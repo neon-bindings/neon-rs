@@ -1,0 +1,56 @@
+{
+  "name": "@neon-rs/cli",
+  "version": "0.0.1",
+  "description": "Command-line build tool for Neon modules.",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "data/**/*",
+    "dist/**/*",
+    "types/**/*",
+    "LICENSE*"
+  ],
+  "bin": {
+    "neon": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "pretest": "npm run build",
+    "prepack": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherman/neon-rs.git"
+  },
+  "keywords": [
+    "Neon",
+    "Rust",
+    "Node"
+  ],
+  "author": "Dave Herman <david.herman@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dherman/neon-rs/issues"
+  },
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/command-line-args": "^5.2.0",
+    "@types/command-line-commands": "^2.0.1",
+    "@types/command-line-usage": "^5.0.2",
+    "@types/node": "^18.15.11",
+    "@types/temp": "^0.9.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "command-line-args": "^5.2.1",
+    "command-line-commands": "^3.0.2",
+    "command-line-usage": "^7.0.1",
+    "execa": "^7.1.1",
+    "stream-to-string": "^1.2.1",
+    "temp": "^0.9.4"
+  }
+}

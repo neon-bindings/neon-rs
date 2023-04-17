@@ -1,0 +1,8 @@
+{
+  "name": "@neon-rs packages",
+  "workspaces": [
+    "pkgs/cli",
+    "pkgs/load"
+  ]
+}
+
