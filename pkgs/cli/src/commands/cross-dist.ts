@@ -1,6 +1,7 @@
 import { copyFile } from 'node:fs/promises';
 import commandLineArgs from 'command-line-args';
 import { CargoMessage, CrossMessageStream, isCompilerArtifact } from '../cargo.js';
+import { Command } from '../command.js';
 
 // FIXME: add options to infer crate name from manifests
 // --package <path/to/package.json>
@@ -28,7 +29,7 @@ async function findArtifact(
   });
 }
 
-export default async function main(argv: string[]) {
+export default function parse(argv: string[]): Command {
   const options = commandLineArgs(OPTIONS, { argv });
 
   if (options.log && options.file) {
@@ -43,12 +44,14 @@ export default async function main(argv: string[]) {
 
   const dir = options.dir || process.cwd();
 
-  const file = options.file ?? await findArtifact(options.log, crateName, dir);
+  return async () => {
+    const file = options.file ?? await findArtifact(options.log, crateName, dir);
 
-  if (!file) {
-    throw new Error(`No library found for crate ${crateName}`);
-  }
+    if (!file) {
+      throw new Error(`No library found for crate ${crateName}`);
+    }
 
-  // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-  await copyFile(file, options.out);
+    // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
+    await copyFile(file, options.out);
+  };
 }

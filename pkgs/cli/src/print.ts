@@ -164,13 +164,10 @@ export function printUsage(command?: CommandName) {
   }
 }
 
-export function die(msg?: string | null) {
-  printUsage();
-
-  if (msg) {
+export function printError(message?: string) {
+  if (message) {
+    console.error(chalk.bold.red("error:") + " " + message);
+  } else {
     console.error();
-    console.error(msg);
   }
-
-  process.exit(1);
 }

@@ -4,6 +4,7 @@ import { createRequire } from 'node:module';
 import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
+import { Command } from '../command.js';
 
 const mktemp = temp.track().mkdir;
 
@@ -34,7 +35,7 @@ function lookup(target: string): TargetDescriptor {
   return NODE[platform][arch][abi];
 }
 
-export default async function main(argv: string[]) {
+export default function parse(argv: string[]): Command {
   const options = commandLineArgs(OPTIONS, { argv, stopAtFirstUnknown: true });
 
   argv = options._unknown || [];
@@ -53,65 +54,67 @@ export default async function main(argv: string[]) {
 
   const outDir: string = options['out-dir'] || path.join(process.cwd(), 'dist');
 
-  await fs.mkdir(outDir, { recursive: true });
+  return async () => {
+    await fs.mkdir(outDir, { recursive: true });
 
-  const manifest = JSON.parse(await fs.readFile('package.json', { encoding: 'utf8' }));
+    const manifest = JSON.parse(await fs.readFile('package.json', { encoding: 'utf8' }));
 
-  const version = manifest.version;
-  const targets = manifest.neon.targets;
-  const name = targets[target];
+    const version = manifest.version;
+    const targets = manifest.neon.targets;
+    const name = targets[target];
 
-  if (!name) {
-    throw new Error(`Rust target ${target} not found in package.json.`);
-  }
-
-  const targetInfo = lookup(target);
-  const description = `Prebuilt binary package for \`${manifest.name}\` on \`${targetInfo.node}\`.`;
-  
-  let prebuildManifest: Record<string, any> = {
-    name,
-    description,
-    version,
-    os: [targetInfo.platform],
-    cpu: [targetInfo.arch],
-    main: "index.node",
-    files: ["README.md", "index.node"]
-  };
-  
-  const OPTIONAL_KEYS = [
-    'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
-  ];
-  
-  for (const key of OPTIONAL_KEYS) {
-    if (manifest[key]) {
-      prebuildManifest[key] = manifest[key];
+    if (!name) {
+      throw new Error(`Rust target ${target} not found in package.json.`);
     }
-  }
-  
-  const tmpdir = await mktemp('neon-');
 
-  await fs.writeFile(path.join(tmpdir, "package.json"), JSON.stringify(prebuildManifest, null, 2));
-  await fs.copyFile(addon, path.join(tmpdir, "index.node"));
-  await fs.writeFile(path.join(tmpdir, "README.md"), `# \`${name}\`\n\n${description}\n`);
+    const targetInfo = lookup(target);
+    const description = `Prebuilt binary package for \`${manifest.name}\` on \`${targetInfo.node}\`.`;
+    
+    let prebuildManifest: Record<string, any> = {
+      name,
+      description,
+      version,
+      os: [targetInfo.platform],
+      cpu: [targetInfo.arch],
+      main: "index.node",
+      files: ["README.md", "index.node"]
+    };
+    
+    const OPTIONAL_KEYS = [
+      'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
+    ];
+    
+    for (const key of OPTIONAL_KEYS) {
+      if (manifest[key]) {
+        prebuildManifest[key] = manifest[key];
+      }
+    }
+    
+    const tmpdir = await mktemp('neon-');
 
-  const result = await execa("npm", ["pack", "--json"], {
-    shell: true,
-    cwd: tmpdir,
-    stdio: ['pipe', 'pipe', 'inherit']
-  });
+    await fs.writeFile(path.join(tmpdir, "package.json"), JSON.stringify(prebuildManifest, null, 2));
+    await fs.copyFile(addon, path.join(tmpdir, "index.node"));
+    await fs.writeFile(path.join(tmpdir, "README.md"), `# \`${name}\`\n\n${description}\n`);
 
-  if (result.exitCode !== 0) {
-    process.exit(result.exitCode);
-  }
+    const result = await execa("npm", ["pack", "--json"], {
+      shell: true,
+      cwd: tmpdir,
+      stdio: ['pipe', 'pipe', 'inherit']
+    });
 
-  // FIXME: comment linking to the npm issue this fixes
-  const tarball = JSON.parse(result.stdout)[0].filename.replace('@', '').replace('/', '-');
+    if (result.exitCode !== 0) {
+      process.exit(result.exitCode);
+    }
 
-  const dest = path.join(outDir, tarball);
+    // FIXME: comment linking to the npm issue this fixes
+    const tarball = JSON.parse(result.stdout)[0].filename.replace('@', '').replace('/', '-');
 
-  // Copy instead of move since e.g. GitHub Actions Windows runners host temp directories
-  // on a different device (which causes fs.renameSync to fail).
-  await fs.copyFile(path.join(tmpdir, tarball), dest);
+    const dest = path.join(outDir, tarball);
 
-  console.log(dest);
+    // Copy instead of move since e.g. GitHub Actions Windows runners host temp directories
+    // on a different device (which causes fs.renameSync to fail).
+    await fs.copyFile(path.join(tmpdir, tarball), dest);
+
+    console.log(dest);
+  };
 }
