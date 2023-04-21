@@ -2,56 +2,32 @@
 
 import commandLineCommands from 'command-line-commands';
 import { printUsage, printError } from './print.js';
-import dist from './commands/dist.js';
-import crossDist from './commands/cross-dist.js';
-import crossPack from './commands/cross-pack.js';
-import crossInstall from './commands/cross-install.js';
-import help from './commands/help.js';
-import { CommandParser, Command } from './command.js';
+import { Command, CommandName, CommandClass, isCommandName, commandFor } from './command.js';
 
-export type CommandName =
-  | 'help'
-  | 'dist'
-  | 'cross-dist'
-  | 'cross-pack'
-  | 'cross-install';
-
-const COMMANDS: Record<string, CommandParser> = {
-  'help': help,
-  'dist': dist,
-  'cross-dist': crossDist,
-  'cross-pack': crossPack,
-  'cross-install': crossInstall
-};
-
-const VALID_COMMANDS: (CommandName | null)[] =
-  [null, 'help', 'dist', 'cross-dist', 'cross-pack', 'cross-install'];
-
-function parse(): Command {
-  try {
-    const { command, argv } = commandLineCommands(VALID_COMMANDS);
-
-    if (!command) {
-      throw null;
+class Cli {
+  parse(): Command {
+    try {
+      const { command, argv } = commandLineCommands([null, ...Object.values(CommandName)]);
+      if (!command || !isCommandName(command)) {
+        throw null;
+      }
+      const ctor: CommandClass = commandFor(command);
+      return new ctor(argv);
+    } catch (e) {
+      printUsage();
+      if (e instanceof Error) {
+        printError(e.message);
+      }
+      process.exit(1);
     }
-
-    return COMMANDS[command](argv);
-  } catch (e) {
-    printUsage();
-
-    if (e instanceof Error) {
-      printError(e.message);
-    }
-
-    process.exit(1);
   }
 }
 
 async function main() {
-  const command: Command = parse();
-
+  const cli = new Cli();
+  const command = cli.parse();
   try {
-    await command();
+    await command.run();
   } catch (e) {
     printError((e instanceof Error) ? e.message : String(e));
     process.exit(1);
