@@ -171,39 +171,34 @@ export class MessageStream {
   }
 }
 
-export class CrossMessageStream extends MessageStream {
-  private _dir: string;
+export class UnmountMessageStream extends MessageStream {
+  private _mount: string;
+  private _manifestPath: string | null;
 
-  constructor(dir: string, file?: string | null) {
+  constructor(mount: string, manifestPath: string | null, file?: string | null) {
     super(file);
-    this._dir = dir;
+    this._mount = mount;
+    this._manifestPath = manifestPath;
   }
 
   async findPath(pred: MessageFilter<string>): Promise<string | null> {
     // The base class's version reports paths as absolute paths from within
-    // the cross-rs Docker image's virtual filesystem.
-    const dockerPath = await super.findPath(pred);
-    if (!dockerPath) {
+    // a mount in a virtual filesystem.
+    const mountedPath = await super.findPath(pred);
+    if (!mountedPath) {
       return null;
     }
 
-    // Convert the absolute path into a relative path from within the
-    // workspace's target directory.
-    const cross = await execa('cross', ['metadata', '--format-version=1', '--no-deps'], {
-      cwd: this._dir,
-      shell: true
-    });
-    if (cross.exitCode !== 0) {
-      throw new Error(`Invoking \`cross metadata\` failed: ${cross.stderr}`);
-    }
-    const crossMetadata = JSON.parse(cross.stdout);
-
     // The path relative to the workspace's target directory.
-    const relPath = path.relative(crossMetadata.target_directory, dockerPath);
+    const relPath = path.relative(this._mount, mountedPath);
 
     // Now find the true absolute path of the target directory on the host system.
-    const cargo = await execa('cargo', ['metadata', '--format-version=1', '--no-deps'], {
-      cwd: this._dir,
+    const cargo = await execa('cargo', [
+      'metadata',
+      '--format-version=1',
+      '--no-deps',
+      ...(this._manifestPath ? ['--manifest-path', this._manifestPath] : [])
+    ], {
       shell: true
     });
     if (cargo.exitCode !== 0) {

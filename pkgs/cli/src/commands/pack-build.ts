@@ -35,9 +35,9 @@ function lookup(target: string): TargetDescriptor {
   return NODE[platform][arch][abi];
 }
 
-export default class CrossPack implements Command {
-  static summary(): string { return 'Create an npm tarball from a cross-compiled prebuild'; }
-  static syntax(): string { return 'neon cross-pack [-f <addon>] <target>'; }
+export default class PackBuild implements Command {
+  static summary(): string { return 'Create an npm tarball from a prebuild.'; }
+  static syntax(): string { return 'neon pack-build [-f <addon>] <target>'; }
   static options(): CommandDetail[] {
     return [
       { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
