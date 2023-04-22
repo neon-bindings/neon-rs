@@ -37,11 +37,11 @@ function lookup(target: string): TargetDescriptor {
 
 export default class PackBuild implements Command {
   static summary(): string { return 'Create an npm tarball from a prebuild.'; }
-  static syntax(): string { return 'neon pack-build [-f <addon>] <target>'; }
+  static syntax(): string { return 'neon pack-build [-f <addon>] [-t <target>]'; }
   static options(): CommandDetail[] {
     return [
       { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
-      { name: '<target>', summary: 'Rust target triple the addon was built for.' }
+      { name: '-t, --target <target>', summary: 'Rust target triple the addon was built for. (Default: rustc default host)' }
     ];
   }
   static seeAlso(): CommandDetail[] | void {
@@ -52,26 +52,32 @@ export default class PackBuild implements Command {
     ];
   }
 
-  private _target: string;
+  private _target: string | null;
   private _addon: string;
   private _outDir: string;
 
   constructor(argv: string[]) {
-    const options = commandLineArgs(OPTIONS, { argv, stopAtFirstUnknown: true });
+    const options = commandLineArgs(OPTIONS, { argv });
 
-    argv = options._unknown || [];
-
-    if (argv.length === 0) {
-      throw new Error("Expected <target>.");
-    }
-
-    if (argv.length > 1) {
-      throw new Error(`Unexpected argument \`${argv[1]}\`.`)
-    }
-
-    this._target = argv[0];
+    this._target = options.target || null;
     this._addon = options.file;
     this._outDir = options['out-dir'] || path.join(process.cwd(), 'dist');
+  }
+
+  async currentTarget(): Promise<string> {
+    const result = await execa("rustc", ["-vV"], { shell: true });
+
+    if (result.exitCode !== 0) {
+      throw new Error(`Could not determine current Rust target: ${result.stderr}`);
+    }
+
+    const hostLine = result.stdout.split(/\n/).find(line => line.startsWith('host:'));
+
+    if (!hostLine) {
+      throw new Error("Could not determine current Rust target (unexpected rustc output)");
+    }
+
+    return hostLine.replace(/^host:\s+/, '');
   }
 
   async run() {
@@ -81,13 +87,14 @@ export default class PackBuild implements Command {
 
     const version = manifest.version;
     const targets = manifest.neon.targets;
-    const name = targets[this._target];
+    const target = this._target || await this.currentTarget();
+    const name = targets[target];
 
     if (!name) {
-      throw new Error(`Rust target ${this._target} not found in package.json.`);
+      throw new Error(`Rust target ${target} not found in package.json.`);
     }
 
-    const targetInfo = lookup(this._target);
+    const targetInfo = lookup(target);
     const description = `Prebuilt binary package for \`${manifest.name}\` on \`${targetInfo.node}\`.`;
 
     let prebuildManifest: Record<string, any> = {
