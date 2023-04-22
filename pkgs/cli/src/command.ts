@@ -1,7 +1,6 @@
 import Dist from './commands/dist.js';
-import CrossDist from './commands/cross-dist.js';
-import CrossPack from './commands/cross-pack.js';
-import CrossInstall from './commands/cross-install.js';
+import PackBuild from './commands/pack-build.js';
+import InstallBuilds from './commands/install-builds.js';
 import Help from './commands/help.js';
 
 export interface Command {
@@ -25,9 +24,8 @@ export type CommandDetail = {
 export enum CommandName {
   Help = 'help',
   Dist = 'dist',
-  CrossDist = 'cross-dist',
-  CrossPack = 'cross-pack',
-  CrossInstall = 'cross-install'
+  PackBuild = 'pack-build',
+  InstallBuilds = 'install-builds'
 };
 
 export function isCommandName(s: string): s is CommandName {
@@ -37,7 +35,7 @@ export function isCommandName(s: string): s is CommandName {
 
 export function asCommandName(name: string): CommandName {
   if (!isCommandName(name)) {
-    throw new RangeError(`Unrecognized command: ${name}`);
+    throw new RangeError(`Command not recognized: ${name}`);
   }
   return name;
 }
@@ -45,9 +43,8 @@ export function asCommandName(name: string): CommandName {
 const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Help]: Help,
   [CommandName.Dist]: Dist,
-  [CommandName.CrossDist]: CrossDist,
-  [CommandName.CrossPack]: CrossPack,
-  [CommandName.CrossInstall]: CrossInstall
+  [CommandName.PackBuild]: PackBuild,
+  [CommandName.InstallBuilds]: InstallBuilds
 };
 
 export function commandFor(name: CommandName): CommandClass {
@@ -58,8 +55,7 @@ export function summaries(): CommandDetail[] {
   return [
     { name: CommandName.Help, summary: Help.summary() },
     { name: CommandName.Dist, summary: Dist.summary() },
-    { name: CommandName.CrossDist, summary: CrossDist.summary() },
-    { name: CommandName.CrossPack, summary: CrossPack.summary() },
-    { name: CommandName.CrossInstall, summary: CrossInstall.summary() }
+    { name: CommandName.PackBuild, summary: PackBuild.summary() },
+    { name: CommandName.InstallBuilds, summary: InstallBuilds.summary() }
   ];
 }

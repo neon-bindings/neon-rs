@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 
 import commandLineCommands from 'command-line-commands';
-import { printUsage, printError } from './print.js';
-import { Command, CommandName, CommandClass, isCommandName, commandFor } from './command.js';
+import { printErrorWithUsage, printError, printMainUsage } from './print.js';
+import { Command, CommandName, CommandClass, asCommandName, commandFor } from './command.js';
 
 class Cli {
   parse(): Command {
     try {
       const { command, argv } = commandLineCommands([null, ...Object.values(CommandName)]);
-      if (!command || !isCommandName(command)) {
-        throw null;
+
+      if (!command) {
+        printMainUsage();
+        process.exit(0);
       }
-      const ctor: CommandClass = commandFor(command);
+
+      const ctor: CommandClass = commandFor(asCommandName(command));
       return new ctor(argv);
     } catch (e) {
-      printUsage();
-      if (e instanceof Error) {
-        printError(e.message);
-      }
+      printErrorWithUsage(e);
       process.exit(1);
     }
   }
@@ -29,7 +29,7 @@ async function main() {
   try {
     await command.run();
   } catch (e) {
-    printError((e instanceof Error) ? e.message : String(e));
+    printError(e);
     process.exit(1);
   }
 }

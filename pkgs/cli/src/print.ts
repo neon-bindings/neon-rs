@@ -1,4 +1,3 @@
-import { createRequire } from 'node:module';
 import commandLineUsage from 'command-line-usage';
 import chalk from 'chalk';
 import { CommandName, CommandStatics, commandFor, summaries } from './command.js';
@@ -40,16 +39,13 @@ function commandUsage(name: CommandName, command: CommandStatics): string {
     sections.push({ header: green('See Also:'), content: seeAlso });
   }
 
-  return commandLineUsage(sections);
+  return commandLineUsage(sections).trimStart();
 }
 
 function mainUsage(): string {
-  const require = createRequire(import.meta.url);
-  const version = require('../package.json').version;
-
   const sections = [
     {
-      content: `${pink('Neon:')} CLI v${version}`,
+      content: `${pink('Neon:')} the npm packaging tool for Rust addons`,
       raw: true
     },
     {
@@ -62,21 +58,25 @@ function mainUsage(): string {
     }
   ];
 
-  return commandLineUsage(sections);
+  return commandLineUsage(sections).trim();
 }
 
-export function printUsage(command?: CommandName) {
-  if (command) {
-    console.error(commandUsage(command, commandFor(command)));
-  } else {
-    console.error(mainUsage());
-  }
+export function printCommandUsage(name: CommandName) {
+  console.error(commandUsage(name, commandFor(name)));
 }
 
-export function printError(message?: string) {
-  if (message) {
-    console.error(chalk.bold.red("error:") + " " + message);
-  } else {
-    console.error();
-  }
+export function printMainUsage() {
+  console.error(mainUsage());
+  console.error();
+  console.error("See 'neon help <command>' for more information on a specific command.");
+}
+
+export function printErrorWithUsage(e: any) {
+  console.error(mainUsage());
+  console.error();
+  printError(e);
+}
+
+export function printError(e: any) {
+  console.error(chalk.bold.red("error:") + " " + ((e instanceof Error) ? e.message : String(e)));
 }

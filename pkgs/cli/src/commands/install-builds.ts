@@ -9,9 +9,9 @@ const OPTIONS = [
   { name: 'no-bundle', alias: 'B', type: String, defaultValue: null }
 ];
 
-export default class CrossInstall implements Command {
-  static summary(): string { return 'Install dependencies on cross-compiled prebuilds'; }
-  static syntax(): string { return 'neon cross-install [-b <file>|-B]'; }
+export default class InstallBuilds implements Command {
+  static summary(): string { return 'Install dependencies on prebuilds in package.json.'; }
+  static syntax(): string { return 'neon install-builds [-b <file>|-B]'; }
   static options(): CommandDetail[] {
     return [
       { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata. (Default: .targets)' },

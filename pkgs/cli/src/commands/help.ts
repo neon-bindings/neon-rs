@@ -1,8 +1,8 @@
-import { printUsage } from '../print.js';
+import { printMainUsage, printCommandUsage } from '../print.js';
 import { Command, CommandName, CommandDetail, asCommandName } from '../command.js';
 
 export default class Help implements Command {
-  static summary(): string { return 'Display help information about Neon'; }
+  static summary(): string { return 'Display help information about Neon.'; }
   static syntax(): string { return 'neon help <command>'; }
   static options(): CommandDetail[] {
     return [
@@ -21,6 +21,10 @@ export default class Help implements Command {
   }
 
   async run() {
-    printUsage(this._name);
+    if (this._name) {
+      printCommandUsage(this._name);
+    } else {
+      printMainUsage();
+    }
   }
 }
