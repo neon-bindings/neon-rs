@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
-import { Command } from '../command.js';
+import { Command, CommandDetail } from '../command.js';
 
 const mktemp = temp.track().mkdir;
 
@@ -35,41 +35,61 @@ function lookup(target: string): TargetDescriptor {
   return NODE[platform][arch][abi];
 }
 
-export default function parse(argv: string[]): Command {
-  const options = commandLineArgs(OPTIONS, { argv, stopAtFirstUnknown: true });
-
-  argv = options._unknown || [];
-
-  if (argv.length === 0) {
-    throw new Error("Expected <target>.");
+export default class CrossPack implements Command {
+  static summary(): string { return 'Create an npm tarball from a cross-compiled prebuild'; }
+  static syntax(): string { return 'neon cross-pack [-f <addon>] <target>'; }
+  static options(): CommandDetail[] {
+    return [
+      { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
+      { name: '<target>', summary: 'Rust target triple the addon was built for.' }
+    ];
+  }
+  static seeAlso(): CommandDetail[] | void {
+    return [
+      { name: 'Rust platform support', summary: '<https://doc.rust-lang.org/rustc/platform-support.html>' },
+      { name: 'npm pack', summary: '<https://docs.npmjs.com/cli/commands/npm-pack>' },
+      { name: 'cross-rs', summary: '<https://github.com/cross-rs/cross>' }
+    ];
   }
 
-  if (argv.length > 1) {
-    throw new Error(`Unexpected argument \`${argv[1]}\`.`)
+  private _target: string;
+  private _addon: string;
+  private _outDir: string;
+
+  constructor(argv: string[]) {
+    const options = commandLineArgs(OPTIONS, { argv, stopAtFirstUnknown: true });
+
+    argv = options._unknown || [];
+
+    if (argv.length === 0) {
+      throw new Error("Expected <target>.");
+    }
+
+    if (argv.length > 1) {
+      throw new Error(`Unexpected argument \`${argv[1]}\`.`)
+    }
+
+    this._target = argv[0];
+    this._addon = options.file;
+    this._outDir = options['out-dir'] || path.join(process.cwd(), 'dist');
   }
 
-  const target = argv[0];
-
-  const addon: string = options.file;
-
-  const outDir: string = options['out-dir'] || path.join(process.cwd(), 'dist');
-
-  return async () => {
-    await fs.mkdir(outDir, { recursive: true });
+  async run() {
+   await fs.mkdir(this._outDir, { recursive: true });
 
     const manifest = JSON.parse(await fs.readFile('package.json', { encoding: 'utf8' }));
 
     const version = manifest.version;
     const targets = manifest.neon.targets;
-    const name = targets[target];
+    const name = targets[this._target];
 
     if (!name) {
-      throw new Error(`Rust target ${target} not found in package.json.`);
+      throw new Error(`Rust target ${this._target} not found in package.json.`);
     }
 
-    const targetInfo = lookup(target);
+    const targetInfo = lookup(this._target);
     const description = `Prebuilt binary package for \`${manifest.name}\` on \`${targetInfo.node}\`.`;
-    
+
     let prebuildManifest: Record<string, any> = {
       name,
       description,
@@ -79,21 +99,21 @@ export default function parse(argv: string[]): Command {
       main: "index.node",
       files: ["README.md", "index.node"]
     };
-    
+
     const OPTIONAL_KEYS = [
       'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
     ];
-    
+
     for (const key of OPTIONAL_KEYS) {
       if (manifest[key]) {
         prebuildManifest[key] = manifest[key];
       }
     }
-    
+
     const tmpdir = await mktemp('neon-');
 
     await fs.writeFile(path.join(tmpdir, "package.json"), JSON.stringify(prebuildManifest, null, 2));
-    await fs.copyFile(addon, path.join(tmpdir, "index.node"));
+    await fs.copyFile(this._addon, path.join(tmpdir, "index.node"));
     await fs.writeFile(path.join(tmpdir, "README.md"), `# \`${name}\`\n\n${description}\n`);
 
     const result = await execa("npm", ["pack", "--json"], {
@@ -109,7 +129,7 @@ export default function parse(argv: string[]): Command {
     // FIXME: comment linking to the npm issue this fixes
     const tarball = JSON.parse(result.stdout)[0].filename.replace('@', '').replace('/', '-');
 
-    const dest = path.join(outDir, tarball);
+    const dest = path.join(this._outDir, tarball);
 
     // Copy instead of move since e.g. GitHub Actions Windows runners host temp directories
     // on a different device (which causes fs.renameSync to fail).
