@@ -10,6 +10,7 @@ const mktemp = temp.track().mkdir;
 
 const OPTIONS = [
   { name: 'file', alias: 'f', type: String, defaultValue: 'index.node' },
+  { name: 'target', alias: 't', type: String, defaultValue: null },
   { name: 'out-dir', alias: 'd', type: String, defaultValue: null }
 ];
 
@@ -37,11 +38,12 @@ function lookup(target: string): TargetDescriptor {
 
 export default class PackBuild implements Command {
   static summary(): string { return 'Create an npm tarball from a prebuild.'; }
-  static syntax(): string { return 'neon pack-build [-f <addon>] [-t <target>]'; }
+  static syntax(): string { return 'neon pack-build [-f <addon>] [-t <target>] [-d <dir>]'; }
   static options(): CommandDetail[] {
     return [
       { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
-      { name: '-t, --target <target>', summary: 'Rust target triple the addon was built for. (Default: rustc default host)' }
+      { name: '-t, --target <target>', summary: 'Rust target triple the addon was built for. (Default: rustc default host)' },
+      { name: '-d, --out-dir <path>', summary: 'Output directory, recursively created if needed. (Default: ./dist)' }
     ];
   }
   static seeAlso(): CommandDetail[] | void {
