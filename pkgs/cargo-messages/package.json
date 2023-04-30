@@ -20,6 +20,7 @@
   "main": "./cjs/index.cjs",
   "files": [
     "README.md",
+    "cjs/.targets.cjs",
     "cjs/index.cjs",
     "types/cjs/index.d.ts",
     "esm/index.js",
@@ -31,7 +32,7 @@
     "build": "cargo build --message-format=json --release | neon dist",
     "cross": "cross build --message-format=json --release | neon dist -m /target",
     "pack-build": "neon pack-build",
-    "prepack": "neon install-builds"
+    "prepack": "neon install-builds --bundle cjs/.targets.cjs"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",

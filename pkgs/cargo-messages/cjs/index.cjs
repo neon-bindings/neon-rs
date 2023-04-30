@@ -1,6 +1,9 @@
 const path = require("path");
 const { load, currentTarget } = require('@neon-rs/load');
 
+// Static requires for bundlers.
+if (0) { require('./.targets'); }
+
 const {
   fromStdin,
   fromFile,
