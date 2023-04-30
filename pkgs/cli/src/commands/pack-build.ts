@@ -1,6 +1,5 @@
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { createRequire } from 'node:module';
 import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
@@ -14,26 +13,37 @@ const OPTIONS = [
   { name: 'out-dir', alias: 'd', type: String, defaultValue: null }
 ];
 
-const require = createRequire(import.meta.url);
+import RUST from '../../data/rust.json';
 
-const LLVM = require('../../data/llvm.json');
-const NODE = require('../../data/node.json');
+type RustTarget = keyof(typeof RUST);
+
+function isRustTarget(x: string): x is RustTarget {
+  return (x in RUST);
+}
+
+import NODE from '../../data/node.json';
+
+type NodeTarget = keyof(typeof NODE);
+
+function isNodeTarget(x: any): x is NodeTarget {
+  return (typeof x === 'string') && (x in NODE);
+}
 
 type TargetDescriptor = {
+  node: string,
   platform: string,
   arch: string,
   abi: string | null,
-  node: string,
-  llvm: string
+  llvm: string[]
 };
 
-function lookup(target: string): TargetDescriptor {
-  const path = LLVM[target];
-  if (!path) {
+function lookup(target: RustTarget): TargetDescriptor {
+  const node = RUST[target];
+  if (!isNodeTarget(node)) {
     throw new Error(`Rust target ${target} not supported`);
   }
-  const [platform, arch, abi] = path;
-  return NODE[platform][arch][abi];
+
+  return { node, ...NODE[node] };
 }
 
 export default class PackBuild implements Command {
@@ -90,6 +100,11 @@ export default class PackBuild implements Command {
     const version = manifest.version;
     const targets = manifest.neon.targets;
     const target = this._target || await this.currentTarget();
+
+    if (!isRustTarget(target)) {
+      throw new Error(`Rust target ${target} not supported.`);
+    }
+
     const name = targets[target];
 
     if (!name) {
