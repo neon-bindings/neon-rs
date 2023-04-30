@@ -9,6 +9,6 @@
     "pkgs/load"
   ],
   "scripts": {
-    "version": "npm version $npm_package_version && git add **/package.json"
+    "version": "npm version $npm_package_version --workspaces && git add **/package.json"
   }
 }
