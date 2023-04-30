@@ -86,7 +86,7 @@ jobs:
       contents: write
     steps:
       - name: Publish (cargo-messages)
-        uses: neon-actions/publish@v0.1.1
+        uses: neon-actions/publish@v0.2
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
