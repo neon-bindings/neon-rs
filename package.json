@@ -1,7 +1,7 @@
 {
   "name": "neon-rs",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "@neon-rs workspace root",
   "workspaces": [
     "pkgs/cargo-messages",
@@ -9,6 +9,6 @@
     "pkgs/load"
   ],
   "scripts": {
-    "version": "npm version $npm_package_version --workspaces && git add **/package.json"
+    "version": "npm version $npm_package_version --workspaces && git add **/package.json **/package-lock.json"
   }
 }
