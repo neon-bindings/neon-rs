@@ -1,9 +1,14 @@
 {
+  "name": "neon-rs",
   "private": true,
-  "description": "@neon-rs packages",
+  "version": "0.0.5",
+  "description": "@neon-rs workspace root",
   "workspaces": [
     "pkgs/cargo-messages",
     "pkgs/cli",
     "pkgs/load"
-  ]
+  ],
+  "scripts": {
+    "version": "echo $npm_package_version && exit 1"
+  }
 }
