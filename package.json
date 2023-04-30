@@ -1,8 +1,9 @@
 {
-  "name": "@neon-rs packages",
+  "private": true,
+  "description": "@neon-rs packages",
   "workspaces": [
+    "pkgs/cargo-messages",
     "pkgs/cli",
     "pkgs/load"
   ]
 }
-

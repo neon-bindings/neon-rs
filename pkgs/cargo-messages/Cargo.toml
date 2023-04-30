@@ -1,0 +1,22 @@
+[package]
+name = "cargo-messages"
+version = "0.0.1"
+description = "A streaming reader for JSON messages emitted from Cargo"
+authors = ["David Herman <david.herman@gmail.com>"]
+license = "MIT"
+edition = "2018"
+exclude = ["index.node"]
+
+[lib]
+crate-type = ["cdylib"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cargo_metadata = "0.15.4"
+pathdiff = "0.2.1"
+
+[dependencies.neon]
+version = "1.0.0-alpha.4"
+default-features = false
+features = ["napi-6"]
