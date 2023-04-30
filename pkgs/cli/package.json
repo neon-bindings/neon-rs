@@ -1,5 +1,6 @@
 {
-  "name": "@neon-rs/cli",
+  "name": "@neon-rs/cli-source",
+  "private": true,
   "version": "0.0.4",
   "description": "Command-line build tool for Neon modules.",
   "type": "module",
@@ -15,6 +16,11 @@
     "neon": "dist/index.js"
   },
   "scripts": {
+    "prebundle": "rm -rf bundle",
+    "bundle": "ncc build src/index.ts -o bundle",
+    "postbundle": "npm run bundle-assets && npm run bundle-manifest",
+    "bundle-assets": "cp README.md LICENSE* ./bundle",
+    "bundle-manifest": "cat package.json | jq -f bundle.jq > ./bundle/package.json",
     "build": "tsc",
     "pretest": "npm run build",
     "prepack": "npm run build",
@@ -42,6 +48,7 @@
     "@types/command-line-usage": "^5.0.2",
     "@types/node": "^18.15.11",
     "@types/temp": "^0.9.1",
+    "@vercel/ncc": "^0.36.1",
     "typescript": "^5.0.4"
   },
   "dependencies": {
