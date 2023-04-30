@@ -31,8 +31,7 @@
     "build": "cargo build --message-format=json --release | neon dist",
     "cross": "cross build --message-format=json --release | neon dist -m /target",
     "pack-build": "neon pack-build",
-    "prepack": "neon install-builds",
-    "postversion": "git push --follow-tags"
+    "prepack": "neon install-builds"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
