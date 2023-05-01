@@ -37,7 +37,7 @@
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "0.0.10"
+    "@neon-rs/cli": "0.0.13"
   },
   "repository": {
     "type": "git",
@@ -52,7 +52,7 @@
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "dependencies": {
-    "@neon-rs/load": "^0.0.5"
+    "@neon-rs/load": "^0.0.13"
   },
   "neon": {
     "targets": {
