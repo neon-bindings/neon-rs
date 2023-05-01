@@ -121,7 +121,7 @@ export default class PackBuild implements Command {
       os: [targetInfo.platform],
       cpu: [targetInfo.arch],
       main: "index.node",
-      files: ["README.md", "index.node"]
+      files: ["index.node"]
     };
 
     const OPTIONAL_KEYS = [
