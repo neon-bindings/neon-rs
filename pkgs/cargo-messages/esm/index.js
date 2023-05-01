@@ -1,5 +1,3 @@
-import { createRequire } from "node:module";
+import { CargoMessages } from '../cjs/index.cjs';
 
-const require = createRequire(import.meta.url);
-
-export const CargoMessages = require("../cjs/index.cjs").CargoMessages;
+export const CargoMessages = CargoMessages;
