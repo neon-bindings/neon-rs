@@ -5,7 +5,7 @@ const {
   fromFile,
   findArtifact,
   findFileByCrateType
-} = load.debug(`${__dirname}/..`) || load.scope("@cargo-messages");
+} = load.debug(__dirname, '..') || load.scope("@cargo-messages");
 
 const PRIVATE = {};
 
