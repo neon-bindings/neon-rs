@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-export function currentTarget() {
+export function currentTarget(): string {
   let os = null;
 
   switch (process.platform) {
@@ -81,7 +81,46 @@ function isGlibc(): boolean {
     ('glibcVersionRuntime' in header);
 }
 
-export function load(dirname: string) {
+function debug(dirname: string) {
   const m = path.join(dirname, "index.node");
   return fs.existsSync(m) ? require(m) : null;
+}
+
+export type LoadDir = {
+  debug?: string,
+  dir: string
+};
+
+export type LoadScope = {
+  debug?: string,
+  scope: string
+};
+
+export type LoadCustom = {
+  debug?: string,
+  custom: (target: string) => string
+};
+
+export type LoadOptions =
+  | LoadDir
+  | LoadScope
+  | LoadCustom;
+
+export default function load(options: LoadOptions) {
+  let debugModule = null;
+  if (options.debug && (debugModule = debug(options.debug))) {
+    return debugModule;
+  }
+
+  if ("dir" in options) {
+    return require(path.join(options.dir, "index.node"));
+  }
+
+  if ("scope" in options) {
+    return require(options.scope + "/" + currentTarget());
+  }
+
+  if ("custom" in options) {
+    return require(options.custom(currentTarget()));
+  }
 }
