@@ -1,15 +1,12 @@
 const path = require("path");
-const { load, currentTarget } = require('@neon-rs/load');
-
-// Static requires for bundlers.
-if (0) { require('./.targets.cjs'); }
+const load = require('@neon-rs/load').default;
 
 const {
   fromStdin,
   fromFile,
   findArtifact,
   findFileByCrateType
-} = load(path.join(__dirname, "..")) || require(`@cargo-messages/${currentTarget()}`);
+} = load({ scope: "@cargo-messages", debug: path.join(__dirname, "..") });
 
 const PRIVATE = {};
 
