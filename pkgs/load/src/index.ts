@@ -81,9 +81,12 @@ function isGlibc(): boolean {
     ('glibcVersionRuntime' in header);
 }
 
-export function debug(dirname: string) {
-  const m = path.join(dirname, "index.node");
-  return fs.existsSync(m) ? require(m) : null;
+export function debug(...components: string[]) {
+  if (components.length === 0 || !components[components.length - 1].endsWith(".node")) {
+    components.push("index.node");
+  }
+  const pathSpec = path.join(...components);
+  return fs.existsSync(pathSpec) ? require(pathSpec) : null;
 }
 
 export function scope(scope: string) {
