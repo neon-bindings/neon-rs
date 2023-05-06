@@ -1,12 +1,11 @@
-const path = require("path");
-const load = require('@neon-rs/load').default;
+const load = require('@neon-rs/load');
 
 const {
   fromStdin,
   fromFile,
   findArtifact,
   findFileByCrateType
-} = load({ scope: "@cargo-messages", debug: path.join(__dirname, "..") });
+} = load.debug(`${__dirname}/..`) || load.scope("@cargo-messages");
 
 const PRIVATE = {};
 
