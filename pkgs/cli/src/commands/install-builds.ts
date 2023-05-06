@@ -5,21 +5,19 @@ import * as path from 'node:path';
 import { Command, CommandDetail } from '../command.js';
 
 const OPTIONS = [
-  { name: 'bundle', alias: 'b', type: String, defaultValue: null },
-  { name: 'no-bundle', alias: 'B', type: String, defaultValue: null }
+  { name: 'bundle', alias: 'b', type: String, defaultValue: null }
 ];
 
 export default class InstallBuilds implements Command {
   static summary(): string { return 'Install dependencies on prebuilds in package.json.'; }
-  static syntax(): string { return 'neon install-builds [-b <file>|-B]'; }
+  static syntax(): string { return 'neon install-builds [-b <file>]'; }
   static options(): CommandDetail[] {
     return [
-      { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata. (Default: .targets)' },
+      { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata.' },
       {
         name: '',
         summary: 'This generated file ensures support for bundlers (e.g. @vercel/ncc), which rely on static analysis to detect and enable any addons used by the library.'
-      },
-      { name: '-B, --no-bundle', summary: 'Do not generate bundling metadata.' }
+      }
     ];
   }
   static seeAlso(): CommandDetail[] | void {
@@ -33,15 +31,7 @@ export default class InstallBuilds implements Command {
   constructor(argv: string[]) {
     const options = commandLineArgs(OPTIONS, { argv });
 
-    if (options.bundle && options['no-bundle']) {
-      throw new Error("Options --bundle and --no-bundle cannot both be enabled.");
-    }
-
-    this._bundle = options['no-bundle']
-      ? null
-      : !options.bundle
-      ? '.targets'
-      : options.bundle;
+    this._bundle = options.bundle || null;
   }
 
   async run() {
@@ -70,12 +60,11 @@ export default class InstallBuilds implements Command {
 // analyzable by bundler analyses, so this module provides an exhaustive
 // static list for those analyses.
 
-return;
-
+if (0) {
 `;
 
-    const requires = targets.map(name => `require('${name}');`).join('\n');
+    const requires = targets.map(name => `  require('${name}');`).join('\n');
 
-    await fs.writeFile(this._bundle, PREAMBLE + requires + '\n');
+    await fs.writeFile(this._bundle, PREAMBLE + requires + '\n}\n');
   }
 }
