@@ -1,7 +1,7 @@
 import { copyFile } from 'node:fs/promises';
 import commandLineArgs from 'command-line-args';
-import { CargoMessage, MessageStream, UnmountMessageStream, isCompilerArtifact } from '../cargo.js';
 import { Command, CommandDetail } from '../command.js';
+import { CargoMessages } from 'cargo-messages';
 
 // FIXME: add options to infer crate name from manifests
 // --package <path/to/package.json>
@@ -68,22 +68,18 @@ export default class Dist implements Command {
     this._out = options.out;
   }
 
-  async findArtifact(): Promise<string | null> {
-    const stream: MessageStream = this._mount
-      ? new UnmountMessageStream(this._mount, this._manifestPath, this._log)
-      : new MessageStream(this._log);
+  findArtifact(): string | null {
+    const messages: CargoMessages = new CargoMessages({
+      mount: this._mount || undefined,
+      manifestPath: this._manifestPath || undefined,
+      file: this._log || undefined
+    });
 
-    return await stream.findPath((msg: CargoMessage) => {
-      if (!isCompilerArtifact(msg) || (msg.target.name !== this._crateName)) {
-        return null;
-      }
-      const index = msg.target.crate_types.indexOf('cdylib');
-      return (index < 0) ? null : msg.filenames[index];
-    });  
+    return messages.findArtifact(this._crateName)?.findFileByCrateType('cdylib') || null;
   }
 
   async run() {
-    const file = this._file || await this.findArtifact();
+    const file = this._file || this.findArtifact();
 
     if (!file) {
       throw new Error(`No library found for crate ${this._crateName}`);

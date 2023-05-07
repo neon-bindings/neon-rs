@@ -17,5 +17,5 @@
   license: .license,
   bugs: .bugs,
   homepage: .homepage,
-  neon: .neon
+  optionalDependences: .optionalDependencies
 }
