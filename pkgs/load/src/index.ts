@@ -1,5 +1,4 @@
-import * as path from 'path';
-import * as fs from 'fs';
+import { createRequire } from 'node:module';
 
 export function currentTarget(): string {
   let os = null;
@@ -81,18 +80,20 @@ function isGlibc(): boolean {
     ('glibcVersionRuntime' in header);
 }
 
-export function debug(...components: string[]) {
-  if (components.length === 0 || !components[components.length - 1].endsWith(".node")) {
-    components.push("index.node");
-  }
-  const pathSpec = path.join(...components);
-  return fs.existsSync(pathSpec) ? require(pathSpec) : null;
-}
+// export function debug(...components: string[]) {
+//   if (components.length === 0 || !components[components.length - 1].endsWith(".node")) {
+//     components.push("index.node");
+//   }
+//   const pathSpec = path.join(...components);
+//   return fs.existsSync(pathSpec) ? require(pathSpec) : null;
+// }
+
+const requireAbsolute = createRequire(process.cwd());
 
 export function scope(scope: string) {
-  return require(scope + "/" + currentTarget());
+  return requireAbsolute(scope + "/" + currentTarget());
 }
 
 export function custom(toRequireSpec: (target: string) => string) {
-  return require(toRequireSpec(currentTarget()));
+  return requireAbsolute(toRequireSpec(currentTarget()));
 }
