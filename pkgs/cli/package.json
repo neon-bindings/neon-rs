@@ -59,15 +59,15 @@
     "execa": "^7.1.1",
     "stream-to-string": "^1.2.1",
     "temp": "^0.9.4",
-    "cargo-messages": "0.0.28"
+    "cargo-messages": "0.0.31"
   },
   "optionalDependencies": {
-    "@cargo-messages/win32-x64-msvc": "0.0.28",
-    "@cargo-messages/win32-arm64-msvc": "0.0.28",
-    "@cargo-messages/darwin-x64": "0.0.28",
-    "@cargo-messages/darwin-arm64": "0.0.28",
-    "@cargo-messages/linux-x64-gnu": "0.0.28",
-    "@cargo-messages/linux-arm-gnueabihf": "0.0.28",
-    "@cargo-messages/android-arm-eabi": "0.0.28"
+    "@cargo-messages/win32-x64-msvc": "0.0.31",
+    "@cargo-messages/win32-arm64-msvc": "0.0.31",
+    "@cargo-messages/darwin-x64": "0.0.31",
+    "@cargo-messages/darwin-arm64": "0.0.31",
+    "@cargo-messages/linux-x64-gnu": "0.0.31",
+    "@cargo-messages/linux-arm-gnueabihf": "0.0.31",
+    "@cargo-messages/android-arm-eabi": "0.0.31"
   }
 }
