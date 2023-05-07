@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "dependencies": {
-    "@neon-rs/load": "^0.0.23"
+    "@neon-rs/load": "^0.0.30"
   },
   "neon": {
     "targets": {
