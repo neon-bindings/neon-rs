@@ -1,11 +1,11 @@
-const load = require('@neon-rs/load');
+const { bin } = require('@neon-rs/load');
 
 const {
   fromStdin,
   fromFile,
   findArtifact,
   findFileByCrateType
-} = load.scope("@cargo-messages");
+} = require(bin("@cargo-messages"));
 
 const PRIVATE = {};
 
