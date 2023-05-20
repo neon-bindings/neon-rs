@@ -5,7 +5,7 @@ const {
   fromFile,
   findArtifact,
   findFileByCrateType
-} = require(bin("@cargo-messages"));
+} = require(bin`@cargo-messages`);
 
 const PRIVATE = {};
 

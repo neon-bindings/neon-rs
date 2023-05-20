@@ -1,5 +1,3 @@
-import { createRequire } from 'node:module';
-
 export function currentTarget(): string {
   let os = null;
 
@@ -87,16 +85,6 @@ function isGlibc(): boolean {
 //   const pathSpec = path.join(...components);
 //   return fs.existsSync(pathSpec) ? require(pathSpec) : null;
 // }
-
-const requireAbsolute = createRequire(process.cwd());
-
-export function scope(scope: string) {
-  return requireAbsolute(scope + "/" + currentTarget());
-}
-
-export function custom(toRequireSpec: (target: string) => string) {
-  return requireAbsolute(toRequireSpec(currentTarget()));
-}
 
 function* interleave<T>(a1: T[], a2: T[]): Generator<T> {
   const length = Math.max(a1.length, a2.length);
