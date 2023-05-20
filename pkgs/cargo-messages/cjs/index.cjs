@@ -1,7 +1,9 @@
-const { bin } = require('@neon-rs/load');
+const { currentTarget } = require('@neon-rs/load');
 
-if (!process) {
-  require('@cargo-messages/darwin-x64');
+let addon;
+switch (currentTarget()) {
+  case 'darwin-x64': addon = require('@cargo-messages/darwin-64'); break;
+  default: throw new Error(`no binary @cargo-messages module found for ${currentTarget()}`);
 }
 
 const {
@@ -9,7 +11,7 @@ const {
   fromFile,
   findArtifact,
   findFileByCrateType
-} = require(bin`@cargo-messages`);
+} = addon;
 
 const PRIVATE = {};
 
