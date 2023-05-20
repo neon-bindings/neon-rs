@@ -1,6 +1,6 @@
 const { bin } = require('@neon-rs/load');
 
-if (0) {
+if (!platform) {
   require('@cargo-messages/darwin-x64');
 }
 
