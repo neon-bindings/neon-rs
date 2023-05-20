@@ -97,3 +97,7 @@ export function scope(scope: string) {
 export function custom(toRequireSpec: (target: string) => string) {
   return requireAbsolute(toRequireSpec(currentTarget()));
 }
+
+export function bin(scope: string) {
+  return scope + "/" + currentTarget();
+}
