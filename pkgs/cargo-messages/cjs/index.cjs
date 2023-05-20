@@ -1,17 +1,18 @@
 const { currentTarget } = require('@neon-rs/load');
 
-let addon;
-switch (currentTarget()) {
-  case 'darwin-x64': addon = require('@cargo-messages/darwin-64'); break;
-  default: throw new Error(`no binary @cargo-messages module found for ${currentTarget()}`);
-}
+let saved = null;
 
-const {
-  fromStdin,
-  fromFile,
-  findArtifact,
-  findFileByCrateType
-} = addon;
+function addon() {
+  if (saved) {
+    return saved;
+  }
+  const target = currentTarget();
+  switch (target) {
+    case 'darwin-x64': saved = require('@cargo-messages/darwin-x64'); break;
+    default: throw new Error(`no binary @cargo-messages module found for ${target}`);
+  }
+  return addon();
+}
 
 const PRIVATE = {};
 
@@ -28,7 +29,7 @@ class CargoArtifact {
   }
 
   findFileByCrateType(crateType) {
-    return findFileByCrateType(this._kernel, crateType);
+    return addon().findFileByCrateType(this._kernel, crateType);
   }
 }
 
@@ -38,12 +39,12 @@ class CargoMessages {
     this._mount = options.mount || null;
     this._manifestPath = options.manifestPath || null;
     this._kernel = options.file
-      ? fromFile(options.file, this._mount, this._manifestPath)
-      : fromStdin(this._mount, this._manifestPath);
+      ? addon().fromFile(options.file, this._mount, this._manifestPath)
+      : addon().fromStdin(this._mount, this._manifestPath);
   }
 
   findArtifact(crateName) {
-    const found = findArtifact(this._kernel, crateName);
+    const found = addon().findArtifact(this._kernel, crateName);
     return found
       ? new CargoArtifact(PRIVATE, found)
       : null;
