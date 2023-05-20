@@ -1,5 +1,9 @@
 const { bin } = require('@neon-rs/load');
 
+if (0) {
+  require('@cargo-messages/darwin-x64');
+}
+
 const {
   fromStdin,
   fromFile,
