@@ -98,6 +98,20 @@ export function custom(toRequireSpec: (target: string) => string) {
   return requireAbsolute(toRequireSpec(currentTarget()));
 }
 
-export function bin(scope: string) {
-  return scope + "/" + currentTarget();
+function* interleave<T>(a1: T[], a2: T[]): Generator<T> {
+  const length = Math.max(a1.length, a2.length);
+
+  for (let i = 0; i < length; i++) {
+    if (i < a1.length) {
+      yield a1[i];
+    }
+
+    if (i < a2.length) {
+      yield a2[i];
+    }
+  }
+}
+
+export function bin(scope: string[], ...rest: string[]): string {
+  return [...interleave(scope, rest)].join("") + "/" + currentTarget();
 }

@@ -1,31 +1,7 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.load = exports.currentTarget = void 0;
-const path = __importStar(require("path"));
-const fs = __importStar(require("fs"));
+exports.bin = exports.custom = exports.scope = exports.currentTarget = void 0;
+const node_module_1 = require("node:module");
 function currentTarget() {
     let os = null;
     switch (process.platform) {
@@ -95,8 +71,34 @@ function isGlibc() {
         !!header &&
         ('glibcVersionRuntime' in header);
 }
-function load(dirname) {
-    const m = path.join(dirname, "index.node");
-    return fs.existsSync(m) ? require(m) : null;
+// export function debug(...components: string[]) {
+//   if (components.length === 0 || !components[components.length - 1].endsWith(".node")) {
+//     components.push("index.node");
+//   }
+//   const pathSpec = path.join(...components);
+//   return fs.existsSync(pathSpec) ? require(pathSpec) : null;
+// }
+const requireAbsolute = (0, node_module_1.createRequire)(process.cwd());
+function scope(scope) {
+    return requireAbsolute(scope + "/" + currentTarget());
 }
-exports.load = load;
+exports.scope = scope;
+function custom(toRequireSpec) {
+    return requireAbsolute(toRequireSpec(currentTarget()));
+}
+exports.custom = custom;
+function* interleave(a1, a2) {
+    const length = Math.max(a1.length, a2.length);
+    for (let i = 0; i < length; i++) {
+        if (i < a1.length) {
+            yield a1[i];
+        }
+        if (i < a2.length) {
+            yield a2[i];
+        }
+    }
+}
+function bin(scope, ...rest) {
+    return [...interleave(scope, rest)].join("") + "/" + currentTarget();
+}
+exports.bin = bin;
