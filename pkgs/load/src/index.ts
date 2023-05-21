@@ -103,3 +103,27 @@ function* interleave<T>(a1: T[], a2: T[]): Generator<T> {
 export function bin(scope: string[], ...rest: string[]): string {
   return [...interleave(scope, rest)].join("") + "/" + currentTarget();
 }
+
+export function lazy(loaders: Record<string, () => any>, exports: string[]): any {
+  let loaded: any = null;
+
+  function load() {
+    if (loaded) {
+      return loaded;
+    }
+    const target = currentTarget();
+    if (!loaders.hasOwnProperty(target)) {
+      throw new Error(`no precompiled module found for ${target}`);
+    }
+    loaded = loaders[target]();
+    return loaded;
+  }
+
+  let module = {};
+
+  for (const key of exports) {
+    Object.defineProperty(module, key, { get() { return load()[key]; } });
+  }
+
+  return module;
+}
