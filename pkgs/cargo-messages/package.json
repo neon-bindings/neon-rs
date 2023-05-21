@@ -7,22 +7,23 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./types/esm/index.d.ts",
-        "default": "./esm/index.js"
+        "types": "./types/index.d.mts",
+        "default": "./lib/index.mjs"
       },
       "require": {
-        "types": "./types/cjs/index.d.ts",
-        "default": "./cjs/index.cjs"
+        "types": "./types/index.d.cts",
+        "default": "./lib/index.cjs"
       }
     }
   },
-  "types": "./types/cjs/index.d.ts",
-  "main": "./cjs/index.cjs",
+  "types": "./types/index.d.cts",
+  "main": "./lib/index.cjs",
   "files": [
-    "cjs/index.cjs",
-    "types/cjs/index.d.ts",
-    "esm/index.js",
-    "types/esm/index.d.ts"
+    "lib/index.cjs",
+    "lib/load.cjs",
+    "lib/index.mjs",
+    "types/index.d.cts",
+    "types/index.d.mts"
   ],
   "scripts": {
     "test": "cargo test",
