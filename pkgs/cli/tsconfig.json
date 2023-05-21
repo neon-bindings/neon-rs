@@ -1,7 +1,7 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "module": "node16",
+    "module": "es2020",
     "moduleResolution": "bundler",
     "outDir": "dist",
     "declaration": true,
