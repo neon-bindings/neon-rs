@@ -1,9 +1,4 @@
-const {
-  fromFile,
-  fromStdin,
-  findArtifact,
-  findFileByCrateType
-} = require('./load.cjs');
+const addon = require('./load.cjs');
 
 const PRIVATE = {};
 
@@ -20,7 +15,7 @@ class CargoArtifact {
   }
 
   findFileByCrateType(crateType) {
-    return findFileByCrateType(this._kernel, crateType);
+    return addon.findFileByCrateType(this._kernel, crateType);
   }
 }
 
@@ -30,12 +25,12 @@ class CargoMessages {
     this._mount = options.mount || null;
     this._manifestPath = options.manifestPath || null;
     this._kernel = options.file
-      ? fromFile(options.file, this._mount, this._manifestPath)
-      : fromStdin(this._mount, this._manifestPath);
+      ? addon.fromFile(options.file, this._mount, this._manifestPath)
+      : addon.fromStdin(this._mount, this._manifestPath);
   }
 
   findArtifact(crateName) {
-    const found = findArtifact(this._kernel, crateName);
+    const found = addon.findArtifact(this._kernel, crateName);
     return found
       ? new CargoArtifact(PRIVATE, found)
       : null;
