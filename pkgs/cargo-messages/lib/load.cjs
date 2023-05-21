@@ -1,40 +1,4 @@
-const { currentTarget } = require('@neon-rs/load');
-
-function lazy(loaders, exports) {
-  let loaded = null;
-
-  function load() {
-    if (loaded) {
-      return loaded;
-    }
-    const target = currentTarget();
-    if (!loaders.hasOwnProperty(target)) {
-      throw new Error(`no precompiled module found for ${target}`);
-    }
-    loaded = loaders[target]();
-    return loaded;
-  }
-
-  let module = {};
-
-  for (const key of exports) {
-    Object.defineProperty(module, key, { get() { return load()[key]; } });
-  }
-
-  return module;
-}
-
-/*
-function choose(loaders) {
-  const target = currentTarget();
-  if (!loaders.hasOwnProperty(target)) {
-    throw new Error(`no precompiled module found for ${target}`);
-  }
-  return loaders[target]();
-}
-*/
-
-module.exports = lazy({
+module.exports = require('@neon-rs/load').lazy({
   'darwin-x64': () => require('@cargo-messages/darwin-x64'),
   'win32-x64-msvc': () => require('@cargo-messages/win32-x64-msvc'),
   'aarch64-pc-windows-msvc': () => require('@cargo-messages/win32-arm64-msvc'),
