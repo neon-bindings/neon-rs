@@ -52,7 +52,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "cargo-messages": "^0.0.57",
+    "cargo-messages": "^0.0.59",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",
     "command-line-commands": "^3.0.2",
