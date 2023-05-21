@@ -1,5 +1,6 @@
 const { currentTarget } = require('@neon-rs/load');
 
+/*
 function lazy(loaders, exports) {
   let loaded = null;
 
@@ -23,8 +24,17 @@ function lazy(loaders, exports) {
 
   return module;
 }
+*/
 
-module.exports = lazy({
+function choose(loaders) {
+  const target = currentTarget();
+  if (!loaders.hasOwnProperty(target)) {
+    throw new Error(`no precompiled module found for ${target}`);
+  }
+  return loaders[target]();
+}
+
+module.exports = choose({
   'darwin-x64': () => require('@cargo-messages/darwin-x64'),
   'win32-x64-msvc': () => require('@cargo-messages/win32-x64-msvc'),
   'aarch64-pc-windows-msvc': () => require('@cargo-messages/win32-arm64-msvc'),
@@ -33,9 +43,4 @@ module.exports = lazy({
   'linux-x64-gnu': () => require('@cargo-messages/linux-x64-gnu'),
   'linux-arm-gnueabihf': () => require('@cargo-messages/linux-arm-gnueabihf'),
   'android-arm-eabi': () => require('@cargo-messages/android-arm-eabi')
-}, [
-  'fromFile',
-  'fromStdin',
-  'findArtifact',
-  'findFileByCrateType'
-]);
+});
