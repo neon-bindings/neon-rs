@@ -1,3 +1,1 @@
-import { CargoMessages } from './index.cjs';
-
-export { CargoMessages };
+export { CargoMessages } from './index.cjs';
