@@ -1,0 +1,72 @@
+{
+  "name": "@neon-rs/cli-dev",
+  "private": true,
+  "version": "0.0.77",
+  "description": "Command-line build tool for Neon modules.",
+  "type": "module",
+  "exports": "./dist/src/index.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "data/**/*",
+    "dist/**/*",
+    "types/**/*",
+    "LICENSE*"
+  ],
+  "bin": {
+    "neon": "dist/src/index.js"
+  },
+  "scripts": {
+    "bundle": "ncc build src/index.ts -o ../cli",
+    "postbundle": "npm run bundle-assets && npm run bundle-manifest",
+    "bundle-assets": "cp README.md LICENSE* ../cli",
+    "bundle-manifest": "cat package.json | jq -f bundle.jq > ../cli/package.json",
+    "build": "tsc",
+    "pretest": "npm run build",
+    "prepack": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherman/neon-rs.git"
+  },
+  "keywords": [
+    "Neon",
+    "Rust",
+    "Node"
+  ],
+  "author": "Dave Herman <david.herman@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dherman/neon-rs/issues"
+  },
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/command-line-args": "^5.2.0",
+    "@types/command-line-commands": "^2.0.1",
+    "@types/command-line-usage": "^5.0.2",
+    "@types/node": "^18.15.11",
+    "@types/temp": "^0.9.1",
+    "@vercel/ncc": "^0.36.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "cargo-messages": "^0.0.73",
+    "chalk": "^5.2.0",
+    "command-line-args": "^5.2.1",
+    "command-line-commands": "^3.0.2",
+    "command-line-usage": "^7.0.1",
+    "execa": "^7.1.1",
+    "stream-to-string": "^1.2.1",
+    "temp": "^0.9.4"
+  },
+  "optionalDependencies": {
+    "@cargo-messages/android-arm-eabi": "0.0.76",
+    "@cargo-messages/darwin-arm64": "0.0.76",
+    "@cargo-messages/darwin-x64": "0.0.76",
+    "@cargo-messages/linux-arm-gnueabihf": "0.0.76",
+    "@cargo-messages/linux-x64-gnu": "0.0.76",
+    "@cargo-messages/win32-arm64-msvc": "0.0.76",
+    "@cargo-messages/win32-x64-msvc": "0.0.76"
+  }
+}

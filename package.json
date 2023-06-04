@@ -6,6 +6,7 @@
   "workspaces": [
     "pkgs/cargo-messages",
     "pkgs/cli",
+    "pkgs/cli-dev",
     "pkgs/load"
   ],
   "scripts": {

@@ -110,6 +110,6 @@ jobs:
         run: |
           npm install
           npm run bundle
-          cd bundle
+          cd ../cli
           npm publish --access public
-        working-directory: ./pkgs/cli
+        working-directory: ./pkgs/cli-dev

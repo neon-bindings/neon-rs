@@ -1,31 +1,17 @@
 {
-  "name": "@neon-rs/cli-source",
-  "private": true,
+  "name": "@neon-rs/cli",
   "version": "0.0.77",
   "description": "Command-line build tool for Neon modules.",
   "type": "module",
-  "exports": "./dist/src/index.js",
-  "types": "types/index.d.ts",
+  "exports": "./index.js",
   "files": [
-    "data/**/*",
-    "dist/**/*",
-    "types/**/*",
-    "LICENSE*"
+    "LICENSE*",
+    "index.js"
   ],
   "bin": {
-    "neon": "dist/src/index.js"
+    "neon": "./index.js"
   },
-  "scripts": {
-    "prebundle": "rm -rf bundle",
-    "bundle": "ncc build src/index.ts -o bundle",
-    "postbundle": "npm run bundle-assets && npm run bundle-manifest",
-    "bundle-assets": "cp README.md LICENSE* ./bundle",
-    "bundle-manifest": "cat package.json | jq -f bundle.jq > ./bundle/package.json",
-    "build": "tsc",
-    "pretest": "npm run build",
-    "prepack": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "author": "Dave Herman <david.herman@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dherman/neon-rs.git"
@@ -35,32 +21,11 @@
     "Rust",
     "Node"
   ],
-  "author": "Dave Herman <david.herman@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dherman/neon-rs/issues"
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
-  "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
-    "@types/command-line-args": "^5.2.0",
-    "@types/command-line-commands": "^2.0.1",
-    "@types/command-line-usage": "^5.0.2",
-    "@types/node": "^18.15.11",
-    "@types/temp": "^0.9.1",
-    "@vercel/ncc": "^0.36.1",
-    "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "cargo-messages": "^0.0.73",
-    "chalk": "^5.2.0",
-    "command-line-args": "^5.2.1",
-    "command-line-commands": "^3.0.2",
-    "command-line-usage": "^7.0.1",
-    "execa": "^7.1.1",
-    "stream-to-string": "^1.2.1",
-    "temp": "^0.9.4"
-  },
   "optionalDependencies": {
     "@cargo-messages/android-arm-eabi": "0.0.76",
     "@cargo-messages/darwin-arm64": "0.0.76",
