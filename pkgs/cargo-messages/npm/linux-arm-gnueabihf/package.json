@@ -1,0 +1,38 @@
+{
+  "name": "@cargo-messages/linux-arm-gnueabihf",
+  "description": "Prebuilt binary package for `cargo-messages` on `linux-arm-gnueabihf`.",
+  "version": "0.0.79",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm"
+  ],
+  "main": "index.node",
+  "files": [
+    "index.node"
+  ],
+  "author": "David Herman <david.herman@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherman/neon-rs.git"
+  },
+  "keywords": [
+    "Rust",
+    "Neon"
+  ],
+  "bugs": {
+    "url": "https://github.com/dherman/neon-rs/issues"
+  },
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "license": "MIT",
+  "neon": {
+    "binary": {
+      "rust": "armv7-unknown-linux-gnueabihf",
+      "node": "linux-arm-gnueabihf",
+      "platform": "linux",
+      "arch": "arm",
+      "abi": "gnueabihf"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@cargo-messages/win32-arm64-msvc",
+  "description": "Prebuilt binary package for `cargo-messages` on `win32-arm64-msvc`.",
+  "version": "0.0.79",
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "index.node",
+  "files": [
+    "index.node"
+  ],
+  "author": "David Herman <david.herman@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherman/neon-rs.git"
+  },
+  "keywords": [
+    "Rust",
+    "Neon"
+  ],
+  "bugs": {
+    "url": "https://github.com/dherman/neon-rs/issues"
+  },
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "license": "MIT",
+  "neon": {
+    "binary": {
+      "rust": "aarch64-pc-windows-msvc",
+      "node": "win32-arm64-msvc",
+      "platform": "win32",
+      "arch": "arm64",
+      "abi": "msvc"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@cargo-messages/linux-x64-gnu",
+  "description": "Prebuilt binary package for `cargo-messages` on `linux-x64-gnu`.",
+  "version": "0.0.79",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "index.node",
+  "files": [
+    "index.node"
+  ],
+  "author": "David Herman <david.herman@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherman/neon-rs.git"
+  },
+  "keywords": [
+    "Rust",
+    "Neon"
+  ],
+  "bugs": {
+    "url": "https://github.com/dherman/neon-rs/issues"
+  },
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "license": "MIT",
+  "neon": {
+    "binary": {
+      "rust": "x86_64-unknown-linux-gnu",
+      "node": "linux-x64-gnu",
+      "platform": "linux",
+      "arch": "x64",
+      "abi": "gnu"
+    }
+  }
+}

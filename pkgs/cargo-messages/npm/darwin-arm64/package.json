@@ -1,0 +1,38 @@
+{
+  "name": "@cargo-messages/darwin-arm64",
+  "description": "Prebuilt binary package for `cargo-messages` on `darwin-arm64`.",
+  "version": "0.0.79",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "index.node",
+  "files": [
+    "index.node"
+  ],
+  "author": "David Herman <david.herman@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherman/neon-rs.git"
+  },
+  "keywords": [
+    "Rust",
+    "Neon"
+  ],
+  "bugs": {
+    "url": "https://github.com/dherman/neon-rs/issues"
+  },
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "license": "MIT",
+  "neon": {
+    "binary": {
+      "rust": "aarch64-apple-darwin",
+      "node": "darwin-arm64",
+      "platform": "darwin",
+      "arch": "arm64",
+      "abi": null
+    }
+  }
+}
