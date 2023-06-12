@@ -1,7 +1,7 @@
 {
   "name": "cargo-messages",
   "private": false,
-  "version": "0.0.78",
+  "version": "0.0.79",
   "description": "A streaming reader for JSON messages emitted from Cargo.",
   "type": "module",
   "exports": {
