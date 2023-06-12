@@ -5,6 +5,13 @@
   "description": "@neon-rs workspace root",
   "workspaces": [
     "pkgs/cargo-messages",
+    "pkgs/cargo-messages/npm/android-arm-eabi",
+    "pkgs/cargo-messages/npm/darwin-arm64",
+    "pkgs/cargo-messages/npm/darwin-x64",
+    "pkgs/cargo-messages/npm/linux-arm-gnueabihf",
+    "pkgs/cargo-messages/npm/linux-x64-gnu",
+    "pkgs/cargo-messages/npm/win32-arm64-msvc",
+    "pkgs/cargo-messages/npm/win32-x64-msvc",
     "pkgs/cli",
     "pkgs/cli-dev",
     "pkgs/load"
