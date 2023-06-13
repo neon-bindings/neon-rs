@@ -53,5 +53,16 @@
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "dependencies": {
     "@neon-rs/load": "^0.0.70"
+  },
+  "neon": {
+    "targets": {
+      "x86_64-pc-windows-msvc": "@cargo-messages/win32-x64-msvc",
+      "aarch64-pc-windows-msvc": "@cargo-messages/win32-arm64-msvc",
+      "x86_64-apple-darwin": "@cargo-messages/darwin-x64",
+      "aarch64-apple-darwin": "@cargo-messages/darwin-arm64",
+      "x86_64-unknown-linux-gnu": "@cargo-messages/linux-x64-gnu",
+      "armv7-unknown-linux-gnueabihf": "@cargo-messages/linux-arm-gnueabihf",
+      "armv7-linux-androideabi": "@cargo-messages/android-arm-eabi"
+    }
   }
 }
