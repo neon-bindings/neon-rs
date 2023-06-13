@@ -32,7 +32,7 @@
     "cross": "cross build --message-format=json --release | neon dist -m /target",
     "pack-build": "neon pack-build",
     "prepack": "neon install-builds",
-    "version": "cd npm && for p in \"npm/*\"; do; cd \"$p\"; npm version \"$npm_package_version\" --force; cd ..; done"
+    "version": "cd npm && for p in \"npm/*\"; do cd \"$p\"; npm version \"$npm_package_version\" --force; cd ..; done"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
