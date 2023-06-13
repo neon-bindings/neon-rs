@@ -37,7 +37,7 @@
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.78"
+    "@neon-rs/cli": "^0.0.25"
   },
   "repository": {
     "type": "git",
