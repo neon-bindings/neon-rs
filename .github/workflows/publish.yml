@@ -27,16 +27,17 @@ jobs:
     name: Builds (macOS)
     strategy:
       matrix:
-        target: [darwin-arm64, darwin-x64]
+        target: [x86_64-apple-darwin, aarch64-apple-darwin]
+        #target: [darwin-arm64, darwin-x64]
     runs-on: macos-latest
     permissions:
       contents: write
     steps:
       - name: Build
-        uses: neon-actions/build@v0.1.1
+        uses: neon-actions/build@v0.1
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: npm/${{ matrix.target }}
+          target: ${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           npm-publish: false
           github-release: true
@@ -45,16 +46,17 @@ jobs:
     name: Builds (Windows)
     strategy:
       matrix:
-        target: [win32-x64-msvc, win32-arm64-msvc]
+        target: [x86_64-pc-windows-msvc, aarch64-pc-windows-msvc]
+        #target: [win32-x64-msvc, win32-arm64-msvc]
     runs-on: windows-latest
     permissions:
       contents: write
     steps:
       - name: Build
-        uses: neon-actions/build@v0.1.1
+        uses: neon-actions/build@v0.1
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: npm/${{ matrix.target }}
+          target: ${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           npm-publish: false
           github-release: true
@@ -63,16 +65,17 @@ jobs:
     name: Builds (other platforms)
     strategy:
       matrix:
-        target: [linux-arm-gnueabihf, linux-x64-gnu, android-arm-eabi]
+        target: [x86_64-unknown-linux-gnu, armv7-unknown-linux-gnueabihf, armv7-linux-androideabi]
+        #target: [linux-arm-gnueabihf, linux-x64-gnu, android-arm-eabi]
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - name: Build
-        uses: neon-actions/build@v0.1.1
+        uses: neon-actions/build@v0.1
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: npm/${{ matrix.target }}
+          target: ${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           use-cross: true
           npm-publish: false
