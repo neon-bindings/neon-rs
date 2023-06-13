@@ -1,7 +1,7 @@
 {
   "name": "neon-rs",
   "private": true,
-  "version": "0.0.90",
+  "version": "0.0.91",
   "description": "@neon-rs workspace root",
   "workspaces": [
     "pkgs/cargo-messages",
