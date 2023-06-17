@@ -29,6 +29,7 @@
     "test": "cargo test",
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist",
+    "precross": "cat node_modules/@neon-rs/cli/package.json || echo no local cli package",
     "cross": "cross build --message-format=json --release | neon dist -m /target",
     "pack-build": "neon pack-build",
     "prepack": "neon install-builds",
