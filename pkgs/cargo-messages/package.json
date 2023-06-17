@@ -36,7 +36,8 @@
     "postevil-patch-76:x86_64-unknown-linux-gnu": "head -10 node_modules/@neon-rs/cli/index.js",
     "postevil-patch-76:armv7-unknown-linux-gnueabihf": "head -10 node_modules/@neon-rs/cli/index.js",
     "postevil-patch-76:armv7-linux-androideabi": "neon help",
-    "cross": "cross build --message-format=json --release | neon dist -m /target",
+    "cross": "cross build --message-format=json --release > cross.log",
+    "postcross": "cat cross.log && (cat cross.log | neon dist -m /target)",
     "pack-build": "neon pack-build",
     "prepack": "neon install-builds",
     "version": "cd npm; for p in *; do cd $p; npm version $npm_package_version --force; cd ..; done"
