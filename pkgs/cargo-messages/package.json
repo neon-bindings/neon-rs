@@ -30,7 +30,7 @@
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist",
     "precross": "cat node_modules/@neon-rs/cli/package.json && npm run evil-patch-76",
-    "evil-patch-76": "cat node_modules/@neon-rs/cli/index.js | sed -e 's/require(__nccwpck_require.*\"index.node\")/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > node_modules/@neon-rs/cli/index.js.tmp && mv node_modules/@neon-rs/cli/index.js.tmp node_modules/@neon-rs/cli/index.js && chmod 755 node_modules/@neon-rs/cli/index.js",
+    "evil-patch-76": "cat node_modules/@neon-rs/cli/index.js | sed -e 's/require(__nccwpck_require.*\"index.node\")/eval(\"require\")(\"@cargo-messages\\/armv7-unknown-linux-gnueabihf\")/' > node_modules/@neon-rs/cli/index.js.tmp && mv node_modules/@neon-rs/cli/index.js.tmp node_modules/@neon-rs/cli/index.js && chmod 755 node_modules/@neon-rs/cli/index.js",
     "postevil-patch-76": "head -10 node_modules/@neon-rs/cli/index.js",
     "cross": "cross build --message-format=json --release | neon dist -m /target",
     "pack-build": "neon pack-build",
