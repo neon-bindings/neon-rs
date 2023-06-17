@@ -8,6 +8,7 @@ on:
   push:
     tags:
       - v*
+      - DRYRUN*
 
 jobs:
   pack:
@@ -88,7 +89,11 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Get Tag Name
+        uses: olegtarasov/get-tag@v2.1.2
+        id: tagName
       - name: Publish (cargo-messages)
+        if: ${{ !contains(steps.tagName.outputs.tag, 'DRYRUN') }}
         uses: neon-actions/publish@v0.2
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -98,6 +103,7 @@ jobs:
           registry-url: ${{ env.NPM_REGISTRY }}
           github-release: "*.tgz"
       - name: Publish (@neon-rs/load)
+        if: ${{ !contains(steps.tagName.outputs.tag, 'DRYRUN') }}
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -107,6 +113,7 @@ jobs:
           npm publish --access public
         working-directory: ./pkgs/load
       - name: Publish (@neon-rs/cli)
+        if: ${{ !contains(steps.tagName.outputs.tag, 'DRYRUN') }}
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
