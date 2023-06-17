@@ -12,6 +12,6 @@
   "scripts": {
     "version": "npm version $npm_package_version --workspaces && git add **/package.json **/package-lock.json",
     "release": "npm version patch -m 'v%s' && git push --follow-tags",
-    "dryrun": "git tag -a DRYRUN:$(date -Ins) -m 'publish dry-run' && git push --follow-tags"
+    "dryrun": "git tag -a DRYRUN.$(date +%Y-%m-%d.%H.%M.%S) -m 'publish dry-run' && git push --follow-tags"
   }
 }
