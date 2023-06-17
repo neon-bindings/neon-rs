@@ -16,7 +16,7 @@
     "neon": "dist/src/index.js"
   },
   "scripts": {
-    "bundle": "ncc build src/index.ts -o ../cli",
+    "bundle": "ncc build -e @cargo-messages/linux-x64-gnu src/index.ts -o ../cli",
     "postbundle": "npm run bundle-assets && npm run bundle-manifest",
     "bundle-assets": "cp README.md LICENSE* ../cli",
     "bundle-manifest": "cat package.json | jq -f bundle.jq > ../cli/package.json",
