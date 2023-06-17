@@ -30,7 +30,7 @@
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist",
     "precross": "cat node_modules/@neon-rs/cli/package.json && npm run evil-patch-76",
-    "evil-patch-76": "grep 'require(__nccwpck_require__.*+ \"index.node\")' node_modules/@neon-rs/cli/index.js | sed -e 's/require(.*)/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > node_modules/@neon-rs/cli/index.js.tmp && mv node_modules/@neon-rs/cli/index.js.tmp neon_modeules/@neon-rs/cli/index.js",
+    "evil-patch-76": "grep 'require(__nccwpck_require__.*+ \"index.node\")' node_modules/@neon-rs/cli/index.js | sed -e 's/require(.*)/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > node_modules/@neon-rs/cli/index.js.tmp && mv node_modules/@neon-rs/cli/index.js.tmp neon_modules/@neon-rs/cli/index.js",
     "cross": "cross build --message-format=json --release | neon dist -m /target",
     "pack-build": "neon pack-build",
     "prepack": "neon install-builds",
