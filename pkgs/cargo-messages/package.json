@@ -29,13 +29,7 @@
     "test": "cargo test",
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist",
-    "precross": "cat node_modules/@neon-rs/cli/package.json && npm run evil-patch-76:$CARGO_BUILD_TARGET",
-    "evil-patch-76:x86_64-unknown-linux-gnu": "cat node_modules/@neon-rs/cli/index.js | sed -e 's/require(__nccwpck_require.*\"index.node\")/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > node_modules/@neon-rs/cli/index.js.tmp && mv node_modules/@neon-rs/cli/index.js.tmp node_modules/@neon-rs/cli/index.js && chmod 755 node_modules/@neon-rs/cli/index.js",
-    "evil-patch-76:armv7-unknown-linux-gnueabihf": "cat node_modules/@neon-rs/cli/index.js | sed -e 's/require(__nccwpck_require.*\"index.node\")/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > node_modules/@neon-rs/cli/index.js.tmp && mv node_modules/@neon-rs/cli/index.js.tmp node_modules/@neon-rs/cli/index.js && chmod 755 node_modules/@neon-rs/cli/index.js",
-    "evil-patch-76:armv7-linux-androideabi": "cat node_modules/@neon-rs/cli/index.js | sed -e 's/require(__nccwpck_require.*\"index.node\")/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > node_modules/@neon-rs/cli/index.js.tmp && mv node_modules/@neon-rs/cli/index.js.tmp node_modules/@neon-rs/cli/index.js && chmod 755 node_modules/@neon-rs/cli/index.js",
-    "postevil-patch-76:x86_64-unknown-linux-gnu": "head -10 node_modules/@neon-rs/cli/index.js",
-    "postevil-patch-76:armv7-unknown-linux-gnueabihf": "head -10 node_modules/@neon-rs/cli/index.js",
-    "postevil-patch-76:armv7-linux-androideabi": "neon help",
+    "precross": "cat node_modules/@neon-rs/cli/package.json && head -10 node_modules/@neon-rs/cli/index.js",
     "cross": "cross build --message-format=json --release > cross.log",
     "postcross": "cat cross.log && (cat cross.log | neon dist -m /target)",
     "pack-build": "neon pack-build",
@@ -45,7 +39,7 @@
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.76"
+    "@neon-rs/cli": "^0.0.115"
   },
   "repository": {
     "type": "git",
