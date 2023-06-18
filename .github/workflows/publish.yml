@@ -11,8 +11,32 @@ on:
       - DRYRUN*
 
 jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      action: ${{ steps.action.outputs.type }}
+    steps:
+      - name: Get Tag Name
+        uses: olegtarasov/get-tag@v2.1.2
+        id: tagName
+      - id: action
+        name: Determine Action Type
+        shell: bash
+        run: |
+          echo ${{ contains(steps.tagName.outputs.tag, 'DRYRUN') }}
+          if [[ ${{ contains(steps.tagName.outputs.tag, 'DRYRUN') }} == true ]]
+          then
+            echo type=dryrun
+            echo "type=dryrun" >> "$GITHUB_OUTPUT"
+          else
+            echo type=publish
+            echo "type=publish" >> "$GITHUB_OUTPUT"
+          fi
+
   pack:
     name: Pack (cargo-messages)
+    needs: [setup]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,10 +46,11 @@ jobs:
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
-          github-release: true
+          github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   macos-builds:
     name: Builds (macOS)
+    needs: [setup]
     strategy:
       matrix:
         target: [x86_64-apple-darwin, aarch64-apple-darwin]
@@ -41,10 +66,11 @@ jobs:
           target: ${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           npm-publish: false
-          github-release: true
+          github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   windows-builds:
     name: Builds (Windows)
+    needs: [setup]
     strategy:
       matrix:
         target: [x86_64-pc-windows-msvc, aarch64-pc-windows-msvc]
@@ -60,10 +86,11 @@ jobs:
           target: ${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           npm-publish: false
-          github-release: true
+          github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   other-builds:
     name: Builds (other platforms)
+    needs: [setup]
     strategy:
       matrix:
         target: [x86_64-unknown-linux-gnu, armv7-unknown-linux-gnueabihf, armv7-linux-androideabi]
@@ -80,11 +107,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           use-cross: true
           npm-publish: false
-          github-release: true
+          github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   publish:
     name: Publish
-    needs: [pack, macos-builds, windows-builds, other-builds]
+    needs: [setup, pack, macos-builds, windows-builds, other-builds]
+    if: ${{ needs.setup.outputs.action == 'publish' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
