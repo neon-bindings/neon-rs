@@ -116,9 +116,6 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Get Tag Name
-        uses: olegtarasov/get-tag@v2.1.2
-        id: tagName
       - name: Publish (cargo-messages)
         uses: neon-actions/publish@v0.2
         env:
