@@ -29,7 +29,7 @@
     "test": "cargo test",
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist",
-    "precross": "ls node_modules && ls node_modules/@neon-rs && ls node_modules/@neon-rs/cli && cat node_modules/@neon-rs/cli/package.json && head -10 node_modules/@neon-rs/cli/index.js",
+    "precross": "npm explain @neon-rs/cli && ls ../../node_modules/@neon-rs cat ../../node_modules/@neon-rs/cli/package.json && head -10 ../../node_modules/@neon-rs/cli/index.js",
     "cross": "cross build --message-format=json --release > cross.log",
     "postcross": "cat cross.log && (cat cross.log | neon dist -m /target)",
     "pack-build": "neon pack-build",
