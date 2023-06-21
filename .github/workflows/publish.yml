@@ -58,8 +58,14 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Bump Version (dry-run only)
+        if: ${{ needs.setup.outputs.action == 'dryrun' }}
+        shell: bash
+        run: npm version patch -m 'dryrun'
       - name: Build
-        uses: neon-actions/build@v0.1
+        uses: neon-actions/build@v0.2
         with:
           working-directory: ./pkgs/cargo-messages
           target: ${{ matrix.target }}
@@ -78,8 +84,14 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Bump Version (dry-run only)
+        if: ${{ needs.setup.outputs.action == 'dryrun' }}
+        shell: bash
+        run: npm version patch -m 'dryrun'
       - name: Build
-        uses: neon-actions/build@v0.1
+        uses: neon-actions/build@v0.2
         with:
           working-directory: ./pkgs/cargo-messages
           target: ${{ matrix.target }}
@@ -98,8 +110,14 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Bump Version (dry-run only)
+        if: ${{ needs.setup.outputs.action == 'dryrun' }}
+        shell: bash
+        run: npm version patch -m 'dryrun'
       - name: Build
-        uses: neon-actions/build@v0.1
+        uses: neon-actions/build@v0.2
         with:
           working-directory: ./pkgs/cargo-messages
           target: ${{ matrix.target }}
@@ -116,8 +134,10 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
       - name: Publish (cargo-messages)
-        uses: neon-actions/publish@v0.2
+        uses: neon-actions/publish@v0.3
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
