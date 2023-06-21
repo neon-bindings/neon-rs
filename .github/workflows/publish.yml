@@ -63,7 +63,7 @@ jobs:
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm version patch -m 'dryrun'
+        run: npm install && npm version patch -m 'dryrun'
       - name: Build
         uses: neon-actions/build@v0.2
         with:
@@ -89,7 +89,7 @@ jobs:
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm version patch -m 'dryrun'
+        run: npm install && npm version patch -m 'dryrun'
       - name: Build
         uses: neon-actions/build@v0.2
         with:
@@ -115,7 +115,7 @@ jobs:
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm version patch -m 'dryrun'
+        run: npm install && npm version patch -m 'dryrun'
       - name: Build
         uses: neon-actions/build@v0.2
         with:
