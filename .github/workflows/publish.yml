@@ -63,7 +63,7 @@ jobs:
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm install
+        run: ls node_modules/@neon-rs/cli-dev && npm install
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
@@ -93,7 +93,7 @@ jobs:
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm install
+        run: ls node_modules/@neon-rs/cli-dev && npm install
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
@@ -123,7 +123,7 @@ jobs:
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm install
+        run: ls node_modules/@neon-rs/cli-dev && npm install
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
