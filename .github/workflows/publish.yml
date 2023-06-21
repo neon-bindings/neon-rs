@@ -63,11 +63,11 @@ jobs:
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm run setup
+        run: npm run setup && git status
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm version patch -m 'dryrun'
+        run: npm version patch -m 'dryrun' && git status
       - name: Build
         uses: neon-actions/build@v0.2
         with:
@@ -93,11 +93,11 @@ jobs:
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm run setup
+        run: npm run setup && git status
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm version patch -m 'dryrun'
+        run: npm version patch -m 'dryrun' && git status
       - name: Build
         uses: neon-actions/build@v0.2
         with:
@@ -123,11 +123,11 @@ jobs:
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm run setup
+        run: npm run setup && git status
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm version patch -m 'dryrun'
+        run: npm version patch -m 'dryrun' && git status
       - name: Build
         uses: neon-actions/build@v0.2
         with:
