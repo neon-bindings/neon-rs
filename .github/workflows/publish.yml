@@ -60,6 +60,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
@@ -90,6 +92,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
@@ -120,6 +124,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
