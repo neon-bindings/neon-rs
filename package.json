@@ -4,10 +4,10 @@
   "version": "0.0.115",
   "description": "@neon-rs workspace root",
   "workspaces": [
-    "pkgs/cargo-messages",
+    "pkgs/load",
     "pkgs/cli",
-    "pkgs/cli-dev",
-    "pkgs/load"
+    "pkgs/cargo-messages",
+    "pkgs/cli-dev"
   ],
   "scripts": {
     "version": "npm version $npm_package_version --workspaces && git add **/package.json **/package-lock.json",
