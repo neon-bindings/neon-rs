@@ -60,10 +60,14 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Install (dry-run only)
+        if: ${{ needs.setup.outputs.action == 'dryrun' }}
+        shell: bash
+        run: npm install
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm install && npm version patch -m 'dryrun'
+        run: npm version patch -m 'dryrun'
       - name: Build
         uses: neon-actions/build@v0.2
         with:
@@ -86,10 +90,14 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Install (dry-run only)
+        if: ${{ needs.setup.outputs.action == 'dryrun' }}
+        shell: bash
+        run: npm install
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm install && npm version patch -m 'dryrun'
+        run: npm version patch -m 'dryrun'
       - name: Build
         uses: neon-actions/build@v0.2
         with:
@@ -112,10 +120,14 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Install (dry-run only)
+        if: ${{ needs.setup.outputs.action == 'dryrun' }}
+        shell: bash
+        run: npm install
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
-        run: npm install && npm version patch -m 'dryrun'
+        run: npm version patch -m 'dryrun'
       - name: Build
         uses: neon-actions/build@v0.2
         with:
