@@ -112,7 +112,7 @@ jobs:
           git branch -a
           echo GIT STATUS:
           git status
-        - name: Install (dry-run only)
+      - name: Install (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
         run: git branch -a && git status && npm run setup && git branch -a && git status
