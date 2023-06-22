@@ -36,7 +36,7 @@
     "prepack": "neon install-builds",
     "version": "cross-os version",
     "version:unix": "cd npm; for p in *; do cd $p; npm version $npm_package_version --force; cd ..; done",
-    "version:windows": "cd npm && for /D %%p in (\"*\") do cmd /C \"cd %p && npm version %npm_package_version% --force && cd ..\""
+    "version:windows": "cd npm && for /D %p in (\"*\") do cmd /C \"cd %p && npm version %npm_package_version% --force && cd ..\""
   },
   "cross-os": {
     "version": {
