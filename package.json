@@ -12,7 +12,7 @@
     "setup": "npm i --workspaces && (cd pkgs/cli-dev && npm i)",
     "version": "cross-os version",
     "version:unix": "npm version $npm_package_version --workspaces && (cd pkgs/cli-dev && npm version $npm_package_version) && git add .",
-    "version:windows": "npm version %npm_package_version% --workspaces && cd pkgs && cd cli-dev && npm version %npm_package_version && cd .. && cd .. && git add .",
+    "version:windows": "npm version %npm_package_version% --workspaces && cd pkgs && cd cli-dev && npm version %npm_package_version% && cd .. && cd .. && git add .",
     "release": "npm version patch -m 'v%s' && git push --follow-tags",
     "dryrun": "(export TAGNAME=DRYRUN.$(date +%Y-%m-%d.%H.%M.%S); echo $TAGNAME >> .logs/dryruns.log && git add .logs/dryruns.log && git commit -m $TAGNAME && git tag -a $TAGNAME -m 'publish dry-run' && git push --follow-tags)"
   },
