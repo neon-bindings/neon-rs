@@ -9,7 +9,7 @@
     "pkgs/cargo-messages"
   ],
   "scripts": {
-    "setup": "npm i --workspace && (cd pkgs/cli-dev && npm i)",
+    "setup": "npm i --workspaces && (cd pkgs/cli-dev && npm i)",
     "version": "npm version $npm_package_version --workspaces && (cd pkgs/cli-dev && npm version $npm_package_version) && git add **/package.json **/package-lock.json",
     "release": "npm version patch -m 'v%s' && git push --follow-tags",
     "dryrun": "(export TAGNAME=DRYRUN.$(date +%Y-%m-%d.%H.%M.%S); echo $TAGNAME >> .logs/dryruns.log && git add .logs/dryruns.log && git commit -m $TAGNAME && git tag -a $TAGNAME -m 'publish dry-run' && git push --follow-tags)"
