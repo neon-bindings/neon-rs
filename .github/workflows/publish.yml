@@ -148,12 +148,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set Default Branch
-        shell: bash
-        run: git remote set-head origin main && git checkout main
       - name: Diagnostics
         shell: bash
         run: |
+          git checkout main
           echo REF: ${{ github.ref_name }}
           echo BRANCHES:
           git branch -a
