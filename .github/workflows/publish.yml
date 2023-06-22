@@ -58,11 +58,11 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Set Default Branch
+        shell: bash
+        run: git remote set-head origin --auto
       - name: Checkout Code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref_name }}
-          fetch-depth: 0
       - name: Diagnostics
         shell: bash
         run: |
@@ -99,11 +99,11 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Set Default Branch
+        shell: bash
+        run: git remote set-head origin --auto
       - name: Checkout Code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref_name }}
-          fetch-depth: 0
       - name: Diagnostics
         shell: bash
         run: |
@@ -140,11 +140,11 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Set Default Branch
+        shell: bash
+        run: git remote set-head origin --auto
       - name: Checkout Code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref_name }}
-          fetch-depth: 0
       - name: Diagnostics
         shell: bash
         run: |
