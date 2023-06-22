@@ -69,6 +69,8 @@ jobs:
           git checkout main
           npm run setup
           if [[ $(git diff --stat) != '' ]]; then
+            git config --global user.email 'ci@neon-bindings.com'
+            git config --global user.name 'Neon CI'
             git commit -a -m 'updated lockfile after setup'
           fi
           git branch -a
@@ -107,6 +109,8 @@ jobs:
           git checkout main
           npm run setup
           if [[ $(git diff --stat) != '' ]]; then
+            git config --global user.email 'ci@neon-bindings.com'
+            git config --global user.name 'Neon CI'
             git commit -a -m 'updated lockfile after setup'
           fi
           git branch -a
@@ -145,6 +149,8 @@ jobs:
           git checkout main
           npm run setup
           if [[ $(git diff --stat) != '' ]]; then
+            git config --global user.email 'ci@neon-bindings.com'
+            git config --global user.name 'Neon CI'
             git commit -a -m 'updated lockfile after setup'
           fi
           git branch -a
