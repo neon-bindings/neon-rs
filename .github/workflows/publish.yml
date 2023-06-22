@@ -62,22 +62,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install (dry-run only)
+      - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
         run: |
           git checkout main
+          git config --global user.email 'ci@neon-bindings.com'
+          git config --global user.name 'Neon CI'
           npm run setup
           if [[ $(git diff --stat) != '' ]]; then
-            git config --global user.email 'ci@neon-bindings.com'
-            git config --global user.name 'Neon CI'
             git commit -a -m 'updated lockfile after setup'
           fi
           git branch -a
-      - name: Bump Version (dry-run only)
-        if: ${{ needs.setup.outputs.action == 'dryrun' }}
-        shell: bash
-        run: npm version patch -m 'dryrun' && git branch -a && git status
+          npm version patch -m 'dryrun'
+          git branch -a
+          git status
       - name: Build
         uses: neon-actions/build@v0.2
         with:
@@ -102,22 +101,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install (dry-run only)
+      - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
         run: |
           git checkout main
+          git config --global user.email 'ci@neon-bindings.com'
+          git config --global user.name 'Neon CI'
           npm run setup
           if [[ $(git diff --stat) != '' ]]; then
-            git config --global user.email 'ci@neon-bindings.com'
-            git config --global user.name 'Neon CI'
             git commit -a -m 'updated lockfile after setup'
           fi
           git branch -a
-      - name: Bump Version (dry-run only)
-        if: ${{ needs.setup.outputs.action == 'dryrun' }}
-        shell: bash
-        run: npm version patch -m 'dryrun' && git branch -a && git status
+          npm version patch -m 'dryrun'
+          git branch -a
+          git status
       - name: Build
         uses: neon-actions/build@v0.2
         with:
@@ -142,22 +140,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install (dry-run only)
+      - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
         run: |
           git checkout main
+          git config --global user.email 'ci@neon-bindings.com'
+          git config --global user.name 'Neon CI'
           npm run setup
           if [[ $(git diff --stat) != '' ]]; then
-            git config --global user.email 'ci@neon-bindings.com'
-            git config --global user.name 'Neon CI'
             git commit -a -m 'updated lockfile after setup'
           fi
           git branch -a
-      - name: Bump Version (dry-run only)
-        if: ${{ needs.setup.outputs.action == 'dryrun' }}
-        shell: bash
-        run: npm version patch -m 'dryrun' && git branch -a && git status
+          npm version patch -m 'dryrun'
+          git branch -a
+          git status
       - name: Build
         uses: neon-actions/build@v0.2
         with:
