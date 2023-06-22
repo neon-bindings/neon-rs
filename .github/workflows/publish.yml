@@ -64,7 +64,7 @@ jobs:
           fetch-depth: 0
       - name: Set Default Branch
         shell: bash
-        run: git remote set-head origin main
+        run: git remote set-head origin main && git checkout main
       - name: Diagnostics
         shell: bash
         run: |
@@ -107,7 +107,7 @@ jobs:
           fetch-depth: 0
       - name: Set Default Branch
         shell: bash
-        run: git remote set-head origin main
+        run: git remote set-head origin main && git checkout main
       - name: Diagnostics
         shell: bash
         run: |
@@ -150,7 +150,7 @@ jobs:
           fetch-depth: 0
       - name: Set Default Branch
         shell: bash
-        run: git remote set-head origin main
+        run: git remote set-head origin main && git checkout main
       - name: Diagnostics
         shell: bash
         run: |
