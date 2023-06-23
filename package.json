@@ -1,7 +1,7 @@
 {
   "name": "neon-rs",
   "private": true,
-  "version": "0.0.115",
+  "version": "0.0.116",
   "description": "@neon-rs workspace root",
   "workspaces": [
     "pkgs/load",
