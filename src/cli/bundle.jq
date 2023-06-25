@@ -1,5 +1,5 @@
 {
-  name: "@neon-rs/cli",
+  name: .name,
   version: .version,
   description: .description,
   type: .type,

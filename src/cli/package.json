@@ -1,5 +1,5 @@
 {
-  "name": "@neon-rs/cli-dev",
+  "name": "@neon-rs/cli",
   "private": true,
   "version": "0.0.117",
   "description": "Command-line build tool for Neon modules.",
@@ -16,14 +16,14 @@
     "neon": "dist/src/index.js"
   },
   "scripts": {
-    "bundle": "ncc build src/index.ts -o ../cli",
+    "bundle": "ncc build src/index.ts -o ../../pkgs/cli",
     "postbundle": "npm run evil-patch && npm run bundle-assets && npm run bundle-manifest",
-    "debug-bundle": "(echo === BEGIN BUNDLE ===) && cat ../cli/index.js && (echo === END BUNDLE ===)",
+    "debug-bundle": "(echo === BEGIN BUNDLE ===) && cat ../../pkgs/cli/index.js && (echo === END BUNDLE ===)",
     "preevil-patch": "npm run debug-bundle",
-    "evil-patch": "cat ../cli/index.js | sed -e 's/require(__nccwpck_require.*\"index.node\")/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > ../cli/index.js.tmp && mv ../cli/index.js.tmp ../cli/index.js && chmod 755 ../cli/index.js",
+    "evil-patch": "cat ../../pkgs/cli/index.js | sed -e 's/require(__nccwpck_require.*\"index.node\")/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > ../../pkgs/cli/index.js.tmp && mv ../../pkgs/cli/index.js.tmp ../../pkgs/cli/index.js && chmod 755 ../../pkgs/cli/index.js",
     "postevil-patch": "npm run debug-bundle",
-    "bundle-assets": "cp README.md LICENSE* ../cli",
-    "bundle-manifest": "cat package.json | jq -f bundle.jq > ../cli/package.json",
+    "bundle-assets": "cp README.md LICENSE* ../../pkgs/cli",
+    "bundle-manifest": "cat package.json | jq -f bundle.jq > ../../pkgs/cli/package.json",
     "build": "tsc",
     "pretest": "npm run build",
     "prepack": "npm run build",
