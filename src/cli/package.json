@@ -17,11 +17,8 @@
   },
   "scripts": {
     "bundle": "ncc build src/index.ts -o ../../pkgs/cli",
-    "postbundle": "npm run evil-patch && npm run bundle-assets && npm run bundle-manifest",
+    "postbundle": "npm run debug-bundle && npm run bundle-assets && npm run bundle-manifest",
     "debug-bundle": "(echo === BEGIN BUNDLE ===) && cat ../../pkgs/cli/index.js && (echo === END BUNDLE ===)",
-    "preevil-patch": "npm run debug-bundle",
-    "evil-patch": "cat ../../pkgs/cli/index.js | sed -e 's/require(__nccwpck_require.*\"index.node\")/eval(\"require\")(\"@cargo-messages\\/linux-x64-gnu\")/' > ../../pkgs/cli/index.js.tmp && mv ../../pkgs/cli/index.js.tmp ../../pkgs/cli/index.js && chmod 755 ../../pkgs/cli/index.js",
-    "postevil-patch": "npm run debug-bundle",
     "bundle-assets": "cp README.md LICENSE* ../../pkgs/cli",
     "bundle-manifest": "cat package.json | jq -f bundle.jq > ../../pkgs/cli/package.json",
     "build": "tsc",
