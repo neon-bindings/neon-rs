@@ -5,8 +5,8 @@
   "description": "@neon-rs monorepo root",
   "workspaces": [],
   "scripts": {
-    "setup": "cd pkgs && npm i --workspaces && cd .. && cd src && cd cli && npm i",
-    "setup-bundle": "cd pkgs && npm i --workspaces && cd .. && cd src && cd cli && npm i --omit=optional",
+    "setup": "npm i && cd pkgs && npm i --workspaces && cd .. && cd src && cd cli && npm i",
+    "setup-bundle": "npm i && cd pkgs && npm i --workspaces && cd .. && cd src && cd cli && npm i --omit=optional",
     "version": "cross-os version",
     "version:unix": "(cd pkgs && npm version $npm_package_version --workspaces) && (cd src/cli && npm version $npm_package_version) && git add .",
     "version:windows": "cd pkgs && npm version %npm_package_version% --workspaces && cd .. && cd src && cd cli && npm version %npm_package_version% && cd .. && cd .. && git add .",
