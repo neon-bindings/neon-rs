@@ -1,20 +1,17 @@
 {
-  "name": "neon-rs",
+  "name": "pkgs",
   "private": true,
   "version": "0.0.117",
-  "description": "@neon-rs workspace root",
+  "description": "workspace root for all publishable @neon-rs and related packages",
   "workspaces": [
     "load",
     "cli",
     "cargo-messages"
   ],
   "scripts": {
-    "setup": "npm i --workspaces && (cd src/cli && npm i)",
     "version": "cross-os version",
     "version:unix": "npm version $npm_package_version --workspaces && (cd src/cli && npm version $npm_package_version) && git add .",
-    "version:windows": "npm version %npm_package_version% --workspaces && cd src && cd cli && npm version %npm_package_version% && cd .. && cd .. && git add .",
-    "release": "npm version patch -m 'v%s' && git push --follow-tags",
-    "dryrun": "(export TAGNAME=DRYRUN.$(date +%Y-%m-%d.%H.%M.%S); echo $TAGNAME >> .logs/dryruns.log && git add .logs/dryruns.log && git commit -m $TAGNAME && git tag -a $TAGNAME -m 'publish dry-run' && git push --follow-tags)"
+    "version:windows": "npm version %npm_package_version% --workspaces && cd src && cd cli && npm version %npm_package_version% && cd .. && cd .. && git add ."
   },
   "cross-os": {
     "version": {
@@ -22,8 +19,5 @@
       "linux": "npm run version:unix",
       "win32": "npm run version:windows"
     }
-  },
-  "devDependencies": {
-    "cross-os": "^1.5.0"
   }
 }
