@@ -4,9 +4,9 @@
   "version": "0.0.117",
   "description": "@neon-rs workspace root",
   "workspaces": [
-    "pkgs/load",
-    "pkgs/cli",
-    "pkgs/cargo-messages"
+    "load",
+    "cli",
+    "cargo-messages"
   ],
   "scripts": {
     "setup": "npm i --workspaces && (cd src/cli && npm i)",
