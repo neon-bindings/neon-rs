@@ -1,4 +1,5 @@
 import Dist from './commands/dist.js';
+import Bump from './commands/bump.js';
 import PackBuild from './commands/pack-build.js';
 import InstallBuilds from './commands/install-builds.js';
 import Help from './commands/help.js';
@@ -24,6 +25,7 @@ export type CommandDetail = {
 export enum CommandName {
   Help = 'help',
   Dist = 'dist',
+  Bump = 'bump',
   PackBuild = 'pack-build',
   InstallBuilds = 'install-builds'
 };
@@ -43,6 +45,7 @@ export function asCommandName(name: string): CommandName {
 const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Help]: Help,
   [CommandName.Dist]: Dist,
+  [CommandName.Bump]: Bump,
   [CommandName.PackBuild]: PackBuild,
   [CommandName.InstallBuilds]: InstallBuilds
 };
@@ -55,6 +58,7 @@ export function summaries(): CommandDetail[] {
   return [
     { name: CommandName.Help, summary: Help.summary() },
     { name: CommandName.Dist, summary: Dist.summary() },
+    { name: CommandName.Bump, summary: Bump.summary() },
     { name: CommandName.PackBuild, summary: PackBuild.summary() },
     { name: CommandName.InstallBuilds, summary: InstallBuilds.summary() }
   ];
