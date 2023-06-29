@@ -110,7 +110,7 @@ jobs:
           git checkout main
           git config --global user.email 'ci@neon-bindings.com'
           git config --global user.name 'Neon CI'
-          npm run setup
+          npm run setup-bundle
           if [[ $(git diff --stat) != '' ]]; then
             git commit -a -m 'updated lockfile after setup'
           fi
