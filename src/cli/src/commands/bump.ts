@@ -17,7 +17,7 @@ async function subdirs(dir: string): Promise<string[]> {
   let dirs = [];
 
   for (const entry of entries) {
-    if ((await fs.stat(entry)).isDirectory()) {
+    if ((await fs.stat(path.join(dir, entry))).isDirectory()) {
       dirs.push(entry);
     }
   }
