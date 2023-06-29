@@ -32,14 +32,12 @@
     "cross": "cross build --message-format=json --release > cross.log && cat cross.log | neon dist -m /target",
     "pack-build": "neon pack-build",
     "prepack": "neon install-builds",
-    "preversion": "npm explain @neon-rs/cli",
     "version": "neon bump -v --binaries npm"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.120",
-    "cross-os": "^1.5.0"
+    "@neon-rs/cli": "^0.0.120"
   },
   "repository": {
     "type": "git",
