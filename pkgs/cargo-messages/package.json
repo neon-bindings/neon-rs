@@ -32,7 +32,16 @@
     "cross": "cross build --message-format=json --release > cross.log && cat cross.log | neon dist -m /target",
     "pack-build": "neon pack-build",
     "prepack": "neon install-builds",
-    "version": "neon bump -v --binaries npm"
+    "version": "cross-os version",
+    "version:unix": "cd npm; for p in *; do cd $p; npm version $npm_package_version --force; cd ..; done",
+    "version:windows": "cd npm && for /D %p in (\"*\") do cmd /C \"cd %p && npm version %npm_package_version% --force && cd ..\""
+  },
+  "cross-os": {
+    "version": {
+      "darwin": "npm run version:unix",
+      "linux": "npm run version:unix",
+      "win32": "npm run version:windows"
+    }
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
