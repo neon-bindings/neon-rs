@@ -9,15 +9,9 @@
     "cargo-messages"
   ],
   "scripts": {
-    "version": "cross-os version",
-    "version:unix": "npm version $npm_package_version --workspaces",
-    "version:windows": "npm version %npm_package_version% --workspaces"
+    "version": "neon bump -v --workspaces"
   },
-  "cross-os": {
-    "version": {
-      "darwin": "npm run version:unix",
-      "linux": "npm run version:unix",
-      "win32": "npm run version:windows"
-    }
+  "devDependencies": {
+    "@neon-rs/cli": "^0.0.121"
   }
 }
