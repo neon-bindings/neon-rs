@@ -2,7 +2,129 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
-/***/ 3741:
+/***/ 4371:
+/***/ ((__unused_webpack_module, exports) => {
+
+var __webpack_unused_export__;
+
+__webpack_unused_export__ = ({ value: true });
+exports.Vo = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
+function currentTarget() {
+    let os = null;
+    switch (process.platform) {
+        case 'android':
+            switch (process.arch) {
+                case 'arm':
+                    return 'android-arm-eabi';
+                case 'arm64':
+                    return 'android-arm64';
+            }
+            os = 'Android';
+            break;
+        case 'win32':
+            switch (process.arch) {
+                case 'x64':
+                    return 'win32-x64-msvc';
+                case 'arm64':
+                    return 'win32-arm64-msvc';
+                case 'ia32':
+                    return 'win32-ia32-msvc';
+            }
+            os = 'Windows';
+            break;
+        case 'darwin':
+            switch (process.arch) {
+                case 'x64':
+                    return 'darwin-x64';
+                case 'arm64':
+                    return 'darwin-arm64';
+            }
+            os = 'macOS';
+            break;
+        case 'linux':
+            switch (process.arch) {
+                case 'x64':
+                case 'arm64':
+                    return isGlibc()
+                        ? `linux-${process.arch}-gnu`
+                        : `linux-${process.arch}-musl`;
+                case 'arm':
+                    return 'linux-arm-gnueabihf';
+            }
+            os = 'Linux';
+            break;
+        case 'freebsd':
+            if (process.arch === 'x64') {
+                return 'freebsd-x64';
+            }
+            os = 'FreeBSD';
+            break;
+    }
+    if (os) {
+        throw new Error(`Neon: unsupported ${os} architecture: ${process.arch}`);
+    }
+    throw new Error(`Neon: unsupported system: ${process.platform}`);
+}
+__webpack_unused_export__ = currentTarget;
+function isGlibc() {
+    // Cast to unknown to work around a bug in the type definition:
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/40140
+    const report = process.report?.getReport();
+    if ((typeof report !== 'object') || !report || (!('header' in report))) {
+        return false;
+    }
+    const header = report.header;
+    return (typeof header === 'object') &&
+        !!header &&
+        ('glibcVersionRuntime' in header);
+}
+// export function debug(...components: string[]) {
+//   if (components.length === 0 || !components[components.length - 1].endsWith(".node")) {
+//     components.push("index.node");
+//   }
+//   const pathSpec = path.join(...components);
+//   return fs.existsSync(pathSpec) ? require(pathSpec) : null;
+// }
+function* interleave(a1, a2) {
+    const length = Math.max(a1.length, a2.length);
+    for (let i = 0; i < length; i++) {
+        if (i < a1.length) {
+            yield a1[i];
+        }
+        if (i < a2.length) {
+            yield a2[i];
+        }
+    }
+}
+function bin(scope, ...rest) {
+    return [...interleave(scope, rest)].join("") + "/" + currentTarget();
+}
+__webpack_unused_export__ = bin;
+function lazy(loaders, exports) {
+    let loaded = null;
+    function load() {
+        if (loaded) {
+            return loaded;
+        }
+        const target = currentTarget();
+        if (!loaders.hasOwnProperty(target)) {
+            throw new Error(`no precompiled module found for ${target}`);
+        }
+        loaded = loaders[target]();
+        return loaded;
+    }
+    let module = {};
+    for (const key of exports) {
+        Object.defineProperty(module, key, { get() { return load()[key]; } });
+    }
+    return module;
+}
+exports.Vo = lazy;
+
+
+/***/ }),
+
+/***/ 2068:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /* module decorator */ module = __nccwpck_require__.nmd(module);
@@ -48,7 +170,7 @@ const setLazyProperty = (object, property, get) => {
 let colorConvert;
 const makeDynamicStyles = (wrap, targetSpace, identity, isBackground) => {
 	if (colorConvert === undefined) {
-		colorConvert = __nccwpck_require__(2830);
+		colorConvert = __nccwpck_require__(6931);
 	}
 
 	const offset = isBackground ? 10 : 0;
@@ -173,7 +295,7 @@ Object.defineProperty(module, 'exports', {
 
 /***/ }),
 
-/***/ 3353:
+/***/ 9417:
 /***/ ((module) => {
 
 
@@ -242,11 +364,11 @@ function range(a, b, str) {
 
 /***/ }),
 
-/***/ 3197:
+/***/ 3717:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var concatMap = __nccwpck_require__(4527);
-var balanced = __nccwpck_require__(3353);
+var concatMap = __nccwpck_require__(6891);
+var balanced = __nccwpck_require__(9417);
 
 module.exports = expandTop;
 
@@ -450,16 +572,16 @@ function expand(str, isTop) {
 
 /***/ }),
 
-/***/ 8746:
+/***/ 850:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
-const ansiStyles = __nccwpck_require__(3741);
-const {stdout: stdoutColor, stderr: stderrColor} = __nccwpck_require__(395);
+const ansiStyles = __nccwpck_require__(2068);
+const {stdout: stdoutColor, stderr: stderrColor} = __nccwpck_require__(9318);
 const {
 	stringReplaceAll,
 	stringEncaseCRLFWithFirstIndex
-} = __nccwpck_require__(5611);
+} = __nccwpck_require__(7851);
 
 const {isArray} = Array;
 
@@ -668,7 +790,7 @@ const chalkTag = (chalk, ...strings) => {
 	}
 
 	if (template === undefined) {
-		template = __nccwpck_require__(2746);
+		template = __nccwpck_require__(929);
 	}
 
 	return template(chalk, parts.join(''));
@@ -686,7 +808,7 @@ module.exports = chalk;
 
 /***/ }),
 
-/***/ 2746:
+/***/ 929:
 /***/ ((module) => {
 
 
@@ -827,7 +949,7 @@ module.exports = (chalk, temporary) => {
 
 /***/ }),
 
-/***/ 5611:
+/***/ 7851:
 /***/ ((module) => {
 
 
@@ -873,12 +995,12 @@ module.exports = {
 
 /***/ }),
 
-/***/ 9598:
+/***/ 7391:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /* MIT license */
 /* eslint-disable no-mixed-operators */
-const cssKeywords = __nccwpck_require__(9407);
+const cssKeywords = __nccwpck_require__(8510);
 
 // NOTE: conversions should only return primitive values (i.e. arrays, or
 //       values that give correct `typeof` results).
@@ -1719,11 +1841,11 @@ convert.rgb.gray = function (rgb) {
 
 /***/ }),
 
-/***/ 2830:
+/***/ 6931:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const conversions = __nccwpck_require__(9598);
-const route = __nccwpck_require__(5180);
+const conversions = __nccwpck_require__(7391);
+const route = __nccwpck_require__(880);
 
 const convert = {};
 
@@ -1807,10 +1929,10 @@ module.exports = convert;
 
 /***/ }),
 
-/***/ 5180:
+/***/ 880:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const conversions = __nccwpck_require__(9598);
+const conversions = __nccwpck_require__(7391);
 
 /*
 	This function routes a model to all other models.
@@ -1911,7 +2033,7 @@ module.exports = function (fromModel) {
 
 /***/ }),
 
-/***/ 9407:
+/***/ 8510:
 /***/ ((module) => {
 
 
@@ -2070,14 +2192,14 @@ module.exports = {
 
 /***/ }),
 
-/***/ 4516:
+/***/ 5984:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var camelCase = _interopDefault(__nccwpck_require__(7317));
+var camelCase = _interopDefault(__nccwpck_require__(7994));
 
 /**
  * Takes any input and guarantees an array back.
@@ -3476,7 +3598,7 @@ module.exports = commandLineArgs;
 
 /***/ }),
 
-/***/ 5908:
+/***/ 5515:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 /**
@@ -3496,8 +3618,8 @@ module.exports = commandLineCommands
  * @alias module:command-line-commands
  */
 function commandLineCommands (commands, argv) {
-  const arrayify = __nccwpck_require__(2786)
-  const option = __nccwpck_require__(4654)
+  const arrayify = __nccwpck_require__(7892)
+  const option = __nccwpck_require__(7684)
 
   if (!commands || (Array.isArray(commands) && !commands.length)) {
     throw new Error('Please supply one or more commands')
@@ -3527,7 +3649,7 @@ function commandLineCommands (commands, argv) {
 
 /***/ }),
 
-/***/ 2786:
+/***/ 7892:
 /***/ (function(module) {
 
 (function (global, factory) {
@@ -3603,7 +3725,7 @@ function commandLineCommands (commands, argv) {
 
 /***/ }),
 
-/***/ 4654:
+/***/ 7684:
 /***/ ((__unused_webpack_module, exports) => {
 
 /**
@@ -3631,7 +3753,7 @@ exports.optEquals = new Arg(/^(--\S+)=(.*)/)
 
 /***/ }),
 
-/***/ 4527:
+/***/ 6891:
 /***/ ((module) => {
 
 module.exports = function (xs, fn) {
@@ -3651,14 +3773,14 @@ var isArray = Array.isArray || function (xs) {
 
 /***/ }),
 
-/***/ 7987:
+/***/ 2746:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const cp = __nccwpck_require__(2081);
-const parse = __nccwpck_require__(1655);
-const enoent = __nccwpck_require__(9738);
+const parse = __nccwpck_require__(6855);
+const enoent = __nccwpck_require__(4101);
 
 function spawn(command, args, options) {
     // Parse the arguments
@@ -3697,7 +3819,7 @@ module.exports._enoent = enoent;
 
 /***/ }),
 
-/***/ 9738:
+/***/ 4101:
 /***/ ((module) => {
 
 
@@ -3763,15 +3885,15 @@ module.exports = {
 
 /***/ }),
 
-/***/ 1655:
+/***/ 6855:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const path = __nccwpck_require__(1017);
-const resolveCommand = __nccwpck_require__(7534);
-const escape = __nccwpck_require__(8902);
-const readShebang = __nccwpck_require__(2964);
+const resolveCommand = __nccwpck_require__(7274);
+const escape = __nccwpck_require__(4274);
+const readShebang = __nccwpck_require__(1252);
 
 const isWin = process.platform === 'win32';
 const isExecutableRegExp = /\.(?:com|exe)$/i;
@@ -3861,7 +3983,7 @@ module.exports = parse;
 
 /***/ }),
 
-/***/ 8902:
+/***/ 4274:
 /***/ ((module) => {
 
 
@@ -3913,13 +4035,13 @@ module.exports.argument = escapeArgument;
 
 /***/ }),
 
-/***/ 2964:
+/***/ 1252:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const fs = __nccwpck_require__(7147);
-const shebangCommand = __nccwpck_require__(4970);
+const shebangCommand = __nccwpck_require__(7032);
 
 function readShebang(command) {
     // Read the first 150 bytes from the file
@@ -3943,14 +4065,14 @@ module.exports = readShebang;
 
 /***/ }),
 
-/***/ 7534:
+/***/ 7274:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 
 const path = __nccwpck_require__(1017);
-const which = __nccwpck_require__(8201);
-const getPathKey = __nccwpck_require__(2170);
+const which = __nccwpck_require__(4207);
+const getPathKey = __nccwpck_require__(539);
 
 function resolveCommandAttempt(parsed, withoutPathExt) {
     const env = parsed.options.env || process.env;
@@ -4002,7 +4124,7 @@ module.exports = resolveCommand;
 
 /***/ }),
 
-/***/ 8945:
+/***/ 6863:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = realpath
@@ -4018,7 +4140,7 @@ var origRealpathSync = fs.realpathSync
 
 var version = process.version
 var ok = /^v[0-5]\./.test(version)
-var old = __nccwpck_require__(4403)
+var old = __nccwpck_require__(1734)
 
 function newError (er) {
   return er && er.syscall === 'realpath' && (
@@ -4075,7 +4197,7 @@ function unmonkeypatch () {
 
 /***/ }),
 
-/***/ 4403:
+/***/ 1734:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 // Copyright Joyent, Inc. and other Node contributors.
@@ -4385,7 +4507,7 @@ exports.realpath = function realpath(p, cache, cb) {
 
 /***/ }),
 
-/***/ 9114:
+/***/ 1585:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -4444,14 +4566,14 @@ module.exports = options => {
 
 /***/ }),
 
-/***/ 9136:
+/***/ 1766:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 const {constants: BufferConstants} = __nccwpck_require__(4300);
 const stream = __nccwpck_require__(2781);
 const {promisify} = __nccwpck_require__(3837);
-const bufferStream = __nccwpck_require__(9114);
+const bufferStream = __nccwpck_require__(1585);
 
 const streamPipelinePromisified = promisify(stream.pipeline);
 
@@ -4512,7 +4634,7 @@ module.exports.MaxBufferError = MaxBufferError;
 
 /***/ }),
 
-/***/ 2821:
+/***/ 7625:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 exports.setopts = setopts
@@ -4529,8 +4651,8 @@ function ownProp (obj, field) {
 
 var fs = __nccwpck_require__(7147)
 var path = __nccwpck_require__(1017)
-var minimatch = __nccwpck_require__(9566)
-var isAbsolute = __nccwpck_require__(1323)
+var minimatch = __nccwpck_require__(3973)
+var isAbsolute = __nccwpck_require__(8714)
 var Minimatch = minimatch.Minimatch
 
 function alphasort (a, b) {
@@ -4757,7 +4879,7 @@ function childrenIgnored (self, path) {
 
 /***/ }),
 
-/***/ 3700:
+/***/ 1957:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 // Approach:
@@ -4802,24 +4924,24 @@ function childrenIgnored (self, path) {
 
 module.exports = glob
 
-var rp = __nccwpck_require__(8945)
-var minimatch = __nccwpck_require__(9566)
+var rp = __nccwpck_require__(6863)
+var minimatch = __nccwpck_require__(3973)
 var Minimatch = minimatch.Minimatch
-var inherits = __nccwpck_require__(6919)
+var inherits = __nccwpck_require__(4124)
 var EE = (__nccwpck_require__(2361).EventEmitter)
 var path = __nccwpck_require__(1017)
 var assert = __nccwpck_require__(9491)
-var isAbsolute = __nccwpck_require__(1323)
-var globSync = __nccwpck_require__(7433)
-var common = __nccwpck_require__(2821)
+var isAbsolute = __nccwpck_require__(8714)
+var globSync = __nccwpck_require__(9010)
+var common = __nccwpck_require__(7625)
 var setopts = common.setopts
 var ownProp = common.ownProp
-var inflight = __nccwpck_require__(9442)
+var inflight = __nccwpck_require__(2492)
 var util = __nccwpck_require__(3837)
 var childrenIgnored = common.childrenIgnored
 var isIgnored = common.isIgnored
 
-var once = __nccwpck_require__(7197)
+var once = __nccwpck_require__(1223)
 
 function glob (pattern, options, cb) {
   if (typeof options === 'function') cb = options, options = {}
@@ -5554,21 +5676,21 @@ Glob.prototype._stat2 = function (f, abs, er, stat, cb) {
 
 /***/ }),
 
-/***/ 7433:
+/***/ 9010:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = globSync
 globSync.GlobSync = GlobSync
 
-var rp = __nccwpck_require__(8945)
-var minimatch = __nccwpck_require__(9566)
+var rp = __nccwpck_require__(6863)
+var minimatch = __nccwpck_require__(3973)
 var Minimatch = minimatch.Minimatch
-var Glob = (__nccwpck_require__(3700).Glob)
+var Glob = (__nccwpck_require__(1957).Glob)
 var util = __nccwpck_require__(3837)
 var path = __nccwpck_require__(1017)
 var assert = __nccwpck_require__(9491)
-var isAbsolute = __nccwpck_require__(1323)
-var common = __nccwpck_require__(2821)
+var isAbsolute = __nccwpck_require__(8714)
+var common = __nccwpck_require__(7625)
 var setopts = common.setopts
 var ownProp = common.ownProp
 var childrenIgnored = common.childrenIgnored
@@ -6047,7 +6169,7 @@ GlobSync.prototype._makeAbs = function (f) {
 
 /***/ }),
 
-/***/ 6738:
+/***/ 1621:
 /***/ ((module) => {
 
 
@@ -6062,12 +6184,12 @@ module.exports = (flag, argv = process.argv) => {
 
 /***/ }),
 
-/***/ 9442:
+/***/ 2492:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var wrappy = __nccwpck_require__(4586)
+var wrappy = __nccwpck_require__(2940)
 var reqs = Object.create(null)
-var once = __nccwpck_require__(7197)
+var once = __nccwpck_require__(1223)
 
 module.exports = wrappy(inflight)
 
@@ -6123,7 +6245,7 @@ function slice (args) {
 
 /***/ }),
 
-/***/ 6919:
+/***/ 4124:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 try {
@@ -6133,13 +6255,13 @@ try {
   module.exports = util.inherits;
 } catch (e) {
   /* istanbul ignore next */
-  module.exports = __nccwpck_require__(7526);
+  module.exports = __nccwpck_require__(8544);
 }
 
 
 /***/ }),
 
-/***/ 7526:
+/***/ 8544:
 /***/ ((module) => {
 
 if (typeof Object.create === 'function') {
@@ -6173,15 +6295,15 @@ if (typeof Object.create === 'function') {
 
 /***/ }),
 
-/***/ 228:
+/***/ 7126:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var fs = __nccwpck_require__(7147)
 var core
 if (process.platform === 'win32' || global.TESTING_WINDOWS) {
-  core = __nccwpck_require__(7214)
+  core = __nccwpck_require__(2001)
 } else {
-  core = __nccwpck_require__(5211)
+  core = __nccwpck_require__(9728)
 }
 
 module.exports = isexe
@@ -6237,7 +6359,7 @@ function sync (path, options) {
 
 /***/ }),
 
-/***/ 5211:
+/***/ 9728:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = isexe
@@ -6285,7 +6407,7 @@ function checkMode (stat, options) {
 
 /***/ }),
 
-/***/ 7214:
+/***/ 2001:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = isexe
@@ -6334,7 +6456,7 @@ function sync (path, options) {
 
 /***/ }),
 
-/***/ 8532:
+/***/ 2748:
 /***/ ((module) => {
 
 /**
@@ -6963,7 +7085,7 @@ module.exports = assignWith;
 
 /***/ }),
 
-/***/ 7317:
+/***/ 7994:
 /***/ ((module) => {
 
 /**
@@ -7569,7 +7691,7 @@ module.exports = camelCase;
 
 /***/ }),
 
-/***/ 6281:
+/***/ 2621:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -7617,7 +7739,7 @@ module.exports = function (/*streams...*/) {
 
 /***/ }),
 
-/***/ 9566:
+/***/ 3973:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = minimatch
@@ -7629,7 +7751,7 @@ var path = (function () { try { return __nccwpck_require__(1017) } catch (e) {}}
 minimatch.sep = path.sep
 
 var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {}
-var expand = __nccwpck_require__(3197)
+var expand = __nccwpck_require__(3717)
 
 var plTypes = {
   '!': { open: '(?:(?!(?:', close: '))[^/]*?)'},
@@ -8571,7 +8693,7 @@ function regExpEscape (s) {
 
 /***/ }),
 
-/***/ 2086:
+/***/ 6186:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 var path = __nccwpck_require__(1017);
@@ -8680,10 +8802,10 @@ mkdirP.sync = function sync (p, opts, made) {
 
 /***/ }),
 
-/***/ 7197:
+/***/ 1223:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-var wrappy = __nccwpck_require__(4586)
+var wrappy = __nccwpck_require__(2940)
 module.exports = wrappy(once)
 module.exports.strict = wrappy(onceStrict)
 
@@ -8729,7 +8851,7 @@ function onceStrict (fn) {
 
 /***/ }),
 
-/***/ 1323:
+/***/ 8714:
 /***/ ((module) => {
 
 
@@ -8756,7 +8878,7 @@ module.exports.win32 = win32;
 
 /***/ }),
 
-/***/ 2170:
+/***/ 539:
 /***/ ((module) => {
 
 
@@ -8779,7 +8901,7 @@ module.exports["default"] = pathKey;
 
 /***/ }),
 
-/***/ 2780:
+/***/ 4959:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = rimraf
@@ -8788,7 +8910,7 @@ rimraf.sync = rimrafSync
 var assert = __nccwpck_require__(9491)
 var path = __nccwpck_require__(1017)
 var fs = __nccwpck_require__(7147)
-var glob = __nccwpck_require__(3700)
+var glob = __nccwpck_require__(1957)
 var _0666 = parseInt('666', 8)
 
 var defaultGlobOpts = {
@@ -9150,11 +9272,11 @@ function rmkidsSync (p, options) {
 
 /***/ }),
 
-/***/ 4970:
+/***/ 7032:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
-const shebangRegex = __nccwpck_require__(1504);
+const shebangRegex = __nccwpck_require__(2638);
 
 module.exports = (string = '') => {
 	const match = string.match(shebangRegex);
@@ -9176,7 +9298,7 @@ module.exports = (string = '') => {
 
 /***/ }),
 
-/***/ 1504:
+/***/ 2638:
 /***/ ((module) => {
 
 
@@ -9185,7 +9307,7 @@ module.exports = /^#!(.*)/;
 
 /***/ }),
 
-/***/ 2028:
+/***/ 4931:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 // Note: since nyc uses this module to output coverage, any lines
@@ -9214,7 +9336,7 @@ if (!processOk(process)) {
   }
 } else {
   var assert = __nccwpck_require__(9491)
-  var signals = __nccwpck_require__(19)
+  var signals = __nccwpck_require__(3710)
   var isWin = /^win/i.test(process.platform)
 
   var EE = __nccwpck_require__(2361)
@@ -9394,7 +9516,7 @@ if (!processOk(process)) {
 
 /***/ }),
 
-/***/ 19:
+/***/ 3710:
 /***/ ((module) => {
 
 // This is not the set of all possible signals.
@@ -9454,13 +9576,13 @@ if (process.platform === 'linux') {
 
 /***/ }),
 
-/***/ 395:
+/***/ 9318:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
 const os = __nccwpck_require__(2037);
 const tty = __nccwpck_require__(6224);
-const hasFlag = __nccwpck_require__(6738);
+const hasFlag = __nccwpck_require__(1621);
 
 const {env} = process;
 
@@ -9596,7 +9718,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 5758:
+/***/ 8023:
 /***/ ((module, exports, __nccwpck_require__) => {
 
 let fs   = __nccwpck_require__(7147);
@@ -9604,8 +9726,8 @@ let path = __nccwpck_require__(1017);
 let cnst = __nccwpck_require__(2057);
 
 let os         = __nccwpck_require__(2037);
-let rimraf     = __nccwpck_require__(2780);
-let mkdirp     = __nccwpck_require__(2086);
+let rimraf     = __nccwpck_require__(4959);
+let mkdirp     = __nccwpck_require__(6186);
 let osTmpdir   = (__nccwpck_require__(2037).tmpdir)();
 
 const rimrafSync = rimraf.sync;
@@ -9929,7 +10051,7 @@ exports.createWriteStream = createWriteStream;
 
 /***/ }),
 
-/***/ 8201:
+/***/ 4207:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const isWindows = process.platform === 'win32' ||
@@ -9938,7 +10060,7 @@ const isWindows = process.platform === 'win32' ||
 
 const path = __nccwpck_require__(1017)
 const COLON = isWindows ? ';' : ':'
-const isexe = __nccwpck_require__(228)
+const isexe = __nccwpck_require__(7126)
 
 const getNotFoundError = (cmd) =>
   Object.assign(new Error(`not found: ${cmd}`), { code: 'ENOENT' })
@@ -10061,7 +10183,7 @@ which.sync = whichSync
 
 /***/ }),
 
-/***/ 4586:
+/***/ 2940:
 /***/ ((module) => {
 
 // Returns a wrapper function that returns a wrapped callback
@@ -10101,136 +10223,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 1401:
-/***/ ((__unused_webpack_module, exports) => {
-
-var __webpack_unused_export__;
-
-__webpack_unused_export__ = ({ value: true });
-exports.Vo = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
-function currentTarget() {
-    let os = null;
-    switch (process.platform) {
-        case 'android':
-            switch (process.arch) {
-                case 'arm':
-                    return 'android-arm-eabi';
-                case 'arm64':
-                    return 'android-arm64';
-            }
-            os = 'Android';
-            break;
-        case 'win32':
-            switch (process.arch) {
-                case 'x64':
-                    return 'win32-x64-msvc';
-                case 'arm64':
-                    return 'win32-arm64-msvc';
-                case 'ia32':
-                    return 'win32-ia32-msvc';
-            }
-            os = 'Windows';
-            break;
-        case 'darwin':
-            switch (process.arch) {
-                case 'x64':
-                    return 'darwin-x64';
-                case 'arm64':
-                    return 'darwin-arm64';
-            }
-            os = 'macOS';
-            break;
-        case 'linux':
-            switch (process.arch) {
-                case 'x64':
-                case 'arm64':
-                    return isGlibc()
-                        ? `linux-${process.arch}-gnu`
-                        : `linux-${process.arch}-musl`;
-                case 'arm':
-                    return 'linux-arm-gnueabihf';
-            }
-            os = 'Linux';
-            break;
-        case 'freebsd':
-            if (process.arch === 'x64') {
-                return 'freebsd-x64';
-            }
-            os = 'FreeBSD';
-            break;
-    }
-    if (os) {
-        throw new Error(`Neon: unsupported ${os} architecture: ${process.arch}`);
-    }
-    throw new Error(`Neon: unsupported system: ${process.platform}`);
-}
-__webpack_unused_export__ = currentTarget;
-function isGlibc() {
-    // Cast to unknown to work around a bug in the type definition:
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/40140
-    const report = process.report?.getReport();
-    if ((typeof report !== 'object') || !report || (!('header' in report))) {
-        return false;
-    }
-    const header = report.header;
-    return (typeof header === 'object') &&
-        !!header &&
-        ('glibcVersionRuntime' in header);
-}
-// export function debug(...components: string[]) {
-//   if (components.length === 0 || !components[components.length - 1].endsWith(".node")) {
-//     components.push("index.node");
-//   }
-//   const pathSpec = path.join(...components);
-//   return fs.existsSync(pathSpec) ? require(pathSpec) : null;
-// }
-function* interleave(a1, a2) {
-    const length = Math.max(a1.length, a2.length);
-    for (let i = 0; i < length; i++) {
-        if (i < a1.length) {
-            yield a1[i];
-        }
-        if (i < a2.length) {
-            yield a2[i];
-        }
-    }
-}
-function bin(scope, ...rest) {
-    return [...interleave(scope, rest)].join("") + "/" + currentTarget();
-}
-__webpack_unused_export__ = bin;
-function lazy(loaders, exports) {
-    let loaded = null;
-    function load() {
-        if (loaded) {
-            return loaded;
-        }
-        const target = currentTarget();
-        if (!loaders.hasOwnProperty(target)) {
-            throw new Error(`no precompiled module found for ${target}`);
-        }
-        loaded = loaders[target]();
-        return loaded;
-    }
-    let module = {};
-    for (const key of exports) {
-        Object.defineProperty(module, key, { get() { return load()[key]; } });
-    }
-    return module;
-}
-exports.Vo = lazy;
-
-
-/***/ }),
-
-/***/ 3694:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = require(__nccwpck_require__.ab + "index.node")
-
-/***/ }),
-
-/***/ 9441:
+/***/ 5193:
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/android-arm-eabi");
@@ -10238,7 +10231,7 @@ module.exports = eval("require")("@cargo-messages/android-arm-eabi");
 
 /***/ }),
 
-/***/ 1722:
+/***/ 5111:
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/darwin-arm64");
@@ -10246,7 +10239,15 @@ module.exports = eval("require")("@cargo-messages/darwin-arm64");
 
 /***/ }),
 
-/***/ 4766:
+/***/ 5583:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/darwin-x64");
+
+
+/***/ }),
+
+/***/ 6698:
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/linux-arm-gnueabihf");
@@ -10254,7 +10255,7 @@ module.exports = eval("require")("@cargo-messages/linux-arm-gnueabihf");
 
 /***/ }),
 
-/***/ 172:
+/***/ 9301:
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/linux-x64-gnu");
@@ -10262,7 +10263,7 @@ module.exports = eval("require")("@cargo-messages/linux-x64-gnu");
 
 /***/ }),
 
-/***/ 4054:
+/***/ 9329:
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/win32-arm64-msvc");
@@ -10270,7 +10271,7 @@ module.exports = eval("require")("@cargo-messages/win32-arm64-msvc");
 
 /***/ }),
 
-/***/ 4857:
+/***/ 4459:
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/win32-x64-msvc");
@@ -10355,10 +10356,10 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("util");
 
 /***/ }),
 
-/***/ 4071:
+/***/ 9048:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const addon = __nccwpck_require__(5268);
+const addon = __nccwpck_require__(8428);
 
 const PRIVATE = {};
 
@@ -10404,18 +10405,18 @@ module.exports = {
 
 /***/ }),
 
-/***/ 5268:
+/***/ 8428:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = (__nccwpck_require__(1401)/* .lazy */ .Vo)({
-  'darwin-x64': () => __nccwpck_require__(3694),
-  'win32-x64-msvc': () => __nccwpck_require__(4857),
-  'aarch64-pc-windows-msvc': () => __nccwpck_require__(4054),
-  'darwin-x64': () => __nccwpck_require__(3694),
-  'darwin-arm64': () => __nccwpck_require__(1722),
-  'linux-x64-gnu': () => __nccwpck_require__(172),
-  'linux-arm-gnueabihf': () => __nccwpck_require__(4766),
-  'android-arm-eabi': () => __nccwpck_require__(9441)
+module.exports = (__nccwpck_require__(4371)/* .lazy */ .Vo)({
+  'darwin-x64': () => __nccwpck_require__(5583),
+  'win32-x64-msvc': () => __nccwpck_require__(4459),
+  'aarch64-pc-windows-msvc': () => __nccwpck_require__(9329),
+  'darwin-x64': () => __nccwpck_require__(5583),
+  'darwin-arm64': () => __nccwpck_require__(5111),
+  'linux-x64-gnu': () => __nccwpck_require__(9301),
+  'linux-arm-gnueabihf': () => __nccwpck_require__(6698),
+  'android-arm-eabi': () => __nccwpck_require__(5193)
 }, [
   'findArtifact',
   'findFileByCrateType',
@@ -10509,10 +10510,10 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 
-// EXTERNAL MODULE: ../../node_modules/command-line-commands/index.js
-var command_line_commands = __nccwpck_require__(5908);
+// EXTERNAL MODULE: ./node_modules/command-line-commands/index.js
+var command_line_commands = __nccwpck_require__(5515);
 var command_line_commands_default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands);
-;// CONCATENATED MODULE: ../../node_modules/command-line-usage/node_modules/array-back/index.js
+;// CONCATENATED MODULE: ./node_modules/command-line-usage/node_modules/array-back/index.js
 /**
  * Takes any input and guarantees an array back.
  *
@@ -10572,9 +10573,9 @@ function arrayify (input) {
 
 /* harmony default export */ const array_back = (arrayify);
 
-// EXTERNAL MODULE: ../../node_modules/chalk/source/index.js
-var source = __nccwpck_require__(8746);
-;// CONCATENATED MODULE: ../../node_modules/chalk-template/index.js
+// EXTERNAL MODULE: ./node_modules/chalk-template/node_modules/chalk/source/index.js
+var source = __nccwpck_require__(850);
+;// CONCATENATED MODULE: ./node_modules/chalk-template/index.js
 
 
 // eslint-disable-next-line unicorn/better-regex
@@ -10748,7 +10749,7 @@ function chalkTemplate(firstString, ...arguments_) {
 	return template(parts.join(''));
 }
 
-;// CONCATENATED MODULE: ../../node_modules/command-line-usage/lib/chalk-format.js
+;// CONCATENATED MODULE: ./node_modules/command-line-usage/lib/chalk-format.js
 
 
 function chalkFormat (str) {
@@ -10764,7 +10765,7 @@ function chalkFormat (str) {
 
 // EXTERNAL MODULE: external "os"
 var external_os_ = __nccwpck_require__(2037);
-;// CONCATENATED MODULE: ../../node_modules/command-line-usage/lib/section.js
+;// CONCATENATED MODULE: ./node_modules/command-line-usage/lib/section.js
 
 
 
@@ -10796,7 +10797,7 @@ class Section {
 
 /* harmony default export */ const section = (Section);
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/node_modules/array-back/index.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/node_modules/array-back/index.js
 /**
  * Takes any input and guarantees an array back.
  *
@@ -10856,7 +10857,7 @@ function array_back_arrayify (input) {
 
 /* harmony default export */ const node_modules_array_back = (array_back_arrayify);
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/lib/cell.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/lib/cell.js
 const _value = new WeakMap()
 const _column = new WeakMap()
 
@@ -10891,7 +10892,7 @@ class Cell {
 
 /* harmony default export */ const lib_cell = (Cell);
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/lib/rows.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/lib/rows.js
 
 
 
@@ -10918,7 +10919,7 @@ class Rows {
 
 /* harmony default export */ const rows = (Rows);
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/node_modules/typical/index.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/node_modules/typical/index.js
 /**
  * Isomorphic, functional type-checking for Javascript.
  * @module typical
@@ -11218,7 +11219,7 @@ function isFunction (input) {
   isFunction
 });
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/lib/padding.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/lib/padding.js
 /**
  * @module padding
  */
@@ -11236,7 +11237,7 @@ class Padding {
 
 /* harmony default export */ const lib_padding = (Padding);
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/lib/column.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/lib/column.js
 
 
 
@@ -11301,7 +11302,7 @@ class Column {
 
 /* harmony default export */ const lib_column = (Column);
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/lib/columns.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/lib/columns.js
 
 
 
@@ -11443,7 +11444,7 @@ class Columns {
 
 /* harmony default export */ const columns = (Columns);
 
-;// CONCATENATED MODULE: ../../node_modules/wordwrapjs/index.js
+;// CONCATENATED MODULE: ./node_modules/wordwrapjs/index.js
 /**
  * @module wordwrapjs
  */
@@ -11595,9 +11596,9 @@ function breakWord (word) {
 
 /* harmony default export */ const wordwrapjs = (Wordwrap);
 
-// EXTERNAL MODULE: ../../node_modules/lodash.assignwith/index.js
-var lodash_assignwith = __nccwpck_require__(8532);
-;// CONCATENATED MODULE: ../../node_modules/@75lb/deep-merge/node_modules/typical/index.js
+// EXTERNAL MODULE: ./node_modules/lodash.assignwith/index.js
+var lodash_assignwith = __nccwpck_require__(2748);
+;// CONCATENATED MODULE: ./node_modules/@75lb/deep-merge/node_modules/typical/index.js
 /**
  * Isomorphic, functional type-checking for Javascript.
  * @module typical
@@ -11897,7 +11898,7 @@ function typical_isFunction (input) {
   isFunction: typical_isFunction
 });
 
-;// CONCATENATED MODULE: ../../node_modules/@75lb/deep-merge/index.js
+;// CONCATENATED MODULE: ./node_modules/@75lb/deep-merge/index.js
 
 
 
@@ -11922,7 +11923,7 @@ function deepMerge (...args) {
 
 /* harmony default export */ const deep_merge = (deepMerge);
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/lib/ansi.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/lib/ansi.js
 /**
  * @module ansi
  */
@@ -11939,7 +11940,7 @@ function has (input) {
 
 
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/lib/util.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/lib/util.js
 
 
 
@@ -11992,7 +11993,7 @@ function removeEmptyColumns (data) {
   })
 }
 
-;// CONCATENATED MODULE: ../../node_modules/table-layout/index.js
+;// CONCATENATED MODULE: ./node_modules/table-layout/index.js
 
 
 
@@ -12197,7 +12198,7 @@ class Table {
  */
 /* harmony default export */ const table_layout = (Table);
 
-;// CONCATENATED MODULE: ../../node_modules/command-line-usage/node_modules/typical/index.js
+;// CONCATENATED MODULE: ./node_modules/command-line-usage/node_modules/typical/index.js
 /**
  * Isomorphic, functional type-checking for Javascript.
  * @module typical
@@ -12497,7 +12498,7 @@ function node_modules_typical_isFunction (input) {
   isFunction: node_modules_typical_isFunction
 });
 
-;// CONCATENATED MODULE: ../../node_modules/command-line-usage/lib/section/option-list.js
+;// CONCATENATED MODULE: ./node_modules/command-line-usage/lib/section/option-list.js
 
 
 
@@ -12627,7 +12628,7 @@ function intersect (arr1, arr2) {
  * }
  */
 
-;// CONCATENATED MODULE: ../../node_modules/command-line-usage/lib/section/content.js
+;// CONCATENATED MODULE: ./node_modules/command-line-usage/lib/section/content.js
 
 
 
@@ -12783,7 +12784,7 @@ function ansiFormatRow (row) {
  * ```
  */
 
-;// CONCATENATED MODULE: ../../node_modules/command-line-usage/index.js
+;// CONCATENATED MODULE: ./node_modules/command-line-usage/index.js
 
 
 
@@ -13477,11 +13478,11 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 ;// CONCATENATED MODULE: external "node:fs/promises"
 const promises_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs/promises");
-// EXTERNAL MODULE: ../../node_modules/command-line-args/dist/index.js
-var dist = __nccwpck_require__(4516);
+// EXTERNAL MODULE: ./node_modules/command-line-args/dist/index.js
+var dist = __nccwpck_require__(5984);
 var dist_default = /*#__PURE__*/__nccwpck_require__.n(dist);
 // EXTERNAL MODULE: ./node_modules/cargo-messages/lib/index.cjs
-var lib = __nccwpck_require__(4071);
+var lib = __nccwpck_require__(9048);
 ;// CONCATENATED MODULE: ./node_modules/cargo-messages/lib/index.mjs
 
 
@@ -13522,12 +13523,6 @@ class Dist {
             { name: 'cross-rs', summary: '<https://github.com/cross-rs/cross>' }
         ];
     }
-    _log;
-    _file;
-    _mount;
-    _manifestPath;
-    _crateName;
-    _out;
     constructor(argv) {
         const options = dist_default()(OPTIONS, { argv });
         if (options.log && options.file) {
@@ -13564,17 +13559,15 @@ class Dist {
     }
 }
 
-;// CONCATENATED MODULE: external "node:path"
-const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
-// EXTERNAL MODULE: ../../node_modules/temp/lib/temp.js
-var temp = __nccwpck_require__(5758);
 ;// CONCATENATED MODULE: external "node:buffer"
 const external_node_buffer_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:buffer");
+;// CONCATENATED MODULE: external "node:path"
+const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
 ;// CONCATENATED MODULE: external "node:child_process"
 const external_node_child_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:child_process");
-// EXTERNAL MODULE: ../../node_modules/cross-spawn/index.js
-var cross_spawn = __nccwpck_require__(7987);
-;// CONCATENATED MODULE: ../../node_modules/strip-final-newline/index.js
+// EXTERNAL MODULE: ./node_modules/cross-spawn/index.js
+var cross_spawn = __nccwpck_require__(2746);
+;// CONCATENATED MODULE: ./node_modules/strip-final-newline/index.js
 function stripFinalNewline(input) {
 	const LF = typeof input === 'string' ? '\n' : '\n'.charCodeAt();
 	const CR = typeof input === 'string' ? '\r' : '\r'.charCodeAt();
@@ -13592,7 +13585,7 @@ function stripFinalNewline(input) {
 
 ;// CONCATENATED MODULE: external "node:url"
 const external_node_url_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:url");
-;// CONCATENATED MODULE: ../../node_modules/npm-run-path/node_modules/path-key/index.js
+;// CONCATENATED MODULE: ./node_modules/npm-run-path/node_modules/path-key/index.js
 function pathKey(options = {}) {
 	const {
 		env = process.env,
@@ -13606,7 +13599,7 @@ function pathKey(options = {}) {
 	return Object.keys(env).reverse().find(key => key.toUpperCase() === 'PATH') || 'Path';
 }
 
-;// CONCATENATED MODULE: ../../node_modules/npm-run-path/index.js
+;// CONCATENATED MODULE: ./node_modules/npm-run-path/index.js
 
 
 
@@ -13646,7 +13639,7 @@ function npmRunPathEnv({env = external_node_process_namespaceObject.env, ...opti
 	return env;
 }
 
-;// CONCATENATED MODULE: ../../node_modules/mimic-fn/index.js
+;// CONCATENATED MODULE: ./node_modules/mimic-fn/index.js
 const copyProperty = (to, from, property, ignoreNonConfigurable) => {
 	// `Function#length` should reflect the parameters of `to` not `from` since we keep its body.
 	// `Function#prototype` is non-writable and non-configurable so can never be modified.
@@ -13719,7 +13712,7 @@ function mimicFunction(to, from, {ignoreNonConfigurable = false} = {}) {
 	return to;
 }
 
-;// CONCATENATED MODULE: ../../node_modules/onetime/index.js
+;// CONCATENATED MODULE: ./node_modules/onetime/index.js
 
 
 const calledFunctions = new WeakMap();
@@ -13762,7 +13755,7 @@ onetime.callCount = function_ => {
 
 /* harmony default export */ const node_modules_onetime = (onetime);
 
-;// CONCATENATED MODULE: ../../node_modules/human-signals/build/src/realtime.js
+;// CONCATENATED MODULE: ./node_modules/human-signals/build/src/realtime.js
 
 const getRealtimeSignals=()=>{
 const length=SIGRTMAX-SIGRTMIN+1;
@@ -13779,7 +13772,7 @@ standard:"posix"
 
 const SIGRTMIN=34;
 const SIGRTMAX=64;
-;// CONCATENATED MODULE: ../../node_modules/human-signals/build/src/core.js
+;// CONCATENATED MODULE: ./node_modules/human-signals/build/src/core.js
 
 
 const SIGNALS=[
@@ -14053,7 +14046,7 @@ action:"terminate",
 description:"Invalid system call",
 standard:"other"
 }];
-;// CONCATENATED MODULE: ../../node_modules/human-signals/build/src/signals.js
+;// CONCATENATED MODULE: ./node_modules/human-signals/build/src/signals.js
 
 
 
@@ -14088,7 +14081,7 @@ const supported=constantSignal!==undefined;
 const number=supported?constantSignal:defaultNumber;
 return{name,number,description,supported,action,forced,standard};
 };
-;// CONCATENATED MODULE: ../../node_modules/human-signals/build/src/main.js
+;// CONCATENATED MODULE: ./node_modules/human-signals/build/src/main.js
 
 
 
@@ -14159,7 +14152,7 @@ return signals.find((signalA)=>signalA.number===number);
 };
 
 const signalsByNumber=getSignalsByNumber();
-;// CONCATENATED MODULE: ../../node_modules/execa/lib/error.js
+;// CONCATENATED MODULE: ./node_modules/execa/lib/error.js
 
 
 const getErrorPrefix = ({timedOut, timeout, errorCode, signal, signalDescription, exitCode, isCanceled}) => {
@@ -14246,7 +14239,7 @@ const makeError = ({
 	return error;
 };
 
-;// CONCATENATED MODULE: ../../node_modules/execa/lib/stdio.js
+;// CONCATENATED MODULE: ./node_modules/execa/lib/stdio.js
 const aliases = ['stdin', 'stdout', 'stderr'];
 
 const hasAlias = options => aliases.some(alias => options[alias] !== undefined);
@@ -14297,9 +14290,9 @@ const stdio_normalizeStdioNode = options => {
 	return [...stdio, 'ipc'];
 };
 
-// EXTERNAL MODULE: ../../node_modules/signal-exit/index.js
-var signal_exit = __nccwpck_require__(2028);
-;// CONCATENATED MODULE: ../../node_modules/execa/lib/kill.js
+// EXTERNAL MODULE: ./node_modules/signal-exit/index.js
+var signal_exit = __nccwpck_require__(4931);
+;// CONCATENATED MODULE: ./node_modules/execa/lib/kill.js
 
 
 
@@ -14405,7 +14398,7 @@ const setExitHandler = async (spawned, {cleanup, detached}, timedPromise) => {
 
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
-;// CONCATENATED MODULE: ../../node_modules/is-stream/index.js
+;// CONCATENATED MODULE: ./node_modules/is-stream/index.js
 function isStream(stream) {
 	return stream !== null
 		&& typeof stream === 'object'
@@ -14436,7 +14429,7 @@ function isTransformStream(stream) {
 		&& typeof stream._transform === 'function';
 }
 
-;// CONCATENATED MODULE: ../../node_modules/execa/lib/pipe.js
+;// CONCATENATED MODULE: ./node_modules/execa/lib/pipe.js
 
 
 
@@ -14480,11 +14473,11 @@ const addPipeMethods = spawned => {
 	}
 };
 
-// EXTERNAL MODULE: ../../node_modules/get-stream/index.js
-var get_stream = __nccwpck_require__(9136);
-// EXTERNAL MODULE: ../../node_modules/merge-stream/index.js
-var merge_stream = __nccwpck_require__(6281);
-;// CONCATENATED MODULE: ../../node_modules/execa/lib/stream.js
+// EXTERNAL MODULE: ./node_modules/get-stream/index.js
+var get_stream = __nccwpck_require__(1766);
+// EXTERNAL MODULE: ./node_modules/merge-stream/index.js
+var merge_stream = __nccwpck_require__(2621);
+;// CONCATENATED MODULE: ./node_modules/execa/lib/stream.js
 
 
 
@@ -14605,7 +14598,7 @@ const getSpawnedResult = async ({stdout, stderr, all}, {encoding, buffer, maxBuf
 	}
 };
 
-;// CONCATENATED MODULE: ../../node_modules/execa/lib/promise.js
+;// CONCATENATED MODULE: ./node_modules/execa/lib/promise.js
 // eslint-disable-next-line unicorn/prefer-top-level-await
 const nativePromisePrototype = (async () => {})().constructor.prototype;
 
@@ -14643,7 +14636,7 @@ const getSpawnedPromise = spawned => new Promise((resolve, reject) => {
 	}
 });
 
-;// CONCATENATED MODULE: ../../node_modules/execa/lib/command.js
+;// CONCATENATED MODULE: ./node_modules/execa/lib/command.js
 
 
 
@@ -14767,7 +14760,7 @@ const parseTemplates = (templates, expressions) => {
 
 ;// CONCATENATED MODULE: external "node:util"
 const external_node_util_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:util");
-;// CONCATENATED MODULE: ../../node_modules/execa/lib/verbose.js
+;// CONCATENATED MODULE: ./node_modules/execa/lib/verbose.js
 
 
 
@@ -14788,7 +14781,7 @@ const logCommand = (escapedCommand, {verbose}) => {
 	external_node_process_namespaceObject.stderr.write(`[${getTimestamp()}] ${escapedCommand}\n`);
 };
 
-;// CONCATENATED MODULE: ../../node_modules/execa/index.js
+;// CONCATENATED MODULE: ./node_modules/execa/index.js
 
 
 
@@ -15099,6 +15092,107 @@ function execaNode(scriptPath, args, options = {}) {
 	);
 }
 
+;// CONCATENATED MODULE: ./src/commands/bump.ts
+
+
+
+
+const bump_OPTIONS = [
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
+    { name: 'dir', alias: 'd', type: String, defaultValue: null },
+    { name: 'workspaces', type: Boolean, defaultValue: false },
+    { name: 'binaries', alias: 'b', type: String, defaultValue: null }
+];
+async function subdirs(dir) {
+    const entries = await promises_namespaceObject.readdir(dir);
+    let dirs = [];
+    for (const entry of entries) {
+        if ((await promises_namespaceObject.stat(external_node_path_namespaceObject.join(dir, entry))).isDirectory()) {
+            dirs.push(entry);
+        }
+    }
+    return dirs;
+}
+class Bump {
+    static summary() { return 'Portably bump package versions in a project tree.'; }
+    static syntax() { return 'neon bump [-v] (-d <dir>|--workspaces|-b <dir>) [<version>|major|minor|patch]'; }
+    static options() {
+        return [
+            { name: '-d, --dir <dir>', summary: 'Run `npm version <version>` in another directory.' },
+            { name: '--workspaces', summary: 'Run `npm version --workspaces <version>` in the current directory.' },
+            { name: '-b, --binaries <dir>', summary: 'Run `npm version --force <version>` on all binary packages in <dir>.' },
+            { name: '', summary: 'The --force parameter causes npm to ignore `os` and `cpu` constraints in the binary packages\' manifests that might not match the current system.' },
+            { name: '<version>', summary: 'The new package version. (Default: $npm_package_version)' },
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
+        ];
+    }
+    static seeAlso() {
+        return [
+            { name: 'npm version', summary: '<https://docs.npmjs.com/cli/commands/npm-version>' }
+        ];
+    }
+    constructor(argv) {
+        const options = dist_default()(bump_OPTIONS, { argv, partial: true });
+        this._verbose = options.verbose;
+        this._dir = options.dir || null;
+        this._workspaces = options.workspaces;
+        this._binaries = options.binaries || null;
+        if ([this._dir, this._workspaces, this._binaries].filter(x => !!x).length > 1) {
+            throw new Error("Only one of --dir, --workspaces, or --binaries can be specified.");
+        }
+        this._version = (!options._unknown || !options._unknown.length)
+            ? process.env.npm_package_version
+            : options[0];
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon bump] " + msg);
+        }
+    }
+    async bumpDir(dir) {
+        this.log(`CWD=${dir} npm version ${this._version}`);
+        const result = await execa('npm', ['version', this._version], { cwd: dir, shell: true });
+        if (result.exitCode !== 0) {
+            console.error(result.stderr);
+            process.exit(result.exitCode);
+        }
+    }
+    async bumpWorkspaces() {
+        this.log(`npm version --workspaces ${this._version}`);
+        const result = await execa('npm', ['version', "--workspaces", this._version], { shell: true });
+        if (result.exitCode !== 0) {
+            console.error(result.stderr);
+            process.exit(result.exitCode);
+        }
+    }
+    async bumpBinaries(binaries) {
+        const binariesPath = external_node_path_namespaceObject.join(...binaries.split('/'));
+        const dirs = await subdirs(binariesPath);
+        for (const dir of dirs) {
+            const dirPath = external_node_path_namespaceObject.join(binariesPath, dir);
+            this.log(`CWD=${dirPath} npm version --force ${this._version}`);
+            const result = await execa('npm', ['version', "--force", this._version], { cwd: dirPath, shell: true });
+            if (result.exitCode !== 0) {
+                console.error(result.stderr);
+                process.exit(result.exitCode);
+            }
+        }
+    }
+    async run() {
+        if (this._dir) {
+            await this.bumpDir(this._dir);
+        }
+        else if (this._workspaces) {
+            await this.bumpWorkspaces();
+        }
+        else if (this._binaries) {
+            await this.bumpBinaries(this._binaries);
+        }
+    }
+}
+
+// EXTERNAL MODULE: ./node_modules/temp/lib/temp.js
+var temp = __nccwpck_require__(8023);
 ;// CONCATENATED MODULE: ./data/rust.json
 const rust_namespaceObject = JSON.parse('{"aarch64-apple-darwin":"darwin-arm64","x86_64-apple-darwin":"darwin-x64","aarch64-apple-ios":"ios-arm64","x86_64-apple-ios":"ios-x64","aarch64-linux-android":"android-arm64","armv7-linux-androideabi":"android-arm-eabi","i686-linux-android":"android-ia32","x86_64-linux-android":"android-x64","aarch64-pc-windows-msvc":"win32-arm64-msvc","i686-pc-windows-gnu":"win32-ia32-gnu","i686-pc-windows-msvc":"win32-ia32-msvc","x86_64-pc-windows-gnu":"win32-x64-gnu","x86_64-pc-windows-msvc":"win32-x64-msvc","aarch64-unknown-linux-gnu":"linux-arm64-gnu","aarch64-unknown-linux-musl":"linux-arm64-musl","arm-unknown-linux-gnueabihf":"linux-arm-gnueabihf","arm-unknown-linux-musleabihf":"linux-arm-musleabihf","armv7-unknown-linux-gnueabihf":"linux-arm-gnueabihf","armv7-unknown-linux-musleabihf":"linux-arm-musleabihf","i686-unknown-linux-gnu":"linux-ia32-gnu","i686-unknown-linux-musl":"linux-ia32-musl","mips-unknown-linux-gnu":"linux-mips-gnu","mips-unknown-linux-musl":"linux-mips-musl","mips64-unknown-linux-gnuabi64":"linux-mips64-gnuabi64","mips64-unknown-linux-muslabi64":"linux-mips64-muslabi64","mips64el-unknown-linux-gnuabi64":"linux-mips64el-gnuabi64","mips64el-unknown-linux-muslabi64":"linux-mips64el-muslabi64","mipsel-unknown-linux-gnu":"linux-mipsel-gnu","mipsel-unknown-linux-musl":"linux-mipsel-musl","powerpc-unknown-linux-gnu":"linux-powerpc-gnu","powerpc64-unknown-linux-gnu":"linux-powerpc64-gnu","powerpc64le-unknown-linux-gnu":"linux-powerpc64le-gnu","riscv64gc-unknown-linux-gnu":"linux-riscv64gc-gnu","s390x-unknown-linux-gnu":"linux-s390x-gnu","sparc64-unknown-linux-gnu":"linux-sparc64-gnu","x86_64-unknown-linux-gnu":"linux-x64-gnu","x86_64-unknown-linux-gnux32":"linux-x64-gnux32","x86_64-unknown-linux-musl":"linux-x64-musl","i686-unknown-freebsd":"freebsd-ia32","x86_64-unknown-freebsd":"freebsd-x64"}');
 ;// CONCATENATED MODULE: ./data/node.json
@@ -15113,7 +15207,8 @@ const mktemp = temp.track().mkdir;
 const pack_build_OPTIONS = [
     { name: 'file', alias: 'f', type: String, defaultValue: 'index.node' },
     { name: 'target', alias: 't', type: String, defaultValue: null },
-    { name: 'out-dir', alias: 'd', type: String, defaultValue: null }
+    { name: 'in-dir', alias: 'i', type: String, defaultValue: null },
+    { name: 'out-dir', alias: 'o', type: String, defaultValue: null }
 ];
 
 function isRustTarget(x) {
@@ -15136,8 +15231,9 @@ class PackBuild {
     static options() {
         return [
             { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
-            { name: '-t, --target <target>', summary: 'Rust target triple the addon was built for. (Default: rustc default host)' },
-            { name: '-d, --out-dir <path>', summary: 'Output directory, recursively created if needed. (Default: ./dist)' }
+            { name: '-t, --target <target>', summary: 'Rust target triple the addon was built for. (Default: in-dir manifest target or else rustc default host)' },
+            { name: '-i, --in-dir <path>', summary: 'Input directory with package manifest, created automatically by default. (Default: temp dir)' },
+            { name: '-o, --out-dir <path>', summary: 'Output directory, recursively created if needed. (Default: ./dist)' }
         ];
     }
     static seeAlso() {
@@ -15147,13 +15243,11 @@ class PackBuild {
             { name: 'cross-rs', summary: '<https://github.com/cross-rs/cross>' }
         ];
     }
-    _target;
-    _addon;
-    _outDir;
     constructor(argv) {
         const options = dist_default()(pack_build_OPTIONS, { argv });
         this._target = options.target || null;
         this._addon = options.file;
+        this._inDir = options['in-dir'] || null;
         this._outDir = options['out-dir'] || external_node_path_namespaceObject.join(process.cwd(), 'dist');
     }
     async currentTarget() {
@@ -15167,9 +15261,7 @@ class PackBuild {
         }
         return hostLine.replace(/^host:\s+/, '');
     }
-    async run() {
-        await promises_namespaceObject.mkdir(this._outDir, { recursive: true });
-        const manifest = JSON.parse(await promises_namespaceObject.readFile('package.json', { encoding: 'utf8' }));
+    async createTempDir(manifest) {
         const version = manifest.version;
         const targets = manifest.neon.targets;
         const target = this._target || await this.currentTarget();
@@ -15189,7 +15281,16 @@ class PackBuild {
             os: [targetInfo.platform],
             cpu: [targetInfo.arch],
             main: "index.node",
-            files: ["index.node"]
+            files: ["index.node"],
+            neon: {
+                binary: {
+                    rust: target,
+                    node: targetInfo.node,
+                    platform: targetInfo.platform,
+                    arch: targetInfo.arch,
+                    abi: targetInfo.abi
+                }
+            }
         };
         const OPTIONAL_KEYS = [
             'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
@@ -15203,9 +15304,45 @@ class PackBuild {
         await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(tmpdir, "package.json"), JSON.stringify(prebuildManifest, null, 2));
         await promises_namespaceObject.copyFile(this._addon, external_node_path_namespaceObject.join(tmpdir, "index.node"));
         await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(tmpdir, "README.md"), `# \`${name}\`\n\n${description}\n`);
+        return tmpdir;
+    }
+    async prepareInDir(manifest) {
+        if (!this._inDir) {
+            return await this.createTempDir(manifest);
+        }
+        const version = manifest.version;
+        const binaryManifest = JSON.parse(await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(this._inDir, 'package.json'), { encoding: 'utf8' }));
+        const binaryTarget = binaryManifest.neon.binary.rust || null;
+        if (binaryTarget && this._target && (binaryTarget !== this._target)) {
+            throw new Error(`Specified target ${this._target} does not match target ${binaryTarget} in ${this._inDir}`);
+        }
+        const target = binaryTarget || this._target || await this.currentTarget();
+        if (!isRustTarget(target)) {
+            throw new Error(`Rust target ${target} not supported.`);
+        }
+        const descriptor = lookup(target);
+        binaryManifest.neon = binaryManifest.neon || {};
+        binaryManifest.neon.binary = {
+            rust: target,
+            node: descriptor.node,
+            platform: descriptor.platform,
+            arch: descriptor.arch,
+            abi: descriptor.abi
+        };
+        // FIXME: make it possible to disable this
+        binaryManifest.version = version;
+        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(this._inDir, 'package.json'), JSON.stringify(binaryManifest, null, 2), { encoding: 'utf8' });
+        // FIXME: make this path configurable
+        await promises_namespaceObject.copyFile(this._addon, external_node_path_namespaceObject.join(this._inDir, "index.node"));
+        return this._inDir;
+    }
+    async run() {
+        await promises_namespaceObject.mkdir(this._outDir, { recursive: true });
+        const manifest = JSON.parse(await promises_namespaceObject.readFile('package.json', { encoding: 'utf8' }));
+        const inDir = await this.prepareInDir(manifest);
         const result = await execa("npm", ["pack", "--json"], {
             shell: true,
-            cwd: tmpdir,
+            cwd: inDir,
             stdio: ['pipe', 'pipe', 'inherit']
         });
         if (result.exitCode !== 0) {
@@ -15216,7 +15353,7 @@ class PackBuild {
         const dest = external_node_path_namespaceObject.join(this._outDir, tarball);
         // Copy instead of move since e.g. GitHub Actions Windows runners host temp directories
         // on a different device (which causes fs.renameSync to fail).
-        await promises_namespaceObject.copyFile(external_node_path_namespaceObject.join(tmpdir, tarball), dest);
+        await promises_namespaceObject.copyFile(external_node_path_namespaceObject.join(inDir, tarball), dest);
         console.log(dest);
     }
     ;
@@ -15247,7 +15384,6 @@ class InstallBuilds {
             { name: 'ncc', summary: '<https://github.com/vercel/ncc>' }
         ];
     }
-    _bundle;
     constructor(argv) {
         const options = dist_default()(install_builds_OPTIONS, { argv });
         this._bundle = options.bundle || null;
@@ -15292,7 +15428,6 @@ class Help {
         ];
     }
     static seeAlso() { }
-    _name;
     constructor(argv) {
         this._name = argv.length > 0 ? asCommandName(argv[0]) : undefined;
         if (argv.length > 1) {
@@ -15314,10 +15449,12 @@ class Help {
 
 
 
+
 var CommandName;
 (function (CommandName) {
     CommandName["Help"] = "help";
     CommandName["Dist"] = "dist";
+    CommandName["Bump"] = "bump";
     CommandName["PackBuild"] = "pack-build";
     CommandName["InstallBuilds"] = "install-builds";
 })(CommandName || (CommandName = {}));
@@ -15335,6 +15472,7 @@ function asCommandName(name) {
 const COMMANDS = {
     [CommandName.Help]: Help,
     [CommandName.Dist]: Dist,
+    [CommandName.Bump]: Bump,
     [CommandName.PackBuild]: PackBuild,
     [CommandName.InstallBuilds]: InstallBuilds
 };
@@ -15345,6 +15483,7 @@ function summaries() {
     return [
         { name: CommandName.Help, summary: Help.summary() },
         { name: CommandName.Dist, summary: Dist.summary() },
+        { name: CommandName.Bump, summary: Bump.summary() },
         { name: CommandName.PackBuild, summary: PackBuild.summary() },
         { name: CommandName.InstallBuilds, summary: InstallBuilds.summary() }
     ];
