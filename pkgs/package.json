@@ -10,8 +10,8 @@
   ],
   "scripts": {
     "version": "cross-os version",
-    "version:unix": "npm version $npm_package_version --workspaces && (cd src/cli && npm version $npm_package_version) && git add .",
-    "version:windows": "npm version %npm_package_version% --workspaces && cd src && cd cli && npm version %npm_package_version% && cd .. && cd .. && git add ."
+    "version:unix": "npm version $npm_package_version --workspaces",
+    "version:windows": "npm version %npm_package_version% --workspaces"
   },
   "cross-os": {
     "version": {
