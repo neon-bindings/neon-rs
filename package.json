@@ -5,7 +5,7 @@
   "description": "@neon-rs monorepo root",
   "workspaces": [],
   "scripts": {
-    "setup": "npm i && npm run setup-src && npm run setup-pkgs",
+    "setup": "npm i && npm run setup-pkgs && npm run setup-src",
     "setup-pkgs": "cd pkgs && npm i --workspaces",
     "setup-src": "cd src && cd cli && npm i --omit=optional && npm run bundle",
     "version": "cross-os version",
