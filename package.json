@@ -5,11 +5,9 @@
   "description": "@neon-rs monorepo root",
   "workspaces": [],
   "scripts": {
-    "postinstall": "npm run beforesetup-src && npm run setup-src && npm run aftersetup-src && npm run setup-pkgs",
+    "postinstall": "npm run setup-src && npm run setup-pkgs",
     "setup-pkgs": "cd pkgs && npm i --workspaces",
-    "beforesetup-src": "crlf pkgs/cli/index.js",
     "setup-src": "cd src && cd cli && npm i --omit=optional && npm run bundle",
-    "aftersetup-src": "crlf pkgs/cli/index.js && crlf --set=LF pkgs/cli/index.js",
     "version": "cross-os version",
     "version:unix": "(cd pkgs && npm version $npm_package_version) && (cd src/cli && npm version $npm_package_version) && git add .",
     "version:windows": "cd pkgs && npm version %npm_package_version% && cd .. && cd src && cd cli && npm version %npm_package_version% && cd .. && cd .. && git add .",
@@ -24,7 +22,6 @@
     }
   },
   "devDependencies": {
-    "crlf": "^1.1.1",
     "cross-os": "^1.5.0"
   }
 }
