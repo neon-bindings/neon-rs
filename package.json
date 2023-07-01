@@ -9,8 +9,8 @@
     "setup-pkgs": "cd pkgs && npm i --workspaces",
     "setup-src": "cd src && cd cli && npm i --omit=optional && npm run bundle",
     "version": "echo $npm_package_version && echo %npm_package_version% && npm run version-src && npm run version-pkgs && git add .",
-    "version-src": "echo $npm_package_version && echo %npm_package_version% && cd pkgs && npx neon bump -v --dir ../src/cli",
-    "version-pkgs": "echo $npm_package_version && echo %npm_package_version% && cd pkgs && npx neon bump -v --dir .",
+    "version-src": "echo $npm_package_version && echo %npm_package_version% && cd pkgs && npm exec -- neon bump -v --dir ../src/cli",
+    "version-pkgs": "echo $npm_package_version && echo %npm_package_version% && cd pkgs && npm exec -- neon bump -v --dir .",
     "release": "npm version patch -m 'v%s' && git push --follow-tags",
     "dryrun": "(export TAGNAME=DRYRUN.$(date +%Y-%m-%d.%H.%M.%S); echo $TAGNAME >> .logs/dryruns.log && git add .logs/dryruns.log && git commit -m $TAGNAME && git tag -a $TAGNAME -m 'publish dry-run' && git push --follow-tags)"
   },
