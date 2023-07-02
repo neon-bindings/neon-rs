@@ -32,7 +32,6 @@ class Cli {
 }
 
 async function main() {
-  console.error("DEBUGGING: WE ARE RUNNING THE LATEST!");
   const cli = new Cli();
   const command = cli.parse();
   try {
@@ -44,4 +43,3 @@ async function main() {
 }
 
 await main();
-//main().then(() => { });
