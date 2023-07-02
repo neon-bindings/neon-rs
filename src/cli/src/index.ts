@@ -32,6 +32,7 @@ class Cli {
 }
 
 async function main() {
+  console.error("DEBUGGING: WE ARE RUNNING THE LATEST!");
   const cli = new Cli();
   const command = cli.parse();
   try {
