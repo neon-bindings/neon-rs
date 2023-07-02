@@ -9,7 +9,7 @@
     "setup-pkgs": "cd pkgs && npm i --workspaces",
     "setup-src": "cd src && cd cli && npm i --omit=optional && npm run bundle",
     "cli": "node pkgs/cli/index.js",
-    "version": "npm run version-src && npm run version-pkgs",
+    "version": "npm run version-src && npm run version-pkgs && git add .",
     "version-src": "npm run cli -- bump -v --dir src/cli",
     "version-pkgs": "npm run cli -- bump -v --dir pkgs",
     "release": "npm version patch -m 'v%s' && git push --follow-tags",
