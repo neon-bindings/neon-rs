@@ -6,52 +6,73 @@ use cargo_metadata::{Artifact, Message, MessageIter};
 use mount::{MountInfo};
 
 enum CargoMessages {
-    FromStdin(MessageIter<BufReader<Stdin>>, Option<MountInfo>),
-    FromFile(MessageIter<BufReader<File>>, Option<MountInfo>)
+    FromStdin(MessageIter<BufReader<Stdin>>, Option<MountInfo>, bool),
+    FromFile(MessageIter<BufReader<File>>, Option<MountInfo>, bool)
 }
 
 impl CargoMessages {
-    fn mount_info(&self) -> &Option<MountInfo> {
+    fn verbose(&self) -> bool {
         match self {
-            CargoMessages::FromStdin(_, mount_info) => mount_info,
-            CargoMessages::FromFile(_, mount_info) => mount_info,
+            CargoMessages::FromStdin(_, _, verbose) => *verbose,
+            CargoMessages::FromFile(_, _, verbose) => *verbose,
         }
     }
 
-    fn from_stdin(mount_info: Option<MountInfo>) -> Self {
+    fn mount_info(&self) -> &Option<MountInfo> {
+        match self {
+            CargoMessages::FromStdin(_, mount_info, _) => mount_info,
+            CargoMessages::FromFile(_, mount_info, _) => mount_info,
+        }
+    }
+
+    fn from_stdin(mount_info: Option<MountInfo>, verbose: bool) -> Self {
         CargoMessages::FromStdin(
             Message::parse_stream(BufReader::new(stdin())),
             mount_info,
+            verbose,
         )
     }
 
-    fn from_file(file: File, mount_info: Option<MountInfo>) -> Self {
+    fn from_file(file: File, mount_info: Option<MountInfo>, verbose: bool) -> Self {
         CargoMessages::FromFile(
             Message::parse_stream(BufReader::new(file)),
             mount_info,
+            verbose,
         )
     }
 
     fn next(&mut self) -> Option<Result<Message, std::io::Error>> {
         match self {
-            CargoMessages::FromStdin(messages, _) => messages.next(),
-            CargoMessages::FromFile(messages, _) => messages.next()
+            CargoMessages::FromStdin(messages, _, _) => messages.next(),
+            CargoMessages::FromFile(messages, _, _) => messages.next()
         }
     }
 
     fn find_artifact(&mut self, crate_name: &str) -> Option<Artifact> {
+        let mut count: u32 = 0;
         loop {
             match self.next() {
                 Some(Ok(Message::CompilerArtifact(artifact))) => {
+                    count += 1;
+                    if self.verbose() {
+                        eprintln!("[cargo-messages] found artifact for {}", artifact.target.name);
+                    }
                     if &artifact.target.name == crate_name {
                         return Some(artifact);
                     }
                 }
                 Some(Err(err)) => {
-                    eprintln!("cargo-messages parse error: {}", err);
+                    if self.verbose() {
+                        eprintln!("[cargo-messages] parse error: {}", err);
+                    }
                     break;
                 }
-                None => { break; }
+                None => {
+                    if self.verbose() {
+                        eprintln!("[cargo-messages] no{} artifacts", if count == 0 { "" } else { " more" });
+                    }
+                    break;
+                }
                 _ => { continue; }
             }
         }
@@ -136,14 +157,20 @@ fn find_file_by_crate_type(mut cx: FunctionContext) -> JsResult<JsValue> {
 
 fn from_stdin(mut cx: FunctionContext) -> JsResult<Boxed<CargoMessages>> {
     let mount_info: Option<MountInfo> = mount_info(&mut cx, 0)?;
-    Ok(cx.boxed(RefCell::new(CargoMessages::from_stdin(mount_info))))
+    let verbose: Handle<JsValue> = cx.argument(2)?;
+    let t: Handle<JsBoolean> = cx.boolean(true);
+    let verbose = verbose.strict_equals(&mut cx, t);
+    Ok(cx.boxed(RefCell::new(CargoMessages::from_stdin(mount_info, verbose))))
 }
 
 fn from_file(mut cx: FunctionContext) -> JsResult<Boxed<CargoMessages>> {
     let filename = cx.argument::<JsString>(0)?.value(&mut cx);
     let mount_info = mount_info(&mut cx, 1)?;
     let file = File::open(filename).unwrap();
-    Ok(cx.boxed(RefCell::new(CargoMessages::from_file(file, mount_info))))
+    let verbose: Handle<JsValue> = cx.argument(3)?;
+    let t: Handle<JsBoolean> = cx.boolean(true);
+    let verbose = verbose.strict_equals(&mut cx, t);
+    Ok(cx.boxed(RefCell::new(CargoMessages::from_file(file, mount_info, verbose))))
 }
 
 #[neon::main]

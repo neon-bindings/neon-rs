@@ -10,7 +10,8 @@ export interface CargoArtifact {
 export type CargoMessageOptions = {
   mount?: string,
   manifestPath?: string,
-  file?: string
+  file?: string,
+  verbose?: boolean,
 };
 
 export class CargoMessages {

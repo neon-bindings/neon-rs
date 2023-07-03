@@ -29,7 +29,7 @@
     "test": "cargo test",
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist",
-    "cross": "cross build --message-format=json --release | neon dist -m /target",
+    "cross": "cross build --message-format=json --release > cross.log && cat cross.log | neon dist -m /target",
     "pack-build": "neon pack-build",
     "prepack": "neon install-builds",
     "version": "neon bump -v --binaries npm"

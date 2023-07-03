@@ -24,9 +24,10 @@ class CargoMessages {
     options = options || {};
     this._mount = options.mount || null;
     this._manifestPath = options.manifestPath || null;
+    this._verbose = options.verbose || false;
     this._kernel = options.file
-      ? addon.fromFile(options.file, this._mount, this._manifestPath)
-      : addon.fromStdin(this._mount, this._manifestPath);
+      ? addon.fromFile(options.file, this._mount, this._manifestPath, this._verbose)
+      : addon.fromStdin(this._mount, this._manifestPath, this._verbose);
   }
 
   findArtifact(crateName) {
