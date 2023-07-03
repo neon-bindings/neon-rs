@@ -68,22 +68,28 @@ export default class Dist implements Command {
     this._out = options.out;
   }
 
-  findArtifact(): string | null {
+  findArtifact(): string {
     const messages: CargoMessages = new CargoMessages({
       mount: this._mount || undefined,
       manifestPath: this._manifestPath || undefined,
       file: this._log || undefined
     });
 
-    return messages.findArtifact(this._crateName)?.findFileByCrateType('cdylib') || null;
+    const artifact = messages.findArtifact(this._crateName);
+    if (!artifact) {
+      throw new Error(`No artifacts were generated for crate ${this._crateName}`);
+    }
+
+    const file = artifact.findFileByCrateType('cdylib');
+    if (!file) {
+      throw new Error(`No cdylib artifact found for crate ${this._crateName}`);
+    }
+
+    return file;
   }
 
   async run() {
     const file = this._file || this.findArtifact();
-
-    if (!file) {
-      throw new Error(`No library found for crate ${this._crateName}`);
-    }
 
     // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
     await copyFile(file, this._out);
