@@ -12,7 +12,8 @@ const OPTIONS = [
   { name: 'log', alias: 'l', type: String, defaultValue: null },
   { name: 'mount', alias: 'm', type: String, defaultValue: null },
   { name: 'manifest-path', type: String, defaultValue: null },
-  { name: 'out', alias: 'o', type: String, defaultValue: 'index.node' }
+  { name: 'out', alias: 'o', type: String, defaultValue: 'index.node' },
+  { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 
 export default class Dist implements Command {
@@ -28,7 +29,8 @@ export default class Dist implements Command {
         summary: 'Mounted path of target directory in virtual filesystem. This is used to map paths from the log data back to their real paths, needed when tools such as cross-rs report messages from within a mounted Docker filesystem.'
       },
       { name: '--manifest-path <path>', summary: 'Real path to Cargo.toml. (Default: cargo behavior)' },
-      { name: '-o, --out <dist>', summary: 'Copy output to file <dist>. (Default: index.node)' }
+      { name: '-o, --out <dist>', summary: 'Copy output to file <dist>. (Default: index.node)' },
+      { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
     ];
   }
   static seeAlso(): CommandDetail[] | void {
@@ -44,6 +46,7 @@ export default class Dist implements Command {
   private _manifestPath: string | null;
   private _crateName: string;
   private _out: string;
+  private _verbose: boolean;
 
   constructor(argv: string[]) {
     const options = commandLineArgs(OPTIONS, { argv });
@@ -66,13 +69,15 @@ export default class Dist implements Command {
     this._manifestPath = options['manifest-path'];
     this._crateName = options.name || process.env['npm_package_name'];
     this._out = options.out;
+    this._verbose = !!options.verbose;
   }
 
   findArtifact(): string {
     const messages: CargoMessages = new CargoMessages({
       mount: this._mount || undefined,
       manifestPath: this._manifestPath || undefined,
-      file: this._log || undefined
+      file: this._log || undefined,
+      verbose: this._verbose
     });
 
     const artifact = messages.findArtifact(this._crateName);
