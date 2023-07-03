@@ -27,7 +27,7 @@ class CargoMessages {
     this._verbose = options.verbose || false;
     this._kernel = options.file
       ? addon.fromFile(options.file, this._mount, this._manifestPath, this._verbose)
-      : addon.fromStdin(this._mount, this._manifestPath, this._verbose);
+      : (process.stdin.resume(), addon.fromStdin(this._mount, this._manifestPath, this._verbose));
   }
 
   findArtifact(crateName) {
