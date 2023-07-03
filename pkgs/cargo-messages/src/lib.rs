@@ -47,6 +47,10 @@ impl CargoMessages {
                         return Some(artifact);
                     }
                 }
+                Some(Err(err)) => {
+                    eprintln!("cargo-messages parse error: {}", err);
+                    break;
+                }
                 None => { break; }
                 _ => { continue; }
             }
