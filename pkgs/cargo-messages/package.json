@@ -28,7 +28,7 @@
   "scripts": {
     "test": "cargo test",
     "debug": "cargo build --message-format=json | neon dist",
-    "build": "cargo build --message-format=json --release > cross.log && cat cross.log | neon dist -v",
+    "build": "cargo build --message-format=json --release | neon dist -v",
     "cross": "cross build --message-format=json --release > cross.log && cat cross.log | neon dist -v -m /target",
     "pack-build": "neon pack-build",
     "prepack": "neon install-builds",
@@ -37,7 +37,7 @@
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.128"
+    "@neon-rs/cli": "^0.0.129"
   },
   "repository": {
     "type": "git",
