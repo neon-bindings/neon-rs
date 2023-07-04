@@ -1,7 +1,7 @@
 mod mount;
 
 use neon::prelude::*;
-use std::{io::{BufReader, Stdin, stdin}, cell::RefCell, fs::File};
+use std::{io::{BufReader, ErrorKind, Stdin, stdin}, cell::RefCell, fs::File, thread, time::Duration};
 use cargo_metadata::{Artifact, BuildFinished, Message, MessageIter};
 use mount::{MountInfo};
 
@@ -73,9 +73,15 @@ impl CargoMessages {
                         eprintln!("[cargo-messages] skipping non-artifact message");
                     }
                 }
+                Err(err) if err.kind() == ErrorKind::WouldBlock => {
+                    if self.verbose() {
+                        eprintln!("[cargo-messages] metadata read error: resource temporarily unavailable");
+                    }
+                    thread::sleep(Duration::from_millis(100));
+                }
                 Err(err) => {
                     if self.verbose() {
-                        eprintln!("[cargo-messages] parse error: {}", err);
+                        eprintln!("[cargo-messages] metadata read error: {}", err);
                     }
                 }
             }
