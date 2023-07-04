@@ -2,7 +2,7 @@ mod mount;
 
 use neon::prelude::*;
 use std::{io::{BufReader, Stdin, stdin}, cell::RefCell, fs::File};
-use cargo_metadata::{Artifact, Message, MessageIter};
+use cargo_metadata::{Artifact, BuildFinished, Message, MessageIter};
 use mount::{MountInfo};
 
 enum CargoMessages {
@@ -50,33 +50,41 @@ impl CargoMessages {
 
     fn find_artifact(&mut self, crate_name: &str) -> Option<Artifact> {
         let mut count: u32 = 0;
-        loop {
-            match self.next() {
-                Some(Ok(Message::CompilerArtifact(artifact))) => {
+        let mut result: Option<Artifact> = None;
+
+        while let Some(msg) = self.next() {
+            match msg {
+                Ok(Message::CompilerArtifact(artifact)) => {
                     count += 1;
                     if self.verbose() {
                         eprintln!("[cargo-messages] found artifact for {}", artifact.target.name);
                     }
-                    if &artifact.target.name == crate_name {
-                        return Some(artifact);
+                    if result.is_none() && &artifact.target.name == crate_name {
+                        result = Some(artifact);
                     }
                 }
-                Some(Err(err)) => {
+                Ok(Message::BuildFinished(BuildFinished { success, .. })) => {
+                    if self.verbose() {
+                        eprintln!("[cargo-messages] build finished ({})", if success { "succeeded" } else { "failed" });
+                    }
+                }
+                Ok(_) => {
+                    if self.verbose() {
+                        eprintln!("[cargo-messages] skipping non-artifact message");
+                    }
+                }
+                Err(err) => {
                     if self.verbose() {
                         eprintln!("[cargo-messages] parse error: {}", err);
                     }
-                    break;
                 }
-                None => {
-                    if self.verbose() {
-                        eprintln!("[cargo-messages] no{} artifacts", if count == 0 { "" } else { " more" });
-                    }
-                    break;
-                }
-                _ => { continue; }
             }
         }
-        None
+        if self.verbose() {
+            eprintln!("[cargo-messages] no{} artifacts", if count == 0 { "" } else { " more" });
+        }
+
+        result
     }
 }
 
