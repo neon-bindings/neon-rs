@@ -60,12 +60,28 @@ jobs:
           if [[ $(git diff --stat) != '' ]]; then
             git commit -a -m 'updated lockfile after setup'
           fi
+      - name: Show Neon CLI Version
+        shell: bash
+        run: |
+          npm explain @neon-rs/cli
+        working-directory: ./pkgs/cargo-messages
       - name: Pack
-        uses: neon-actions/pack@v0.2
+        shell: bash
+        run: |
+          mkdir -p dist
+          npm pack --pack-destination=dist
+        working-directory: ./pkgs/cargo-messages
+      - name: Release
+        if: ${{ needs.setup.outputs.action == 'publish' }}
+        uses: softprops/action-gh-release@v1
         with:
-          working-directory: ./pkgs/cargo-messages
-          node-version: ${{ env.NODE_VERSION }}
-          github-release: ${{ needs.setup.outputs.action == 'publish' }}
+          files: ./pkgs/cargo-messages/dist/*.tgz
+      # - name: Pack
+      #   uses: neon-actions/pack@v0.2
+      #   with:
+      #     working-directory: ./pkgs/cargo-messages
+      #     node-version: ${{ env.NODE_VERSION }}
+      #     github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   macos-builds:
     name: Builds (macOS)
