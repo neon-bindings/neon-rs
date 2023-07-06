@@ -40,8 +40,28 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
+          cache: npm
+      - name: Setup Monorepo
+        shell: bash
+        run: |
+          git checkout main
+          git config --global user.email 'ci@neon-bindings.com'
+          git config --global user.name 'Neon CI'
+          npm i
+          if [[ $(git diff --stat) != '' ]]; then
+            git commit -a -m 'updated lockfile after setup'
+          fi
       - name: Pack
-        uses: neon-actions/pack@v0.1.2
+        uses: neon-actions/pack@v0.2
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
