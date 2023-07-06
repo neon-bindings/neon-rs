@@ -41,7 +41,7 @@ jobs:
       contents: write
     steps:
       - name: Pack
-        uses: neon-actions/pack@v0.1.1
+        uses: neon-actions/pack@v0.1.2
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
