@@ -11,7 +11,8 @@ const OPTIONS = [
   { name: 'file', alias: 'f', type: String, defaultValue: 'index.node' },
   { name: 'target', alias: 't', type: String, defaultValue: null },
   { name: 'in-dir', alias: 'i', type: String, defaultValue: null },
-  { name: 'out-dir', alias: 'o', type: String, defaultValue: null }
+  { name: 'out-dir', alias: 'o', type: String, defaultValue: null },
+  { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
 ];
 
 import RUST from '../../data/rust.json';
@@ -55,7 +56,8 @@ export default class PackBuild implements Command {
       { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
       { name: '-t, --target <target>', summary: 'Rust target triple the addon was built for. (Default: in-dir manifest target or else rustc default host)' },
       { name: '-i, --in-dir <path>', summary: 'Input directory with package manifest, created automatically by default. (Default: temp dir)' },
-      { name: '-o, --out-dir <path>', summary: 'Output directory, recursively created if needed. (Default: ./dist)' }
+      { name: '-o, --out-dir <path>', summary: 'Output directory, recursively created if needed. (Default: ./dist)' },
+      { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
     ];
   }
   static seeAlso(): CommandDetail[] | void {
@@ -70,6 +72,7 @@ export default class PackBuild implements Command {
   private _addon: string;
   private _inDir: string | null;
   private _outDir: string;
+  private _verbose: boolean;
 
   constructor(argv: string[]) {
     const options = commandLineArgs(OPTIONS, { argv });
@@ -78,9 +81,17 @@ export default class PackBuild implements Command {
     this._addon = options.file;
     this._inDir = options['in-dir'] || null;
     this._outDir = options['out-dir'] || path.join(process.cwd(), 'dist');
+    this._verbose = !!options.verbose;
+  }
+
+  log(msg: string) {
+    if (this._verbose) {
+      console.error("[neon pack-build] " + msg);
+    }
   }
 
   async currentTarget(): Promise<string> {
+    this.log(`rustc -vV`);
     const result = await execa("rustc", ["-vV"], { shell: true });
 
     if (result.exitCode !== 0) {
@@ -88,12 +99,16 @@ export default class PackBuild implements Command {
     }
 
     const hostLine = result.stdout.split(/\n/).find(line => line.startsWith('host:'));
+    this.log(`found host line: ${hostLine}`);
 
     if (!hostLine) {
       throw new Error("Could not determine current Rust target (unexpected rustc output)");
     }
 
-    return hostLine.replace(/^host:\s+/, '');
+    const target = hostLine.replace(/^host:\s+/, '');
+    this.log(`currentTarget result: "${target}"`);
+
+    return target;
   }
 
   async createTempDir(manifest: any): Promise<string> {
@@ -142,11 +157,19 @@ export default class PackBuild implements Command {
         prebuildManifest[key] = manifest[key];
       }
     }
+    this.log(`prebuild manifest: ${JSON.stringify(prebuildManifest)}`);
 
+    this.log("creating temp dir");
     const tmpdir = await mktemp('neon-');
+    this.log(`created temp dir ${tmpdir}`);
 
+    this.log(`creating ${tmpdir}/package.json`)
     await fs.writeFile(path.join(tmpdir, "package.json"), JSON.stringify(prebuildManifest, null, 2));
+
+    this.log(`copying ${this._addon} to ${tmpdir}/index.node`);
     await fs.copyFile(this._addon, path.join(tmpdir, "index.node"));
+
+    this.log(`creating ${tmpdir}/README.md`);
     await fs.writeFile(path.join(tmpdir, "README.md"), `# \`${name}\`\n\n${description}\n`);
 
     return tmpdir;
@@ -183,20 +206,29 @@ export default class PackBuild implements Command {
     // FIXME: make it possible to disable this
     binaryManifest.version = version;
 
+    this.log(`binary manifest: ${JSON.stringify(binaryManifest)}`);
+
+    this.log(`creating ${this._inDir}/package.json`);
     await fs.writeFile(path.join(this._inDir, 'package.json'), JSON.stringify(binaryManifest, null, 2), { encoding: 'utf8' });
+
     // FIXME: make this path configurable
+    this.log(`copying ${this._addon} to ${this._inDir}/index.node`);
     await fs.copyFile(this._addon, path.join(this._inDir, "index.node"));
 
     return this._inDir;
   }
 
   async run() {
-   await fs.mkdir(this._outDir, { recursive: true });
+    this.log(`creating directory ${this._outDir}`);
+    await fs.mkdir(this._outDir, { recursive: true });
 
+    this.log(`reading package.json`);
     const manifest = JSON.parse(await fs.readFile('package.json', { encoding: 'utf8' }));
+    this.log(`manifest: ${JSON.stringify(manifest)}`);
 
     const inDir = await this.prepareInDir(manifest);
 
+    this.log(`npm pack --json`);
     const result = await execa("npm", ["pack", "--json"], {
       shell: true,
       cwd: inDir,
@@ -204,14 +236,17 @@ export default class PackBuild implements Command {
     });
 
     if (result.exitCode !== 0) {
+      this.log(`npm pack failed with exit code ${result.exitCode}`);
       process.exit(result.exitCode);
     }
 
     // FIXME: comment linking to the npm issue this fixes
     const tarball = JSON.parse(result.stdout)[0].filename.replace('@', '').replace('/', '-');
+    this.log(`tarball filename: ${tarball}`);
 
     const dest = path.join(this._outDir, tarball);
 
+    this.log(`copying ${path.join(inDir, tarball)} to ${dest}`);
     // Copy instead of move since e.g. GitHub Actions Windows runners host temp directories
     // on a different device (which causes fs.renameSync to fail).
     await fs.copyFile(path.join(inDir, tarball), dest);
