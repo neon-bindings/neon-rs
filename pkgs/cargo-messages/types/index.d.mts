@@ -1,3 +1,3 @@
-import { CrateType, CargoArtifact, CargoMessageOptions, CargoMessages } from './index.d.cts';
+import { CrateType, CargoArtifact, CargoMessageOptions, CargoMessages, CargoReader, CargoReaderOptions, CompilerArtifact, CargoMessage } from './index.d.cts';
 
-export { CrateType, CargoArtifact, CargoMessageOptions, CargoMessages };
+export { CrateType, CargoArtifact, CargoMessageOptions, CargoMessages, CargoReader, CargoReaderOptions, CompilerArtifact, CargoMessage };

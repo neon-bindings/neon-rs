@@ -2,8 +2,130 @@ mod mount;
 
 use neon::prelude::*;
 use std::{io::{BufReader, ErrorKind, Stdin, stdin}, cell::RefCell, fs::File, thread, time::Duration};
-use cargo_metadata::{Artifact, BuildFinished, Message, MessageIter};
+use cargo_metadata::{Artifact, Message, MessageIter};
 use mount::{MountInfo};
+use serde::de::Deserialize;
+
+#[derive(Clone)]
+struct Options {
+    mount_info: Option<MountInfo>,
+    verbose: bool,
+}
+
+impl Options {
+    fn mount_info(&self) -> &Option<MountInfo> {
+        &self.mount_info
+    }
+
+    fn verbose(&self) -> bool {
+        self.verbose
+    }
+}
+
+struct CargoReader {
+    options: Options,
+}
+
+impl Finalize for CargoReader { }
+
+struct CompilerArtifact {
+    options: Options,
+    artifact: Artifact,
+}
+
+impl Finalize for CompilerArtifact { }
+
+impl CompilerArtifact {
+    fn crate_name(&self) -> &str {
+        &self.artifact.target.name
+    }
+}
+
+struct CompilerMessage {
+    options: Options,
+    message: cargo_metadata::CompilerMessage,
+}
+
+impl Finalize for CompilerMessage { }
+
+struct BuildScriptExecuted {
+    options: Options,
+    script: cargo_metadata::BuildScript,
+}
+
+impl Finalize for BuildScriptExecuted { }
+
+struct BuildFinished {
+    options: Options,
+    finished: cargo_metadata::BuildFinished,
+}
+
+impl Finalize for BuildFinished { }
+
+struct TextLine {
+    options: Options,
+    line: String,
+}
+
+impl Finalize for TextLine { }
+
+fn parse_message(line: &str) -> Message {
+    let mut deserializer = serde_json::Deserializer::from_str(line);
+    deserializer.disable_recursion_limit();
+    Message::deserialize(&mut deserializer).unwrap_or(Message::TextLine(line.to_string()))
+}
+
+fn readline(mut cx: FunctionContext) -> JsResult<JsObject> {
+    let reader: Handle<Boxed<CargoReader>> = cx.argument(0)?;
+    let reader = reader.borrow();
+    let line: Handle<JsString> = cx.argument(1)?;
+    let line = line.value(&mut cx);
+
+    let message = parse_message(&line);
+    let options = reader.options.clone();
+    let result = cx.empty_object();
+
+    match message {
+        Message::CompilerArtifact(artifact) => {
+            let kernel = cx.boxed(RefCell::new(CompilerArtifact { options, artifact }));
+            let kind = cx.number(0);
+            result.set(&mut cx, "kernel", kernel)?;
+            result.set(&mut cx, "kind", kind)?;
+        }
+        Message::CompilerMessage(message) => {
+            let kernel = cx.boxed(RefCell::new(CompilerMessage { options, message }));
+            let kind = cx.number(1);
+            result.set(&mut cx, "kernel", kernel)?;
+            result.set(&mut cx, "kind", kind)?;
+        }
+        Message::BuildScriptExecuted(script) => {
+            let kernel = cx.boxed(RefCell::new(BuildScriptExecuted { options, script }));
+            let kind = cx.number(2);
+            result.set(&mut cx, "kernel", kernel)?;
+            result.set(&mut cx, "kind", kind)?;
+        }
+        Message::BuildFinished(finished) => {
+            let kernel = cx.boxed(RefCell::new(BuildFinished { options, finished }));
+            let kind = cx.number(3);
+            result.set(&mut cx, "kernel", kernel)?;
+            result.set(&mut cx, "kind", kind)?;
+        }
+        Message::TextLine(line) => {
+            let kernel = cx.boxed(RefCell::new(TextLine { options, line }));
+            let kind = cx.number(4);
+            result.set(&mut cx, "kernel", kernel)?;
+            result.set(&mut cx, "kind", kind)?;
+        }
+        _ => {
+            let kernel = cx.boxed(RefCell::new(TextLine { options, line }));
+            let kind = cx.number(4);
+            result.set(&mut cx, "kernel", kernel)?;
+            result.set(&mut cx, "kind", kind)?;
+        }
+    }
+
+    Ok(result)
+}
 
 enum CargoMessages {
     FromStdin(MessageIter<BufReader<Stdin>>, Option<MountInfo>, bool),
@@ -63,7 +185,7 @@ impl CargoMessages {
                         result = Some(artifact);
                     }
                 }
-                Ok(Message::BuildFinished(BuildFinished { success, .. })) => {
+                Ok(Message::BuildFinished(cargo_metadata::BuildFinished { success, .. })) => {
                     if self.verbose() {
                         eprintln!("[cargo-messages] build finished ({})", if success { "succeeded" } else { "failed" });
                     }
@@ -159,6 +281,14 @@ fn mount_info<'cx>(cx: &mut FunctionContext<'cx>, i: usize) -> NeonResult<Option
     }
 }
 
+fn options<'cx>(cx: &mut FunctionContext<'cx>, i: usize) -> NeonResult<Options> {
+    let mount_info = mount_info(cx, i)?;
+    let verbose: Handle<JsValue> = cx.argument(i + 2)?;
+    let t: Handle<JsBoolean> = cx.boolean(true);
+    let verbose = verbose.strict_equals(cx, t);
+    Ok(Options { mount_info, verbose })
+}
+
 fn find_file_by_crate_type(mut cx: FunctionContext) -> JsResult<JsValue> {
     let artifact: Handle<Boxed<CargoArtifact>> = cx.argument(0)?;
     let crate_type = cx.argument::<JsString>(1)?.value(&mut cx);
@@ -187,11 +317,25 @@ fn from_file(mut cx: FunctionContext) -> JsResult<Boxed<CargoMessages>> {
     Ok(cx.boxed(RefCell::new(CargoMessages::from_file(file, mount_info, verbose))))
 }
 
+fn create_reader(mut cx: FunctionContext) -> JsResult<Boxed<CargoReader>> {
+    let options = options(&mut cx, 0)?;
+    Ok(cx.boxed(RefCell::new(CargoReader { options })))
+}
+
+fn compiler_artifact_crate_name(mut cx: FunctionContext) -> JsResult<JsString> {
+    let artifact: Handle<Boxed<CompilerArtifact>> = cx.argument(0)?;
+    let artifact = artifact.borrow();
+    Ok(cx.string(artifact.crate_name()))
+}
+
 #[neon::main]
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
     cx.export_function("fromStdin", from_stdin)?;
     cx.export_function("fromFile", from_file)?;
     cx.export_function("findArtifact", find_artifact)?;
     cx.export_function("findFileByCrateType", find_file_by_crate_type)?;
+    cx.export_function("createReader", create_reader)?;
+    cx.export_function("compilerArtifactCrateName", compiler_artifact_crate_name)?;
+    cx.export_function("readline", readline)?;
     Ok(())
 }

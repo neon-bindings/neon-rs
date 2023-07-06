@@ -11,5 +11,8 @@ module.exports = require('@neon-rs/load').lazy({
   'findArtifact',
   'findFileByCrateType',
   'fromStdin',
-  'fromFile'
+  'fromFile',
+  'createReader',
+  'compilerArtifactCrateName',
+  'readline'
 ]);
