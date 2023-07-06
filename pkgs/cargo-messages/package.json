@@ -31,7 +31,7 @@
     "build": "cargo build --message-format=json --release | neon dist -v",
     "cross": "cross build --message-format=json --release | neon dist -v -m /target",
     "pack-build": "neon pack-build -v",
-    "prepack": "neon install-builds -v",
+    "prepack": "exit 1 && neon install-builds -v",
     "version": "neon bump -v --binaries npm"
   },
   "author": "David Herman <david.herman@gmail.com>",
