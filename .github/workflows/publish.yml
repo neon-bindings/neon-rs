@@ -70,7 +70,6 @@ jobs:
         run: |
           mkdir -p dist
           npm pack --pack-destination=dist
-          cat install-builds.log
         working-directory: ./pkgs/cargo-messages
       - name: Release
         if: ${{ needs.setup.outputs.action == 'publish' }}
