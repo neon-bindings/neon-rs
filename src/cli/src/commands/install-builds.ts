@@ -48,6 +48,7 @@ export default class InstallBuilds implements Command {
     this.log(`reading package.json (CWD=${process.cwd()})`);
     const manifest = JSON.parse(await fs.readFile(path.join(process.cwd(), 'package.json'), { encoding: 'utf8' }));
     const version = manifest.version;
+    this.log(`package.json before: ${JSON.stringify(manifest)}`);
     this.log(`determined version: ${version}`);
 
     const targets = Object.values(manifest.neon.targets);
@@ -60,6 +61,7 @@ export default class InstallBuilds implements Command {
       console.error(result.stderr);
       process.exit(result.exitCode);
     }
+    this.log(`package.json after: ${await fs.readFile(path.join(process.cwd(), "package.json"))}`);
 
     if (!this._bundle) {
       return;
