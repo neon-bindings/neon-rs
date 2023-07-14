@@ -33,56 +33,56 @@ jobs:
             echo "type=publish" >> "$GITHUB_OUTPUT"
           fi
 
-  pack:
-    name: Pack (cargo-messages)
-    needs: [setup]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
-          cache: npm
-      - name: Setup Monorepo
-        shell: bash
-        run: |
-          git checkout main
-          git config --global user.email 'ci@neon-bindings.com'
-          git config --global user.name 'Neon CI'
-          npm i
-          if [[ $(git diff --stat) != '' ]]; then
-            git commit -a -m 'updated lockfile after setup'
-          fi
-      - name: Show Neon CLI Version
-        shell: bash
-        run: |
-          npm explain @neon-rs/cli
-        working-directory: ./pkgs/cargo-messages
-      - name: Pack
-        shell: bash
-        run: |
-          mkdir -p dist
-          npm pack --pack-destination=dist
-          cat install-builds.log
-        working-directory: ./pkgs/cargo-messages
-      - name: Release
-        if: ${{ needs.setup.outputs.action == 'publish' }}
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ./pkgs/cargo-messages/dist/*.tgz
-      # - name: Pack
-      #   uses: neon-actions/pack@v0.2
-      #   with:
-      #     working-directory: ./pkgs/cargo-messages
-      #     node-version: ${{ env.NODE_VERSION }}
-      #     github-release: ${{ needs.setup.outputs.action == 'publish' }}
+  # pack:
+  #   name: Pack (cargo-messages)
+  #   needs: [setup]
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: write
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Install Node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         registry-url: ${{ env.NPM_REGISTRY }}
+  #         cache: npm
+  #     - name: Setup Monorepo
+  #       shell: bash
+  #       run: |
+  #         git checkout main
+  #         git config --global user.email 'ci@neon-bindings.com'
+  #         git config --global user.name 'Neon CI'
+  #         npm i
+  #         if [[ $(git diff --stat) != '' ]]; then
+  #           git commit -a -m 'updated lockfile after setup'
+  #         fi
+  #     - name: Show Neon CLI Version
+  #       shell: bash
+  #       run: |
+  #         npm explain @neon-rs/cli
+  #       working-directory: ./pkgs/cargo-messages
+  #     - name: Pack
+  #       shell: bash
+  #       run: |
+  #         mkdir -p dist
+  #         npm pack --pack-destination=dist
+  #         cat install-builds.log
+  #       working-directory: ./pkgs/cargo-messages
+  #     - name: Release
+  #       if: ${{ needs.setup.outputs.action == 'publish' }}
+  #       uses: softprops/action-gh-release@v1
+  #       with:
+  #         files: ./pkgs/cargo-messages/dist/*.tgz
+  #     # - name: Pack
+  #     #   uses: neon-actions/pack@v0.2
+  #     #   with:
+  #     #     working-directory: ./pkgs/cargo-messages
+  #     #     node-version: ${{ env.NODE_VERSION }}
+  #     #     github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   macos-builds:
     name: Builds (macOS)
@@ -213,7 +213,7 @@ jobs:
 
   publish:
     name: Publish
-    needs: [setup, pack, macos-builds, windows-builds, other-builds]
+    needs: [setup, macos-builds, windows-builds, other-builds]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -234,14 +234,15 @@ jobs:
           fi
       - name: Publish (cargo-messages)
         if: ${{ needs.setup.outputs.action == 'publish' }}
-        uses: neon-actions/publish@v0.3
+        uses: neon-actions/publish@v0.4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
           registry-url: ${{ env.NPM_REGISTRY }}
-          github-release: "*.tgz"
+          fetch-binaries: "*.tgz"
+          github-release: true
       - name: Build (@neon-rs/load)
         shell: bash
         run: npm run build
