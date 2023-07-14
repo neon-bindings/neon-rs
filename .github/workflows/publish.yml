@@ -234,7 +234,7 @@ jobs:
           fi
       - name: Publish (cargo-messages)
         if: ${{ needs.setup.outputs.action == 'publish' }}
-        uses: neon-actions/publish@v0.4
+        uses: neon-actions/publish@v0.4.1
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         with:
