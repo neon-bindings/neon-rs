@@ -20,6 +20,13 @@ impl Options {
     fn verbose(&self) -> bool {
         self.verbose
     }
+
+    fn unmount(&self, filename: String) -> String {
+        match &self.mount_info {
+            Some(mount_info) => mount_info.unmount(filename),
+            None => filename,
+        }
+    }
 }
 
 struct CargoReader {
@@ -38,6 +45,13 @@ impl Finalize for CompilerArtifact { }
 impl CompilerArtifact {
     fn crate_name(&self) -> &str {
         &self.artifact.target.name
+    }
+
+    fn find_file_by_crate_type(&self, crate_type: String) -> Option<String> {
+        match self.artifact.target.crate_types.iter().position(|ct| *ct == crate_type) {
+            Some(i) => { Some(self.options.unmount(self.artifact.filenames[i].to_string())) }
+            None => { None }
+        }
     }
 }
 
@@ -328,6 +342,16 @@ fn compiler_artifact_crate_name(mut cx: FunctionContext) -> JsResult<JsString> {
     Ok(cx.string(artifact.crate_name()))
 }
 
+fn compiler_artifact_find_file_by_crate_type(mut cx: FunctionContext) -> JsResult<JsValue> {
+    let artifact: Handle<Boxed<CompilerArtifact>> = cx.argument(0)?;
+    let crate_type = cx.argument::<JsString>(1)?.value(&mut cx);
+    let artifact = artifact.borrow();
+    Ok(match artifact.find_file_by_crate_type(crate_type) {
+        Some(filename) => cx.string(filename).upcast(),
+        None => cx.null().upcast(),
+    })
+}
+
 #[neon::main]
 fn main(mut cx: ModuleContext) -> NeonResult<()> {
     cx.export_function("fromStdin", from_stdin)?;
@@ -336,6 +360,7 @@ fn main(mut cx: ModuleContext) -> NeonResult<()> {
     cx.export_function("findFileByCrateType", find_file_by_crate_type)?;
     cx.export_function("createReader", create_reader)?;
     cx.export_function("compilerArtifactCrateName", compiler_artifact_crate_name)?;
+    cx.export_function("compilerArtifactFindFileByCrateType", compiler_artifact_find_file_by_crate_type)?;
     cx.export_function("readline", readline)?;
     Ok(())
 }

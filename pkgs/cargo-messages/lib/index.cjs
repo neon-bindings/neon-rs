@@ -61,10 +61,19 @@ class CargoReader {
           break;
 
         case 1:
+          yield new CompilerMessage(PRIVATE, kernel);
+          break;
+
         case 2:
+          yield new BuildScriptExecuted(PRIVATE, kernel);
+          break;
+
         case 3:
+          yield new BuildFinished(PRIVATE, kernel);
+          break;
+
         case 4:
-          throw new Error(`message type not yet implemented (code: ${kind})`);
+          yield new TextLine(PRIVATE, kernel);
           break;
       }
     }
@@ -79,6 +88,38 @@ class CompilerArtifact {
 
   crateName() {
     return addon.compilerArtifactCrateName(this._kernel);
+  }
+
+  findFileByCrateType(crateType) {
+    return addon.compilerArtifactFindFileByCrateType(this._kernel, crateType);
+  }
+}
+
+class CompilerMessage {
+  constructor(nonce, kernel) {
+    enforcePrivate(nonce, 'CompilerMessage');
+    this._kernel = kernel;
+  }
+}
+
+class BuildScriptExecuted {
+  constructor(nonce, kernel) {
+    enforcePrivate(nonce, 'BuildScriptExecuted');
+    this._kernel = kernel;
+  }
+}
+
+class BuildFinished {
+  constructor(nonce, kernel) {
+    enforcePrivate(nonce, 'BuildFinished');
+    this._kernel = kernel;
+  }
+}
+
+class TextLine {
+  constructor(nonce, kernel) {
+    enforcePrivate(nonce, 'TextLine');
+    this._kernel = kernel;
   }
 }
 

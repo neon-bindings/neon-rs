@@ -31,7 +31,16 @@ export interface CargoMessage {
 
 export interface CompilerArtifact extends CargoMessage {
   crateName(): string;
+  findFileByCrateType(crateType: CrateType): string | null;
 }
+
+export interface CompilerMessage extends CargoMessage { }
+
+export interface BuildScriptExecuted extends CargoMessage { }
+
+export interface BuildFinished extends CargoMessage { }
+
+export interface TextLine extends CargoMessage { }
 
 export class CargoReader implements AsyncIterable<CargoMessage> {
   constructor(options?: CargoReaderOptions);
