@@ -54,7 +54,7 @@ class CargoReader {
       input: this._input
     });
     for await (const line of rl) {
-      const { kernel, kind } = addon.readline(line);
+      const { kernel, kind } = addon.readline(this._kernel, line);
       switch (kind) {
         case 0:
           yield new CompilerArtifact(PRIVATE, kernel);
