@@ -10,15 +10,12 @@ pub(crate) struct MountInfo {
 
 impl MountInfo {
     // FIXME: super sloppy, clean up the unwraps and lossy conversions
-    pub(crate) fn unmount(&self, filename: String, verbose: bool) -> String {
+    pub(crate) fn unmount(&self, filename: String) -> String {
         let mounted_path = Path::new(&filename);
         let mounted_base = Path::new(&self.mount);
         let rel_path = pathdiff::diff_paths(mounted_path, mounted_base).unwrap();
         let mut cmd = MetadataCommand::new();
         if let Some(manifest_path) = &self.manifest_path {
-            if verbose {
-                eprintln!("[unmount] manifest_path={}", manifest_path);
-            }
             cmd.manifest_path(manifest_path);
         }
         cmd.no_deps();

@@ -23,7 +23,7 @@ impl Options {
 
     fn unmount(&self, filename: String) -> String {
         match &self.mount_info {
-            Some(mount_info) => mount_info.unmount(filename, self.verbose),
+            Some(mount_info) => mount_info.unmount(filename),
             None => filename,
         }
     }
@@ -248,7 +248,7 @@ impl CargoArtifact {
 
     fn unmount(&self, filename: String) -> String {
         match &self.mount_info {
-            Some(mount_info) => mount_info.unmount(filename, false),
+            Some(mount_info) => mount_info.unmount(filename),
             None => filename,
         }
     }
