@@ -90,6 +90,7 @@ class CargoMessage {
 
 class CompilerArtifact extends CargoMessage {
   constructor(nonce, kernel) {
+    super();
     enforcePrivate(nonce, 'CompilerArtifact');
     this._kernel = kernel;
   }
@@ -107,6 +108,7 @@ class CompilerArtifact extends CargoMessage {
 
 class CompilerMessage extends CargoMessage {
   constructor(nonce, kernel) {
+    super();
     enforcePrivate(nonce, 'CompilerMessage');
     this._kernel = kernel;
   }
@@ -116,6 +118,7 @@ class CompilerMessage extends CargoMessage {
 
 class BuildScriptExecuted extends CargoMessage {
   constructor(nonce, kernel) {
+    super();
     enforcePrivate(nonce, 'BuildScriptExecuted');
     this._kernel = kernel;
   }
@@ -125,6 +128,7 @@ class BuildScriptExecuted extends CargoMessage {
 
 class BuildFinished extends CargoMessage {
   constructor(nonce, kernel) {
+    super();
     enforcePrivate(nonce, 'BuildFinished');
     this._kernel = kernel;
   }
@@ -134,6 +138,7 @@ class BuildFinished extends CargoMessage {
 
 class TextLine extends CargoMessage {
   constructor(nonce, kernel) {
+    super();
     enforcePrivate(nonce, 'TextLine');
     this._kernel = kernel;
   }
