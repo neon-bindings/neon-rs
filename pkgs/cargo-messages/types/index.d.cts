@@ -26,7 +26,11 @@ export type CargoReaderOptions = {
 }
 
 export interface CargoMessage {
-  
+  isCompilerArtifact(): this is CompilerArtifact;
+  isCompilerMessage(): this is CompilerMessage;
+  isBuildScriptExecuted(): this is BuildScriptExecuted;
+  isBuildFinished(): this is BuildFinished;
+  isTextLine(): this is TextLine;
 }
 
 export interface CompilerArtifact extends CargoMessage {

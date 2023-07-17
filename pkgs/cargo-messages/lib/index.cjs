@@ -80,11 +80,21 @@ class CargoReader {
   }
 }
 
-class CompilerArtifact {
+class CargoMessage {
+  isCompilerArtifact() { return false; }
+  isCompilerMessage() { return false; }
+  isBuildScriptExecuted() { return false; }
+  isBuildFinished() { return false; }
+  isTextLine() { return false; }
+}
+
+class CompilerArtifact extends CargoMessage {
   constructor(nonce, kernel) {
     enforcePrivate(nonce, 'CompilerArtifact');
     this._kernel = kernel;
   }
+
+  isCompilerArtifact() { return true; }
 
   crateName() {
     return addon.compilerArtifactCrateName(this._kernel);
@@ -95,32 +105,40 @@ class CompilerArtifact {
   }
 }
 
-class CompilerMessage {
+class CompilerMessage extends CargoMessage {
   constructor(nonce, kernel) {
     enforcePrivate(nonce, 'CompilerMessage');
     this._kernel = kernel;
   }
+
+  isCompilerMessage() { return true; }
 }
 
-class BuildScriptExecuted {
+class BuildScriptExecuted extends CargoMessage {
   constructor(nonce, kernel) {
     enforcePrivate(nonce, 'BuildScriptExecuted');
     this._kernel = kernel;
   }
+
+  isBuildScriptExecuted() { return true; }
 }
 
-class BuildFinished {
+class BuildFinished extends CargoMessage {
   constructor(nonce, kernel) {
     enforcePrivate(nonce, 'BuildFinished');
     this._kernel = kernel;
   }
+
+  isBuildFinished() { return true; }
 }
 
-class TextLine {
+class TextLine extends CargoMessage {
   constructor(nonce, kernel) {
     enforcePrivate(nonce, 'TextLine');
     this._kernel = kernel;
   }
+
+  isTextLine() { return true; }
 }
 
 module.exports = {
