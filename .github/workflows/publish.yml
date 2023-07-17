@@ -254,6 +254,13 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
         working-directory: ./pkgs/load
+      - name: Update (@neon-rs/cli)
+        if: ${{ needs.setup.outputs.action == 'publish' }}
+        shell: bash
+        run: |
+          npm run update-src
+          git commit -a -m 'update cli to cargo-messages@latest'
+          git push
       - name: Publish (@neon-rs/cli)
         if: ${{ needs.setup.outputs.action == 'publish' }}
         shell: bash
