@@ -15416,6 +15416,13 @@ function printError(e) {
 
 /***/ }),
 
+/***/ 5969:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = require(__nccwpck_require__.ab + "index.node")
+
+/***/ }),
+
 /***/ 5193:
 /***/ ((module) => {
 
@@ -15444,14 +15451,6 @@ module.exports = eval("require")("@cargo-messages/darwin-x64");
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/linux-arm-gnueabihf");
-
-
-/***/ }),
-
-/***/ 9301:
-/***/ ((module) => {
-
-module.exports = eval("require")("@cargo-messages/linux-x64-gnu");
 
 
 /***/ }),
@@ -15636,32 +15635,96 @@ class CargoReader {
       input: this._input
     });
     for await (const line of rl) {
-      const { kernel, kind } = addon.readline(line);
+      const { kernel, kind } = addon.readline(this._kernel, line);
       switch (kind) {
         case 0:
           yield new CompilerArtifact(PRIVATE, kernel);
           break;
 
         case 1:
+          yield new CompilerMessage(PRIVATE, kernel);
+          break;
+
         case 2:
+          yield new BuildScriptExecuted(PRIVATE, kernel);
+          break;
+
         case 3:
+          yield new BuildFinished(PRIVATE, kernel);
+          break;
+
         case 4:
-          throw new Error(`message type not yet implemented (code: ${kind})`);
+          yield new TextLine(PRIVATE, kernel);
           break;
       }
     }
   }
 }
 
-class CompilerArtifact {
+class CargoMessage {
+  isCompilerArtifact() { return false; }
+  isCompilerMessage() { return false; }
+  isBuildScriptExecuted() { return false; }
+  isBuildFinished() { return false; }
+  isTextLine() { return false; }
+}
+
+class CompilerArtifact extends CargoMessage {
   constructor(nonce, kernel) {
+    super();
     enforcePrivate(nonce, 'CompilerArtifact');
     this._kernel = kernel;
   }
 
+  isCompilerArtifact() { return true; }
+
   crateName() {
     return addon.compilerArtifactCrateName(this._kernel);
   }
+
+  findFileByCrateType(crateType) {
+    return addon.compilerArtifactFindFileByCrateType(this._kernel, crateType);
+  }
+}
+
+class CompilerMessage extends CargoMessage {
+  constructor(nonce, kernel) {
+    super();
+    enforcePrivate(nonce, 'CompilerMessage');
+    this._kernel = kernel;
+  }
+
+  isCompilerMessage() { return true; }
+}
+
+class BuildScriptExecuted extends CargoMessage {
+  constructor(nonce, kernel) {
+    super();
+    enforcePrivate(nonce, 'BuildScriptExecuted');
+    this._kernel = kernel;
+  }
+
+  isBuildScriptExecuted() { return true; }
+}
+
+class BuildFinished extends CargoMessage {
+  constructor(nonce, kernel) {
+    super();
+    enforcePrivate(nonce, 'BuildFinished');
+    this._kernel = kernel;
+  }
+
+  isBuildFinished() { return true; }
+}
+
+class TextLine extends CargoMessage {
+  constructor(nonce, kernel) {
+    super();
+    enforcePrivate(nonce, 'TextLine');
+    this._kernel = kernel;
+  }
+
+  isTextLine() { return true; }
 }
 
 module.exports = {
@@ -15681,7 +15744,7 @@ module.exports = (__nccwpck_require__(4371)/* .lazy */ .Vo)({
   'aarch64-pc-windows-msvc': () => __nccwpck_require__(9329),
   'darwin-x64': () => __nccwpck_require__(5583),
   'darwin-arm64': () => __nccwpck_require__(5111),
-  'linux-x64-gnu': () => __nccwpck_require__(9301),
+  'linux-x64-gnu': () => __nccwpck_require__(5969),
   'linux-arm-gnueabihf': () => __nccwpck_require__(6698),
   'android-arm-eabi': () => __nccwpck_require__(5193)
 }, [
@@ -15691,6 +15754,7 @@ module.exports = (__nccwpck_require__(4371)/* .lazy */ .Vo)({
   'fromFile',
   'createReader',
   'compilerArtifactCrateName',
+  'compilerArtifactFindFileByCrateType',
   'readline'
 ]);
 

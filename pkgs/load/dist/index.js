@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bin = exports.custom = exports.scope = exports.currentTarget = void 0;
-const node_module_1 = require("node:module");
+exports.lazy = exports.bin = exports.currentTarget = void 0;
 function currentTarget() {
     let os = null;
     switch (process.platform) {
@@ -78,15 +77,6 @@ function isGlibc() {
 //   const pathSpec = path.join(...components);
 //   return fs.existsSync(pathSpec) ? require(pathSpec) : null;
 // }
-const requireAbsolute = (0, node_module_1.createRequire)(process.cwd());
-function scope(scope) {
-    return requireAbsolute(scope + "/" + currentTarget());
-}
-exports.scope = scope;
-function custom(toRequireSpec) {
-    return requireAbsolute(toRequireSpec(currentTarget()));
-}
-exports.custom = custom;
 function* interleave(a1, a2) {
     const length = Math.max(a1.length, a2.length);
     for (let i = 0; i < length; i++) {
@@ -102,3 +92,23 @@ function bin(scope, ...rest) {
     return [...interleave(scope, rest)].join("") + "/" + currentTarget();
 }
 exports.bin = bin;
+function lazy(loaders, exports) {
+    let loaded = null;
+    function load() {
+        if (loaded) {
+            return loaded;
+        }
+        const target = currentTarget();
+        if (!loaders.hasOwnProperty(target)) {
+            throw new Error(`no precompiled module found for ${target}`);
+        }
+        loaded = loaders[target]();
+        return loaded;
+    }
+    let module = {};
+    for (const key of exports) {
+        Object.defineProperty(module, key, { get() { return load()[key]; } });
+    }
+    return module;
+}
+exports.lazy = lazy;
