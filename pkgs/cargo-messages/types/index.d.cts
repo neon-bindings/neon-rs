@@ -47,6 +47,6 @@ export interface BuildFinished extends CargoMessage { }
 export interface TextLine extends CargoMessage { }
 
 export class CargoReader implements AsyncIterable<CargoMessage> {
-  constructor(options?: CargoReaderOptions);
+  constructor(input: NodeJS.ReadableStream, options?: CargoReaderOptions);
   [Symbol.asyncIterator](): AsyncIterator<CargoMessage>;
 }

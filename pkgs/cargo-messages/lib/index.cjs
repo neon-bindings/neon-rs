@@ -53,6 +53,7 @@ class CargoReader {
     const rl = readline.createInterface({
       input: this._input
     });
+
     for await (const line of rl) {
       const { kernel, kind } = addon.readline(this._kernel, line);
       switch (kind) {
