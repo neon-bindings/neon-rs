@@ -23,7 +23,7 @@
     "bundle-assets": "cp README.md LICENSE* ../../pkgs/cli",
     "bundle-manifest": "cat package.json | jq -f bundle.jq > ../../pkgs/cli/package.json",
     "update-cargo-messages": "npm i cargo-messages@$(npm view cargo-messages version)",
-    "update-binaries": "for b in android-arm-eabi darwin-arm64 darwin-x64 linux-arm-gnueabihf linux-x64-gnu win32-arm64-msvc win32-x64-msvc ; do npm i -E -O @cargo-messages/$b$(npm view cargo-messages version) ; done",
+    "update-binaries": "for b in android-arm-eabi darwin-arm64 darwin-x64 linux-arm-gnueabihf linux-x64-gnu win32-arm64-msvc win32-x64-msvc ; do npm i -E -O @cargo-messages/$b@$(npm view cargo-messages version) ; done",
     "build": "tsc",
     "pretest": "npm run build",
     "prepack": "npm run build",
