@@ -15416,13 +15416,6 @@ function printError(e) {
 
 /***/ }),
 
-/***/ 5969:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = require(__nccwpck_require__.ab + "index.node")
-
-/***/ }),
-
 /***/ 5193:
 /***/ ((module) => {
 
@@ -15451,6 +15444,14 @@ module.exports = eval("require")("@cargo-messages/darwin-x64");
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/linux-arm-gnueabihf");
+
+
+/***/ }),
+
+/***/ 9301:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/linux-x64-gnu");
 
 
 /***/ }),
@@ -15744,7 +15745,7 @@ module.exports = (__nccwpck_require__(4371)/* .lazy */ .Vo)({
   'aarch64-pc-windows-msvc': () => __nccwpck_require__(9329),
   'darwin-x64': () => __nccwpck_require__(5583),
   'darwin-arm64': () => __nccwpck_require__(5111),
-  'linux-x64-gnu': () => __nccwpck_require__(5969),
+  'linux-x64-gnu': () => __nccwpck_require__(9301),
   'linux-arm-gnueabihf': () => __nccwpck_require__(6698),
   'android-arm-eabi': () => __nccwpck_require__(5193)
 }, [
