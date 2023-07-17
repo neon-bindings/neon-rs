@@ -1,7 +1,7 @@
 {
   "name": "neon-rs",
   "private": true,
-  "version": "0.0.144",
+  "version": "0.0.145",
   "description": "@neon-rs monorepo root",
   "workspaces": [],
   "scripts": {
