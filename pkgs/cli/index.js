@@ -2,13 +2,6 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
-/***/ 8168:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = require(__nccwpck_require__.ab + "index.node")
-
-/***/ }),
-
 /***/ 4371:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -10244,6 +10237,8 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // UNUSED EXPORTS: isCommandName
 
+;// CONCATENATED MODULE: external "node:fs"
+const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: external "node:fs/promises"
 const promises_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs/promises");
 // EXTERNAL MODULE: ./node_modules/command-line-args/dist/index.js
@@ -10255,6 +10250,7 @@ var lib = __nccwpck_require__(9048);
 
 
 ;// CONCATENATED MODULE: ./src/commands/dist.ts
+
 
 
 
@@ -10270,6 +10266,9 @@ const OPTIONS = [
     { name: 'out', alias: 'o', type: String, defaultValue: 'index.node' },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
+function createInputStream(file) {
+    return file ? (0,external_node_fs_namespaceObject.createReadStream)(file) : process.stdin;
+}
 class Dist {
     static summary() { return 'Generate a .node file from a build.'; }
     static syntax() { return 'neon dist [-n <name>] [-f <dylib>|[-l <log>] [-m <path>]] [-o <dist>]'; }
@@ -10312,25 +10311,43 @@ class Dist {
         this._out = options.out;
         this._verbose = !!options.verbose;
     }
-    findArtifact() {
-        const messages = new lib.CargoMessages({
+    async findArtifact() {
+        const reader = new lib.CargoReader(createInputStream(this._log), {
             mount: this._mount || undefined,
             manifestPath: this._manifestPath || undefined,
-            file: this._log || undefined,
             verbose: this._verbose
         });
-        const artifact = messages.findArtifact(this._crateName);
-        if (!artifact) {
+        let file = null;
+        for await (const msg of reader) {
+            if (msg.isCompilerArtifact() && msg.crateName() === this._crateName) {
+                file = msg.findFileByCrateType('cdylib');
+                if (!file) {
+                    throw new Error(`No artifacts were generated for crate ${this._crateName}`);
+                }
+            }
+        }
+        if (!file) {
             throw new Error(`No artifacts were generated for crate ${this._crateName}`);
         }
-        const file = artifact.findFileByCrateType('cdylib');
-        if (!file) {
-            throw new Error(`No cdylib artifact found for crate ${this._crateName}`);
-        }
         return file;
+        // const messages: CargoMessages = new CargoMessages({
+        //   mount: this._mount || undefined,
+        //   manifestPath: this._manifestPath || undefined,
+        //   file: this._log || undefined,
+        //   verbose: this._verbose
+        // });
+        // const artifact = messages.findArtifact(this._crateName);
+        // if (!artifact) {
+        //   throw new Error(`No artifacts were generated for crate ${this._crateName}`);
+        // }
+        // const file = artifact.findFileByCrateType('cdylib');
+        // if (!file) {
+        //   throw new Error(`No cdylib artifact found for crate ${this._crateName}`);
+        // }
+        // return file;
     }
     async run() {
-        const file = this._file || this.findArtifact();
+        const file = this._file || (await this.findArtifact());
         // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
         await (0,promises_namespaceObject.copyFile)(file, this._out);
     }
@@ -11177,8 +11194,6 @@ const setExitHandler = async (spawned, {cleanup, detached}, timedPromise) => {
 	});
 };
 
-;// CONCATENATED MODULE: external "node:fs"
-const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
 ;// CONCATENATED MODULE: ./node_modules/is-stream/index.js
 function isStream(stream) {
 	return stream !== null
@@ -15455,6 +15470,14 @@ module.exports = eval("require")("@cargo-messages/linux-arm-gnueabihf");
 
 /***/ }),
 
+/***/ 9301:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/linux-x64-gnu");
+
+
+/***/ }),
+
 /***/ 9329:
 /***/ ((module) => {
 
@@ -15745,7 +15768,7 @@ module.exports = (__nccwpck_require__(4371)/* .lazy */ .Vo)({
   'aarch64-pc-windows-msvc': () => __nccwpck_require__(9329),
   'darwin-x64': () => __nccwpck_require__(5583),
   'darwin-arm64': () => __nccwpck_require__(5111),
-  'linux-x64-gnu': () => __nccwpck_require__(8168),
+  'linux-x64-gnu': () => __nccwpck_require__(9301),
   'linux-arm-gnueabihf': () => __nccwpck_require__(6698),
   'android-arm-eabi': () => __nccwpck_require__(5193)
 }, [
