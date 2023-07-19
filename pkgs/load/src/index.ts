@@ -149,7 +149,7 @@ function lazyV2(options: LazyOptions): any {
 
   let module = {};
 
-  for (const key of exports) {
+  for (const key of options.exports) {
     Object.defineProperty(module, key, { get() { return load()[key]; } });
   }
 
