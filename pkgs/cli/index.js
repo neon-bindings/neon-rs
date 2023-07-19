@@ -2,13 +2,6 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
-/***/ 8168:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = require(__nccwpck_require__.ab + "index.node")
-
-/***/ }),
-
 /***/ 4371:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -15477,6 +15470,14 @@ module.exports = eval("require")("@cargo-messages/linux-arm-gnueabihf");
 
 /***/ }),
 
+/***/ 9301:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/linux-x64-gnu");
+
+
+/***/ }),
+
 /***/ 9329:
 /***/ ((module) => {
 
@@ -15767,7 +15768,7 @@ module.exports = (__nccwpck_require__(4371)/* .lazy */ .Vo)({
   'aarch64-pc-windows-msvc': () => __nccwpck_require__(9329),
   'darwin-x64': () => __nccwpck_require__(5583),
   'darwin-arm64': () => __nccwpck_require__(5111),
-  'linux-x64-gnu': () => __nccwpck_require__(8168),
+  'linux-x64-gnu': () => __nccwpck_require__(9301),
   'linux-arm-gnueabihf': () => __nccwpck_require__(6698),
   'android-arm-eabi': () => __nccwpck_require__(5193)
 }, [
