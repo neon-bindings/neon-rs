@@ -104,18 +104,46 @@ export function bin(scope: string[], ...rest: string[]): string {
   return [...interleave(scope, rest)].join("") + "/" + currentTarget();
 }
 
-export function lazy(loaders: Record<string, () => any>, exports: string[]): any {
+export type LazyOptions = {
+  targets: Record<string, () => any>,
+  exports: string[],
+  debug?: () => any
+};
+
+function lazyV1(loaders: Record<string, () => any>, exports: string[]): any {
+  return lazyV2({
+    targets: loaders,
+    exports
+  });
+}
+
+function lazyV2(options: LazyOptions): any {
+  const loaders = options.targets;
   let loaded: any = null;
 
   function load() {
     if (loaded) {
       return loaded;
     }
+
     const target = currentTarget();
+
     if (!loaders.hasOwnProperty(target)) {
       throw new Error(`no precompiled module found for ${target}`);
     }
-    loaded = loaders[target]();
+
+    if (options.debug) {
+      try {
+        loaded = options.debug();
+      } catch (_e) {
+        loaded = null;
+      }
+    }
+
+    if (!loaded) {
+      loaded = loaders[target]();
+    }
+
     return loaded;
   }
 
@@ -126,4 +154,12 @@ export function lazy(loaders: Record<string, () => any>, exports: string[]): any
   }
 
   return module;
+}
+
+export function lazy(loaders: Record<string, () => any>, exports: string[]): any;
+export function lazy(options: LazyOptions): any;
+export function lazy(optionsOrLoaders: LazyOptions | Record<string, () => any>, exports?: string[] | undefined): any {
+  return exports
+    ? lazyV1(optionsOrLoaders as Record<string, () => any>, exports)
+    : lazyV2(optionsOrLoaders as LazyOptions);
 }
