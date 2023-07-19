@@ -92,7 +92,14 @@ function bin(scope, ...rest) {
     return [...interleave(scope, rest)].join("") + "/" + currentTarget();
 }
 exports.bin = bin;
-function lazy(loaders, exports) {
+function lazyV1(loaders, exports) {
+    return lazyV2({
+        targets: loaders,
+        exports
+    });
+}
+function lazyV2(options) {
+    const loaders = options.targets;
     let loaded = null;
     function load() {
         if (loaded) {
@@ -102,7 +109,17 @@ function lazy(loaders, exports) {
         if (!loaders.hasOwnProperty(target)) {
             throw new Error(`no precompiled module found for ${target}`);
         }
-        loaded = loaders[target]();
+        if (options.debug) {
+            try {
+                loaded = options.debug();
+            }
+            catch (_e) {
+                loaded = null;
+            }
+        }
+        if (!loaded) {
+            loaded = loaders[target]();
+        }
         return loaded;
     }
     let module = {};
@@ -110,5 +127,10 @@ function lazy(loaders, exports) {
         Object.defineProperty(module, key, { get() { return load()[key]; } });
     }
     return module;
+}
+function lazy(optionsOrLoaders, exports) {
+    return exports
+        ? lazyV1(optionsOrLoaders, exports)
+        : lazyV2(optionsOrLoaders);
 }
 exports.lazy = lazy;
