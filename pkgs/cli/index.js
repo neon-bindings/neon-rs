@@ -12022,6 +12022,23 @@ function lookup(target) {
     }
     return { node, ...node_namespaceObject[node] };
 }
+function extractPackageNameV1(targets, target) {
+    return targets[target];
+}
+function extractPackageNameV2(manifest, target) {
+    for (const key in manifest.neon.targets) {
+        if (key === target) {
+            return `${manifest.neon.org}/${manifest.neon.targets[key]}`;
+        }
+    }
+    return undefined;
+}
+function extractPackageName(manifest, target) {
+    if (manifest.neon.org) {
+        return extractPackageNameV2(manifest, target);
+    }
+    return extractPackageNameV1(manifest.neon.targets, target);
+}
 class PackBuild {
     static summary() { return 'Create an npm tarball from a prebuild.'; }
     static syntax() { return 'neon pack-build [-f <addon>] [-t <target>] [-d <dir>]'; }
@@ -12076,7 +12093,7 @@ class PackBuild {
         if (!isRustTarget(target)) {
             throw new Error(`Rust target ${target} not supported.`);
         }
-        const name = targets[target];
+        const name = extractPackageName(manifest, target);
         if (!name) {
             throw new Error(`Rust target ${target} not found in package.json.`);
         }
