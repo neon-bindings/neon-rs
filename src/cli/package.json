@@ -56,7 +56,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "cargo-messages": "^0.0.156",
+    "cargo-messages": "^0.0.157",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",
     "command-line-commands": "^3.0.2",
@@ -66,12 +66,12 @@
     "temp": "^0.9.4"
   },
   "optionalDependencies": {
-    "@cargo-messages/android-arm-eabi": "0.0.156",
-    "@cargo-messages/darwin-arm64": "0.0.156",
-    "@cargo-messages/darwin-x64": "0.0.156",
-    "@cargo-messages/linux-arm-gnueabihf": "0.0.156",
-    "@cargo-messages/linux-x64-gnu": "0.0.156",
-    "@cargo-messages/win32-arm64-msvc": "0.0.156",
-    "@cargo-messages/win32-x64-msvc": "0.0.156"
+    "@cargo-messages/android-arm-eabi": "0.0.157",
+    "@cargo-messages/darwin-arm64": "0.0.157",
+    "@cargo-messages/darwin-x64": "0.0.157",
+    "@cargo-messages/linux-arm-gnueabihf": "0.0.157",
+    "@cargo-messages/linux-x64-gnu": "0.0.157",
+    "@cargo-messages/win32-arm64-msvc": "0.0.157",
+    "@cargo-messages/win32-x64-msvc": "0.0.157"
   }
 }
