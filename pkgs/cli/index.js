@@ -100,7 +100,14 @@ function bin(scope, ...rest) {
     return [...interleave(scope, rest)].join("") + "/" + currentTarget();
 }
 __webpack_unused_export__ = bin;
-function lazy(loaders, exports) {
+function lazyV1(loaders, exports) {
+    return lazyV2({
+        targets: loaders,
+        exports
+    });
+}
+function lazyV2(options) {
+    const loaders = options.targets;
     let loaded = null;
     function load() {
         if (loaded) {
@@ -110,14 +117,29 @@ function lazy(loaders, exports) {
         if (!loaders.hasOwnProperty(target)) {
             throw new Error(`no precompiled module found for ${target}`);
         }
-        loaded = loaders[target]();
+        if (options.debug) {
+            try {
+                loaded = options.debug();
+            }
+            catch (_e) {
+                loaded = null;
+            }
+        }
+        if (!loaded) {
+            loaded = loaders[target]();
+        }
         return loaded;
     }
     let module = {};
-    for (const key of exports) {
+    for (const key of options.exports) {
         Object.defineProperty(module, key, { get() { return load()[key]; } });
     }
     return module;
+}
+function lazy(optionsOrLoaders, exports) {
+    return exports
+        ? lazyV1(optionsOrLoaders, exports)
+        : lazyV2(optionsOrLoaders);
 }
 exports.Vo = lazy;
 
@@ -15793,24 +15815,27 @@ module.exports = {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = (__nccwpck_require__(4371)/* .lazy */ .Vo)({
-  'darwin-x64': () => __nccwpck_require__(5583),
-  'win32-x64-msvc': () => __nccwpck_require__(4459),
-  'aarch64-pc-windows-msvc': () => __nccwpck_require__(9329),
-  'darwin-x64': () => __nccwpck_require__(5583),
-  'darwin-arm64': () => __nccwpck_require__(5111),
-  'linux-x64-gnu': () => __nccwpck_require__(9301),
-  'linux-arm-gnueabihf': () => __nccwpck_require__(6698),
-  'android-arm-eabi': () => __nccwpck_require__(5193)
-}, [
-  'findArtifact',
-  'findFileByCrateType',
-  'fromStdin',
-  'fromFile',
-  'createReader',
-  'compilerArtifactCrateName',
-  'compilerArtifactFindFileByCrateType',
-  'readline'
-]);
+  targets: {
+    'darwin-x64': () => __nccwpck_require__(5583),
+    'win32-x64-msvc': () => __nccwpck_require__(4459),
+    'aarch64-pc-windows-msvc': () => __nccwpck_require__(9329),
+    'darwin-x64': () => __nccwpck_require__(5583),
+    'darwin-arm64': () => __nccwpck_require__(5111),
+    'linux-x64-gnu': () => __nccwpck_require__(9301),
+    'linux-arm-gnueabihf': () => __nccwpck_require__(6698),
+    'android-arm-eabi': () => __nccwpck_require__(5193)
+  },
+  exports: [
+    'findArtifact',
+    'findFileByCrateType',
+    'fromStdin',
+    'fromFile',
+    'createReader',
+    'compilerArtifactCrateName',
+    'compilerArtifactFindFileByCrateType',
+    'readline'
+  ]
+});
 
 
 /***/ })
