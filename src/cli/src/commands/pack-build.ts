@@ -48,6 +48,26 @@ function lookup(target: RustTarget): TargetDescriptor {
   return { node, ...NODE[node] };
 }
 
+function extractPackageNameV1(targets: Record<string, string>, target: RustTarget): string | undefined {
+  return targets[target];
+}
+
+function extractPackageNameV2(manifest: any, target: RustTarget): string | undefined {
+  for (const key in manifest.neon.targets) {
+    if (key === target) {
+      return `${manifest.neon.org}/${manifest.neon.targets[key]}`;
+    }
+  }
+  return undefined;
+}
+
+function extractPackageName(manifest: any, target: RustTarget): string | undefined {
+  if (manifest.neon.org) {
+    return extractPackageNameV2(manifest, target);
+  }
+  return extractPackageNameV1(manifest.neon.targets, target);
+}
+
 export default class PackBuild implements Command {
   static summary(): string { return 'Create an npm tarball from a prebuild.'; }
   static syntax(): string { return 'neon pack-build [-f <addon>] [-t <target>] [-d <dir>]'; }
@@ -120,7 +140,7 @@ export default class PackBuild implements Command {
       throw new Error(`Rust target ${target} not supported.`);
     }
 
-    const name = targets[target];
+    const name = extractPackageName(manifest, target);
 
     if (!name) {
       throw new Error(`Rust target ${target} not found in package.json.`);
