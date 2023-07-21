@@ -1,7 +1,7 @@
 {
   "name": "pkgs",
   "private": true,
-  "version": "0.0.159",
+  "version": "0.0.160",
   "description": "workspace root for all publishable @neon-rs and related packages",
   "workspaces": [
     "load",
