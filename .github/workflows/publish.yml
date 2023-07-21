@@ -33,64 +33,12 @@ jobs:
             echo "type=publish" >> "$GITHUB_OUTPUT"
           fi
 
-  # pack:
-  #   name: Pack (cargo-messages)
-  #   needs: [setup]
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: write
-  #   steps:
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #     - name: Install Node
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: ${{ env.NODE_VERSION }}
-  #         registry-url: ${{ env.NPM_REGISTRY }}
-  #         cache: npm
-  #     - name: Setup Monorepo
-  #       shell: bash
-  #       run: |
-  #         git checkout main
-  #         git config --global user.email 'ci@neon-bindings.com'
-  #         git config --global user.name 'Neon CI'
-  #         npm i
-  #         if [[ $(git diff --stat) != '' ]]; then
-  #           git commit -a -m 'updated lockfile after setup'
-  #         fi
-  #     - name: Show Neon CLI Version
-  #       shell: bash
-  #       run: |
-  #         npm explain @neon-rs/cli
-  #       working-directory: ./pkgs/cargo-messages
-  #     - name: Pack
-  #       shell: bash
-  #       run: |
-  #         mkdir -p dist
-  #         npm pack --pack-destination=dist
-  #         cat install-builds.log
-  #       working-directory: ./pkgs/cargo-messages
-  #     - name: Release
-  #       if: ${{ needs.setup.outputs.action == 'publish' }}
-  #       uses: softprops/action-gh-release@v1
-  #       with:
-  #         files: ./pkgs/cargo-messages/dist/*.tgz
-  #     # - name: Pack
-  #     #   uses: neon-actions/pack@v0.2
-  #     #   with:
-  #     #     working-directory: ./pkgs/cargo-messages
-  #     #     node-version: ${{ env.NODE_VERSION }}
-  #     #     github-release: ${{ needs.setup.outputs.action == 'publish' }}
-
   macos-builds:
     name: Builds (macOS)
     needs: [setup]
     strategy:
       matrix:
-        target: [x86_64-apple-darwin, aarch64-apple-darwin]
-        #target: [darwin-arm64, darwin-x64]
+        target: [darwin-arm64, darwin-x64]
     runs-on: macos-latest
     permissions:
       contents: write
@@ -118,7 +66,7 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.2
+        uses: neon-actions/build@v0.3.2
         with:
           working-directory: ./pkgs/cargo-messages
           target: ${{ matrix.target }}
@@ -131,8 +79,7 @@ jobs:
     needs: [setup]
     strategy:
       matrix:
-        target: [x86_64-pc-windows-msvc, aarch64-pc-windows-msvc]
-        #target: [win32-x64-msvc, win32-arm64-msvc]
+        target: [win32-x64-msvc, win32-arm64-msvc]
     runs-on: windows-latest
     permissions:
       contents: write
@@ -160,7 +107,7 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.2
+        uses: neon-actions/build@v0.3.2
         with:
           working-directory: ./pkgs/cargo-messages
           target: ${{ matrix.target }}
@@ -173,8 +120,7 @@ jobs:
     needs: [setup]
     strategy:
       matrix:
-        target: [x86_64-unknown-linux-gnu, armv7-unknown-linux-gnueabihf, armv7-linux-androideabi]
-        #target: [linux-arm-gnueabihf, linux-x64-gnu, android-arm-eabi]
+        target: [linux-arm-gnueabihf, linux-x64-gnu, android-arm-eabi]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -202,7 +148,7 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.2
+        uses: neon-actions/build@v0.3.2
         with:
           working-directory: ./pkgs/cargo-messages
           target: ${{ matrix.target }}
