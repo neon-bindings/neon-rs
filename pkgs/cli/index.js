@@ -12192,6 +12192,18 @@ const install_builds_OPTIONS = [
     { name: 'bundle', alias: 'b', type: String, defaultValue: null },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
+function lookupBinaryPackagesV1(targets) {
+    return Object.values(targets);
+}
+function lookupBinaryPackagesV2(org, targets) {
+    return Object.keys(targets).map(key => `${org}/${key}`);
+}
+function lookupBinaryPackages(manifest) {
+    if (manifest.neon.org) {
+        return lookupBinaryPackagesV2(manifest.neon.org, manifest.neon.targets);
+    }
+    return lookupBinaryPackagesV1(manifest.neon.targets);
+}
 class InstallBuilds {
     static summary() { return 'Install dependencies on prebuilds in package.json.'; }
     static syntax() { return 'neon install-builds [-b <file>]'; }
@@ -12226,8 +12238,8 @@ class InstallBuilds {
         const version = manifest.version;
         this.log(`package.json before: ${JSON.stringify(manifest)}`);
         this.log(`determined version: ${version}`);
-        const targets = Object.values(manifest.neon.targets);
-        const specs = targets.map(name => `${name}@${version}`);
+        const packages = lookupBinaryPackages(manifest);
+        const specs = packages.map(name => `${name}@${version}`);
         this.log(`npm install --save-exact -O ${specs.join(' ')}`);
         const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
         if (result.exitCode !== 0) {
@@ -12249,7 +12261,7 @@ class InstallBuilds {
 
 if (0) {
 `;
-        const requires = targets.map(name => `  require('${name}');`).join('\n');
+        const requires = packages.map(name => `  require('${name}');`).join('\n');
         this.log(`generating bundler compatibility module at ${this._bundle}`);
         await promises_namespaceObject.writeFile(this._bundle, PREAMBLE + requires + '\n}\n');
     }
