@@ -54,8 +54,9 @@ function extractPackageNameV1(targets: Record<string, string>, target: RustTarge
 
 function extractPackageNameV2(manifest: any, target: RustTarget): string | undefined {
   for (const key in manifest.neon.targets) {
-    if (key === target) {
-      return `${manifest.neon.org}/${manifest.neon.targets[key]}`;
+    const value = manifest.neon.targets[key];
+    if (value === target) {
+      return `${manifest.neon.org}/${key}`;
     }
   }
   return undefined;
