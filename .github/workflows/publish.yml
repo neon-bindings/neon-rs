@@ -53,7 +53,10 @@ jobs:
           git checkout main
           git config --global user.email 'ci@neon-bindings.com'
           git config --global user.name 'Neon CI'
-          npm ci
+          npm i
+          if [[ $(git diff --stat) != '' ]]; then
+            git commit -a -m 'updated lockfile after setup'
+          fi
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
@@ -91,7 +94,10 @@ jobs:
           git checkout main
           git config --global user.email 'ci@neon-bindings.com'
           git config --global user.name 'Neon CI'
-          npm ci
+          npm i
+          if [[ $(git diff --stat) != '' ]]; then
+            git commit -a -m 'updated lockfile after setup'
+          fi
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
@@ -129,7 +135,10 @@ jobs:
           git checkout main
           git config --global user.email 'ci@neon-bindings.com'
           git config --global user.name 'Neon CI'
-          npm ci
+          npm i
+          if [[ $(git diff --stat) != '' ]]; then
+            git commit -a -m 'updated lockfile after setup'
+          fi
       - name: Bump Version (dry-run only)
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
@@ -165,7 +174,10 @@ jobs:
           git checkout main
           git config --global user.email 'ci@neon-bindings.com'
           git config --global user.name 'Neon CI'
-          npm ci
+          npm i
+          if [[ $(git diff --stat) != '' ]]; then
+            git commit -a -m 'updated lockfile after setup'
+          fi
       - name: Publish (cargo-messages)
         if: ${{ needs.setup.outputs.action == 'publish' }}
         uses: neon-actions/publish@v0.4.1
