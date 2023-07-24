@@ -6,7 +6,7 @@
   "workspaces": [],
   "scripts": {
     "postinstall": "npm run setup-src && npm run setup-pkgs",
-    "setup-pkgs": "node ./sub-install/index.js pkgs --workspaces",
+    "setup-pkgs": "node ./pkgs/sub-install/index.js pkgs --workspaces",
     "setup-src": "cd src && cd cli && node ../../pkgs/sub-install/index.js . --omit=optional && npm run bundle",
     "update-src": "cd src && cd cli && npm run update-binaries && npm run update-cargo-messages && npm run bundle",
     "cli": "node pkgs/cli/index.js",
