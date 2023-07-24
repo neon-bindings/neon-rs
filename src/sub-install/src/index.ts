@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// FIXME: delete this comment
+
 import { execa } from 'execa';
 
 const cmd = process.env.npm_command === 'ci' ? 'ci' : 'install';
