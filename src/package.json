@@ -1,0 +1,21 @@
+{
+  "name": "src",
+  "description": "Workspace tree of source packages to be bundled with ncc",
+  "private": true,
+  "workspaces": [
+    "cli",
+    "sub-install"
+  ],
+  "author": "Dave Herman <david.herman@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "execa": "^7.1.1"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/node": "^18.15.11",
+    "@vercel/ncc": "^0.36.1",
+    "crlf": "^1.1.1",
+    "typescript": "^5.0.4"
+  }
+}
