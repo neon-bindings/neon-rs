@@ -1169,6 +1169,8 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var execa__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(199);
 
 const cmd = process.env.npm_command === 'ci' ? 'ci' : 'install';
+console.error(`[sub-install] $npm_command=${process.env.npm_command}`);
+console.error(`[sub-install] running command: npm ${cmd} ${process.argv.slice(2).join(' ')}`);
 const result = await (0,execa__WEBPACK_IMPORTED_MODULE_0__/* .execa */ .r)('npm', [cmd].concat(process.argv.slice(2)), {
     shell: true,
     stdout: 'inherit',
