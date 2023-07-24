@@ -27,6 +27,10 @@ jobs:
             output_workspace=$(echo $input_workspace | sed -e 's/^src/pkgs/')
             input_mtime=$(git log -1 --format=%ct $input_workspace)
             output_mtime=$(git log -1 --format=%ct $output_workspace)
+            echo "input_workspace=${input_workspace}"
+            echo "output_workspace=${output_workspace}"
+            echo "input_mtime=${input_mtime}"
+            echo "output_mtime=${output_mtime}"
             if [[ $input_mtime -gt $output_mtime ]] ; then
               echo "❌ $input_workspace has changed since $output_workspace was last generated"
               dirty_workspaces+=($input_workspace)
