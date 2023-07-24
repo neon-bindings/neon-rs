@@ -1169,12 +1169,15 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var execa__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(199);
 
 const cmd = process.env.npm_command === 'ci' ? 'ci' : 'install';
+const args = process.argv;
 console.error(`[sub-install] $npm_command=${process.env.npm_command}`);
-console.error(`[sub-install] running command: npm ${cmd} ${process.argv.slice(2).join(' ')}`);
-const result = await (0,execa__WEBPACK_IMPORTED_MODULE_0__/* .execa */ .r)('npm', [cmd].concat(process.argv.slice(2)), {
+console.error(`[sub-install] running in working directory: ${args[2]}`);
+console.error(`[sub-install] running command: npm ${cmd} ${args.slice(3).join(' ')}`);
+const result = await (0,execa__WEBPACK_IMPORTED_MODULE_0__/* .execa */ .r)('npm', [cmd].concat(args.slice(3)), {
     shell: true,
     stdout: 'inherit',
-    stderr: 'inherit'
+    stderr: 'inherit',
+    cwd: args[2]
 });
 process.exit(result.exitCode);
 
