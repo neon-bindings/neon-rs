@@ -1,0 +1,7 @@
+{
+  "name": "sub-install",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Command-line tool to recursively run npm i or npm ci on a subfolder",
+  "main": "index.js"
+}
