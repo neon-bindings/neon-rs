@@ -9,7 +9,7 @@
     "update-src": "cd src && cd cli && npm run update-binaries && npm run update-cargo-messages && npm run bundle",
     "cli": "node pkgs/cli/index.js",
     "version": "npm run version-src && npm run version-pkgs && git add .",
-    "version-src": "npm run cli -- bump -v --dir src/cli",
+    "version-src": "npm run cli -- bump -v --dir src",
     "version-pkgs": "npm run cli -- bump -v --dir pkgs",
     "release": "npm version patch -m 'v%s' && git push --follow-tags",
     "dryrun": "(export TAGNAME=DRYRUN.$(date +%Y-%m-%d.%H.%M.%S); echo $TAGNAME >> .logs/dryruns.log && git add .logs/dryruns.log && git commit -m $TAGNAME && git tag -a $TAGNAME -m 'publish dry-run' && git push --follow-tags)"
