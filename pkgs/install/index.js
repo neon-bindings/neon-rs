@@ -1168,6 +1168,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var execa__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(199);
 
+// Inherit the install command (`install` vs `ci`) from the current running npm command, if any.
 const cmd = process.env.npm_command === 'ci' ? 'ci' : 'install';
 const args = process.argv;
 console.error(`[install] $npm_command=${process.env.npm_command}`);

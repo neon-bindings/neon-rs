@@ -2,6 +2,7 @@
 
 import { execa } from 'execa';
 
+// Inherit the install command (`install` vs `ci`) from the current running npm command, if any.
 const cmd = process.env.npm_command === 'ci' ? 'ci' : 'install';
 const args = process.argv;
 
