@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "Checking that all bundled tools are up to date..."
           dirty_workspaces=()
-          for input_workspace in `find src -type d -depth 1 -not -name node_modules` ; do
+          for input_workspace in `find src -type d -depth=1 -not -name node_modules` ; do
             output_workspace=$(echo $input_workspace | sed -e 's/^src/pkgs/')
             input_mtime=$(git log -1 --format=%ct $input_workspace)
             output_mtime=$(git log -1 --format=%ct $output_workspace)
