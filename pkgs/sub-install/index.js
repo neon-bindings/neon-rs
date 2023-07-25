@@ -1167,6 +1167,7 @@ which.sync = whichSync
 __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __nccwpck_require__.r(__webpack_exports__);
 /* harmony import */ var execa__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(199);
+// FIXME: delete this comment
 
 const cmd = process.env.npm_command === 'ci' ? 'ci' : 'install';
 const args = process.argv;
