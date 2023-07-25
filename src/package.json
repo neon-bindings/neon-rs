@@ -4,7 +4,7 @@
   "private": true,
   "workspaces": [
     "cli",
-    "sub-install"
+    "install"
   ],
   "author": "Dave Herman <david.herman@gmail.com>",
   "license": "MIT",

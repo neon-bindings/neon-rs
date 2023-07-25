@@ -4,6 +4,7 @@
   "version": "0.0.160",
   "description": "workspace root for all publishable @neon-rs and related packages",
   "workspaces": [
+    "install",
     "load",
     "cli",
     "cargo-messages"
