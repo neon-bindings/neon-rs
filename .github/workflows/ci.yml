@@ -27,17 +27,8 @@ jobs:
           dirty_workspaces=()
           for input_workspace in src/cli src/sub-install ; do
             output_workspace=$(echo $input_workspace | sed -e 's/^src/pkgs/')
-            echo "last commit of input:"
-            git log -1 $input_workspace
-            echo
-            echo "last commit of output:"
-            git log -1 $output_workspace
             input_mtime=$(git log -1 --format=%ct $input_workspace)
             output_mtime=$(git log -1 --format=%ct $output_workspace)
-            echo "input_workspace=${input_workspace}"
-            echo "output_workspace=${output_workspace}"
-            echo "input_mtime=${input_mtime}"
-            echo "output_mtime=${output_mtime}"
             if [[ $input_mtime -gt $output_mtime ]] ; then
               echo "❌ $input_workspace has changed since $output_workspace was last generated"
               dirty_workspaces+=($input_workspace)
@@ -45,7 +36,7 @@ jobs:
           done
           if [[ ${#dirty_workspaces[@]} -gt 0 ]] ; then
             echo
-            echo 'Re-run `npm run bundle` on the following workspaces before committing:'
+            echo '💡 Re-run `npm run bundle` on the following workspaces before committing:'
             for workspace in ${dirty_workspaces[*]} ; do
               echo "  • $workspace"
             done
