@@ -9,6 +9,9 @@
   ],
   "author": "Dave Herman <david.herman@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "version": "node ../pkgs/cli/index.js bump -v --workspaces"
+  },
   "dependencies": {
     "execa": "^7.1.1"
   },

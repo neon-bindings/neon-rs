@@ -2,6 +2,13 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
+/***/ 9074:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = require(__nccwpck_require__.ab + "index.node")
+
+/***/ }),
+
 /***/ 1869:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -12420,6 +12427,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 
 const absoluteRequire = (0,node_module__WEBPACK_IMPORTED_MODULE_3__.createRequire)(import.meta.url);
+// FIXME: do we really know this is necessary? if so, document it
 global['require'] = function (spec) {
     return absoluteRequire(spec);
 };
@@ -15518,14 +15526,6 @@ module.exports = eval("require")("@cargo-messages/android-arm-eabi");
 
 /***/ }),
 
-/***/ 4404:
-/***/ ((module) => {
-
-module.exports = eval("require")("@cargo-messages/darwin-arm64");
-
-
-/***/ }),
-
 /***/ 2990:
 /***/ ((module) => {
 
@@ -15840,7 +15840,7 @@ module.exports = (__nccwpck_require__(1869)/* .lazy */ .Vo)({
     'win32-x64-msvc': () => __nccwpck_require__(1324),
     'aarch64-pc-windows-msvc': () => __nccwpck_require__(7894),
     'darwin-x64': () => __nccwpck_require__(2990),
-    'darwin-arm64': () => __nccwpck_require__(4404),
+    'darwin-arm64': () => __nccwpck_require__(9074),
     'linux-x64-gnu': () => __nccwpck_require__(1316),
     'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
     'android-arm-eabi': () => __nccwpck_require__(1738)

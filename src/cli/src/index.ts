@@ -8,6 +8,7 @@ import { createRequire } from 'node:module';
 
 const absoluteRequire = createRequire(import.meta.url);
 
+// FIXME: do we really know this is necessary? if so, document it
 global['require'] = function(spec: string) {
   return absoluteRequire(spec);
 } as any;
