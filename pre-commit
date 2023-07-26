@@ -1,0 +1,33 @@
+#!/bin/bash
+
+dirty_workspaces=()
+
+for workspace in `find src -depth 1 -type d -not -name node_modules` ; do
+  workspace_dirty=no
+  if (! git diff -s --exit-code $workspace) ; then
+    output_file=$(echo $workspace | sed -e 's/^src/pkgs/')
+    output_mtime=$(stat -f %m $output_file)
+    input_files=$(find $workspace/src -name '*.ts')
+  
+    for input_file in `git diff --name-only $workspace/src` ; do
+      input_mtime=$(stat -f %m $input_file)
+      if [[ $input_mtime -gt $output_mtime ]] ; then
+        echo "❌ $input_file has changed"
+        workspace_dirty=yes
+      fi
+    done
+
+    if [ "$workspace_dirty" = "yes" ] ; then
+      dirty_workspaces+=($workspace)
+    fi
+  fi
+done
+
+if [[ ${#dirty_workspaces[@]} -gt 0 ]] ; then
+  echo
+  echo 'Re-run `npm run bundle` on the following workspaces before committing:'
+  for workspace in ${dirty_workspaces[*]} ; do
+    echo "  • $workspace"
+  done
+  exit 1
+fi
