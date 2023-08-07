@@ -55,6 +55,7 @@
     "@neon-rs/load": "^0.0.158"
   },
   "neon": {
+    "type": "source",
     "org": "@cargo-messages",
     "targets": {
       "win32-x64-msvc": "x86_64-pc-windows-msvc",

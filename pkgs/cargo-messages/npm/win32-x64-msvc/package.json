@@ -27,12 +27,11 @@
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "license": "MIT",
   "neon": {
-    "binary": {
-      "rust": "x86_64-pc-windows-msvc",
-      "node": "win32-x64-msvc",
-      "platform": "win32",
-      "arch": "x64",
-      "abi": "msvc"
-    }
+    "type": "binary",
+    "rust": "x86_64-pc-windows-msvc",
+    "node": "win32-x64-msvc",
+    "platform": "win32",
+    "arch": "x64",
+    "abi": "msvc"
   }
 }
