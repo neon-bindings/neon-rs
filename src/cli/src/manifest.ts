@@ -11,6 +11,18 @@ export interface BinaryCfg {
   abi: string | null
 }
 
+type SourceV1 = {[key in RustTarget]?: string};
+
+type BinaryV1 = {
+  binary: {
+    rust: RustTarget,
+    node: NodeTarget,
+    platform: string,
+    arch: string,
+    abi: string | null
+  }
+};
+
 function checkBinaryCfg(json: unknown): BinaryCfg {
   if (!json || typeof json !== 'object') {
     throw new TypeError(`expected "neon" property to be an object, found ${json}`);
@@ -72,7 +84,51 @@ function checkTargetMap(json: unknown): TargetMap {
   return json as TargetMap;
 }
 
-function checkTargetMapV1(json: unknown): TargetMapV1 {
+function checkBinaryV1(json: unknown): BinaryV1 {
+  if (!json || typeof json !== 'object') {
+    throw new TypeError(`expected "neon" to be an object, found ${json}`);
+  }
+  if (!('binary' in json)) {
+    throw new TypeError('property "neon.binary" not found');
+  }
+  const binary = json.binary;
+  if (!binary || typeof binary !== 'object') {
+    throw new TypeError(`expected "neon.binary" to be an object, found ${binary}`);
+  }
+  if (!('rust' in binary)) {
+    throw new TypeError(`property "neon.binary.rust" not found`);
+  }
+  if (typeof binary.rust !== 'string' || !isRustTarget(binary.rust)) {
+    throw new TypeError(`expected "neon.binary.rust" to be a valid Rust target, found ${binary.rust}`);
+  }
+  if (!('node' in binary)) {
+    throw new TypeError(`property "neon.binary.node" not found`);
+  }
+  if (!isNodeTarget(binary.node)) {
+    throw new TypeError(`expected "neon.binary.node" to be a valid Node target, found ${binary.node}`);
+  }
+  if (!('platform' in binary)) {
+    throw new TypeError(`property "neon.binary.platform" not found`);
+  }
+  if (typeof binary.platform !== 'string') {
+    throw new TypeError(`expected "neon.binary.platform" to be a string, found ${binary.platform}`);
+  }
+  if (!('arch' in binary)) {
+    throw new TypeError(`property "neon.binary.arch" not found`);
+  }
+  if (typeof binary.arch !== 'string') {
+    throw new TypeError(`expected "neon.binary.arch" to be a string, found ${binary.arch}`);
+  }
+  if (!('abi' in binary)) {
+    throw new TypeError(`property "neon.binary.abi" not found`);
+  }
+  if (binary.abi !== null && typeof binary.abi !== 'string') {
+    throw new TypeError(`expected "neon.binary.abi" to be a string or null, found ${binary.abi}`);
+  }
+  return json as BinaryV1;
+}
+
+function checkSourceV1(json: unknown): SourceV1 {
   if (!json || typeof json !== 'object') {
     throw new TypeError(`expected { Rust => string } target table, found ${json}`);
   }
@@ -85,10 +141,8 @@ function checkTargetMapV1(json: unknown): TargetMapV1 {
       throw new TypeError(`target table value ${value} is not a string`);
     }
   }
-  return json as TargetMapV1;
+  return json as SourceV1;
 }
-
-type TargetMapV1 = {[key in RustTarget]?: string};
 
 export interface SourceCfg {
   type: "source";
@@ -168,20 +222,25 @@ class AbstractManifest implements Preamble {
 
 type HasBinaryCfg = { neon: BinaryCfg };
 type HasSourceCfg = { neon: SourceCfg };
+type HasCfg = { neon: object };
 
-function checkHasBinaryCfg(json: object): HasBinaryCfg {
+function checkHasCfg(json: object): HasCfg {
   if (!('neon' in json)) {
     throw new TypeError('property "neon" not found');
   }
-  checkBinaryCfg(json.neon);
+  if (!json.neon || typeof json.neon !== 'object') {
+    throw new TypeError(`expected "neon" property to be an object, found ${json.neon}`);
+  }
+  return json as { neon: object };
+}
+
+function checkHasBinaryCfg(json: object): HasBinaryCfg {
+  checkBinaryCfg(checkHasCfg(json).neon);
   return json as HasBinaryCfg;
 }
 
 function checkHasSourceCfg(json: object): HasSourceCfg {
-  if (!('neon' in json)) {
-    throw new TypeError('property "neon" not found');
-  }
-  checkSourceCfg(json.neon);
+  checkSourceCfg(checkHasCfg(json).neon);
   return json as HasSourceCfg;
 }
 
@@ -195,6 +254,7 @@ export class BinaryManifest extends AbstractManifest {
 
   constructor(json: unknown) {
     super(json);
+    this._upgraded = normalizeBinaryCfg(this._json);
     this._binaryJSON = checkHasBinaryCfg(this._json);
   }
 
@@ -207,13 +267,40 @@ export class BinaryManifest extends AbstractManifest {
   }
 }
 
+function normalizeBinaryCfg(json: object): boolean {
+  const jsonWithCfg = checkHasCfg(json);
+
+  // V2 format: {
+  //   neon: {
+  //     type: 'binary',
+  //     rust: RustTarget,
+  //     node: NodeTarget,
+  //     platform: string,
+  //     arch: string,
+  //     abi: string | null
+  //   }
+  // }
+  if ('type' in jsonWithCfg.neon) {
+    return false;
+  }
+
+  // V1 format: {
+  //   neon: {
+  //     binary: {
+  //       rust: RustTarget,
+  //       node: NodeTarget,
+  //       platform: string,
+  //       arch: string,
+  //       abi: string | null
+  //     }
+  //   }
+  // }
+  jsonWithCfg.neon = upgradeBinaryV1(jsonWithCfg.neon);
+  return true;
+}
+
 function normalizeSourceCfg(json: object): boolean {
-  if (!('neon' in json)) {
-    throw new TypeError('property "neon" not found');
-  }
-  if (!json.neon || typeof json.neon !== 'object') {
-    throw new TypeError(`expected "neon" property to be an object, found ${json.neon}`);
-  }
+  const jsonWithCfg = checkHasCfg(json);
 
   // V3 format: {
   //   neon: {
@@ -222,7 +309,7 @@ function normalizeSourceCfg(json: object): boolean {
   //     targets: { Node => Rust }
   //   }
   // }
-  if ('type' in json.neon) {
+  if ('type' in jsonWithCfg.neon) {
     return false;
   }
 
@@ -232,11 +319,11 @@ function normalizeSourceCfg(json: object): boolean {
   //     targets: { Node => Rust }
   //   }
   // }
-  if ('org' in json.neon) {
-    json.neon = {
+  if ('org' in jsonWithCfg.neon) {
+    jsonWithCfg.neon = {
       type: 'source',
-      org: json.neon.org,
-      targets: checkTargetMap(json.neon['targets' as keyof typeof json.neon])
+      org: jsonWithCfg.neon.org,
+      targets: checkTargetMap(jsonWithCfg.neon['targets' as keyof typeof jsonWithCfg.neon])
     };
     return true;
   }
@@ -246,7 +333,7 @@ function normalizeSourceCfg(json: object): boolean {
   //     targets: { Rust => fully-qualified package name }
   //   }
   // }
-  json.neon = upgradeSourceV1(checkTargetMapV1(json.neon['targets' as keyof typeof json.neon]));
+  jsonWithCfg.neon = upgradeSourceV1(checkSourceV1(jsonWithCfg.neon['targets' as keyof typeof jsonWithCfg.neon]));
   return true;
 }
 
@@ -325,7 +412,7 @@ export class SourceManifest extends AbstractManifest {
 
 export type Manifest = SourceManifest | BinaryManifest;
 
-function upgradeSourceV1(object: TargetMapV1): SourceCfg
+function upgradeSourceV1(object: SourceV1): SourceCfg
 {
   function splitSwap([key, value]: [string, string]): [NodeTarget, RustTarget] {
     if (!/^@.*\//.test(value)) {
@@ -349,5 +436,17 @@ function upgradeSourceV1(object: TargetMapV1): SourceCfg
     type: 'source',
     org: [...orgs][0],
     targets: Object.fromEntries(entries)
+  };
+}
+
+function upgradeBinaryV1(object: object): BinaryCfg {
+  const v1 = checkBinaryV1(object);
+  return {
+    type: 'binary',
+    rust: v1.binary.rust,
+    node: v1.binary.node,
+    platform: v1.binary.platform,
+    arch: v1.binary.arch,
+    abi: v1.binary.abi
   };
 }

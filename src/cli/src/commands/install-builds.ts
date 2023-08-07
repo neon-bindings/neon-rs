@@ -55,6 +55,11 @@ export default class InstallBuilds implements Command {
     const packages = sourceManifest.packageNames();
     const specs = packages.map(name => `${name}@${version}`);
 
+    if (sourceManifest.upgraded) {
+      this.log(`upgrading manifest format`);
+      await sourceManifest.save();
+    }
+
     this.log(`npm install --save-exact -O ${specs.join(' ')}`);
     const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
     if (result.exitCode !== 0) {
