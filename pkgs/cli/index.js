@@ -12118,7 +12118,50 @@ function checkTargetMap(json) {
     }
     return json;
 }
-function checkTargetMapV1(json) {
+function checkBinaryV1(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected "neon" to be an object, found ${json}`);
+    }
+    if (!('binary' in json)) {
+        throw new TypeError('property "neon.binary" not found');
+    }
+    const binary = json.binary;
+    if (!binary || typeof binary !== 'object') {
+        throw new TypeError(`expected "neon.binary" to be an object, found ${binary}`);
+    }
+    if (!('rust' in binary)) {
+        throw new TypeError(`property "neon.binary.rust" not found`);
+    }
+    if (typeof binary.rust !== 'string' || !isRustTarget(binary.rust)) {
+        throw new TypeError(`expected "neon.binary.rust" to be a valid Rust target, found ${binary.rust}`);
+    }
+    if (!('node' in binary)) {
+        throw new TypeError(`property "neon.binary.node" not found`);
+    }
+    if (!isNodeTarget(binary.node)) {
+        throw new TypeError(`expected "neon.binary.node" to be a valid Node target, found ${binary.node}`);
+    }
+    if (!('platform' in binary)) {
+        throw new TypeError(`property "neon.binary.platform" not found`);
+    }
+    if (typeof binary.platform !== 'string') {
+        throw new TypeError(`expected "neon.binary.platform" to be a string, found ${binary.platform}`);
+    }
+    if (!('arch' in binary)) {
+        throw new TypeError(`property "neon.binary.arch" not found`);
+    }
+    if (typeof binary.arch !== 'string') {
+        throw new TypeError(`expected "neon.binary.arch" to be a string, found ${binary.arch}`);
+    }
+    if (!('abi' in binary)) {
+        throw new TypeError(`property "neon.binary.abi" not found`);
+    }
+    if (binary.abi !== null && typeof binary.abi !== 'string') {
+        throw new TypeError(`expected "neon.binary.abi" to be a string or null, found ${binary.abi}`);
+    }
+    return json;
+}
+function checkSourceV1(json) {
     if (!json || typeof json !== 'object') {
         throw new TypeError(`expected { Rust => string } target table, found ${json}`);
     }
@@ -12188,18 +12231,21 @@ class AbstractManifest {
         return JSON.stringify(this._json);
     }
 }
-function checkHasBinaryCfg(json) {
+function checkHasCfg(json) {
     if (!('neon' in json)) {
         throw new TypeError('property "neon" not found');
     }
-    checkBinaryCfg(json.neon);
+    if (!json.neon || typeof json.neon !== 'object') {
+        throw new TypeError(`expected "neon" property to be an object, found ${json.neon}`);
+    }
+    return json;
+}
+function checkHasBinaryCfg(json) {
+    checkBinaryCfg(checkHasCfg(json).neon);
     return json;
 }
 function checkHasSourceCfg(json) {
-    if (!('neon' in json)) {
-        throw new TypeError('property "neon" not found');
-    }
-    checkSourceCfg(json.neon);
+    checkSourceCfg(checkHasCfg(json).neon);
     return json;
 }
 async function readManifest(dir) {
@@ -12210,6 +12256,7 @@ class BinaryManifest extends AbstractManifest {
     _binaryJSON;
     constructor(json) {
         super(json);
+        this._upgraded = normalizeBinaryCfg(this._json);
         this._binaryJSON = checkHasBinaryCfg(this._json);
     }
     cfg() {
@@ -12219,13 +12266,37 @@ class BinaryManifest extends AbstractManifest {
         return new BinaryManifest(await readManifest(dir));
     }
 }
+function normalizeBinaryCfg(json) {
+    const jsonWithCfg = checkHasCfg(json);
+    // V2 format: {
+    //   neon: {
+    //     type: 'binary',
+    //     rust: RustTarget,
+    //     node: NodeTarget,
+    //     platform: string,
+    //     arch: string,
+    //     abi: string | null
+    //   }
+    // }
+    if ('type' in jsonWithCfg.neon) {
+        return false;
+    }
+    // V1 format: {
+    //   neon: {
+    //     binary: {
+    //       rust: RustTarget,
+    //       node: NodeTarget,
+    //       platform: string,
+    //       arch: string,
+    //       abi: string | null
+    //     }
+    //   }
+    // }
+    jsonWithCfg.neon = upgradeBinaryV1(jsonWithCfg.neon);
+    return true;
+}
 function normalizeSourceCfg(json) {
-    if (!('neon' in json)) {
-        throw new TypeError('property "neon" not found');
-    }
-    if (!json.neon || typeof json.neon !== 'object') {
-        throw new TypeError(`expected "neon" property to be an object, found ${json.neon}`);
-    }
+    const jsonWithCfg = checkHasCfg(json);
     // V3 format: {
     //   neon: {
     //     type: 'source',
@@ -12233,7 +12304,7 @@ function normalizeSourceCfg(json) {
     //     targets: { Node => Rust }
     //   }
     // }
-    if ('type' in json.neon) {
+    if ('type' in jsonWithCfg.neon) {
         return false;
     }
     // V2 format: {
@@ -12242,11 +12313,11 @@ function normalizeSourceCfg(json) {
     //     targets: { Node => Rust }
     //   }
     // }
-    if ('org' in json.neon) {
-        json.neon = {
+    if ('org' in jsonWithCfg.neon) {
+        jsonWithCfg.neon = {
             type: 'source',
-            org: json.neon.org,
-            targets: checkTargetMap(json.neon['targets'])
+            org: jsonWithCfg.neon.org,
+            targets: checkTargetMap(jsonWithCfg.neon['targets'])
         };
         return true;
     }
@@ -12255,7 +12326,7 @@ function normalizeSourceCfg(json) {
     //     targets: { Rust => fully-qualified package name }
     //   }
     // }
-    json.neon = upgradeSourceV1(checkTargetMapV1(json.neon['targets']));
+    jsonWithCfg.neon = upgradeSourceV1(checkSourceV1(jsonWithCfg.neon['targets']));
     return true;
 }
 class SourceManifest extends AbstractManifest {
@@ -12338,6 +12409,17 @@ function upgradeSourceV1(object) {
         type: 'source',
         org: [...orgs][0],
         targets: Object.fromEntries(entries)
+    };
+}
+function upgradeBinaryV1(object) {
+    const v1 = checkBinaryV1(object);
+    return {
+        type: 'binary',
+        rust: v1.binary.rust,
+        node: v1.binary.node,
+        platform: v1.binary.platform,
+        arch: v1.binary.arch,
+        abi: v1.binary.abi
     };
 }
 
@@ -12527,6 +12609,10 @@ class InstallBuilds {
         this.log(`determined version: ${version}`);
         const packages = sourceManifest.packageNames();
         const specs = packages.map(name => `${name}@${version}`);
+        if (sourceManifest.upgraded) {
+            this.log(`upgrading manifest format`);
+            await sourceManifest.save();
+        }
         this.log(`npm install --save-exact -O ${specs.join(' ')}`);
         const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
         if (result.exitCode !== 0) {
