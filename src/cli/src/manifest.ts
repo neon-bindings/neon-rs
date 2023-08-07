@@ -63,8 +63,8 @@ function assertIsBinaryCfg(json: unknown): asserts json is BinaryCfg {
 
 export type TargetMap = {[key in NodeTarget]?: RustTarget};
 
-function assertIsTargetMap(json: unknown): asserts json is TargetMap {
-  assertIsObject(json, "neon");
+function assertIsTargetMap(json: unknown, path: string): asserts json is TargetMap {
+  assertIsObject(json, path);
   for (const key in json) {
     const value: unknown = json[key as keyof typeof json];
     if (!isNodeTarget(key)) {
@@ -128,7 +128,7 @@ function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
   if (typeof json.org !== 'string') {
     throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
   }
-  assertIsTargetMap(json.targets);
+  assertIsTargetMap(json.targets, "neon.targets");
 }
 
 type Preamble = {
@@ -186,9 +186,7 @@ function assertHasCfg(json: object): asserts json is HasCfg {
   if (!('neon' in json)) {
     throw new TypeError('property "neon" not found');
   }
-  if (!json.neon || typeof json.neon !== 'object') {
-    throw new TypeError(`expected "neon" property to be an object, found ${json.neon}`);
-  }
+  assertIsObject(json.neon, "neon");
 }
 
 function assertHasBinaryCfg(json: object): asserts json is HasBinaryCfg {
@@ -280,7 +278,7 @@ function normalizeSourceCfg(json: object): boolean {
   if ('org' in json.neon) {
     const targets: unknown = json.neon['targets' as keyof typeof json.neon];
 
-    assertIsTargetMap(targets);
+    assertIsTargetMap(targets, "neon.targets");
 
     json.neon = {
       type: 'source',
