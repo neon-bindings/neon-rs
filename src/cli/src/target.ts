@@ -8,11 +8,10 @@ export function isRustTarget(x: string): x is RustTarget {
   return (x in RUST);
 }
 
-export function checkRustTarget(x: string): RustTarget {
+export function assertIsRustTarget(x: string): asserts x is RustTarget {
   if (!isRustTarget(x)) {
     throw new RangeError(`invalid Rust target: ${x}`);
   }
-  return x;
 }
 
 export type NodeTarget = keyof(typeof NODE);
@@ -22,11 +21,10 @@ export function isNodeTarget(x: any): x is NodeTarget {
   return (typeof x === 'string') && (x in NODE);
 }
 
-export function checkNodeTarget(x: string): NodeTarget {
+export function assertIsNodeTarget(x: any): asserts x is NodeTarget {
   if (!isNodeTarget(x)) {
     throw new RangeError(`invalid Node target: ${x}`);
   }
-  return x;
 }
 
 export type TargetDescriptor = {
