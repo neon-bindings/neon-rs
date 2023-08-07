@@ -12094,8 +12094,8 @@ function assertIsBinaryCfg(json) {
         throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
     }
 }
-function assertIsTargetMap(json) {
-    assertIsObject(json, "neon");
+function assertIsTargetMap(json, path) {
+    assertIsObject(json, path);
     for (const key in json) {
         const value = json[key];
         if (!isNodeTarget(key)) {
@@ -12149,7 +12149,7 @@ function assertIsSourceCfg(json) {
     if (typeof json.org !== 'string') {
         throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
     }
-    assertIsTargetMap(json.targets);
+    assertIsTargetMap(json.targets, "neon.targets");
 }
 function assertIsPreamble(json) {
     if (!json || typeof json !== 'object') {
@@ -12188,9 +12188,7 @@ function assertHasCfg(json) {
     if (!('neon' in json)) {
         throw new TypeError('property "neon" not found');
     }
-    if (!json.neon || typeof json.neon !== 'object') {
-        throw new TypeError(`expected "neon" property to be an object, found ${json.neon}`);
-    }
+    assertIsObject(json.neon, "neon");
 }
 function assertHasBinaryCfg(json) {
     assertHasCfg(json);
@@ -12268,7 +12266,7 @@ function normalizeSourceCfg(json) {
     // }
     if ('org' in json.neon) {
         const targets = json.neon['targets'];
-        assertIsTargetMap(targets);
+        assertIsTargetMap(targets, "neon.targets");
         json.neon = {
             type: 'source',
             org: json.neon.org,
