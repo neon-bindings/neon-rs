@@ -12033,21 +12033,19 @@ const node_namespaceObject = JSON.parse('{"darwin-arm64":{"platform":"darwin","a
 function isRustTarget(x) {
     return (x in rust_namespaceObject);
 }
-function checkRustTarget(x) {
+function assertIsRustTarget(x) {
     if (!isRustTarget(x)) {
         throw new RangeError(`invalid Rust target: ${x}`);
     }
-    return x;
 }
 // FIXME: isNodeTarget taking any is inconsistent with isRustTarget taking string
 function isNodeTarget(x) {
     return (typeof x === 'string') && (x in node_namespaceObject);
 }
-function checkNodeTarget(x) {
+function assertIsNodeTarget(x) {
     if (!isNodeTarget(x)) {
         throw new RangeError(`invalid Node target: ${x}`);
     }
-    return x;
 }
 function getTargetDescriptor(target) {
     const node = rust_namespaceObject[target];
@@ -12061,52 +12059,43 @@ function getTargetDescriptor(target) {
 
 
 
-function checkBinaryCfg(json) {
+function assertIsObject(json, path) {
     if (!json || typeof json !== 'object') {
-        throw new TypeError(`expected "neon" property to be an object, found ${json}`);
+        throw new TypeError(`expected "${path}" property to be an object, found ${json}`);
     }
-    if (!('type' in json)) {
-        throw new TypeError('property "neon.type" not found');
+}
+// Idea thanks to https://www.lucaspaganini.com/academy/assertion-functions-typescript-narrowing-5
+function assertHasProps(keys, json, path) {
+    assertIsObject(json, path);
+    for (const key of keys) {
+        if (!(key in json)) {
+            throw new TypeError(`property "${path}.${key}" not found`);
+        }
     }
+}
+function assertIsBinaryCfg(json) {
+    assertHasProps(['type', 'rust', 'node', 'platform', 'arch', 'abi'], json, "neon");
     if (json.type !== 'binary') {
         throw new TypeError(`expected "neon.type" property to be "binary", found ${json.type}`);
     }
-    if (!('rust' in json)) {
-        throw new TypeError('property "neon.rust" not found');
-    }
     if (typeof json.rust !== 'string' || !isRustTarget(json.rust)) {
-        throw new TypeError(`expected "neon.type" to be a valid Rust target, found ${json.rust}`);
-    }
-    if (!('node' in json)) {
-        throw new TypeError('property "neon.node" not found');
+        throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
     }
     if (typeof json.node !== 'string' || !isNodeTarget(json.rust)) {
         throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
     }
-    if (!('platform' in json)) {
-        throw new TypeError('property "neon.platform" not found');
-    }
     if (typeof json.platform !== 'string') {
         throw new TypeError(`expected "neon.platform" to be a string, found ${json.platform}`);
-    }
-    if (!('arch' in json)) {
-        throw new TypeError('property "neon.arch" not found');
     }
     if (typeof json.arch !== 'string') {
         throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
     }
-    if (!('abi' in json)) {
-        throw new TypeError('property "neon.abi" not found');
-    }
     if (json.abi !== null && typeof json.abi !== 'string') {
         throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
     }
-    return json;
 }
-function checkTargetMap(json) {
-    if (!json || typeof json !== 'object') {
-        throw new TypeError(`expected { Node => Rust } target table, found ${json}`);
-    }
+function assertIsTargetMap(json) {
+    assertIsObject(json, "neon");
     for (const key in json) {
         const value = json[key];
         if (!isNodeTarget(key)) {
@@ -12116,55 +12105,32 @@ function checkTargetMap(json) {
             throw new TypeError(`target table value ${value} is not a valid Rust target`);
         }
     }
-    return json;
 }
-function checkBinaryV1(json) {
-    if (!json || typeof json !== 'object') {
-        throw new TypeError(`expected "neon" to be an object, found ${json}`);
-    }
-    if (!('binary' in json)) {
-        throw new TypeError('property "neon.binary" not found');
-    }
+function assertIsBinaryV1(json) {
+    assertHasProps(['binary'], json, "neon");
     const binary = json.binary;
     if (!binary || typeof binary !== 'object') {
         throw new TypeError(`expected "neon.binary" to be an object, found ${binary}`);
     }
-    if (!('rust' in binary)) {
-        throw new TypeError(`property "neon.binary.rust" not found`);
-    }
+    assertHasProps(['rust', 'node', 'platform', 'arch', 'abi'], binary, "neon.binary");
     if (typeof binary.rust !== 'string' || !isRustTarget(binary.rust)) {
         throw new TypeError(`expected "neon.binary.rust" to be a valid Rust target, found ${binary.rust}`);
-    }
-    if (!('node' in binary)) {
-        throw new TypeError(`property "neon.binary.node" not found`);
     }
     if (!isNodeTarget(binary.node)) {
         throw new TypeError(`expected "neon.binary.node" to be a valid Node target, found ${binary.node}`);
     }
-    if (!('platform' in binary)) {
-        throw new TypeError(`property "neon.binary.platform" not found`);
-    }
     if (typeof binary.platform !== 'string') {
         throw new TypeError(`expected "neon.binary.platform" to be a string, found ${binary.platform}`);
-    }
-    if (!('arch' in binary)) {
-        throw new TypeError(`property "neon.binary.arch" not found`);
     }
     if (typeof binary.arch !== 'string') {
         throw new TypeError(`expected "neon.binary.arch" to be a string, found ${binary.arch}`);
     }
-    if (!('abi' in binary)) {
-        throw new TypeError(`property "neon.binary.abi" not found`);
-    }
     if (binary.abi !== null && typeof binary.abi !== 'string') {
         throw new TypeError(`expected "neon.binary.abi" to be a string or null, found ${binary.abi}`);
     }
-    return json;
 }
-function checkSourceV1(json) {
-    if (!json || typeof json !== 'object') {
-        throw new TypeError(`expected { Rust => string } target table, found ${json}`);
-    }
+function assertIsSourceV1(json) {
+    assertIsObject(json, "neon");
     for (const key in json) {
         const value = json[key];
         if (!isRustTarget(key)) {
@@ -12174,31 +12140,18 @@ function checkSourceV1(json) {
             throw new TypeError(`target table value ${value} is not a string`);
         }
     }
-    return json;
 }
-function checkSourceCfg(json) {
-    if (!json || typeof json !== 'object') {
-        throw new TypeError(`expected "neon" property to be an object, found ${json}`);
-    }
-    if (!('type' in json)) {
-        throw new TypeError('property "neon.type" not found');
-    }
+function assertIsSourceCfg(json) {
+    assertHasProps(['type', 'org', 'targets'], json, "neon");
     if (json.type !== 'source') {
         throw new TypeError(`expected "neon.type" property to be "source", found ${json.type}`);
-    }
-    if (!('org' in json)) {
-        throw new TypeError('property "neon.org" not found');
     }
     if (typeof json.org !== 'string') {
         throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
     }
-    if (!('targets' in json)) {
-        throw new TypeError('property "neon.targets" not found');
-    }
-    checkTargetMap(json.targets);
-    return json;
+    assertIsTargetMap(json.targets);
 }
-function checkPreamble(json) {
+function assertIsPreamble(json) {
     if (!json || typeof json !== 'object') {
         throw new TypeError(`expected binary Neon package manifest, found ${json}`);
     }
@@ -12208,13 +12161,13 @@ function checkPreamble(json) {
     if (!('name' in json) || typeof json.name !== 'string') {
         throw new TypeError('valid "name" string not found in Neon package manifest');
     }
-    return json;
 }
 class AbstractManifest {
     _json;
     _upgraded;
     constructor(json) {
-        this._json = checkPreamble(json);
+        assertIsPreamble(json);
+        this._json = json;
         this._upgraded = false;
     }
     get name() { return this._json.name; }
@@ -12231,22 +12184,21 @@ class AbstractManifest {
         return JSON.stringify(this._json);
     }
 }
-function checkHasCfg(json) {
+function assertHasCfg(json) {
     if (!('neon' in json)) {
         throw new TypeError('property "neon" not found');
     }
     if (!json.neon || typeof json.neon !== 'object') {
         throw new TypeError(`expected "neon" property to be an object, found ${json.neon}`);
     }
-    return json;
 }
-function checkHasBinaryCfg(json) {
-    checkBinaryCfg(checkHasCfg(json).neon);
-    return json;
+function assertHasBinaryCfg(json) {
+    assertHasCfg(json);
+    assertIsBinaryCfg(json.neon);
 }
-function checkHasSourceCfg(json) {
-    checkSourceCfg(checkHasCfg(json).neon);
-    return json;
+function assertHasSourceCfg(json) {
+    assertHasCfg(json);
+    assertIsSourceCfg(json.neon);
 }
 async function readManifest(dir) {
     dir = dir ?? process.cwd();
@@ -12257,7 +12209,8 @@ class BinaryManifest extends AbstractManifest {
     constructor(json) {
         super(json);
         this._upgraded = normalizeBinaryCfg(this._json);
-        this._binaryJSON = checkHasBinaryCfg(this._json);
+        assertHasBinaryCfg(this._json);
+        this._binaryJSON = this._json;
     }
     cfg() {
         return this._binaryJSON.neon;
@@ -12267,7 +12220,7 @@ class BinaryManifest extends AbstractManifest {
     }
 }
 function normalizeBinaryCfg(json) {
-    const jsonWithCfg = checkHasCfg(json);
+    assertHasCfg(json);
     // V2 format: {
     //   neon: {
     //     type: 'binary',
@@ -12278,7 +12231,7 @@ function normalizeBinaryCfg(json) {
     //     abi: string | null
     //   }
     // }
-    if ('type' in jsonWithCfg.neon) {
+    if ('type' in json.neon) {
         return false;
     }
     // V1 format: {
@@ -12292,11 +12245,11 @@ function normalizeBinaryCfg(json) {
     //     }
     //   }
     // }
-    jsonWithCfg.neon = upgradeBinaryV1(jsonWithCfg.neon);
+    json.neon = upgradeBinaryV1(json.neon);
     return true;
 }
 function normalizeSourceCfg(json) {
-    const jsonWithCfg = checkHasCfg(json);
+    assertHasCfg(json);
     // V3 format: {
     //   neon: {
     //     type: 'source',
@@ -12304,7 +12257,7 @@ function normalizeSourceCfg(json) {
     //     targets: { Node => Rust }
     //   }
     // }
-    if ('type' in jsonWithCfg.neon) {
+    if ('type' in json.neon) {
         return false;
     }
     // V2 format: {
@@ -12313,11 +12266,13 @@ function normalizeSourceCfg(json) {
     //     targets: { Node => Rust }
     //   }
     // }
-    if ('org' in jsonWithCfg.neon) {
-        jsonWithCfg.neon = {
+    if ('org' in json.neon) {
+        const targets = json.neon['targets'];
+        assertIsTargetMap(targets);
+        json.neon = {
             type: 'source',
-            org: jsonWithCfg.neon.org,
-            targets: checkTargetMap(jsonWithCfg.neon['targets'])
+            org: json.neon.org,
+            targets
         };
         return true;
     }
@@ -12326,7 +12281,9 @@ function normalizeSourceCfg(json) {
     //     targets: { Rust => fully-qualified package name }
     //   }
     // }
-    jsonWithCfg.neon = upgradeSourceV1(checkSourceV1(jsonWithCfg.neon['targets']));
+    const targets = json.neon['targets'];
+    assertIsSourceV1(targets);
+    json.neon = upgradeSourceV1(targets);
     return true;
 }
 class SourceManifest extends AbstractManifest {
@@ -12334,7 +12291,8 @@ class SourceManifest extends AbstractManifest {
     constructor(json) {
         super(json);
         this._upgraded = normalizeSourceCfg(this._json);
-        this._sourceJSON = checkHasSourceCfg(this._json);
+        assertHasSourceCfg(this._json);
+        this._sourceJSON = this._json;
     }
     static async load(dir) {
         return new SourceManifest(await readManifest(dir));
@@ -12395,7 +12353,10 @@ function upgradeSourceV1(object) {
         if (!/^@.*\//.test(value)) {
             throw new TypeError(`expected namespaced npm package name, found ${value}`);
         }
-        return [checkNodeTarget(value.split('/')[1]), checkRustTarget(key)];
+        const pkg = value.split('/')[1];
+        assertIsNodeTarget(pkg);
+        assertIsRustTarget(key);
+        return [pkg, key];
     }
     const entries = Object.entries(object).map(splitSwap);
     const orgs = new Set(Object.values(object).map(v => v.split('/')[0]));
@@ -12411,15 +12372,15 @@ function upgradeSourceV1(object) {
         targets: Object.fromEntries(entries)
     };
 }
-function upgradeBinaryV1(object) {
-    const v1 = checkBinaryV1(object);
+function upgradeBinaryV1(json) {
+    assertIsBinaryV1(json);
     return {
         type: 'binary',
-        rust: v1.binary.rust,
-        node: v1.binary.node,
-        platform: v1.binary.platform,
-        arch: v1.binary.arch,
-        abi: v1.binary.abi
+        rust: json.binary.rust,
+        node: json.binary.node,
+        platform: json.binary.platform,
+        arch: json.binary.arch,
+        abi: json.binary.abi
     };
 }
 
