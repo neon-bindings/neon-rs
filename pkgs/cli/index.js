@@ -10245,7 +10245,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 2294:
+/***/ 3236:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -12027,7 +12027,323 @@ var temp = __nccwpck_require__(591);
 const rust_namespaceObject = JSON.parse('{"aarch64-apple-darwin":"darwin-arm64","x86_64-apple-darwin":"darwin-x64","aarch64-apple-ios":"ios-arm64","x86_64-apple-ios":"ios-x64","aarch64-linux-android":"android-arm64","armv7-linux-androideabi":"android-arm-eabi","i686-linux-android":"android-ia32","x86_64-linux-android":"android-x64","aarch64-pc-windows-msvc":"win32-arm64-msvc","i686-pc-windows-gnu":"win32-ia32-gnu","i686-pc-windows-msvc":"win32-ia32-msvc","x86_64-pc-windows-gnu":"win32-x64-gnu","x86_64-pc-windows-msvc":"win32-x64-msvc","aarch64-unknown-linux-gnu":"linux-arm64-gnu","aarch64-unknown-linux-musl":"linux-arm64-musl","arm-unknown-linux-gnueabihf":"linux-arm-gnueabihf","arm-unknown-linux-musleabihf":"linux-arm-musleabihf","armv7-unknown-linux-gnueabihf":"linux-arm-gnueabihf","armv7-unknown-linux-musleabihf":"linux-arm-musleabihf","i686-unknown-linux-gnu":"linux-ia32-gnu","i686-unknown-linux-musl":"linux-ia32-musl","mips-unknown-linux-gnu":"linux-mips-gnu","mips-unknown-linux-musl":"linux-mips-musl","mips64-unknown-linux-gnuabi64":"linux-mips64-gnuabi64","mips64-unknown-linux-muslabi64":"linux-mips64-muslabi64","mips64el-unknown-linux-gnuabi64":"linux-mips64el-gnuabi64","mips64el-unknown-linux-muslabi64":"linux-mips64el-muslabi64","mipsel-unknown-linux-gnu":"linux-mipsel-gnu","mipsel-unknown-linux-musl":"linux-mipsel-musl","powerpc-unknown-linux-gnu":"linux-powerpc-gnu","powerpc64-unknown-linux-gnu":"linux-powerpc64-gnu","powerpc64le-unknown-linux-gnu":"linux-powerpc64le-gnu","riscv64gc-unknown-linux-gnu":"linux-riscv64gc-gnu","s390x-unknown-linux-gnu":"linux-s390x-gnu","sparc64-unknown-linux-gnu":"linux-sparc64-gnu","x86_64-unknown-linux-gnu":"linux-x64-gnu","x86_64-unknown-linux-gnux32":"linux-x64-gnux32","x86_64-unknown-linux-musl":"linux-x64-musl","i686-unknown-freebsd":"freebsd-ia32","x86_64-unknown-freebsd":"freebsd-x64"}');
 ;// CONCATENATED MODULE: ./data/node.json
 const node_namespaceObject = JSON.parse('{"darwin-arm64":{"platform":"darwin","arch":"arm64","abi":null,"llvm":["aarch64-apple-darwin"]},"darwin-x64":{"platform":"darwin","arch":"x64","abi":null,"llvm":["x86_64-apple-darwin"]},"ios-arm64":{"platform":"ios","arch":"arm64","abi":null,"llvm":["aarch64-apple-ios"]},"ios-x64":{"platform":"ios","arch":"x64","abi":null,"llvm":["x86_64-apple-ios"]},"android-arm64":{"platform":"android","arch":"arm64","abi":null,"llvm":["aarch64-linux-android"]},"android-arm-eabi":{"platform":"android","arch":"arm","abi":"eabi","llvm":["armv7-linux-androideabi"]},"android-ia32":{"platform":"android","arch":"ia32","abi":null,"llvm":["i686-linux-android"]},"android-x64":{"platform":"android","arch":"x64","abi":null,"llvm":["x86_64-linux-android"]},"win32-arm64-msvc":{"platform":"win32","arch":"arm64","abi":"msvc","llvm":["aarch64-pc-windows-msvc"]},"win32-ia32-gnu":{"platform":"win32","arch":"ia32","abi":"gnu","llvm":["i686-pc-windows-gnu"]},"win32-ia32-msvc":{"platform":"win32","arch":"ia32","abi":"msvc","llvm":["i686-pc-windows-msvc"]},"win32-x64-gnu":{"platform":"win32","arch":"x64","abi":"gnu","llvm":["x86_64-pc-windows-gnu"]},"win32-x64-msvc":{"platform":"win32","arch":"x64","abi":"msvc","llvm":["x86_64-pc-windows-msvc"]},"linux-arm64-gnu":{"platform":"linux","arch":"arm64","abi":"gnu","llvm":["aarch64-unknown-linux-gnu"]},"linux-arm64-musl":{"platform":"linux","arch":"arm64","abi":"musl","llvm":["aarch64-unknown-linux-musl"]},"linux-arm-gnueabihf":{"platform":"linux","arch":"arm","abi":"gnueabihf","llvm":["arm-unknown-linux-gnueabihf","armv7-unknown-linux-gnueabihf"]},"linux-arm-musleabihf":{"platform":"linux","arch":"arm","abi":"musleabihf","llvm":["arm-unknown-linux-musleabihf","armv7-unknown-linux-musleabihf"]},"linux-ia32-gnu":{"platform":"linux","arch":"ia32","abi":"gnu","llvm":["i686-unknown-linux-gnu"]},"linux-ia32-musl":{"platform":"linux","arch":"ia32","abi":"musl","llvm":["i686-unknown-linux-musl"]},"linux-mips-gnu":{"platform":"linux","arch":"mips","abi":"gnu","llvm":["mips-unknown-linux-gnu"]},"linux-mips-musl":{"platform":"linux","arch":"mips","abi":"musl","llvm":["mips-unknown-linux-musl"]},"linux-mips64-gnuabi64":{"platform":"linux","arch":"mips64","abi":"gnuabi64","llvm":["mips64-unknown-linux-gnuabi64"]},"linux-mips64-muslabi64":{"platform":"linux","arch":"mips64","abi":"muslabi64","llvm":["mips64-unknown-linux-muslabi64"]},"linux-mips64el-gnuabi64":{"platform":"linux","arch":"mips64el","abi":"gnuabi64","llvm":["mips64el-unknown-linux-gnuabi64"]},"linux-mips64el-muslabi64":{"platform":"linux","arch":"mips64el","abi":"muslabi64","llvm":["mips64el-unknown-linux-muslabi64"]},"linux-mipsel-gnu":{"platform":"linux","arch":"mipsel","abi":"gnu","llvm":["mipsel-unknown-linux-gnu"]},"linux-mipsel-musl":{"platform":"linux","arch":"mipsel","abi":"musl","llvm":["mipsel-unknown-linux-musl"]},"linux-powerpc-gnu":{"platform":"linux","arch":"powerpc","abi":"gnu","llvm":["powerpc-unknown-linux-gnu"]},"linux-powerpc64-gnu":{"platform":"linux","arch":"powerpc64","abi":"gnu","llvm":["powerpc64-unknown-linux-gnu"]},"linux-powerpc64le-gnu":{"platform":"linux","arch":"powerpc64le","abi":"gnu","llvm":["powerpc64le-unknown-linux-gnu"]},"linux-riscv64gc-gnu":{"platform":"linux","arch":"riscv64gc","abi":"gnu","llvm":["riscv64gc-unknown-linux-gnu"]},"linux-s390x-gnu":{"platform":"linux","arch":"s390x","abi":"gnu","llvm":["s390x-unknown-linux-gnu"]},"linux-sparc64-gnu":{"platform":"linux","arch":"sparc64","abi":"gnu","llvm":["sparc64-unknown-linux-gnu"]},"linux-x64-gnu":{"platform":"linux","arch":"x64","abi":"gnu","llvm":["x86_64-unknown-linux-gnu"]},"linux-x64-gnux32":{"platform":"linux","arch":"x64","abi":"gnux32","llvm":["x86_64-unknown-linux-gnux32"]},"linux-x64-musl":{"platform":"linux","arch":"x64","abi":"musl","llvm":["x86_64-unknown-linux-musl"]},"freebsd-ia32":{"platform":"freebsd","arch":"ia32","abi":null,"llvm":["i686-unknown-freebsd"]},"freebsd-x64":{"platform":"freebsd","arch":"x64","abi":null,"llvm":["x86_64-unknown-freebsd"]}}');
+;// CONCATENATED MODULE: ./src/target.ts
+
+
+function isRustTarget(x) {
+    return (x in rust_namespaceObject);
+}
+function checkRustTarget(x) {
+    if (!isRustTarget(x)) {
+        throw new RangeError(`invalid Rust target: ${x}`);
+    }
+    return x;
+}
+// FIXME: isNodeTarget taking any is inconsistent with isRustTarget taking string
+function isNodeTarget(x) {
+    return (typeof x === 'string') && (x in node_namespaceObject);
+}
+function checkNodeTarget(x) {
+    if (!isNodeTarget(x)) {
+        throw new RangeError(`invalid Node target: ${x}`);
+    }
+    return x;
+}
+function getTargetDescriptor(target) {
+    const node = rust_namespaceObject[target];
+    if (!isNodeTarget(node)) {
+        throw new Error(`Rust target ${target} not supported`);
+    }
+    return { node, ...node_namespaceObject[node] };
+}
+
+;// CONCATENATED MODULE: ./src/manifest.ts
+
+
+
+function checkBinaryCfg(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected "neon" property to be an object, found ${json}`);
+    }
+    if (!('type' in json)) {
+        throw new TypeError('property "neon.type" not found');
+    }
+    if (json.type !== 'binary') {
+        throw new TypeError(`expected "neon.type" property to be "binary", found ${json.type}`);
+    }
+    if (!('rust' in json)) {
+        throw new TypeError('property "neon.rust" not found');
+    }
+    if (typeof json.rust !== 'string' || !isRustTarget(json.rust)) {
+        throw new TypeError(`expected "neon.type" to be a valid Rust target, found ${json.rust}`);
+    }
+    if (!('node' in json)) {
+        throw new TypeError('property "neon.node" not found');
+    }
+    if (typeof json.node !== 'string' || !isNodeTarget(json.rust)) {
+        throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
+    }
+    if (!('platform' in json)) {
+        throw new TypeError('property "neon.platform" not found');
+    }
+    if (typeof json.platform !== 'string') {
+        throw new TypeError(`expected "neon.platform" to be a string, found ${json.platform}`);
+    }
+    if (!('arch' in json)) {
+        throw new TypeError('property "neon.arch" not found');
+    }
+    if (typeof json.arch !== 'string') {
+        throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
+    }
+    if (!('abi' in json)) {
+        throw new TypeError('property "neon.abi" not found');
+    }
+    if (json.abi !== null && typeof json.abi !== 'string') {
+        throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
+    }
+    return json;
+}
+function checkTargetMap(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected { Node => Rust } target table, found ${json}`);
+    }
+    for (const key in json) {
+        const value = json[key];
+        if (!isNodeTarget(key)) {
+            throw new TypeError(`target table key ${key} is not a valid Node target`);
+        }
+        if (typeof value !== 'string' || !isRustTarget(value)) {
+            throw new TypeError(`target table value ${value} is not a valid Rust target`);
+        }
+    }
+    return json;
+}
+function checkTargetMapV1(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected { Rust => string } target table, found ${json}`);
+    }
+    for (const key in json) {
+        const value = json[key];
+        if (!isRustTarget(key)) {
+            throw new TypeError(`target table key ${key} is not a valid Rust target`);
+        }
+        if (typeof value !== 'string') {
+            throw new TypeError(`target table value ${value} is not a string`);
+        }
+    }
+    return json;
+}
+function checkSourceCfg(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected "neon" property to be an object, found ${json}`);
+    }
+    if (!('type' in json)) {
+        throw new TypeError('property "neon.type" not found');
+    }
+    if (json.type !== 'source') {
+        throw new TypeError(`expected "neon.type" property to be "source", found ${json.type}`);
+    }
+    if (!('org' in json)) {
+        throw new TypeError('property "neon.org" not found');
+    }
+    if (typeof json.org !== 'string') {
+        throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
+    }
+    if (!('targets' in json)) {
+        throw new TypeError('property "neon.targets" not found');
+    }
+    checkTargetMap(json.targets);
+    return json;
+}
+function checkPreamble(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected binary Neon package manifest, found ${json}`);
+    }
+    if (!('version' in json) || typeof json.version !== 'string') {
+        throw new TypeError('valid "version" string not found in Neon package manifest');
+    }
+    if (!('name' in json) || typeof json.name !== 'string') {
+        throw new TypeError('valid "name" string not found in Neon package manifest');
+    }
+    return json;
+}
+class AbstractManifest {
+    _json;
+    _upgraded;
+    constructor(json) {
+        this._json = checkPreamble(json);
+        this._upgraded = false;
+    }
+    get name() { return this._json.name; }
+    set name(value) { this._json.name = value; }
+    get version() { return this._json.version; }
+    set version(value) { this._json.version = value; }
+    get description() { return this._json.description ?? ""; }
+    get upgraded() { return this._upgraded; }
+    async save(dir) {
+        dir = dir ?? process.cwd();
+        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(dir, "package.json"), JSON.stringify(this._json, null, 2), { encoding: 'utf8' });
+    }
+    stringify() {
+        return JSON.stringify(this._json);
+    }
+}
+function checkHasBinaryCfg(json) {
+    if (!('neon' in json)) {
+        throw new TypeError('property "neon" not found');
+    }
+    checkBinaryCfg(json.neon);
+    return json;
+}
+function checkHasSourceCfg(json) {
+    if (!('neon' in json)) {
+        throw new TypeError('property "neon" not found');
+    }
+    checkSourceCfg(json.neon);
+    return json;
+}
+async function readManifest(dir) {
+    dir = dir ?? process.cwd();
+    return JSON.parse(await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(dir, "package.json"), { encoding: 'utf8' }));
+}
+class BinaryManifest extends AbstractManifest {
+    _binaryJSON;
+    constructor(json) {
+        super(json);
+        this._binaryJSON = checkHasBinaryCfg(this._json);
+    }
+    cfg() {
+        return this._binaryJSON.neon;
+    }
+    static async load(dir) {
+        return new BinaryManifest(await readManifest(dir));
+    }
+}
+function normalizeSourceCfg(json) {
+    if (!('neon' in json)) {
+        throw new TypeError('property "neon" not found');
+    }
+    if (!json.neon || typeof json.neon !== 'object') {
+        throw new TypeError(`expected "neon" property to be an object, found ${json.neon}`);
+    }
+    // V3 format: {
+    //   neon: {
+    //     type: 'source',
+    //     org: string,
+    //     targets: { Node => Rust }
+    //   }
+    // }
+    if ('type' in json.neon) {
+        return false;
+    }
+    // V2 format: {
+    //   neon: {
+    //     org: string,
+    //     targets: { Node => Rust }
+    //   }
+    // }
+    if ('org' in json.neon) {
+        json.neon = {
+            type: 'source',
+            org: json.neon.org,
+            targets: checkTargetMap(json.neon['targets'])
+        };
+        return true;
+    }
+    // V1 format: {
+    //   neon: {
+    //     targets: { Rust => fully-qualified package name }
+    //   }
+    // }
+    json.neon = upgradeSourceV1(checkTargetMapV1(json.neon['targets']));
+    return true;
+}
+class SourceManifest extends AbstractManifest {
+    _sourceJSON;
+    constructor(json) {
+        super(json);
+        this._upgraded = normalizeSourceCfg(this._json);
+        this._sourceJSON = checkHasSourceCfg(this._json);
+    }
+    static async load(dir) {
+        return new SourceManifest(await readManifest(dir));
+    }
+    cfg() {
+        return this._sourceJSON.neon;
+    }
+    packageNames() {
+        const cfg = this.cfg();
+        return Object.keys(cfg.targets).map(key => `${cfg.org}/${key}`);
+    }
+    packageFor(target) {
+        const cfg = this.cfg();
+        for (const key in cfg.targets) {
+            const value = cfg.targets[key];
+            if (value === target) {
+                return `${cfg.org}/${key}`;
+            }
+        }
+        return undefined;
+    }
+    manifestFor(target) {
+        const targetInfo = getTargetDescriptor(target);
+        const name = this.packageFor(target);
+        if (!name) {
+            throw new Error(`Rust target ${target} not found in "neon.targets" table.`);
+        }
+        const json = {
+            name,
+            description: `Prebuilt binary package for \`${this.name}\` on \`${targetInfo.node}\`.`,
+            version: this.version,
+            os: [targetInfo.platform],
+            cpu: [targetInfo.arch],
+            main: "index.node",
+            files: ["index.node"],
+            neon: {
+                type: "binary",
+                rust: target,
+                node: targetInfo.node,
+                platform: targetInfo.platform,
+                arch: targetInfo.arch,
+                abi: targetInfo.abi
+            }
+        };
+        const OPTIONAL_KEYS = [
+            'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
+        ];
+        for (const key of OPTIONAL_KEYS) {
+            if (key in this._json) {
+                json[key] = this._json[key];
+            }
+        }
+        return new BinaryManifest(json);
+    }
+}
+function upgradeSourceV1(object) {
+    function splitSwap([key, value]) {
+        if (!/^@.*\//.test(value)) {
+            throw new TypeError(`expected namespaced npm package name, found ${value}`);
+        }
+        return [checkNodeTarget(value.split('/')[1]), checkRustTarget(key)];
+    }
+    const entries = Object.entries(object).map(splitSwap);
+    const orgs = new Set(Object.values(object).map(v => v.split('/')[0]));
+    if (orgs.size === 0) {
+        throw new Error("empty target table");
+    }
+    else if (orgs.size > 1) {
+        throw new Error(`multiple npm orgs found: ${orgs}`);
+    }
+    return {
+        type: 'source',
+        org: [...orgs][0],
+        targets: Object.fromEntries(entries)
+    };
+}
+
 ;// CONCATENATED MODULE: ./src/commands/pack-build.ts
+
+
 
 
 
@@ -12041,42 +12357,9 @@ const pack_build_OPTIONS = [
     { name: 'out-dir', alias: 'o', type: String, defaultValue: null },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
 ];
-
-function isRustTarget(x) {
-    return (x in rust_namespaceObject);
-}
-
-function isNodeTarget(x) {
-    return (typeof x === 'string') && (x in node_namespaceObject);
-}
-function lookup(target) {
-    const node = rust_namespaceObject[target];
-    if (!isNodeTarget(node)) {
-        throw new Error(`Rust target ${target} not supported`);
-    }
-    return { node, ...node_namespaceObject[node] };
-}
-function extractPackageNameV1(targets, target) {
-    return targets[target];
-}
-function extractPackageNameV2(manifest, target) {
-    for (const key in manifest.neon.targets) {
-        const value = manifest.neon.targets[key];
-        if (value === target) {
-            return `${manifest.neon.org}/${key}`;
-        }
-    }
-    return undefined;
-}
-function extractPackageName(manifest, target) {
-    if (manifest.neon.org) {
-        return extractPackageNameV2(manifest, target);
-    }
-    return extractPackageNameV1(manifest.neon.targets, target);
-}
 class PackBuild {
     static summary() { return 'Create an npm tarball from a prebuild.'; }
-    static syntax() { return 'neon pack-build [-f <addon>] [-t <target>] [-d <dir>]'; }
+    static syntax() { return 'neon pack-build [-f <addon>] [-t <target>] [-i <dir>] [-o <dir>] [-v]'; }
     static options() {
         return [
             { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
@@ -12126,85 +12409,41 @@ class PackBuild {
         this.log(`currentTarget result: "${target}"`);
         return target;
     }
-    async createTempDir(manifest) {
-        const version = manifest.version;
-        const targets = manifest.neon.targets;
+    async createTempDir(sourceManifest) {
         const target = this._target || await this.currentTarget();
         if (!isRustTarget(target)) {
             throw new Error(`Rust target ${target} not supported.`);
         }
-        const name = extractPackageName(manifest, target);
-        if (!name) {
-            throw new Error(`Rust target ${target} not found in package.json.`);
-        }
-        const targetInfo = lookup(target);
-        const description = `Prebuilt binary package for \`${manifest.name}\` on \`${targetInfo.node}\`.`;
-        let prebuildManifest = {
-            name,
-            description,
-            version,
-            os: [targetInfo.platform],
-            cpu: [targetInfo.arch],
-            main: "index.node",
-            files: ["index.node"],
-            neon: {
-                binary: {
-                    rust: target,
-                    node: targetInfo.node,
-                    platform: targetInfo.platform,
-                    arch: targetInfo.arch,
-                    abi: targetInfo.abi
-                }
-            }
-        };
-        const OPTIONAL_KEYS = [
-            'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
-        ];
-        for (const key of OPTIONAL_KEYS) {
-            if (manifest[key]) {
-                prebuildManifest[key] = manifest[key];
-            }
-        }
-        this.log(`prebuild manifest: ${JSON.stringify(prebuildManifest)}`);
+        const binaryManifest = sourceManifest.manifestFor(target);
+        this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
         this.log("creating temp dir");
         const tmpdir = await mktemp('neon-');
         this.log(`created temp dir ${tmpdir}`);
         this.log(`creating ${tmpdir}/package.json`);
-        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(tmpdir, "package.json"), JSON.stringify(prebuildManifest, null, 2));
+        await binaryManifest.save(tmpdir);
         this.log(`copying ${this._addon} to ${tmpdir}/index.node`);
         await promises_namespaceObject.copyFile(this._addon, external_node_path_namespaceObject.join(tmpdir, "index.node"));
         this.log(`creating ${tmpdir}/README.md`);
-        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(tmpdir, "README.md"), `# \`${name}\`\n\n${description}\n`);
+        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(tmpdir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
         return tmpdir;
     }
-    async prepareInDir(manifest) {
+    async prepareInDir(sourceManifest) {
         if (!this._inDir) {
-            return await this.createTempDir(manifest);
+            return await this.createTempDir(sourceManifest);
         }
-        const version = manifest.version;
-        const binaryManifest = JSON.parse(await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(this._inDir, 'package.json'), { encoding: 'utf8' }));
-        const binaryTarget = binaryManifest.neon.binary.rust || null;
-        if (binaryTarget && this._target && (binaryTarget !== this._target)) {
-            throw new Error(`Specified target ${this._target} does not match target ${binaryTarget} in ${this._inDir}`);
+        const version = sourceManifest.version;
+        const binaryManifest = await BinaryManifest.load(this._inDir);
+        const cfg = binaryManifest.cfg();
+        if (this._target && (cfg.rust !== this._target)) {
+            throw new Error(`Specified target ${this._target} does not match target ${cfg.rust} in ${this._inDir}`);
         }
-        const target = binaryTarget || this._target || await this.currentTarget();
-        if (!isRustTarget(target)) {
-            throw new Error(`Rust target ${target} not supported.`);
-        }
-        const descriptor = lookup(target);
-        binaryManifest.neon = binaryManifest.neon || {};
-        binaryManifest.neon.binary = {
-            rust: target,
-            node: descriptor.node,
-            platform: descriptor.platform,
-            arch: descriptor.arch,
-            abi: descriptor.abi
-        };
+        // FIXME: update the descriptor in binaryManifest with getTargetDescriptor(cfg.rust)
+        // FIXME: update the preamble fields (os, arch) with getTargetDescriptor(cfg.rust)
         // FIXME: make it possible to disable this
         binaryManifest.version = version;
-        this.log(`binary manifest: ${JSON.stringify(binaryManifest)}`);
+        this.log(`binary manifest: ${binaryManifest.stringify()}`);
         this.log(`creating ${this._inDir}/package.json`);
-        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(this._inDir, 'package.json'), JSON.stringify(binaryManifest, null, 2), { encoding: 'utf8' });
+        await binaryManifest.save(this._inDir);
         // FIXME: make this path configurable
         this.log(`copying ${this._addon} to ${this._inDir}/index.node`);
         await promises_namespaceObject.copyFile(this._addon, external_node_path_namespaceObject.join(this._inDir, "index.node"));
@@ -12214,9 +12453,9 @@ class PackBuild {
         this.log(`creating directory ${this._outDir}`);
         await promises_namespaceObject.mkdir(this._outDir, { recursive: true });
         this.log(`reading package.json`);
-        const manifest = JSON.parse(await promises_namespaceObject.readFile('package.json', { encoding: 'utf8' }));
-        this.log(`manifest: ${JSON.stringify(manifest)}`);
-        const inDir = await this.prepareInDir(manifest);
+        const sourceManifest = await SourceManifest.load();
+        this.log(`manifest: ${sourceManifest.stringify()}`);
+        const inDir = await this.prepareInDir(sourceManifest);
         this.log(`npm pack --json`);
         const result = await execa("npm", ["pack", "--json"], {
             shell: true,
@@ -12245,22 +12484,11 @@ class PackBuild {
 
 
 
+
 const install_builds_OPTIONS = [
     { name: 'bundle', alias: 'b', type: String, defaultValue: null },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-function lookupBinaryPackagesV1(targets) {
-    return Object.values(targets);
-}
-function lookupBinaryPackagesV2(org, targets) {
-    return Object.keys(targets).map(key => `${org}/${key}`);
-}
-function lookupBinaryPackages(manifest) {
-    if (manifest.neon.org) {
-        return lookupBinaryPackagesV2(manifest.neon.org, manifest.neon.targets);
-    }
-    return lookupBinaryPackagesV1(manifest.neon.targets);
-}
 class InstallBuilds {
     static summary() { return 'Install dependencies on prebuilds in package.json.'; }
     static syntax() { return 'neon install-builds [-b <file>]'; }
@@ -12293,11 +12521,11 @@ class InstallBuilds {
     }
     async run() {
         this.log(`reading package.json (CWD=${process.cwd()})`);
-        const manifest = JSON.parse(await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(process.cwd(), 'package.json'), { encoding: 'utf8' }));
-        const version = manifest.version;
-        this.log(`package.json before: ${JSON.stringify(manifest)}`);
+        const sourceManifest = await SourceManifest.load();
+        const version = sourceManifest.version;
+        this.log(`package.json before: ${sourceManifest.stringify()}`);
         this.log(`determined version: ${version}`);
-        const packages = lookupBinaryPackages(manifest);
+        const packages = sourceManifest.packageNames();
         const specs = packages.map(name => `${name}@${version}`);
         this.log(`npm install --save-exact -O ${specs.join(' ')}`);
         const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
@@ -12412,7 +12640,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(2294);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3236);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -15435,8 +15663,8 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 /* harmony default export */ const chalk_source = (chalk);
 
-// EXTERNAL MODULE: ./src/command.ts + 34 modules
-var command = __nccwpck_require__(2294);
+// EXTERNAL MODULE: ./src/command.ts + 36 modules
+var command = __nccwpck_require__(3236);
 ;// CONCATENATED MODULE: ./src/print.ts
 
 
