@@ -12031,14 +12031,13 @@ const node_namespaceObject = JSON.parse('{"darwin-arm64":{"platform":"darwin","a
 
 
 function isRustTarget(x) {
-    return (x in rust_namespaceObject);
+    return (typeof x === 'string') && (x in rust_namespaceObject);
 }
 function assertIsRustTarget(x) {
     if (!isRustTarget(x)) {
         throw new RangeError(`invalid Rust target: ${x}`);
     }
 }
-// FIXME: isNodeTarget taking any is inconsistent with isRustTarget taking string
 function isNodeTarget(x) {
     return (typeof x === 'string') && (x in node_namespaceObject);
 }
