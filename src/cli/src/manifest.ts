@@ -47,7 +47,7 @@ function assertIsBinaryCfg(json: unknown): asserts json is BinaryCfg {
   if (typeof json.rust !== 'string' || !isRustTarget(json.rust)) {
     throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
   }
-  if (typeof json.node !== 'string' || !isNodeTarget(json.rust)) {
+  if (typeof json.node !== 'string' || !isNodeTarget(json.node)) {
     throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
   }
   if (typeof json.platform !== 'string') {
