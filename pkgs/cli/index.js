@@ -12052,7 +12052,18 @@ function getTargetDescriptor(target) {
     if (!isNodeTarget(node)) {
         throw new Error(`Rust target ${target} not supported`);
     }
-    return { node, ...node_namespaceObject[node] };
+    const nodeDescriptor = node_namespaceObject[node];
+    const badTarget = nodeDescriptor.llvm.find(t => !isRustTarget(t));
+    if (badTarget) {
+        throw new Error(`Rust target ${badTarget} not supported`);
+    }
+    return {
+        node,
+        platform: nodeDescriptor.platform,
+        arch: nodeDescriptor.arch,
+        abi: nodeDescriptor.abi,
+        llvm: nodeDescriptor.llvm
+    };
 }
 
 ;// CONCATENATED MODULE: ./src/manifest.ts
@@ -12478,8 +12489,11 @@ class PackBuild {
         if (this._target && (cfg.rust !== this._target)) {
             throw new Error(`Specified target ${this._target} does not match target ${cfg.rust} in ${this._inDir}`);
         }
-        // FIXME: update the descriptor in binaryManifest with getTargetDescriptor(cfg.rust)
-        // FIXME: update the preamble fields (os, arch) with getTargetDescriptor(cfg.rust)
+        const targetInfo = getTargetDescriptor(cfg.rust);
+        cfg.node = targetInfo.node;
+        cfg.platform = targetInfo.platform;
+        cfg.arch = targetInfo.arch;
+        cfg.abi = targetInfo.abi;
         // FIXME: make it possible to disable this
         binaryManifest.version = version;
         this.log(`binary manifest: ${binaryManifest.stringify()}`);
