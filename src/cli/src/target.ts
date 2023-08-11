@@ -4,11 +4,11 @@ import NODE from '../data/node.json';
 
 export type RustTarget = keyof(typeof RUST);
 
-export function isRustTarget(x: string): x is RustTarget {
-  return (x in RUST);
+export function isRustTarget(x: unknown): x is RustTarget {
+  return (typeof x === 'string') && (x in RUST);
 }
 
-export function assertIsRustTarget(x: string): asserts x is RustTarget {
+export function assertIsRustTarget(x: unknown): asserts x is RustTarget {
   if (!isRustTarget(x)) {
     throw new RangeError(`invalid Rust target: ${x}`);
   }
@@ -16,12 +16,11 @@ export function assertIsRustTarget(x: string): asserts x is RustTarget {
 
 export type NodeTarget = keyof(typeof NODE);
 
-// FIXME: isNodeTarget taking any is inconsistent with isRustTarget taking string
-export function isNodeTarget(x: any): x is NodeTarget {
+export function isNodeTarget(x: unknown): x is NodeTarget {
   return (typeof x === 'string') && (x in NODE);
 }
 
-export function assertIsNodeTarget(x: any): asserts x is NodeTarget {
+export function assertIsNodeTarget(x: unknown): asserts x is NodeTarget {
   if (!isNodeTarget(x)) {
     throw new RangeError(`invalid Node target: ${x}`);
   }
