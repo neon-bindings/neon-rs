@@ -2,6 +2,13 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
+/***/ 9074:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = require(__nccwpck_require__.ab + "index.node")
+
+/***/ }),
+
 /***/ 1869:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -12091,7 +12098,7 @@ function assertIsBinaryCfg(json) {
     if (typeof json.rust !== 'string' || !isRustTarget(json.rust)) {
         throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
     }
-    if (typeof json.node !== 'string' || !isNodeTarget(json.rust)) {
+    if (typeof json.node !== 'string' || !isNodeTarget(json.node)) {
         throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
     }
     if (typeof json.platform !== 'string') {
@@ -15805,14 +15812,6 @@ module.exports = eval("require")("@cargo-messages/android-arm-eabi");
 
 /***/ }),
 
-/***/ 4404:
-/***/ ((module) => {
-
-module.exports = eval("require")("@cargo-messages/darwin-arm64");
-
-
-/***/ }),
-
 /***/ 2990:
 /***/ ((module) => {
 
@@ -16127,7 +16126,7 @@ module.exports = (__nccwpck_require__(1869)/* .lazy */ .Vo)({
     'win32-x64-msvc': () => __nccwpck_require__(1324),
     'aarch64-pc-windows-msvc': () => __nccwpck_require__(7894),
     'darwin-x64': () => __nccwpck_require__(2990),
-    'darwin-arm64': () => __nccwpck_require__(4404),
+    'darwin-arm64': () => __nccwpck_require__(9074),
     'linux-x64-gnu': () => __nccwpck_require__(1316),
     'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
     'android-arm-eabi': () => __nccwpck_require__(1738)
