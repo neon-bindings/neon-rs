@@ -27,12 +27,11 @@
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "license": "MIT",
   "neon": {
-    "binary": {
-      "rust": "armv7-unknown-linux-gnueabihf",
-      "node": "linux-arm-gnueabihf",
-      "platform": "linux",
-      "arch": "arm",
-      "abi": "gnueabihf"
-    }
+    "type": "binary",
+    "rust": "armv7-unknown-linux-gnueabihf",
+    "node": "linux-arm-gnueabihf",
+    "platform": "linux",
+    "arch": "arm",
+    "abi": "gnueabihf"
   }
 }

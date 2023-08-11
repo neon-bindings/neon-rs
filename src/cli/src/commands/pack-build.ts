@@ -4,6 +4,8 @@ import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
 import { Command, CommandDetail } from '../command.js';
+import { getTargetDescriptor, isRustTarget } from '../target.js';
+import { SourceManifest, BinaryManifest } from '../manifest.js';
 
 const mktemp = temp.track().mkdir;
 
@@ -15,63 +17,9 @@ const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
 ];
 
-import RUST from '../../data/rust.json';
-
-type RustTarget = keyof(typeof RUST);
-
-function isRustTarget(x: string): x is RustTarget {
-  return (x in RUST);
-}
-
-import NODE from '../../data/node.json';
-
-type NodeTarget = keyof(typeof NODE);
-
-function isNodeTarget(x: any): x is NodeTarget {
-  return (typeof x === 'string') && (x in NODE);
-}
-
-type TargetDescriptor = {
-  node: string,
-  platform: string,
-  arch: string,
-  abi: string | null,
-  llvm: string[]
-};
-
-function lookup(target: RustTarget): TargetDescriptor {
-  const node = RUST[target];
-  if (!isNodeTarget(node)) {
-    throw new Error(`Rust target ${target} not supported`);
-  }
-
-  return { node, ...NODE[node] };
-}
-
-function extractPackageNameV1(targets: Record<string, string>, target: RustTarget): string | undefined {
-  return targets[target];
-}
-
-function extractPackageNameV2(manifest: any, target: RustTarget): string | undefined {
-  for (const key in manifest.neon.targets) {
-    const value = manifest.neon.targets[key];
-    if (value === target) {
-      return `${manifest.neon.org}/${key}`;
-    }
-  }
-  return undefined;
-}
-
-function extractPackageName(manifest: any, target: RustTarget): string | undefined {
-  if (manifest.neon.org) {
-    return extractPackageNameV2(manifest, target);
-  }
-  return extractPackageNameV1(manifest.neon.targets, target);
-}
-
 export default class PackBuild implements Command {
   static summary(): string { return 'Create an npm tarball from a prebuild.'; }
-  static syntax(): string { return 'neon pack-build [-f <addon>] [-t <target>] [-d <dir>]'; }
+  static syntax(): string { return 'neon pack-build [-f <addon>] [-t <target>] [-i <dir>] [-o <dir>] [-v]'; }
   static options(): CommandDetail[] {
     return [
       { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
@@ -132,105 +80,60 @@ export default class PackBuild implements Command {
     return target;
   }
 
-  async createTempDir(manifest: any): Promise<string> {
-    const version = manifest.version;
-    const targets = manifest.neon.targets;
+  async createTempDir(sourceManifest: SourceManifest): Promise<string> {
     const target = this._target || await this.currentTarget();
 
     if (!isRustTarget(target)) {
       throw new Error(`Rust target ${target} not supported.`);
     }
 
-    const name = extractPackageName(manifest, target);
-
-    if (!name) {
-      throw new Error(`Rust target ${target} not found in package.json.`);
-    }
-
-    const targetInfo = lookup(target);
-    const description = `Prebuilt binary package for \`${manifest.name}\` on \`${targetInfo.node}\`.`;
-
-    let prebuildManifest: Record<string, any> = {
-      name,
-      description,
-      version,
-      os: [targetInfo.platform],
-      cpu: [targetInfo.arch],
-      main: "index.node",
-      files: ["index.node"],
-      neon: {
-        binary: {
-          rust: target,
-          node: targetInfo.node,
-          platform: targetInfo.platform,
-          arch: targetInfo.arch,
-          abi: targetInfo.abi
-        }
-      }
-    };
-
-    const OPTIONAL_KEYS = [
-      'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
-    ];
-
-    for (const key of OPTIONAL_KEYS) {
-      if (manifest[key]) {
-        prebuildManifest[key] = manifest[key];
-      }
-    }
-    this.log(`prebuild manifest: ${JSON.stringify(prebuildManifest)}`);
+    const binaryManifest = sourceManifest.manifestFor(target);
+    this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
 
     this.log("creating temp dir");
     const tmpdir = await mktemp('neon-');
     this.log(`created temp dir ${tmpdir}`);
 
     this.log(`creating ${tmpdir}/package.json`)
-    await fs.writeFile(path.join(tmpdir, "package.json"), JSON.stringify(prebuildManifest, null, 2));
+    await binaryManifest.save(tmpdir);
 
     this.log(`copying ${this._addon} to ${tmpdir}/index.node`);
     await fs.copyFile(this._addon, path.join(tmpdir, "index.node"));
 
     this.log(`creating ${tmpdir}/README.md`);
-    await fs.writeFile(path.join(tmpdir, "README.md"), `# \`${name}\`\n\n${description}\n`);
+    await fs.writeFile(path.join(tmpdir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
 
     return tmpdir;
   }
 
-  async prepareInDir(manifest: any): Promise<string> {
+  async prepareInDir(sourceManifest: SourceManifest): Promise<string> {
     if (!this._inDir) {
-      return await this.createTempDir(manifest);
+      return await this.createTempDir(sourceManifest);
     }
 
-    const version = manifest.version;
-    const binaryManifest = JSON.parse(await fs.readFile(path.join(this._inDir, 'package.json'), { encoding: 'utf8' }));
+    const version = sourceManifest.version;
+    const binaryManifest = await BinaryManifest.load(this._inDir);
 
-    const binaryTarget = binaryManifest.neon.binary.rust || null;
+    const cfg = binaryManifest.cfg();
 
-    if (binaryTarget && this._target && (binaryTarget !== this._target)) {
-      throw new Error(`Specified target ${this._target} does not match target ${binaryTarget} in ${this._inDir}`);
+    if (this._target && (cfg.rust !== this._target)) {
+      throw new Error(`Specified target ${this._target} does not match target ${cfg.rust} in ${this._inDir}`);
     }
 
-    const target = binaryTarget || this._target || await this.currentTarget();
-    if (!isRustTarget(target)) {
-      throw new Error(`Rust target ${target} not supported.`);
-    }
+    const targetInfo = getTargetDescriptor(cfg.rust);
 
-    const descriptor = lookup(target);
-    binaryManifest.neon = binaryManifest.neon || {};
-    binaryManifest.neon.binary = {
-      rust: target,
-      node: descriptor.node,
-      platform: descriptor.platform,
-      arch: descriptor.arch,
-      abi: descriptor.abi
-    };
+    cfg.node = targetInfo.node;
+    cfg.platform = targetInfo.platform;
+    cfg.arch = targetInfo.arch;
+    cfg.abi = targetInfo.abi;
+
     // FIXME: make it possible to disable this
     binaryManifest.version = version;
 
-    this.log(`binary manifest: ${JSON.stringify(binaryManifest)}`);
+    this.log(`binary manifest: ${binaryManifest.stringify()}`);
 
     this.log(`creating ${this._inDir}/package.json`);
-    await fs.writeFile(path.join(this._inDir, 'package.json'), JSON.stringify(binaryManifest, null, 2), { encoding: 'utf8' });
+    await binaryManifest.save(this._inDir);
 
     // FIXME: make this path configurable
     this.log(`copying ${this._addon} to ${this._inDir}/index.node`);
@@ -244,10 +147,10 @@ export default class PackBuild implements Command {
     await fs.mkdir(this._outDir, { recursive: true });
 
     this.log(`reading package.json`);
-    const manifest = JSON.parse(await fs.readFile('package.json', { encoding: 'utf8' }));
-    this.log(`manifest: ${JSON.stringify(manifest)}`);
+    const sourceManifest = await SourceManifest.load();
+    this.log(`manifest: ${sourceManifest.stringify()}`);
 
-    const inDir = await this.prepareInDir(manifest);
+    const inDir = await this.prepareInDir(sourceManifest);
 
     this.log(`npm pack --json`);
     const result = await execa("npm", ["pack", "--json"], {

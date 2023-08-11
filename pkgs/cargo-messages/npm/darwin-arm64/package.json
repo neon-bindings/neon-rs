@@ -27,12 +27,11 @@
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "license": "MIT",
   "neon": {
-    "binary": {
-      "rust": "aarch64-apple-darwin",
-      "node": "darwin-arm64",
-      "platform": "darwin",
-      "arch": "arm64",
-      "abi": null
-    }
+    "type": "binary",
+    "rust": "aarch64-apple-darwin",
+    "node": "darwin-arm64",
+    "platform": "darwin",
+    "arch": "arm64",
+    "abi": null
   }
 }

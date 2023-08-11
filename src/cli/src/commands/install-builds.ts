@@ -3,26 +3,12 @@ import commandLineArgs from 'command-line-args';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { Command, CommandDetail } from '../command.js';
+import { SourceManifest } from '../manifest.js';
 
 const OPTIONS = [
   { name: 'bundle', alias: 'b', type: String, defaultValue: null },
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-
-function lookupBinaryPackagesV1(targets: Record<string, string>): string[] {
-  return Object.values(targets);
-}
-
-function lookupBinaryPackagesV2(org: string, targets: Record<string, string>): string[] {
-  return Object.keys(targets).map(key => `${org}/${key}`);
-}
-
-function lookupBinaryPackages(manifest: any): string[] {
-  if (manifest.neon.org) {
-    return lookupBinaryPackagesV2(manifest.neon.org, manifest.neon.targets);
-  }
-  return lookupBinaryPackagesV1(manifest.neon.targets);
-}
 
 export default class InstallBuilds implements Command {
   static summary(): string { return 'Install dependencies on prebuilds in package.json.'; }
@@ -61,13 +47,18 @@ export default class InstallBuilds implements Command {
 
   async run() {
     this.log(`reading package.json (CWD=${process.cwd()})`);
-    const manifest = JSON.parse(await fs.readFile(path.join(process.cwd(), 'package.json'), { encoding: 'utf8' }));
-    const version = manifest.version;
-    this.log(`package.json before: ${JSON.stringify(manifest)}`);
+    const sourceManifest = await SourceManifest.load();
+    const version = sourceManifest.version;
+    this.log(`package.json before: ${sourceManifest.stringify()}`);
     this.log(`determined version: ${version}`);
 
-    const packages = lookupBinaryPackages(manifest);
+    const packages = sourceManifest.packageNames();
     const specs = packages.map(name => `${name}@${version}`);
+
+    if (sourceManifest.upgraded) {
+      this.log(`upgrading manifest format`);
+      await sourceManifest.save();
+    }
 
     this.log(`npm install --save-exact -O ${specs.join(' ')}`);
     const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
