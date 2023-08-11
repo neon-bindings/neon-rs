@@ -28,11 +28,11 @@ export function assertIsNodeTarget(x: any): asserts x is NodeTarget {
 }
 
 export type TargetDescriptor = {
-  node: string,
+  node: NodeTarget,
   platform: string,
   arch: string,
   abi: string | null,
-  llvm: string[]
+  llvm: RustTarget[]
 };
 
 export function getTargetDescriptor(target: RustTarget): TargetDescriptor {
@@ -41,5 +41,18 @@ export function getTargetDescriptor(target: RustTarget): TargetDescriptor {
     throw new Error(`Rust target ${target} not supported`);
   }
 
-  return { node, ...NODE[node] };
+  const nodeDescriptor = NODE[node];
+
+  const badTarget = nodeDescriptor.llvm.find(t => !isRustTarget(t));
+  if (badTarget) {
+    throw new Error(`Rust target ${badTarget} not supported`);
+  }
+
+  return {
+    node,
+    platform: nodeDescriptor.platform,
+    arch: nodeDescriptor.arch,
+    abi: nodeDescriptor.abi,
+    llvm: nodeDescriptor.llvm as RustTarget[]
+  };
 }

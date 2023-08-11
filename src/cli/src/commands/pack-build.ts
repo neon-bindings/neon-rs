@@ -4,7 +4,7 @@ import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
 import { Command, CommandDetail } from '../command.js';
-import { isRustTarget } from '../target.js';
+import { getTargetDescriptor, isRustTarget } from '../target.js';
 import { SourceManifest, BinaryManifest } from '../manifest.js';
 
 const mktemp = temp.track().mkdir;
@@ -120,8 +120,12 @@ export default class PackBuild implements Command {
       throw new Error(`Specified target ${this._target} does not match target ${cfg.rust} in ${this._inDir}`);
     }
 
-    // FIXME: update the descriptor in binaryManifest with getTargetDescriptor(cfg.rust)
-    // FIXME: update the preamble fields (os, arch) with getTargetDescriptor(cfg.rust)
+    const targetInfo = getTargetDescriptor(cfg.rust);
+
+    cfg.node = targetInfo.node;
+    cfg.platform = targetInfo.platform;
+    cfg.arch = targetInfo.arch;
+    cfg.abi = targetInfo.abi;
 
     // FIXME: make it possible to disable this
     binaryManifest.version = version;
