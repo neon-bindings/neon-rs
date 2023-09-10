@@ -112,6 +112,16 @@ jobs:
           npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
           echo before publishing
           cat ../../../test/integration/proxy/proxy.log
+          echo now just double check this truly is the prebuild package not the main package
+          ls -alF
+          mkdir tmp
+          cd tmp
+          cp ../"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz" .
+          tar xzf "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
+          find . -name package.json
+          cat ./package/package.json
+          cd ..
+          rm -rf tmp
           npm publish --registry ${{env.PROXY}} "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
           echo after publishing
           cat ../../../test/integration/proxy/proxy.log
