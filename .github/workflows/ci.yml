@@ -67,6 +67,9 @@ jobs:
       - name: Check for changes in tree
         shell: bash
         run: git status
+      - name: Try to find the 165 dependency
+        shell: bash
+        run: find . -name package.json | xargs fgrep '.165'
       - name: Install Dependencies in pkgs/install
         shell: bash
         working-directory: pkgs/install
