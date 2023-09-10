@@ -92,7 +92,9 @@ jobs:
           sleep 4
           ps
           echo and now take a look at the log
-          cat proxy.log
+          if [ -e proxy.log ]; then
+            cat proxy.log
+          fi
       # - name: Determine tarball
       #   shell: bash
       #   working-directory: ./pkgs/cargo-messages/dist
