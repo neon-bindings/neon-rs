@@ -81,7 +81,7 @@ jobs:
         shell: bash
         run: |
           nohup npx verdaccio --config ./config.yml &
-          sleep 3
+          sleep 5
         working-directory: ./test/integration/proxy
       # - name: Determine tarball
       #   shell: bash
@@ -96,7 +96,7 @@ jobs:
           npm_config_always_auth: true
         run: |
           npm i -g npm-cli-adduser
-          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}} || (cat ../../../test/integration/proxy/proxy.log && exit 1)
+          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}} || (ls ../../../test/integration/proxy && exit 1)
           npm publish --registry ${{env.PROXY}} "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
       - name: Publish cargo-messages to proxy
         shell: bash
