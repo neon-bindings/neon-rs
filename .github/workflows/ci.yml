@@ -82,7 +82,14 @@ jobs:
         working-directory: ./test/integration/proxy
         run: |
           nohup npx verdaccio --config ./config.yml &
+          echo wait three seconds and then ps
           sleep 3
+          ps
+          echo wait three more seconds and then ps
+          sleep 3
+          ps
+          echo wait four more seconds for a total of ten and then one last ps
+          sleep 4
           ps
       # - name: Determine tarball
       #   shell: bash
