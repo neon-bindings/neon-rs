@@ -116,8 +116,8 @@ jobs:
           ls -alF
           mkdir tmp
           cd tmp
-          cp ../"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz" .
-          tar xzf "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
+          cp ../"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../../package.json).tgz" .
+          tar xzf "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../../package.json).tgz"
           find . -name package.json
           cat ./package/package.json
           cd ..
