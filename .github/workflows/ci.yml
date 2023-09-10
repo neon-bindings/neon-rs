@@ -62,7 +62,7 @@ jobs:
           fetch-depth: 0
       - name: Install Dependencies
         shell: bash
-        run: npm ci
+        run: npm ci -vv
       - name: Bump Version (dry-run only)
         shell: bash
         run: |
