@@ -110,7 +110,7 @@ jobs:
         working-directory: ./pkgs/cargo-messages
         run: |
           npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-          npm publish --registry ${{env.PROXY}} || (cat ../../../test/integration/proxy/proxy.log && exit 1)
+          npm publish --registry ${{env.PROXY}} || (cat ../../test/integration/proxy/proxy.log && exit 1)
       - name: Publish @neon-rs/load to proxy
         shell: bash
         working-directory: ./pkgs/load
