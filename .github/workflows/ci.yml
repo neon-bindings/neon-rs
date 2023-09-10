@@ -123,7 +123,7 @@ jobs:
           cd ..
           rm -rf tmp
           cd ../../../
-          npm publish ./pkgs/cargo-messages/dist/"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz" --registry ${{env.PROXY}}
+          npm publish ./pkgs/cargo-messages/dist/"cargo-messages-linux-x64-gnu-$(jq -r '.version' < .pkgs/cargo-messages/package.json).tgz" --registry ${{env.PROXY}}
           echo after publishing
           cat ./test/integration/proxy/proxy.log
       - name: Publish cargo-messages to proxy
