@@ -1,5 +1,12 @@
 name: CI
 
+env:
+  NODE_VERSION: 18.x
+  PROXY: http://localhost:4873/
+  CIUSER: ci
+  CIEMAIL: ci@neon-bindings.com
+  CIPASS: dummycipassword
+
 on:
   push:
     # Prevent duplicate runs of this workflow on our own internal PRs.
@@ -43,3 +50,59 @@ jobs:
             done
             exit 1
           fi
+
+  integration:
+    name: Integration Tests
+    needs: [bundles]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install Dependencies
+        shell: bash
+        run: npm ci
+      - name: Build
+        uses: neon-actions/build@v0.3.4
+        with:
+          working-directory: ./pkgs/cargo-messages
+          target: linux-x64-gnu
+          node-version: ${{ env.NODE_VERSION }}
+          use-cross: false
+          npm-publish: false
+          github-release: false
+      - name: Diagnostics
+        shell: bash
+        run: |
+          cd ./pkgs/cargo-messages
+          ls -alF
+      # - name: Start npm Proxy
+      #   shell: bash
+      #   run: ./proxy.sh
+      #   working-directory: ./test/integration/proxy
+      # - name: Publish @cargo-messages/linux-x64-gnu to proxy
+      #   shell: bash
+      #   working-directory: ./pkgs/cargo-messages/npm/linux-x64-gnu
+      #   run: |
+      #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+      #     npm publish --registry ${{env.PROXY}}
+      # - name: Publish cargo-messages to proxy
+      #   shell: bash
+      #   working-directory: ./pkgs/cargo-messages
+      #   run: |
+      #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+      #     npm publish --registry ${{env.PROXY}}
+      # - name: Publish @neon-rs/load to proxy
+      #   shell: bash
+      #   working-directory: ./pkgs/load
+      #   run: |
+      #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+      #     npm publish --registry ${{env.PROXY}}
+      # - name: Publish @neon-rs/cli to proxy
+      #   shell: bash
+      #   working-directory: ./pkgs/cli
+      #   run: |
+      #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+      #     npm publish --registry ${{env.PROXY}}
+      

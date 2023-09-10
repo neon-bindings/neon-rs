@@ -1,0 +1,21 @@
+storage: ./storage
+auth:
+  htpasswd:
+    file: ./htpasswd
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+packages:
+  'cargo-messages':
+    access: $all
+    publish: $all
+  '@cargo-messages/*':
+    access: $all
+    publish: $all
+  '@neon-rs/*':
+    access: $all
+    publish: $all
+  '**':
+    access: $all
+    proxy: npmjs
+log: { type: file, path: proxy.log, level: info }
