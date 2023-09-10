@@ -26,6 +26,7 @@
     "types/index.d.mts"
   ],
   "scripts": {
+    "preci": "echo preci pkgs/cargo-messages",
     "test": "cargo test",
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist -v",

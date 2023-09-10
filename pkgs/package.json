@@ -10,6 +10,7 @@
     "cargo-messages"
   ],
   "scripts": {
+    "preci": "echo preci pkgs",
     "version": "neon bump -v --workspaces"
   },
   "devDependencies": {
