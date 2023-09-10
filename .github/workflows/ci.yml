@@ -81,34 +81,33 @@ jobs:
         shell: bash
         run: ./proxy.sh
         working-directory: ./test/integration/proxy
-      - name: Determine tarball
-        shell: bash
-        working-directory: ./pkgs/cargo-messages/dist
-        run: |
-          echo "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
-          ls -l "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
-      # - name: Publish @cargo-messages/linux-x64-gnu to proxy
+      # - name: Determine tarball
       #   shell: bash
       #   working-directory: ./pkgs/cargo-messages/dist
       #   run: |
-      #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-      #     npm publish --registry ${{env.PROXY}}
-      # - name: Publish cargo-messages to proxy
-      #   shell: bash
-      #   working-directory: ./pkgs/cargo-messages
-      #   run: |
-      #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-      #     npm publish --registry ${{env.PROXY}}
-      # - name: Publish @neon-rs/load to proxy
-      #   shell: bash
-      #   working-directory: ./pkgs/load
-      #   run: |
-      #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-      #     npm publish --registry ${{env.PROXY}}
-      # - name: Publish @neon-rs/cli to proxy
-      #   shell: bash
-      #   working-directory: ./pkgs/cli
-      #   run: |
-      #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-      #     npm publish --registry ${{env.PROXY}}
-      
+      #     echo "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
+      #     ls -l "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
+      - name: Publish @cargo-messages/linux-x64-gnu to proxy
+        shell: bash
+        working-directory: ./pkgs/cargo-messages/dist
+        run: |
+          npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+          npm publish --registry ${{env.PROXY}} "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
+      - name: Publish cargo-messages to proxy
+        shell: bash
+        working-directory: ./pkgs/cargo-messages
+        run: |
+          npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+          npm publish --registry ${{env.PROXY}}
+      - name: Publish @neon-rs/load to proxy
+        shell: bash
+        working-directory: ./pkgs/load
+        run: |
+          npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+          npm publish --registry ${{env.PROXY}}
+      - name: Publish @neon-rs/cli to proxy
+        shell: bash
+        working-directory: ./pkgs/cli
+        run: |
+          npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+          npm publish --registry ${{env.PROXY}}
