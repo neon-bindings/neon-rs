@@ -99,39 +99,17 @@ jobs:
           if [ -e proxy.log ]; then
             cat proxy.log
           fi
-      # - name: Determine tarball
-      #   shell: bash
-      #   working-directory: ./pkgs/cargo-messages/dist
-      #   run: |
-      #     echo "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
-      #     ls -l "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
       - name: Publish @cargo-messages/linux-x64-gnu to proxy
         shell: bash
-        working-directory: ./pkgs/cargo-messages/dist
         run: |
           npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-          echo before publishing
-          cat ../../../test/integration/proxy/proxy.log
-          echo now just double check this truly is the prebuild package not the main package
-          ls -alF
-          mkdir tmp
-          cd tmp
-          cp ../"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../../package.json).tgz" .
-          tar xzf "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../../package.json).tgz"
-          find . -name package.json
-          cat ./package/package.json
-          cd ..
-          rm -rf tmp
-          cd ../../../
           npm publish ./pkgs/cargo-messages/dist/"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ./pkgs/cargo-messages/package.json).tgz" --registry ${{env.PROXY}}
-          echo after publishing
-          cat ./test/integration/proxy/proxy.log
       - name: Publish cargo-messages to proxy
         shell: bash
         working-directory: ./pkgs/cargo-messages
         run: |
           npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-          npm publish --registry ${{env.PROXY}} || (cat ../../test/integration/proxy/proxy.log && exit 1)
+          npm publish --registry ${{env.PROXY}}
       - name: Publish @neon-rs/load to proxy
         shell: bash
         working-directory: ./pkgs/load
