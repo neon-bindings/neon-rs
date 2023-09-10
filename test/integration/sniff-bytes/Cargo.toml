@@ -1,6 +1,6 @@
 [package]
 name = "sniff-bytes"
-version = "1.0"
+version = "1.0.0"
 description = "Integration test: a portable npm library with a Rust implementation."
 authors = ["David Herman <david.herman@gmail.com>"]
 license = "MIT"
