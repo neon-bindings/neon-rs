@@ -91,6 +91,8 @@ jobs:
           echo wait four more seconds for a total of ten and then one last ps
           sleep 4
           ps
+          echo and now take a look at the log
+          cat proxy.log
       # - name: Determine tarball
       #   shell: bash
       #   working-directory: ./pkgs/cargo-messages/dist
@@ -104,7 +106,7 @@ jobs:
           npm_config_always_auth: true
         run: |
           npm i -g npm-cli-adduser
-          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}} || (ls -l ../../../test/integration/proxy && ps && exit 1)
+          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}} || (cat ../../../test/integration/proxy/proxy.log && ps && exit 1)
           npm publish --registry ${{env.PROXY}} "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
       - name: Publish cargo-messages to proxy
         shell: bash
