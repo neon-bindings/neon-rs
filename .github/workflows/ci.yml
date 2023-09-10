@@ -77,6 +77,13 @@ jobs:
         run: |
           cd ./pkgs/cargo-messages/dist
           ls -alF
+          mkdir tmp
+          cd tmp
+          cp ../*.tgz .
+          tar xzf *.tgz
+          find . -name package.json
+          cd ..
+          rm -rf tmp
       - name: Install global tools
         shell: bash
         run: |
