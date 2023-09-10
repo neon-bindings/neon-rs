@@ -81,15 +81,15 @@ jobs:
         shell: bash
         working-directory: ./test/integration/proxy
         run: |
-          nohup npx verdaccio --config ./config.yml &
+          nohup npx verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
           echo wait three seconds and then ps
           sleep 3
           ps
           echo wait three more seconds and then ps
           sleep 3
           ps
-          echo wait four more seconds for a total of ten and then one last ps
-          sleep 4
+          echo wait seven more seconds for a total of ten and then one last ps
+          sleep 7
           ps
           echo and now take a look at the log
           if [ -e proxy.log ]; then
