@@ -63,6 +63,16 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: npm ci
+      - name: Bump Version (dry-run only)
+        shell: bash
+        run: |
+          git checkout main
+          git config --global user.email '${{ env.CIEMAIL }}'
+          git config --global user.name 'Neon CI'
+          git branch -a
+          npm version patch -m 'dryrun'
+          git branch -a
+          git status
       - name: Build
         uses: neon-actions/build@v0.3.4
         with:
