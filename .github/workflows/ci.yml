@@ -91,7 +91,7 @@ jobs:
         shell: bash
         working-directory: ./pkgs/cargo-messages/dist
         run: |
-          npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+          npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}} || (cat ../../../test/integration/proxy/proxy.log && exit 1)
           npm publish --registry ${{env.PROXY}} "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
       - name: Publish cargo-messages to proxy
         shell: bash
