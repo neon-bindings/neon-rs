@@ -79,7 +79,7 @@ jobs:
           ls -alF
       - name: Start npm Proxy
         shell: bash
-        run: ./proxy.sh
+        run: nohup npx verdaccio --config ./config.yml &
         working-directory: ./test/integration/proxy
       # - name: Determine tarball
       #   shell: bash
