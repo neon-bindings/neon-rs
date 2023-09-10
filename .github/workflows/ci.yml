@@ -57,7 +57,7 @@ jobs:
         shell: bash
         working-directory: ./test/integration/proxy
         timeout-minutes: 3
-        run: ./proxy.sh
+        run: ./proxy.sh '${{ env.PROXY }}'
       - name: Authenticate Proxy
         shell: bash
         run: npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
