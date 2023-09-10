@@ -77,13 +77,19 @@ jobs:
         run: |
           cd ./pkgs/cargo-messages/dist
           ls -alF
-      # - name: Start npm Proxy
-      #   shell: bash
-      #   run: ./proxy.sh
-      #   working-directory: ./test/integration/proxy
+      - name: Start npm Proxy
+        shell: bash
+        run: ./proxy.sh
+        working-directory: ./test/integration/proxy
+      - name: Determine tarball
+        shell: bash
+        working-directory: ./pkgs/cargo-messages/dist
+        run: |
+          echo "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
+          ls -l "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
       # - name: Publish @cargo-messages/linux-x64-gnu to proxy
       #   shell: bash
-      #   working-directory: ./pkgs/cargo-messages/npm/linux-x64-gnu
+      #   working-directory: ./pkgs/cargo-messages/dist
       #   run: |
       #     npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
       #     npm publish --registry ${{env.PROXY}}
