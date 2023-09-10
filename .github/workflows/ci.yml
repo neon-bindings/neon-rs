@@ -82,17 +82,8 @@ jobs:
         working-directory: ./test/integration/proxy
         run: |
           nohup verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
-          # Verdaccio needs up to 10 seconds to boot up and begin accepting connections.
-          #sleep 10
-          #if [ -e proxy.log ]; then
-          #  cat proxy.log
-          #fi
-          # Wait for the log to exist
-          until [ -f proxy.log ]; do
-            sleep 2
-          done
           # Wait for the server to begin listening for connections
-          ( tail -f -n10 proxy.log & ) | fgrep -q 'http://127.0.0.1:4873/'
+          ( tail -F -n10 proxy.log & ) | fgrep -q 'http://127.0.0.1:4873/'
           cat proxy.log
       - name: Publish @cargo-messages/linux-x64-gnu to proxy
         shell: bash
