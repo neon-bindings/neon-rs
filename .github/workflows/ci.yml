@@ -2,7 +2,7 @@ name: CI
 
 env:
   NODE_VERSION: 18.x
-  PROXY: http://0.0.0.0:4873/
+  PROXY: http://127.0.0.1:4873/
   CIUSER: ci
   CIEMAIL: ci@neon-bindings.com
   CIPASS: dummycipassword
