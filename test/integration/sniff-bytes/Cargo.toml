@@ -1,0 +1,21 @@
+[package]
+name = "sniff-bytes"
+version = "1.0"
+description = "Integration test: a portable npm library with a Rust implementation."
+authors = ["David Herman <david.herman@gmail.com>"]
+license = "MIT"
+edition = "2021"
+exclude = ["index.node"]
+
+[lib]
+crate-type = ["cdylib"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+file-format = "0.18.0"
+
+[dependencies.neon]
+version = "1.0.0-alpha.4"
+default-features = false
+features = ["napi-6"]
