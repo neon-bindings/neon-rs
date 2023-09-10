@@ -72,37 +72,30 @@ jobs:
           use-cross: false
           npm-publish: false
           github-release: false
-      - name: Install global tools
-        shell: bash
-        run: |
-          npm install -g verdaccio
-          npm install -g npm-cli-adduser
       - name: Start npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
         timeout-minutes: 3
         run: |
+          npm install -g verdaccio npm-cli-adduser
           nohup verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
           # Wait for the server to begin listening for connections
           ( tail -F -n10 proxy.log & ) | fgrep -q 'http://127.0.0.1:4873/'
           cat proxy.log
+          # Authenticate with a dummy CI user
+          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
       - name: Publish @cargo-messages/linux-x64-gnu to proxy
         shell: bash
-        run: |
-          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-          npm publish ./pkgs/cargo-messages/dist/"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ./pkgs/cargo-messages/package.json).tgz" --registry ${{env.PROXY}}
+        run: npm publish ./pkgs/cargo-messages/dist/"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ./pkgs/cargo-messages/package.json).tgz" --registry ${{env.PROXY}}
       - name: Publish cargo-messages to proxy
         shell: bash
         working-directory: ./pkgs/cargo-messages
-        run: |
-          npm publish --registry ${{env.PROXY}}
+        run: npm publish --registry ${{env.PROXY}}
       - name: Publish @neon-rs/load to proxy
         shell: bash
         working-directory: ./pkgs/load
-        run: |
-          npm publish --registry ${{env.PROXY}}
+        run: npm publish --registry ${{env.PROXY}}
       - name: Publish @neon-rs/cli to proxy
         shell: bash
         working-directory: ./pkgs/cli
-        run: |
-          npm publish --registry ${{env.PROXY}}
+        run: npm publish --registry ${{env.PROXY}}
