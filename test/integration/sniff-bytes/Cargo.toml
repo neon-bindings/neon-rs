@@ -19,5 +19,3 @@ file-format = "0.18.0"
 version = "1.0.0-alpha.4"
 default-features = false
 features = ["napi-6"]
-
-[workspace]

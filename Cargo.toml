@@ -2,3 +2,6 @@
 members = [
   "pkgs/cargo-messages"
 ]
+exclude = [
+  "test/integration/sniff-bytes"
+]
