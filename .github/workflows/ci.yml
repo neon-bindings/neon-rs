@@ -64,6 +64,9 @@ jobs:
         shell: bash
         working-directory: src
         run: npm ci --workspaces --omit=optional
+      - name: Check for changes in tree
+        shell: bash
+        run: git status
       - name: Install Dependencies in pkgs/install
         shell: bash
         working-directory: pkgs/install
