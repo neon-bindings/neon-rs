@@ -82,6 +82,7 @@ jobs:
         working-directory: ./test/integration/proxy
         run: |
           nohup npx verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
+          sleep 10
       # echo wait three seconds and then ps
       # sleep 3
       # ps
