@@ -76,3 +76,22 @@ jobs:
         shell: bash
         working-directory: ./pkgs/cli
         run: npm publish --registry ${{env.PROXY}}
+      - name: Install Dependencies for sniff-bytes Integration Test
+        shell: bash
+        working-directory: ./test/integration/sniff-bytes
+        run: npm ci
+      - name: Build sniff-bytes Integration Test
+        uses: neon-actions/build@v0.3.4
+        with:
+          working-directory: ./test/integration/sniff-bytes
+          target: linux-x64-gnu
+          node-version: ${{ env.NODE_VERSION }}
+          use-cross: false
+          npm-publish: false
+          github-release: false
+      - name: Diagnostics
+        shell: bash
+        working-directory: ./test/integration/sniff-bytes
+        run: |
+          ls -alF
+          ls -alF ./dist
