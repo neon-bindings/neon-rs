@@ -80,6 +80,7 @@ jobs:
       - name: Start npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
+        timeout-minutes: 3
         run: |
           nohup verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
           # Wait for the server to begin listening for connections
