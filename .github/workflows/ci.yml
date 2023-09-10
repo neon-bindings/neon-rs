@@ -72,19 +72,6 @@ jobs:
           use-cross: false
           npm-publish: false
           github-release: false
-      - name: Diagnostics
-        shell: bash
-        run: |
-          cd ./pkgs/cargo-messages/dist
-          ls -alF
-          mkdir tmp
-          cd tmp
-          cp ../*.tgz .
-          tar xzf *.tgz
-          find . -name package.json
-          cat ./package/package.json
-          cd ..
-          rm -rf tmp
       - name: Install global tools
         shell: bash
         run: |
@@ -95,10 +82,18 @@ jobs:
         working-directory: ./test/integration/proxy
         run: |
           nohup verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
-          sleep 10
-          if [ -e proxy.log ]; then
-            cat proxy.log
-          fi
+          # Verdaccio needs up to 10 seconds to boot up and begin accepting connections.
+          #sleep 10
+          #if [ -e proxy.log ]; then
+          #  cat proxy.log
+          #fi
+          # Wait for the log to exist
+          until [ -f proxy.log ]; do
+            sleep 2
+          done
+          # Wait for the server to begin listening for connections
+          ( tail -f -n10 proxy.log & ) | fgrep -q 'http://127.0.0.1:4873/'
+          cat proxy.log
       - name: Publish @cargo-messages/linux-x64-gnu to proxy
         shell: bash
         run: |
