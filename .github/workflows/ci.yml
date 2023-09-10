@@ -95,17 +95,14 @@ jobs:
         shell: bash
         working-directory: ./pkgs/cargo-messages
         run: |
-          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
           npm publish --registry ${{env.PROXY}}
       - name: Publish @neon-rs/load to proxy
         shell: bash
         working-directory: ./pkgs/load
         run: |
-          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
           npm publish --registry ${{env.PROXY}}
       - name: Publish @neon-rs/cli to proxy
         shell: bash
         working-directory: ./pkgs/cli
         run: |
-          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
           npm publish --registry ${{env.PROXY}}
