@@ -76,13 +76,10 @@ jobs:
         shell: bash
         working-directory: ./test/integration/proxy
         timeout-minutes: 3
-        run: |
-          nohup npx verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
-          # Wait for the server to begin listening for connections
-          ( tail -F -n10 proxy.log & ) | fgrep -q 'http://127.0.0.1:4873/'
-          cat proxy.log
-          # Authenticate with a dummy CI user
-          npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+        run: ./proxy.sh
+      - name: Authenticate Proxy
+        shell: bash
+        run: npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
       - name: Publish @cargo-messages/linux-x64-gnu to proxy
         shell: bash
         run: npm publish ./pkgs/cargo-messages/dist/"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ./pkgs/cargo-messages/package.json).tgz" --registry ${{env.PROXY}}
