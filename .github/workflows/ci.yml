@@ -97,7 +97,7 @@ jobs:
           ls -alF ./dist
       - name: Publish @sniff-bytes/linux-x64-gnu to proxy
         shell: bash
-        run: npm publish ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.tgz --registry ${{ env.PROXY }}
+        run: npm publish ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz --registry ${{ env.PROXY }}
       - name: Publish sniff-bytes to proxy
         shell: bash
         working-directory: test/integration/sniff-bytes
