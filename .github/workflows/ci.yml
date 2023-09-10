@@ -60,32 +60,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: First set up src
-        shell: bash
-        working-directory: src
-        run: npm ci --workspaces --omit=optional
-      - name: Check for changes in tree
-        shell: bash
-        run: git status
-      - name: Try to find the 165 dependency
-        shell: bash
-        run: find . -name package.json | xargs fgrep '.165'
-      - name: Install Dependencies in pkgs/install
-        shell: bash
-        working-directory: pkgs/install
-        run: npm ci --verbose
-      - name: Install Dependencies in pkgs/load
-        shell: bash
-        working-directory: pkgs/load
-        run: npm ci --verbose
-      - name: Install Dependencies in pkgs/cli
-        shell: bash
-        working-directory: pkgs/cli
-        run: npm ci --verbose
-      - name: Install Dependencies in pkgs/cargo-messages
-        shell: bash
-        working-directory: pkgs/cargo-messages
-        run: npm ci --verbose
       - name: Install Dependencies
         shell: bash
         run: npm ci --verbose
@@ -101,7 +75,7 @@ jobs:
       - name: Diagnostics
         shell: bash
         run: |
-          cd ./pkgs/cargo-messages
+          cd ./pkgs/cargo-messages/dist
           ls -alF
       # - name: Start npm Proxy
       #   shell: bash
