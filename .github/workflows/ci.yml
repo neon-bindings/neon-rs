@@ -77,25 +77,20 @@ jobs:
         run: |
           cd ./pkgs/cargo-messages/dist
           ls -alF
+      - name: Install global tools
+        shell: bash
+        run: |
+          npm install -g verdaccio
+          npm install -g npm-cli-adduser
       - name: Start npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
         run: |
-          nohup npx verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
+          nohup verdaccio --config ./config.yml --listen ${{ env.PROXY }} &
           sleep 10
-      # echo wait three seconds and then ps
-      # sleep 3
-      # ps
-      # echo wait three more seconds and then ps
-      # sleep 3
-      # ps
-      # echo wait seven more seconds for a total of ten and then one last ps
-      # sleep 7
-      # ps
-      # echo and now take a look at the log
-      # if [ -e proxy.log ]; then
-      #   cat proxy.log
-      # fi
+          if [ -e proxy.log ]; then
+            cat proxy.log
+          fi
       # - name: Determine tarball
       #   shell: bash
       #   working-directory: ./pkgs/cargo-messages/dist
@@ -108,15 +103,14 @@ jobs:
         env:
           npm_config_always_auth: true
         run: |
-          npm i -g npm-cli-adduser
-          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}} || (cat ../../../test/integration/proxy/proxy.log && ps && exit 1)
+          npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
           npm publish --registry ${{env.PROXY}} "cargo-messages-linux-x64-gnu-$(jq -r '.version' < ../package.json).tgz"
       - name: Publish cargo-messages to proxy
         shell: bash
         working-directory: ./pkgs/cargo-messages
         run: |
           npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-          npm publish --registry ${{env.PROXY}}
+          npm publish --registry ${{env.PROXY}} || (cat ../../../test/integration/proxy/proxy.log && exit 1)
       - name: Publish @neon-rs/load to proxy
         shell: bash
         working-directory: ./pkgs/load
