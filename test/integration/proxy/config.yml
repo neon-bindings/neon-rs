@@ -15,6 +15,12 @@ packages:
   '@neon-rs/*':
     access: $all
     publish: $all
+  '@sniff-bytes/*':
+    access: $all
+    publish: $all
+  'sniff-bytes':
+    access: $all
+    publish: $all
   '**':
     access: $all
     proxy: npmjs
