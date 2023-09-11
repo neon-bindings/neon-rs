@@ -49,5 +49,9 @@
   },
   "dependencies": {
     "@neon-rs/load": "*"
+  },
+  "optionalDependencies": {
+    "@sniff-bytes/darwin-arm64": "1.0.0",
+    "@sniff-bytes/linux-x64-gnu": "1.0.0"
   }
 }
