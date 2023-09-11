@@ -89,12 +89,6 @@ jobs:
           use-cross: false
           npm-publish: false
           github-release: false
-      - name: Diagnostics
-        shell: bash
-        working-directory: ./test/integration/sniff-bytes
-        run: |
-          ls -alF
-          ls -alF ./dist
       - name: Publish @sniff-bytes/linux-x64-gnu to proxy
         shell: bash
         run: npm publish ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz --registry ${{ env.PROXY }} || (cat test/integration/proxy/proxy.log && exit 1)
@@ -102,3 +96,9 @@ jobs:
         shell: bash
         working-directory: test/integration/sniff-bytes
         run: npm publish --registry ${{ env.PROXY }}
+      - name: Run test-sniff-bytes tests
+        shell: bash
+        working-directory: test/integration/test-sniff-bytes
+        run: |
+          npm ci
+          npm test
