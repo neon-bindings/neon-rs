@@ -14,6 +14,7 @@ describe('main', () => {
 
   test('load a fixture', async () => {
     const jpg = await loadFixture('pit-droids.jpg');
-    console.error(jpg);
+    const metadata = sniffBytes(jpg);
+    console.error(metadata);
   });
 });
