@@ -93,7 +93,9 @@ jobs:
           github-release: false
       - name: Display the integrity shasum of @sniff-bytes/linux-x64-gnu
         shell: bash
-        run: cat ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz | shasum -a 512
+        run: |
+          cat ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz | shasum -a 512
+          curl -s ${{env.PROXY}}/@sniff-bytes/linux-x64-gnu | jq -r '.versions[.["dist-tags"].latest].dist.integrity'
       - name: Publish @sniff-bytes/linux-x64-gnu to proxy
         shell: bash
         run: npm publish ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz --registry ${{ env.PROXY }} || (cat test/integration/proxy/proxy.log && exit 1)
