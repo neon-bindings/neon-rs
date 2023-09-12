@@ -101,6 +101,7 @@ jobs:
         shell: bash
         run: |
           cat ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz | shasum -a 512
+          curl -s ${{env.PROXY}}/cargo-messages
           curl -s ${{env.PROXY}}/@sniff-bytes/linux-x64-gnu
           # curl -s ${{env.PROXY}}/@sniff-bytes/linux-x64-gnu | jq -r '.versions[.["dist-tags"].latest].dist.integrity'
       - name: Publish sniff-bytes to proxy
