@@ -75,6 +75,7 @@
     "@babel/highlight": "^7.22.20",
     "@jridgewell/trace-mapping": "^0.3.19",
     "@jridgewell/gen-mapping": "^0.3.3",
+    "@babel/types": "^7.22.19",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
