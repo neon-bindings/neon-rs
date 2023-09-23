@@ -73,6 +73,7 @@
     "@babel/helper-validator-option": "^7.22.15",
     "@babel/compat-data": "^7.22.20",
     "@babel/highlight": "^7.22.20",
+    "@jridgewell/trace-mapping": "^0.3.19",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
