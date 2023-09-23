@@ -51,6 +51,7 @@
     "@sinclair/typebox": "^0.31.15",
     "@types/yargs": "^17.0.24",
     "@types/istanbul-reports": "^3.0.1",
+    "@jest/schemas": "^29.6.3",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
