@@ -44,6 +44,7 @@
     "@jest/expect-utils": "^29.7.0",
     "@types/yargs-parser": "^21.0.0",
     "@types/istanbul-lib-report": "^3.0.0",
+    "@sinonjs/commons": "^3.0.0",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
