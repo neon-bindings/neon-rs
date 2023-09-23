@@ -112,5 +112,8 @@ jobs:
         shell: bash
         working-directory: test/integration/test-sniff-bytes
         run: |
-          npm i
+          # Since package integrity checksums may vary depending on what versions
+          # are available in the proxy registry, we don't put the lockfile for this
+          # test in source control. This means we have to use `npm i`, not `npm ci`.
+          npm i --registry ${{ env.PROXY }}
           npm test
