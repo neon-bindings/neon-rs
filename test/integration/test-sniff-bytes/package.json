@@ -22,6 +22,7 @@
     "@babel/plugin-syntax-optional-chaining": "^7.8.3",
     "@babel/plugin-syntax-optional-catch-binding": "^7.8.3",
     "@babel/plugin-syntax-object-rest-spread": "^7.8.3",
+    "@babel/plugin-syntax-numeric-separator": "^7.10.4",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
