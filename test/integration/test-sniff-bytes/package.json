@@ -64,6 +64,7 @@
     "@babel/helper-string-parser": "^7.22.5",
     "@babel/helper-hoist-variables": "^7.22.5",
     "@babel/helper-function-name": "^7.22.5",
+    "@babel/helper-plugin-utils": "7.22.5",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
