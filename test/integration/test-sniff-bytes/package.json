@@ -18,6 +18,7 @@
     "typescript": "^5.2.2",
     "@babel/plugin-syntax-typescript": "^7.22.5",
     "@babel/plugin-syntax-jsx": "^7.22.5",
+    "@babel/plugin-syntax-top-level-await": "^7.14.5",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
