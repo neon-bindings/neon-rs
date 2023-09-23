@@ -21,6 +21,30 @@ packages:
   'sniff-bytes':
     access: $all
     publish: $all
+  '@jest/*':
+    access: $all
+    proxy: npmjs
+  '@babel/*':
+    access: $all
+    proxy: npmjs
+  '@types/*':
+    access: $all
+    proxy: npmjs
+  '@jridgewell/*':
+    access: $all
+    proxy: npmjs
+  '@sinclair/*':
+    access: $all
+    proxy: npmjs
+  '@istanbuljs/*':
+    access: $all
+    proxy: npmjs
+  '@sinonjs/*':
+    access: $all
+    proxy: npmjs
+  '@bcoe/*':
+    access: $all
+    proxy: npmjs
   '**':
     access: $all
     proxy: npmjs
