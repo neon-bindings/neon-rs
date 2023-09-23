@@ -66,6 +66,7 @@
     "@babel/helper-function-name": "^7.22.5",
     "@babel/helper-plugin-utils": "7.22.5",
     "@babel/helper-validator-identifier": "^7.22.20",
+    "@babel/helper-split-export-declaration": "^7.22.6",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
