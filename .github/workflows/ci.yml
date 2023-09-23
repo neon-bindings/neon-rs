@@ -115,5 +115,5 @@ jobs:
           # Since package integrity checksums may vary depending on what versions
           # are available in the proxy registry, we don't put the lockfile for this
           # test in source control. This means we have to use `npm i`, not `npm ci`.
-          npm i --registry ${{ env.PROXY }}
+          npm i --registry ${{ env.PROXY }} || (cat test/integration/proxy/proxy.log && exit 1)
           npm test
