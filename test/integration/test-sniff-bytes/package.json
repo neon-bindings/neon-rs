@@ -61,6 +61,7 @@
     "@jest/types": "^29.6.3",
     "@jest/test-result": "^29.7.0",
     "@jest/console": "^29.7.0",
+    "@babel/helper-string-parser": "^7.22.5",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
