@@ -47,6 +47,7 @@
     "@sinonjs/commons": "^3.0.0",
     "@jridgewell/resolve-uri": "^3.1.1",
     "@jridgewell/sourcemap-codec": "^1.4.15",
+    "@jridgewell/set-array": "^1.1.2",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
