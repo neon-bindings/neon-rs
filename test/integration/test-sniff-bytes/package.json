@@ -49,6 +49,7 @@
     "@jridgewell/sourcemap-codec": "^1.4.15",
     "@jridgewell/set-array": "^1.1.2",
     "@sinclair/typebox": "^0.31.15",
+    "@types/yargs": "^17.0.24",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
