@@ -45,7 +45,8 @@
   "devDependencies": {
     "@neon-rs/cli": "*",
     "@tsconfig/node16": "^16.1.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "@babel/plugin-syntax-typescript": "^7.22.5"
   },
   "dependencies": {
     "@neon-rs/load": "*"
