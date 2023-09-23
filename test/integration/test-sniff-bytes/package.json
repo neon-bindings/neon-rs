@@ -33,6 +33,7 @@
     "@types/babel__traverse": "^7.20.2",
     "@types/babel__template": "^7.4.2",
     "@types/babel__generator": "^7.6.5",
+    "@types/babel__core": "^7.20.2",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
