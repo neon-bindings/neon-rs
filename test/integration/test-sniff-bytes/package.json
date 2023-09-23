@@ -30,6 +30,7 @@
     "@babel/plugin-syntax-class-properties": "^7.12.13",
     "@babel/plugin-syntax-bigint": "^7.8.3",
     "@babel/plugin-syntax-async-generators": "^7.8.4",
+    "@types/babel__traverse": "^7.20.2",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
