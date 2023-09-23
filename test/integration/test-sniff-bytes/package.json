@@ -39,6 +39,7 @@
     "@istanbuljs/load-nyc-config": "^1.1.0",
     "@bcoe/v8-coverage": "^0.2.3",
     "@jest/transform": "^29.7.0",
+    "@jest/reporters": "^29.7.0",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
     "@types/graceful-fs": "^4.1.7"
