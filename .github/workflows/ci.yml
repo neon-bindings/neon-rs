@@ -112,5 +112,5 @@ jobs:
         shell: bash
         working-directory: test/integration/test-sniff-bytes
         run: |
-          npm ci
+          npm i
           npm test
