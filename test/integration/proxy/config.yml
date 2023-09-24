@@ -23,5 +23,6 @@ packages:
     publish: $all
   '**':
     access: $all
+    publish: $authenticated
     proxy: npmjs
 log: { type: file, path: proxy.log, level: info }
