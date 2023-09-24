@@ -72,6 +72,7 @@
     "@babel/helper-module-transforms": "^7.22.20",
     "@babel/helper-compilation-targets": "^7.22.15",
     "@babel/generator": "^7.22.15",
+    "@babel/code-frame": "^7.22.13",
     "@babel/helper-environment-visitor": "^7.22.20",
     "@babel/helper-validator-option": "^7.22.15",
     "@babel/compat-data": "^7.22.20",
