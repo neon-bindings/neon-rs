@@ -86,7 +86,8 @@
     "@babel/helpers": "^7.22.15",
     "@jest/source-map": "^29.6.3",
     "@types/stack-utils": "^2.0.1",
-    "@types/graceful-fs": "^4.1.7"
+    "@types/graceful-fs": "^4.1.7",
+    "@ampproject/remapping": "^2.2.1"
   },
   "dependencies": {
     "sniff-bytes": "^1.0.0"
