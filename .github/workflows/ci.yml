@@ -80,7 +80,7 @@ jobs:
         shell: bash
         working-directory: ./test/integration/sniff-bytes
         run: |
-          npm ci
+          npm i
           cat package-lock.json
       - name: Build sniff-bytes Integration Test
         uses: neon-actions/build@v0.3.4
