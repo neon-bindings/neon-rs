@@ -3,3 +3,4 @@ target
 **/*.node
 npm-debug.log*
 dist
+package-lock.json
