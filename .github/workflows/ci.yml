@@ -61,13 +61,6 @@ jobs:
       - name: Authenticate Proxy
         shell: bash
         run: npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-      - name: Publish @cargo-messages/linux-x64-gnu to proxy
-        shell: bash
-        run: npm publish ./pkgs/cargo-messages/dist/"cargo-messages-linux-x64-gnu-$(jq -r '.version' < ./pkgs/cargo-messages/package.json).tgz" --registry ${{env.PROXY}}
-      - name: Publish cargo-messages to proxy
-        shell: bash
-        working-directory: ./pkgs/cargo-messages
-        run: npm publish --registry ${{env.PROXY}}
       - name: Publish @neon-rs/load to proxy
         shell: bash
         working-directory: ./pkgs/load
@@ -112,11 +105,8 @@ jobs:
         shell: bash
         working-directory: test/integration/test-sniff-bytes
         run: |
-          npm cache add @types/yargs-parser --registry ${{ env.PROXY }}
           # Since package integrity checksums may vary depending on what versions
           # are available in the proxy registry, we don't put the lockfile for this
           # test in source control. This means we have to use `npm i`, not `npm ci`.
-          npm i --registry ${{ env.PROXY }} || (echo 'that failed, try one more time...')
-          npm i --registry ${{ env.PROXY }} -D @types/yargs-parser
-          npm i --registry ${{ env.PROXY }} || (cat ../proxy/proxy.log && exit 1)
+          npm i || (cat ../proxy/proxy.log && exit 1)
           npm test

@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import { describe, expect, test } from '@jest/globals';
-import { sniffBytes } from 'sniff-bytes';
+import { sniffBytes } from '@neon-integration-tests/sniff-bytes';
 
 async function loadFixture(name: string) {
   return (await readFile(path.join('.', 'fixtures', name))).buffer;
