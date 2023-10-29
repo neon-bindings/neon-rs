@@ -69,12 +69,10 @@ jobs:
         shell: bash
         working-directory: ./pkgs/cli
         run: npm publish --registry ${{env.PROXY}}
-      - name: Install Dependencies for sniff-bytes Integration Test
+      - name: Setup sniff-bytes Integration Test
         shell: bash
         working-directory: ./test/integration/sniff-bytes
-        run: |
-          npm i
-          cat package-lock.json
+        run: npm i
       - name: Build sniff-bytes Integration Test
         uses: neon-actions/build@v0.3.4
         with:
@@ -84,28 +82,21 @@ jobs:
           use-cross: false
           npm-publish: false
           github-release: false
-      - name: Display the integrity shasum of @sniff-bytes/linux-x64-gnu
-        shell: bash
-        run: cat ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz | shasum -a 512
       - name: Publish @sniff-bytes/linux-x64-gnu to proxy
         shell: bash
         run: npm publish ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz --registry ${{ env.PROXY }} || (cat test/integration/proxy/proxy.log && exit 1)
-      - name: Display the integrity shasum of @sniff-bytes/linux-x64-gnu
-        shell: bash
-        run: |
-          cat ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz | shasum -a 512
-          npm view @sniff-bytes/linux-x64-gnu dist.integrity --registry ${{env.PROXY}}
-          # curl -s ${{env.PROXY}}/@sniff-bytes/linux-x64-gnu | jq -r '.versions[.["dist-tags"].latest].dist.integrity'
       - name: Publish sniff-bytes to proxy
         shell: bash
         working-directory: test/integration/sniff-bytes
         run: npm publish --registry ${{ env.PROXY }}
-      - name: Run test-sniff-bytes tests
+      # Since package integrity checksums may vary depending on what versions
+      # are available in the proxy registry, we don't put the lockfile for this
+      # test in source control. This means we have to use `npm i`, not `npm ci`.
+      - name: Setup test-sniff-bytes Integration Test
         shell: bash
         working-directory: test/integration/test-sniff-bytes
-        run: |
-          # Since package integrity checksums may vary depending on what versions
-          # are available in the proxy registry, we don't put the lockfile for this
-          # test in source control. This means we have to use `npm i`, not `npm ci`.
-          npm i || (cat ../proxy/proxy.log && exit 1)
-          npm test
+        run: npm i || (cat ../proxy/proxy.log && exit 1)
+      - name: Run test-sniff-bytes Integration Test
+        shell: bash
+        working-directory: test/integration/test-sniff-bytes
+        run: npm test
