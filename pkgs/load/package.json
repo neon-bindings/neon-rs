@@ -9,7 +9,6 @@
     "types/**/*"
   ],
   "scripts": {
-    "preci": "echo preci pkgs/load",
     "build": "tsc",
     "pretest": "npm run build",
     "prepack": "npm run build",

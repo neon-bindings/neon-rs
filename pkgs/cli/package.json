@@ -4,9 +4,6 @@
   "description": "Command-line build tool for Neon modules.",
   "type": "module",
   "exports": "./index.js",
-  "scripts": {
-    "preci": "echo preci pkgs/cli"
-  },
   "files": [
     "LICENSE*",
     "index.js"
