@@ -8,17 +8,12 @@ async function loadFixture(name: string) {
 }
 
 describe('main', () => {
-  test('first test', () => {
-    expect(1 + 2).toBe(3);
-  });
-
   test('sniff JPEG bytes', async () => {
     const jpg = await loadFixture('pit-droids.jpg');
     const metadata = sniffBytes(jpg);
     expect(metadata.shortName).toBe('JPEG');
     expect(metadata.mediaType).toBe('image/jpeg');
     expect(metadata.extension).toBe('jpg');
-    console.error(metadata);
   });
 
   test('sniff GIF bytes', async () => {

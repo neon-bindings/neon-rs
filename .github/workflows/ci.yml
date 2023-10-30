@@ -2,10 +2,7 @@ name: CI
 
 env:
   NODE_VERSION: 18.x
-  PROXY: http://127.0.0.1:4873/
-  CIUSER: ci
-  CIEMAIL: ci@neon-bindings.com
-  CIPASS: dummycipassword
+  CIPROXY: http://127.0.0.1:4873/
 
 on:
   push:
@@ -57,38 +54,12 @@ jobs:
         shell: bash
         working-directory: ./test/integration/proxy
         timeout-minutes: 3
-        run: ./proxy.sh '${{ env.PROXY }}'
-      - name: Authenticate Proxy
+        run: ./ci-proxy.sh '${{ env.CIPROXY }}'
+      - name: Publish to npm Proxy
         shell: bash
-        run: npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
-      - name: Publish @neon-rs/load to proxy
-        shell: bash
-        working-directory: ./pkgs/load
-        run: npm publish --registry ${{env.PROXY}}
-      - name: Publish @neon-rs/cli to proxy
-        shell: bash
-        working-directory: ./pkgs/cli
-        run: npm publish --registry ${{env.PROXY}}
-      - name: Setup sniff-bytes Integration Test
-        shell: bash
-        working-directory: ./test/integration/sniff-bytes
-        run: npm i
-      - name: Build sniff-bytes Integration Test
-        uses: neon-actions/build@v0.3.4
-        with:
-          working-directory: ./test/integration/sniff-bytes
-          target: linux-x64-gnu
-          node-version: ${{ env.NODE_VERSION }}
-          use-cross: false
-          npm-publish: false
-          github-release: false
-      - name: Publish @sniff-bytes/linux-x64-gnu to proxy
-        shell: bash
-        run: npm publish ./test/integration/sniff-bytes/dist/sniff-bytes-linux-x64-gnu-1.0.0.tgz --registry ${{ env.PROXY }} || (cat test/integration/proxy/proxy.log && exit 1)
-      - name: Publish sniff-bytes to proxy
-        shell: bash
-        working-directory: test/integration/sniff-bytes
-        run: npm publish --registry ${{ env.PROXY }}
+        working-directory: ./test/integration/proxy
+        timeout-minutes: 3
+        run: ./publish.sh
       # Since package integrity checksums may vary depending on what versions
       # are available in the proxy registry, we don't put the lockfile for this
       # test in source control. This means we have to use `npm i`, not `npm ci`.
