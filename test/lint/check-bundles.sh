@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script implements a lint that ensures that generated bundles
+# in the repo haven't gone stale since the source was last modified.
+
 echo "Checking that all bundled tools are up to date..."
 
 dirty_workspaces=()

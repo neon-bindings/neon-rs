@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script can be used for running the integration tests in local development.
+# It starts up the npm proxy and manages it with the pm2 process manager.
+
 cd $(dirname $0)/../../..
 ROOT_DIR=$(pwd)
 PROXY_DIR=${ROOT_DIR}/test/integration/proxy

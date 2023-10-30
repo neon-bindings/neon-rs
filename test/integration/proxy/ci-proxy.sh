@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script is used by CI to start up the npm proxy.
+
 CIPROXY=http://127.0.0.1:4873
 
 # Boot the server in a background process.
