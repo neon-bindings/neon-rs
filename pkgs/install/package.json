@@ -3,8 +3,5 @@
   "private": true,
   "version": "0.0.165",
   "description": "Command-line tool to recursively run npm i or npm ci on a subfolder",
-  "main": "index.js",
-  "scripts": {
-    "preci": "echo preci pkgs/install"
-  }
+  "main": "index.js"
 }
