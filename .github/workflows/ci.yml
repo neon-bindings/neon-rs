@@ -60,7 +60,7 @@ jobs:
         run: ./ci-proxy.sh '${{ env.CIPROXY }}'
       - name: Authenticate Proxy
         shell: bash
-        run: npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.PROXY}}
+        run: npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.CIPROXY}}
       - name: Publish to npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
