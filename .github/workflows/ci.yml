@@ -2,9 +2,6 @@ name: CI
 
 env:
   NODE_VERSION: 18.x
-  CIUSER: ci
-  CIEMAIL: ci@neon-bindings.com
-  CIPASS: dummycipassword
   CIPROXY: http://127.0.0.1:4873/
 
 on:
@@ -58,9 +55,6 @@ jobs:
         working-directory: ./test/integration/proxy
         timeout-minutes: 3
         run: ./ci-proxy.sh '${{ env.CIPROXY }}'
-      - name: Authenticate Proxy
-        shell: bash
-        run: npx npm-cli-adduser -u ${{env.CIUSER}} -p ${{env.CIPASS}} -e ${{env.CIEMAIL}} -r ${{env.CIPROXY}}
       - name: Publish to npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
