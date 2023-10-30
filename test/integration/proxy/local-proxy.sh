@@ -34,7 +34,6 @@ rm -rf ./storage ./proxy.log
 pm2 start verdaccio --name neon-test-proxy --no-autorestart -- --config ./config.yml --listen ${LOCAL_PROXY}
 
 # Wait for the server to begin listening for connections
-# "${LOCAL_PROXY}"
 ( tail -F -n10 ./proxy.log & ) | fgrep -q "${LOCAL_PROXY}"
 
 cat ./proxy.log
