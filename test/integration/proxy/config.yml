@@ -1,0 +1,15 @@
+storage: ./storage
+auth:
+  htpasswd:
+    file: ./htpasswd
+packages:
+  '@neon-rs/*':
+    access: $all
+    publish: $all
+  '@sniff-bytes/*':
+    access: $all
+    publish: $all
+  '@neon-integration-tests/*':
+    access: $all
+    publish: $all
+log: { type: file, path: proxy.log, level: info }

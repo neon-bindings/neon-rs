@@ -1,0 +1,23 @@
+{
+  "name": "@neon-integration-tests/test-sniff-bytes",
+  "version": "1.0.0",
+  "description": "Integration test: use a portable library that wraps a Rust implementation",
+  "license": "MIT",
+  "type": "module",
+  "exports": "./dist/src/index.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest ./dist",
+    "pretest": "npm run build"
+  },
+  "devDependencies": {
+    "@jest/globals": "^29.6.4",
+    "@tsconfig/node16": "^16.1.1",
+    "jest": "^29.6.4",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@neon-integration-tests/sniff-bytes": "^1.0.0"
+  }
+}

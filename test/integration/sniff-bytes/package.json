@@ -1,0 +1,57 @@
+{
+  "name": "@neon-integration-tests/sniff-bytes",
+  "private": false,
+  "version": "1.0.0",
+  "description": "Integration test: a portable npm library with a Rust implementation.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./types/index.d.mts",
+        "default": "./lib/index.mjs"
+      },
+      "require": {
+        "types": "./types/index.d.cts",
+        "default": "./lib/index.cjs"
+      }
+    }
+  },
+  "types": "./types/index.d.cts",
+  "main": "./lib/index.cjs",
+  "files": [
+    "lib/index.cjs",
+    "lib/load.cjs",
+    "lib/index.mjs",
+    "types/index.d.cts",
+    "types/index.d.mts"
+  ],
+  "scripts": {
+    "test": "cargo test",
+    "debug": "cargo build --message-format=json | neon dist",
+    "build": "cargo build --message-format=json --release | neon dist -v -n sniff-bytes",
+    "cross": "cross build --message-format=json --release | neon dist -v -n sniff-bytes -m /target",
+    "pack-build": "neon pack-build -v",
+    "prepack": "neon install-builds -v"
+  },
+  "license": "MIT",
+  "neon": {
+    "type": "source",
+    "org": "@sniff-bytes",
+    "targets": {
+      "linux-x64-gnu": "x86_64-unknown-linux-gnu",
+      "darwin-arm64": "aarch64-apple-darwin"
+    }
+  },
+  "devDependencies": {
+    "@neon-rs/cli": "*",
+    "@tsconfig/node16": "^16.1.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@neon-rs/load": "*"
+  },
+  "optionalDependencies": {
+    "@sniff-bytes/darwin-arm64": "1.0.0",
+    "@sniff-bytes/linux-x64-gnu": "1.0.0"
+  }
+}
