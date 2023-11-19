@@ -1,5 +1,6 @@
-import RUST from '../data/rust.json';
+import { execa } from 'execa';
 
+import RUST from '../data/rust.json';
 import NODE from '../data/node.json';
 
 export type RustTarget = keyof(typeof RUST);
@@ -54,4 +55,40 @@ export function getTargetDescriptor(target: RustTarget): TargetDescriptor {
     abi: nodeDescriptor.abi,
     llvm: nodeDescriptor.llvm as RustTarget[]
   };
+}
+
+export function node2Rust(target: NodeTarget): RustTarget[] {
+  return NODE[target].llvm.map(rt => {
+    assertIsRustTarget(rt);
+    return rt;
+  });
+}
+
+export function rust2Node(target: RustTarget): NodeTarget {
+  const nt = RUST[target];
+  assertIsNodeTarget(nt);
+  return nt;
+}
+
+export async function getCurrentTarget(log: (msg: string) => void): Promise<RustTarget> {
+  log(`rustc -vV`);
+  const result = await execa("rustc", ["-vV"], { shell: true });
+
+  if (result.exitCode !== 0) {
+    throw new Error(`Could not determine current Rust target: ${result.stderr}`);
+  }
+
+  const hostLine = result.stdout.split(/\n/).find(line => line.startsWith('host:'));
+  log(`found host line: ${hostLine}`);
+
+  if (!hostLine) {
+    throw new Error("Could not determine current Rust target (unexpected rustc output)");
+  }
+
+  const target = hostLine.replace(/^host:\s+/, '');
+  log(`currentTarget result: "${target}"`);
+
+  assertIsRustTarget(target);
+
+  return target;
 }

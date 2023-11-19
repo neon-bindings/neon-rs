@@ -1,6 +1,7 @@
+import { execa } from 'execa';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor } from './target.js';
+import { RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getCurrentTarget, getTargetDescriptor, node2Rust, rust2Node } from './target.js';
 
 export interface BinaryCfg {
   type: "binary",
@@ -371,6 +372,65 @@ export class SourceManifest extends AbstractManifest {
     }
 
     return new BinaryManifest(json);
+  }
+
+  async addTargetPair(node: NodeTarget, rust: RustTarget): Promise<boolean> {
+    const targets = this.cfg().targets;
+
+    if (targets[node] === rust) {
+      return false;
+    }
+
+    targets[node] = rust;
+    await this.save();
+    return true;
+  }
+
+  async addNodeTarget(target: NodeTarget): Promise<boolean> {
+    const rt = node2Rust(target);
+    if (rt.length > 1) {
+      throw new Error(`multiple Rust targets found for Node target ${target}; please specify one of ${rt.join(', ')}`);
+    }
+    return await this.addTargetPair(target, rt[0]);
+  }
+
+  async addRustTarget(target: RustTarget): Promise<boolean> {
+    return await this.addTargetPair(rust2Node(target), target);
+  }
+
+  async updateTargets(log: (msg: string) => void, bundle: string | null) {
+    const packages = this.packageNames();
+    const specs = packages.map(name => `${name}@${this.version}`);
+
+    log(`npm install --save-exact -O ${specs.join(' ')}`);
+    const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
+    if (result.exitCode !== 0) {
+      log(`npm failed with exit code ${result.exitCode}`);
+      console.error(result.stderr);
+      process.exit(result.exitCode);
+    }
+    log(`package.json after: ${await fs.readFile(path.join(process.cwd(), "package.json"))}`);
+
+    if (!bundle) {
+      return;
+    }
+
+    const PREAMBLE =
+`// AUTOMATICALLY GENERATED FILE. DO NOT EDIT.
+//
+// This code is never executed but is detected by the static analysis of
+// bundlers such as \`@vercel/ncc\`. The require() expression that selects
+// the right binary module for the current platform is too dynamic to be
+// analyzable by bundler analyses, so this module provides an exhaustive
+// static list for those analyses.
+
+if (0) {
+`;
+
+    const requires = packages.map(name => `  require('${name}');`).join('\n');
+
+    log(`generating bundler compatibility module at ${bundle}`);
+    await fs.writeFile(bundle, PREAMBLE + requires + '\n}\n');
   }
 }
 
