@@ -30,14 +30,14 @@
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist -v",
     "cross": "cross build --message-format=json --release | neon dist -v -m /target",
-    "pack-build": "neon pack-build -v",
-    "prepack": "neon install-builds -v 2>install-builds.log",
+    "pack-target": "neon tarball -v",
+    "prepack": "neon update-targets -v 2>update-targets.log",
     "version": "neon bump -v --binaries npm"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.158"
+    "@neon-rs/cli": "^0.0.166"
   },
   "repository": {
     "type": "git",
