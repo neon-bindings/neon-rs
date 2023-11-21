@@ -17,6 +17,6 @@ cd test/integration/sniff-bytes
 npm i
 npm run build
 mkdir -p dist
-PACKAGE_TARBALL=$(npm run pack-build -- --out-dir dist | tail -1)
+PACKAGE_TARBALL=$(npx neon tarball --out-dir dist | tail -1)
 npm publish ./${PACKAGE_TARBALL} --registry $PROXY_SERVER
 npm publish --registry $PROXY_SERVER
