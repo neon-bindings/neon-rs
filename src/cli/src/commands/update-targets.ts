@@ -10,9 +10,9 @@ const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 
-export default class InstallBuilds implements Command {
-  static summary(): string { return 'Install dependencies on prebuilds in package.json.'; }
-  static syntax(): string { return 'neon install-builds [-b <file>]'; }
+export default class UpdateTargets implements Command {
+  static summary(): string { return 'Update dependencies for all build targets in package.json.'; }
+  static syntax(): string { return 'neon update-targets [-b <file>]'; }
   static options(): CommandDetail[] {
     return [
       { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata.' },
@@ -41,7 +41,7 @@ export default class InstallBuilds implements Command {
 
   log(msg: string) {
     if (this._verbose) {
-      console.error("[neon install-builds] " + msg);
+      console.error("[neon update-targets] " + msg);
     }
   }
 
@@ -52,42 +52,11 @@ export default class InstallBuilds implements Command {
     this.log(`package.json before: ${sourceManifest.stringify()}`);
     this.log(`determined version: ${version}`);
 
-    const packages = sourceManifest.packageNames();
-    const specs = packages.map(name => `${name}@${version}`);
-
     if (sourceManifest.upgraded) {
       this.log(`upgrading manifest format`);
       await sourceManifest.save();
     }
 
-    this.log(`npm install --save-exact -O ${specs.join(' ')}`);
-    const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
-    if (result.exitCode !== 0) {
-      this.log(`npm failed with exit code ${result.exitCode}`);
-      console.error(result.stderr);
-      process.exit(result.exitCode);
-    }
-    this.log(`package.json after: ${await fs.readFile(path.join(process.cwd(), "package.json"))}`);
-
-    if (!this._bundle) {
-      return;
-    }
-
-    const PREAMBLE =
-`// AUTOMATICALLY GENERATED FILE. DO NOT EDIT.
-//
-// This code is never executed but is detected by the static analysis of
-// bundlers such as \`@vercel/ncc\`. The require() expression that selects
-// the right binary module for the current platform is too dynamic to be
-// analyzable by bundler analyses, so this module provides an exhaustive
-// static list for those analyses.
-
-if (0) {
-`;
-
-    const requires = packages.map(name => `  require('${name}');`).join('\n');
-
-    this.log(`generating bundler compatibility module at ${this._bundle}`);
-    await fs.writeFile(this._bundle, PREAMBLE + requires + '\n}\n');
+    sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
   }
 }

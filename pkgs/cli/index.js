@@ -10245,7 +10245,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 3236:
+/***/ 1217:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -10292,7 +10292,7 @@ function createInputStream(file) {
     return file ? (0,external_node_fs_namespaceObject.createReadStream)(file) : process.stdin;
 }
 class Dist {
-    static summary() { return 'Generate a .node file from a build.'; }
+    static summary() { return 'Generate a binary .node file from a cargo output log.'; }
     static syntax() { return 'neon dist [-n <name>] [-f <dylib>|[-l <log>] [-m <path>]] [-o <dist>]'; }
     static options() {
         return [
@@ -12030,6 +12030,7 @@ const node_namespaceObject = JSON.parse('{"darwin-arm64":{"platform":"darwin","a
 ;// CONCATENATED MODULE: ./src/target.ts
 
 
+
 function isRustTarget(x) {
     return (typeof x === 'string') && (x in rust_namespaceObject);
 }
@@ -12064,8 +12065,36 @@ function getTargetDescriptor(target) {
         llvm: nodeDescriptor.llvm
     };
 }
+function node2Rust(target) {
+    return node_namespaceObject[target].llvm.map(rt => {
+        assertIsRustTarget(rt);
+        return rt;
+    });
+}
+function rust2Node(target) {
+    const nt = rust_namespaceObject[target];
+    assertIsNodeTarget(nt);
+    return nt;
+}
+async function getCurrentTarget(log) {
+    log(`rustc -vV`);
+    const result = await execa("rustc", ["-vV"], { shell: true });
+    if (result.exitCode !== 0) {
+        throw new Error(`Could not determine current Rust target: ${result.stderr}`);
+    }
+    const hostLine = result.stdout.split(/\n/).find(line => line.startsWith('host:'));
+    log(`found host line: ${hostLine}`);
+    if (!hostLine) {
+        throw new Error("Could not determine current Rust target (unexpected rustc output)");
+    }
+    const target = hostLine.replace(/^host:\s+/, '');
+    log(`currentTarget result: "${target}"`);
+    assertIsRustTarget(target);
+    return target;
+}
 
 ;// CONCATENATED MODULE: ./src/manifest.ts
+
 
 
 
@@ -12355,6 +12384,53 @@ class SourceManifest extends AbstractManifest {
         }
         return new BinaryManifest(json);
     }
+    async addTargetPair(node, rust) {
+        const targets = this.cfg().targets;
+        if (targets[node] === rust) {
+            return false;
+        }
+        targets[node] = rust;
+        await this.save();
+        return true;
+    }
+    async addNodeTarget(target) {
+        const rt = node2Rust(target);
+        if (rt.length > 1) {
+            throw new Error(`multiple Rust targets found for Node target ${target}; please specify one of ${rt.join(', ')}`);
+        }
+        return await this.addTargetPair(target, rt[0]);
+    }
+    async addRustTarget(target) {
+        return await this.addTargetPair(rust2Node(target), target);
+    }
+    async updateTargets(log, bundle) {
+        const packages = this.packageNames();
+        const specs = packages.map(name => `${name}@${this.version}`);
+        log(`npm install --save-exact -O ${specs.join(' ')}`);
+        const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
+        if (result.exitCode !== 0) {
+            log(`npm failed with exit code ${result.exitCode}`);
+            console.error(result.stderr);
+            process.exit(result.exitCode);
+        }
+        log(`package.json after: ${await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(process.cwd(), "package.json"))}`);
+        if (!bundle) {
+            return;
+        }
+        const PREAMBLE = `// AUTOMATICALLY GENERATED FILE. DO NOT EDIT.
+//
+// This code is never executed but is detected by the static analysis of
+// bundlers such as \`@vercel/ncc\`. The require() expression that selects
+// the right binary module for the current platform is too dynamic to be
+// analyzable by bundler analyses, so this module provides an exhaustive
+// static list for those analyses.
+
+if (0) {
+`;
+        const requires = packages.map(name => `  require('${name}');`).join('\n');
+        log(`generating bundler compatibility module at ${bundle}`);
+        await promises_namespaceObject.writeFile(bundle, PREAMBLE + requires + '\n}\n');
+    }
 }
 function upgradeSourceV1(object) {
     function splitSwap([key, value]) {
@@ -12392,7 +12468,7 @@ function upgradeBinaryV1(json) {
     };
 }
 
-;// CONCATENATED MODULE: ./src/commands/pack-build.ts
+;// CONCATENATED MODULE: ./src/commands/tarball.ts
 
 
 
@@ -12401,16 +12477,16 @@ function upgradeBinaryV1(json) {
 
 
 const mktemp = temp.track().mkdir;
-const pack_build_OPTIONS = [
+const tarball_OPTIONS = [
     { name: 'file', alias: 'f', type: String, defaultValue: 'index.node' },
     { name: 'target', alias: 't', type: String, defaultValue: null },
     { name: 'in-dir', alias: 'i', type: String, defaultValue: null },
     { name: 'out-dir', alias: 'o', type: String, defaultValue: null },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
 ];
-class PackBuild {
-    static summary() { return 'Create an npm tarball from a prebuild.'; }
-    static syntax() { return 'neon pack-build [-f <addon>] [-t <target>] [-i <dir>] [-o <dir>] [-v]'; }
+class Tarball {
+    static summary() { return 'Create an npm tarball from a binary .node file.'; }
+    static syntax() { return 'neon tarball [-f <addon>] [-t <target>] [-i <dir>] [-o <dir>] [-v]'; }
     static options() {
         return [
             { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
@@ -12433,7 +12509,7 @@ class PackBuild {
     _outDir;
     _verbose;
     constructor(argv) {
-        const options = dist_default()(pack_build_OPTIONS, { argv });
+        const options = dist_default()(tarball_OPTIONS, { argv });
         this._target = options.target || null;
         this._addon = options.file;
         this._inDir = options['in-dir'] || null;
@@ -12442,26 +12518,11 @@ class PackBuild {
     }
     log(msg) {
         if (this._verbose) {
-            console.error("[neon pack-build] " + msg);
+            console.error("[neon tarball] " + msg);
         }
-    }
-    async currentTarget() {
-        this.log(`rustc -vV`);
-        const result = await execa("rustc", ["-vV"], { shell: true });
-        if (result.exitCode !== 0) {
-            throw new Error(`Could not determine current Rust target: ${result.stderr}`);
-        }
-        const hostLine = result.stdout.split(/\n/).find(line => line.startsWith('host:'));
-        this.log(`found host line: ${hostLine}`);
-        if (!hostLine) {
-            throw new Error("Could not determine current Rust target (unexpected rustc output)");
-        }
-        const target = hostLine.replace(/^host:\s+/, '');
-        this.log(`currentTarget result: "${target}"`);
-        return target;
     }
     async createTempDir(sourceManifest) {
-        const target = this._target || await this.currentTarget();
+        const target = this._target || await getCurrentTarget(msg => this.log(msg));
         if (!isRustTarget(target)) {
             throw new Error(`Rust target ${target} not supported.`);
         }
@@ -12533,19 +12594,111 @@ class PackBuild {
     ;
 }
 
-;// CONCATENATED MODULE: ./src/commands/install-builds.ts
+;// CONCATENATED MODULE: ./src/commands/add-target.ts
 
 
 
+const add_target_OPTIONS = [
+    { name: 'bundle', alias: 'b', type: String, defaultValue: null },
+    { name: 'platform', alias: 'p', type: String, defaultValue: null },
+    { name: 'arch', alias: 'a', type: String, defaultValue: null },
+    { name: 'abi', type: String, defaultValue: null },
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+class AddTarget {
+    static summary() { return 'Add a new build target to package.json.'; }
+    static syntax() { return 'neon add-target [<target> | -p <plat> -a <arch> [--abi <abi>]] [-b <file>]'; }
+    static options() {
+        return [
+            { name: '<target>', summary: 'Full target name, in either Node or Rust convention. (Default: current target)' },
+            { name: '-p, --platform <plat>', summary: 'Target platform name. (Default: current platform)' },
+            { name: '-a, --arch <arch>', summary: 'Target architecture name. (Default: current arch)' },
+            { name: '--abi <abi>', summary: 'Target ABI name. (Default: current ABI)' },
+            { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata.' },
+            {
+                name: '',
+                summary: 'This generated file ensures support for bundlers (e.g. @vercel/ncc), which rely on static analysis to detect and enable any addons used by the library.'
+            },
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
+        ];
+    }
+    static seeAlso() {
+        return [];
+    }
+    _platform;
+    _arch;
+    _abi;
+    _target;
+    _bundle;
+    _verbose;
+    constructor(argv) {
+        const options = dist_default()(add_target_OPTIONS, { argv, partial: true });
+        this._platform = options.platform || null;
+        this._arch = options.arch || null;
+        this._abi = options.abi || null;
+        this._bundle = options.bundle || null;
+        this._verbose = !!options.verbose;
+        if (options.platform && !options.arch) {
+            throw new Error("Option --platform requires option --arch to be specified as well.");
+        }
+        if (!options.platform && options.arch) {
+            throw new Error("Option --arch requires option --platform to be specified as well.");
+        }
+        if (options.abi && (!options.platform || !options.arch)) {
+            throw new Error("Option --abi requires both options --platform and --arch to be specified as well.");
+        }
+        if (!options.platform && !options.arch && !options.abi) {
+            if (!options._unknown || options._unknown.length === 0) {
+                throw new Error("No arguments found, expected <target> or -p and -a options.");
+            }
+            this._target = options._unknown[0];
+        }
+        else {
+            this._target = null;
+        }
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon add-target] " + msg);
+        }
+    }
+    async addTarget(sourceManifest) {
+        if (!this._target) {
+            this.log('adding default system target');
+            return sourceManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg)));
+        }
+        else if (isRustTarget(this._target)) {
+            this.log(`adding Rust target ${this._target}`);
+            return sourceManifest.addRustTarget(this._target);
+        }
+        else if (isNodeTarget(this._target)) {
+            this.log(`adding Node target ${this._target}`);
+            return sourceManifest.addNodeTarget(this._target);
+        }
+        else {
+            throw new Error(`unrecognized target ${this._target}`);
+        }
+    }
+    async run() {
+        this.log(`reading package.json`);
+        const sourceManifest = await SourceManifest.load();
+        this.log(`manifest: ${sourceManifest.stringify()}`);
+        if (await this.addTarget(sourceManifest)) {
+            sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/commands/update-targets.ts
 
 
-const install_builds_OPTIONS = [
+const update_targets_OPTIONS = [
     { name: 'bundle', alias: 'b', type: String, defaultValue: null },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-class InstallBuilds {
-    static summary() { return 'Install dependencies on prebuilds in package.json.'; }
-    static syntax() { return 'neon install-builds [-b <file>]'; }
+class UpdateTargets {
+    static summary() { return 'Update dependencies for all build targets in package.json.'; }
+    static syntax() { return 'neon update-targets [-b <file>]'; }
     static options() {
         return [
             { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata.' },
@@ -12564,13 +12717,13 @@ class InstallBuilds {
     _bundle;
     _verbose;
     constructor(argv) {
-        const options = dist_default()(install_builds_OPTIONS, { argv });
+        const options = dist_default()(update_targets_OPTIONS, { argv });
         this._bundle = options.bundle || null;
         this._verbose = !!options.verbose;
     }
     log(msg) {
         if (this._verbose) {
-            console.error("[neon install-builds] " + msg);
+            console.error("[neon update-targets] " + msg);
         }
     }
     async run() {
@@ -12579,36 +12732,11 @@ class InstallBuilds {
         const version = sourceManifest.version;
         this.log(`package.json before: ${sourceManifest.stringify()}`);
         this.log(`determined version: ${version}`);
-        const packages = sourceManifest.packageNames();
-        const specs = packages.map(name => `${name}@${version}`);
         if (sourceManifest.upgraded) {
             this.log(`upgrading manifest format`);
             await sourceManifest.save();
         }
-        this.log(`npm install --save-exact -O ${specs.join(' ')}`);
-        const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
-        if (result.exitCode !== 0) {
-            this.log(`npm failed with exit code ${result.exitCode}`);
-            console.error(result.stderr);
-            process.exit(result.exitCode);
-        }
-        this.log(`package.json after: ${await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(process.cwd(), "package.json"))}`);
-        if (!this._bundle) {
-            return;
-        }
-        const PREAMBLE = `// AUTOMATICALLY GENERATED FILE. DO NOT EDIT.
-//
-// This code is never executed but is detected by the static analysis of
-// bundlers such as \`@vercel/ncc\`. The require() expression that selects
-// the right binary module for the current platform is too dynamic to be
-// analyzable by bundler analyses, so this module provides an exhaustive
-// static list for those analyses.
-
-if (0) {
-`;
-        const requires = packages.map(name => `  require('${name}');`).join('\n');
-        this.log(`generating bundler compatibility module at ${this._bundle}`);
-        await promises_namespaceObject.writeFile(this._bundle, PREAMBLE + requires + '\n}\n');
+        sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
     }
 }
 
@@ -12649,13 +12777,17 @@ class Help {
 
 
 
+
 var CommandName;
 (function (CommandName) {
     CommandName["Help"] = "help";
     CommandName["Dist"] = "dist";
     CommandName["Bump"] = "bump";
     CommandName["PackBuild"] = "pack-build";
+    CommandName["Tarball"] = "tarball";
+    CommandName["AddTarget"] = "add-target";
     CommandName["InstallBuilds"] = "install-builds";
+    CommandName["UpdateTargets"] = "update-targets";
 })(CommandName || (CommandName = {}));
 ;
 function isCommandName(s) {
@@ -12672,8 +12804,11 @@ const COMMANDS = {
     [CommandName.Help]: Help,
     [CommandName.Dist]: Dist,
     [CommandName.Bump]: Bump,
-    [CommandName.PackBuild]: PackBuild,
-    [CommandName.InstallBuilds]: InstallBuilds
+    [CommandName.PackBuild]: Tarball,
+    [CommandName.Tarball]: Tarball,
+    [CommandName.AddTarget]: AddTarget,
+    [CommandName.InstallBuilds]: UpdateTargets,
+    [CommandName.UpdateTargets]: UpdateTargets
 };
 function commandFor(name) {
     return COMMANDS[name];
@@ -12683,8 +12818,9 @@ function summaries() {
         { name: CommandName.Help, summary: Help.summary() },
         { name: CommandName.Dist, summary: Dist.summary() },
         { name: CommandName.Bump, summary: Bump.summary() },
-        { name: CommandName.PackBuild, summary: PackBuild.summary() },
-        { name: CommandName.InstallBuilds, summary: InstallBuilds.summary() }
+        { name: CommandName.Tarball, summary: Tarball.summary() },
+        { name: CommandName.AddTarget, summary: AddTarget.summary() },
+        { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() }
     ];
 }
 
@@ -12698,7 +12834,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3236);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(1217);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -15721,8 +15857,8 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 /* harmony default export */ const chalk_source = (chalk);
 
-// EXTERNAL MODULE: ./src/command.ts + 36 modules
-var command = __nccwpck_require__(3236);
+// EXTERNAL MODULE: ./src/command.ts + 37 modules
+var command = __nccwpck_require__(1217);
 ;// CONCATENATED MODULE: ./src/print.ts
 
 

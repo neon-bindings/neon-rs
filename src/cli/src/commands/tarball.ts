@@ -4,7 +4,7 @@ import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
 import { Command, CommandDetail } from '../command.js';
-import { getTargetDescriptor, isRustTarget } from '../target.js';
+import { getCurrentTarget, getTargetDescriptor, isRustTarget } from '../target.js';
 import { SourceManifest, BinaryManifest } from '../manifest.js';
 
 const mktemp = temp.track().mkdir;
@@ -17,9 +17,9 @@ const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
 ];
 
-export default class PackBuild implements Command {
-  static summary(): string { return 'Create an npm tarball from a prebuild.'; }
-  static syntax(): string { return 'neon pack-build [-f <addon>] [-t <target>] [-i <dir>] [-o <dir>] [-v]'; }
+export default class Tarball implements Command {
+  static summary(): string { return 'Create an npm tarball from a binary .node file.'; }
+  static syntax(): string { return 'neon tarball [-f <addon>] [-t <target>] [-i <dir>] [-o <dir>] [-v]'; }
   static options(): CommandDetail[] {
     return [
       { name: '-f, --file <addon>', summary: 'Prebuilt .node file to pack. (Default: index.node)' },
@@ -55,33 +55,12 @@ export default class PackBuild implements Command {
 
   log(msg: string) {
     if (this._verbose) {
-      console.error("[neon pack-build] " + msg);
+      console.error("[neon tarball] " + msg);
     }
-  }
-
-  async currentTarget(): Promise<string> {
-    this.log(`rustc -vV`);
-    const result = await execa("rustc", ["-vV"], { shell: true });
-
-    if (result.exitCode !== 0) {
-      throw new Error(`Could not determine current Rust target: ${result.stderr}`);
-    }
-
-    const hostLine = result.stdout.split(/\n/).find(line => line.startsWith('host:'));
-    this.log(`found host line: ${hostLine}`);
-
-    if (!hostLine) {
-      throw new Error("Could not determine current Rust target (unexpected rustc output)");
-    }
-
-    const target = hostLine.replace(/^host:\s+/, '');
-    this.log(`currentTarget result: "${target}"`);
-
-    return target;
   }
 
   async createTempDir(sourceManifest: SourceManifest): Promise<string> {
-    const target = this._target || await this.currentTarget();
+    const target = this._target || await getCurrentTarget(msg => this.log(msg));
 
     if (!isRustTarget(target)) {
       throw new Error(`Rust target ${target} not supported.`);

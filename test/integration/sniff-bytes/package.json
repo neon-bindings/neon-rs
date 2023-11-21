@@ -30,8 +30,7 @@
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist -v -n sniff-bytes",
     "cross": "cross build --message-format=json --release | neon dist -v -n sniff-bytes -m /target",
-    "pack-build": "neon pack-build -v",
-    "prepack": "neon install-builds -v"
+    "prepack": "neon update-targets -v"
   },
   "license": "MIT",
   "neon": {

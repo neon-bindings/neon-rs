@@ -22,7 +22,7 @@ function createInputStream(file: string | null): NodeJS.ReadableStream {
 }
 
 export default class Dist implements Command {
-  static summary(): string { return 'Generate a .node file from a build.'; }
+  static summary(): string { return 'Generate a binary .node file from a cargo output log.'; }
   static syntax(): string { return 'neon dist [-n <name>] [-f <dylib>|[-l <log>] [-m <path>]] [-o <dist>]'; }
   static options(): CommandDetail[] {
     return [
