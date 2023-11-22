@@ -44,7 +44,7 @@ jobs:
         uses: neon-actions/build@v0.4
         with:
           working-directory: ./pkgs/cargo-messages
-          target: linux-x64-gnu
+          input-directory: npm/linux-x64-gnu
           node-version: ${{ env.NODE_VERSION }}
           use-cross: false
           npm-publish: false

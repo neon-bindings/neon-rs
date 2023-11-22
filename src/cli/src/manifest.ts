@@ -1,7 +1,7 @@
 import { execa } from 'execa';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getCurrentTarget, getTargetDescriptor, node2Rust, rust2Node } from './target.js';
+import { RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor, node2Rust, rust2Node, TargetMap } from './target.js';
 
 export interface BinaryCfg {
   type: "binary",
@@ -61,8 +61,6 @@ function assertIsBinaryCfg(json: unknown): asserts json is BinaryCfg {
     throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
   }
 }
-
-export type TargetMap = {[key in NodeTarget]?: RustTarget};
 
 function assertIsTargetMap(json: unknown, path: string): asserts json is TargetMap {
   assertIsObject(json, path);
@@ -396,6 +394,29 @@ export class SourceManifest extends AbstractManifest {
 
   async addRustTarget(target: RustTarget): Promise<boolean> {
     return await this.addTargetPair(rust2Node(target), target);
+  }
+
+  async addTargets(family: TargetMap): Promise<boolean> {
+    const targets = this.cfg().targets;
+    let modified = false;
+
+    for (const [key, value] of Object.entries(family)) {
+      const node: NodeTarget = key as NodeTarget;
+      const rust: RustTarget = value;
+
+      if (targets[node] === rust) {
+        continue;
+      }
+
+      targets[node] = rust;
+      modified = true;
+    }
+
+    if (modified) {
+      await this.save();
+    }
+
+    return modified;
   }
 
   async updateTargets(log: (msg: string) => void, bundle: string | null) {

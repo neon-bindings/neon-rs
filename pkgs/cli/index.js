@@ -2,6 +2,13 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
+/***/ 9074:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = require(__nccwpck_require__.ab + "index.node")
+
+/***/ }),
+
 /***/ 1869:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -10245,7 +10252,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 1217:
+/***/ 3235:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -10314,6 +10321,7 @@ class Dist {
             { name: 'cross-rs', summary: '<https://github.com/cross-rs/cross>' }
         ];
     }
+    static extraSection() { }
     _log;
     _file;
     _mount;
@@ -11956,6 +11964,7 @@ class Bump {
             { name: 'npm version', summary: '<https://docs.npmjs.com/cli/commands/npm-version>' }
         ];
     }
+    static extraSection() { }
     _verbose;
     _dir;
     _workspaces;
@@ -12027,7 +12036,10 @@ var temp = __nccwpck_require__(591);
 const rust_namespaceObject = JSON.parse('{"aarch64-apple-darwin":"darwin-arm64","x86_64-apple-darwin":"darwin-x64","aarch64-apple-ios":"ios-arm64","x86_64-apple-ios":"ios-x64","aarch64-linux-android":"android-arm64","armv7-linux-androideabi":"android-arm-eabi","i686-linux-android":"android-ia32","x86_64-linux-android":"android-x64","aarch64-pc-windows-msvc":"win32-arm64-msvc","i686-pc-windows-gnu":"win32-ia32-gnu","i686-pc-windows-msvc":"win32-ia32-msvc","x86_64-pc-windows-gnu":"win32-x64-gnu","x86_64-pc-windows-msvc":"win32-x64-msvc","aarch64-unknown-linux-gnu":"linux-arm64-gnu","aarch64-unknown-linux-musl":"linux-arm64-musl","arm-unknown-linux-gnueabihf":"linux-arm-gnueabihf","arm-unknown-linux-musleabihf":"linux-arm-musleabihf","armv7-unknown-linux-gnueabihf":"linux-arm-gnueabihf","armv7-unknown-linux-musleabihf":"linux-arm-musleabihf","i686-unknown-linux-gnu":"linux-ia32-gnu","i686-unknown-linux-musl":"linux-ia32-musl","mips-unknown-linux-gnu":"linux-mips-gnu","mips-unknown-linux-musl":"linux-mips-musl","mips64-unknown-linux-gnuabi64":"linux-mips64-gnuabi64","mips64-unknown-linux-muslabi64":"linux-mips64-muslabi64","mips64el-unknown-linux-gnuabi64":"linux-mips64el-gnuabi64","mips64el-unknown-linux-muslabi64":"linux-mips64el-muslabi64","mipsel-unknown-linux-gnu":"linux-mipsel-gnu","mipsel-unknown-linux-musl":"linux-mipsel-musl","powerpc-unknown-linux-gnu":"linux-powerpc-gnu","powerpc64-unknown-linux-gnu":"linux-powerpc64-gnu","powerpc64le-unknown-linux-gnu":"linux-powerpc64le-gnu","riscv64gc-unknown-linux-gnu":"linux-riscv64gc-gnu","s390x-unknown-linux-gnu":"linux-s390x-gnu","sparc64-unknown-linux-gnu":"linux-sparc64-gnu","x86_64-unknown-linux-gnu":"linux-x64-gnu","x86_64-unknown-linux-gnux32":"linux-x64-gnux32","x86_64-unknown-linux-musl":"linux-x64-musl","i686-unknown-freebsd":"freebsd-ia32","x86_64-unknown-freebsd":"freebsd-x64"}');
 ;// CONCATENATED MODULE: ./data/node.json
 const node_namespaceObject = JSON.parse('{"darwin-arm64":{"platform":"darwin","arch":"arm64","abi":null,"llvm":["aarch64-apple-darwin"]},"darwin-x64":{"platform":"darwin","arch":"x64","abi":null,"llvm":["x86_64-apple-darwin"]},"ios-arm64":{"platform":"ios","arch":"arm64","abi":null,"llvm":["aarch64-apple-ios"]},"ios-x64":{"platform":"ios","arch":"x64","abi":null,"llvm":["x86_64-apple-ios"]},"android-arm64":{"platform":"android","arch":"arm64","abi":null,"llvm":["aarch64-linux-android"]},"android-arm-eabi":{"platform":"android","arch":"arm","abi":"eabi","llvm":["armv7-linux-androideabi"]},"android-ia32":{"platform":"android","arch":"ia32","abi":null,"llvm":["i686-linux-android"]},"android-x64":{"platform":"android","arch":"x64","abi":null,"llvm":["x86_64-linux-android"]},"win32-arm64-msvc":{"platform":"win32","arch":"arm64","abi":"msvc","llvm":["aarch64-pc-windows-msvc"]},"win32-ia32-gnu":{"platform":"win32","arch":"ia32","abi":"gnu","llvm":["i686-pc-windows-gnu"]},"win32-ia32-msvc":{"platform":"win32","arch":"ia32","abi":"msvc","llvm":["i686-pc-windows-msvc"]},"win32-x64-gnu":{"platform":"win32","arch":"x64","abi":"gnu","llvm":["x86_64-pc-windows-gnu"]},"win32-x64-msvc":{"platform":"win32","arch":"x64","abi":"msvc","llvm":["x86_64-pc-windows-msvc"]},"linux-arm64-gnu":{"platform":"linux","arch":"arm64","abi":"gnu","llvm":["aarch64-unknown-linux-gnu"]},"linux-arm64-musl":{"platform":"linux","arch":"arm64","abi":"musl","llvm":["aarch64-unknown-linux-musl"]},"linux-arm-gnueabihf":{"platform":"linux","arch":"arm","abi":"gnueabihf","llvm":["arm-unknown-linux-gnueabihf","armv7-unknown-linux-gnueabihf"]},"linux-arm-musleabihf":{"platform":"linux","arch":"arm","abi":"musleabihf","llvm":["arm-unknown-linux-musleabihf","armv7-unknown-linux-musleabihf"]},"linux-ia32-gnu":{"platform":"linux","arch":"ia32","abi":"gnu","llvm":["i686-unknown-linux-gnu"]},"linux-ia32-musl":{"platform":"linux","arch":"ia32","abi":"musl","llvm":["i686-unknown-linux-musl"]},"linux-mips-gnu":{"platform":"linux","arch":"mips","abi":"gnu","llvm":["mips-unknown-linux-gnu"]},"linux-mips-musl":{"platform":"linux","arch":"mips","abi":"musl","llvm":["mips-unknown-linux-musl"]},"linux-mips64-gnuabi64":{"platform":"linux","arch":"mips64","abi":"gnuabi64","llvm":["mips64-unknown-linux-gnuabi64"]},"linux-mips64-muslabi64":{"platform":"linux","arch":"mips64","abi":"muslabi64","llvm":["mips64-unknown-linux-muslabi64"]},"linux-mips64el-gnuabi64":{"platform":"linux","arch":"mips64el","abi":"gnuabi64","llvm":["mips64el-unknown-linux-gnuabi64"]},"linux-mips64el-muslabi64":{"platform":"linux","arch":"mips64el","abi":"muslabi64","llvm":["mips64el-unknown-linux-muslabi64"]},"linux-mipsel-gnu":{"platform":"linux","arch":"mipsel","abi":"gnu","llvm":["mipsel-unknown-linux-gnu"]},"linux-mipsel-musl":{"platform":"linux","arch":"mipsel","abi":"musl","llvm":["mipsel-unknown-linux-musl"]},"linux-powerpc-gnu":{"platform":"linux","arch":"powerpc","abi":"gnu","llvm":["powerpc-unknown-linux-gnu"]},"linux-powerpc64-gnu":{"platform":"linux","arch":"powerpc64","abi":"gnu","llvm":["powerpc64-unknown-linux-gnu"]},"linux-powerpc64le-gnu":{"platform":"linux","arch":"powerpc64le","abi":"gnu","llvm":["powerpc64le-unknown-linux-gnu"]},"linux-riscv64gc-gnu":{"platform":"linux","arch":"riscv64gc","abi":"gnu","llvm":["riscv64gc-unknown-linux-gnu"]},"linux-s390x-gnu":{"platform":"linux","arch":"s390x","abi":"gnu","llvm":["s390x-unknown-linux-gnu"]},"linux-sparc64-gnu":{"platform":"linux","arch":"sparc64","abi":"gnu","llvm":["sparc64-unknown-linux-gnu"]},"linux-x64-gnu":{"platform":"linux","arch":"x64","abi":"gnu","llvm":["x86_64-unknown-linux-gnu"]},"linux-x64-gnux32":{"platform":"linux","arch":"x64","abi":"gnux32","llvm":["x86_64-unknown-linux-gnux32"]},"linux-x64-musl":{"platform":"linux","arch":"x64","abi":"musl","llvm":["x86_64-unknown-linux-musl"]},"freebsd-ia32":{"platform":"freebsd","arch":"ia32","abi":null,"llvm":["i686-unknown-freebsd"]},"freebsd-x64":{"platform":"freebsd","arch":"x64","abi":null,"llvm":["x86_64-unknown-freebsd"]}}');
+;// CONCATENATED MODULE: ./data/family.json
+const family_namespaceObject = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
 ;// CONCATENATED MODULE: ./src/target.ts
+
 
 
 
@@ -12046,6 +12058,31 @@ function assertIsNodeTarget(x) {
     if (!isNodeTarget(x)) {
         throw new RangeError(`invalid Node target: ${x}`);
     }
+}
+function isTargetFamilyKey(x) {
+    return (typeof x === 'string') && (x in family_namespaceObject);
+}
+function assertIsTargetFamilyKey(x) {
+    if (!isTargetFamilyKey(x)) {
+        throw new RangeError(`invalid target family name: ${x}`);
+    }
+}
+function lookupTargetFamily(key) {
+    return family_namespaceObject[key];
+}
+function merge(maps) {
+    const merged = Object.create(null);
+    for (const map of maps) {
+        Object.assign(merged, map);
+    }
+    return merged;
+}
+function expandTargetFamily(family) {
+    return isTargetFamilyKey(family)
+        ? expandTargetFamily(lookupTargetFamily(family))
+        : Array.isArray(family)
+            ? merge(family.map(expandTargetFamily))
+            : family;
 }
 function getTargetDescriptor(target) {
     const node = rust_namespaceObject[target];
@@ -12403,6 +12440,23 @@ class SourceManifest extends AbstractManifest {
     async addRustTarget(target) {
         return await this.addTargetPair(rust2Node(target), target);
     }
+    async addTargets(family) {
+        const targets = this.cfg().targets;
+        let modified = false;
+        for (const [key, value] of Object.entries(family)) {
+            const node = key;
+            const rust = value;
+            if (targets[node] === rust) {
+                continue;
+            }
+            targets[node] = rust;
+            modified = true;
+        }
+        if (modified) {
+            await this.save();
+        }
+        return modified;
+    }
     async updateTargets(log, bundle) {
         const packages = this.packageNames();
         const specs = packages.map(name => `${name}@${this.version}`);
@@ -12503,6 +12557,7 @@ class Tarball {
             { name: 'cross-rs', summary: '<https://github.com/cross-rs/cross>' }
         ];
     }
+    static extraSection() { }
     _target;
     _addon;
     _inDir;
@@ -12610,7 +12665,11 @@ class AddTarget {
     static syntax() { return 'neon add-target [<target> | -p <plat> -a <arch> [--abi <abi>]] [-b <file>]'; }
     static options() {
         return [
-            { name: '<target>', summary: 'Full target name, in either Node or Rust convention. (Default: current target)' },
+            { name: '<target>', summary: 'Full target name, in either Node or Rust convention.' },
+            {
+                name: '',
+                summary: 'This may be a target name in either Node or Rust convention, or one of the Neon target family presets described below. (Default: current target)'
+            },
             { name: '-p, --platform <plat>', summary: 'Target platform name. (Default: current platform)' },
             { name: '-a, --arch <arch>', summary: 'Target architecture name. (Default: current arch)' },
             { name: '--abi <abi>', summary: 'Target ABI name. (Default: current ABI)' },
@@ -12622,8 +12681,20 @@ class AddTarget {
             { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
         ];
     }
-    static seeAlso() {
-        return [];
+    static seeAlso() { }
+    static extraSection() {
+        return {
+            title: 'Target Family Presets',
+            details: [
+                { name: 'linux', summary: 'Common desktop Linux targets.' },
+                { name: 'macos', summary: 'Common desktop macOS targets.' },
+                { name: 'windows', summary: 'Common desktop Windows targets.' },
+                { name: 'mobile', summary: 'Common mobile and tablet targets.' },
+                { name: 'desktop', summary: 'All common desktop targets.' },
+                { name: 'common', summary: 'All common targets.' },
+                { name: 'extended', summary: 'All supported targets.' }
+            ]
+        };
     }
     _platform;
     _arch;
@@ -12654,7 +12725,10 @@ class AddTarget {
             this._target = options._unknown[0];
         }
         else {
-            this._target = null;
+            this._target = `${options.platform}-${options.arch}`;
+            if (!!options.abi) {
+                this._target = `${this._target}-${options.abi}`;
+            }
         }
     }
     log(msg) {
@@ -12674,6 +12748,9 @@ class AddTarget {
         else if (isNodeTarget(this._target)) {
             this.log(`adding Node target ${this._target}`);
             return sourceManifest.addNodeTarget(this._target);
+        }
+        else if (isTargetFamilyKey(this._target)) {
+            return sourceManifest.addTargets(expandTargetFamily(this._target));
         }
         else {
             throw new Error(`unrecognized target ${this._target}`);
@@ -12714,6 +12791,7 @@ class UpdateTargets {
             { name: 'ncc', summary: '<https://github.com/vercel/ncc>' }
         ];
     }
+    static extraSection() { }
     _bundle;
     _verbose;
     constructor(argv) {
@@ -12740,6 +12818,86 @@ class UpdateTargets {
     }
 }
 
+;// CONCATENATED MODULE: ./src/commands/rust-target.ts
+
+
+
+const rust_target_OPTIONS = [
+    { name: 'platform', alias: 'p', type: String, defaultValue: null },
+    { name: 'arch', alias: 'a', type: String, defaultValue: null },
+    { name: 'abi', type: String, defaultValue: null },
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+class RustTarget {
+    static summary() { return 'Look up the Rust target triple for a given build target.'; }
+    static syntax() { return 'neon rust-target <target> | (-p <plat> -a <arch> [--abi <abi>])'; }
+    static options() {
+        return [
+            { name: '<target>', summary: 'Full target name in Node convention.' },
+            { name: '-p, --platform <plat>', summary: 'Target platform name.' },
+            { name: '-a, --arch <arch>', summary: 'Target architecture name.' },
+            { name: '--abi <abi>', summary: 'Target ABI name. (Default: null)' },
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
+        ];
+    }
+    static seeAlso() { }
+    static extraSection() { }
+    _platform;
+    _arch;
+    _abi;
+    _target;
+    _verbose;
+    constructor(argv) {
+        const options = dist_default()(rust_target_OPTIONS, { argv, partial: true });
+        this._platform = options.platform || null;
+        this._arch = options.arch || null;
+        this._abi = options.abi || null;
+        this._verbose = !!options.verbose;
+        if (options.platform && !options.arch) {
+            throw new Error("Option --platform requires option --arch to be specified as well.");
+        }
+        if (!options.platform && options.arch) {
+            throw new Error("Option --arch requires option --platform to be specified as well.");
+        }
+        if (options.abi && (!options.platform || !options.arch)) {
+            throw new Error("Option --abi requires both options --platform and --arch to be specified as well.");
+        }
+        let target;
+        if (!options.platform && !options.arch && !options.abi) {
+            if (!options._unknown || options._unknown.length === 0) {
+                throw new Error("No arguments found, expected <target> or -p and -a options.");
+            }
+            target = options._unknown[0];
+        }
+        else {
+            target = `${options.platform}-${options.arch}`;
+            if (!!options.abi) {
+                target = `${target}-${options.abi}`;
+            }
+        }
+        if (!isNodeTarget(target)) {
+            throw new Error(`${target} is not a valid Node target.`);
+        }
+        this._target = target;
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon rust-target] " + msg);
+        }
+    }
+    async run() {
+        this.log(`reading package.json`);
+        const sourceManifest = await SourceManifest.load();
+        this.log(`manifest: ${sourceManifest.stringify()}`);
+        const targets = sourceManifest.cfg().targets;
+        const rust = targets[this._target];
+        if (!rust) {
+            throw new Error(`no Rust target found for ${this._target}`);
+        }
+        console.log(rust);
+    }
+}
+
 // EXTERNAL MODULE: ./src/print.ts + 26 modules
 var print = __nccwpck_require__(9050);
 ;// CONCATENATED MODULE: ./src/commands/help.ts
@@ -12754,6 +12912,7 @@ class Help {
         ];
     }
     static seeAlso() { }
+    static extraSection() { }
     _name;
     constructor(argv) {
         this._name = argv.length > 0 ? asCommandName(argv[0]) : undefined;
@@ -12778,6 +12937,7 @@ class Help {
 
 
 
+
 var CommandName;
 (function (CommandName) {
     CommandName["Help"] = "help";
@@ -12788,6 +12948,7 @@ var CommandName;
     CommandName["AddTarget"] = "add-target";
     CommandName["InstallBuilds"] = "install-builds";
     CommandName["UpdateTargets"] = "update-targets";
+    CommandName["RustTarget"] = "rust-target";
 })(CommandName || (CommandName = {}));
 ;
 function isCommandName(s) {
@@ -12808,7 +12969,8 @@ const COMMANDS = {
     [CommandName.Tarball]: Tarball,
     [CommandName.AddTarget]: AddTarget,
     [CommandName.InstallBuilds]: UpdateTargets,
-    [CommandName.UpdateTargets]: UpdateTargets
+    [CommandName.UpdateTargets]: UpdateTargets,
+    [CommandName.RustTarget]: RustTarget
 };
 function commandFor(name) {
     return COMMANDS[name];
@@ -12820,7 +12982,8 @@ function summaries() {
         { name: CommandName.Bump, summary: Bump.summary() },
         { name: CommandName.Tarball, summary: Tarball.summary() },
         { name: CommandName.AddTarget, summary: AddTarget.summary() },
-        { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() }
+        { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() },
+        { name: CommandName.RustTarget, summary: RustTarget.summary() }
     ];
 }
 
@@ -12834,7 +12997,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(1217);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3235);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -15857,8 +16020,8 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 /* harmony default export */ const chalk_source = (chalk);
 
-// EXTERNAL MODULE: ./src/command.ts + 37 modules
-var command = __nccwpck_require__(1217);
+// EXTERNAL MODULE: ./src/command.ts + 39 modules
+var command = __nccwpck_require__(3235);
 ;// CONCATENATED MODULE: ./src/print.ts
 
 
@@ -15874,6 +16037,9 @@ function yellow(text) {
 }
 function green(text) {
     return chalk_source.bold.greenBright(text);
+}
+function purple(text) {
+    return chalk_source.bold.magentaBright(text);
 }
 function commandUsage(name, command) {
     const sections = [
@@ -15893,6 +16059,10 @@ function commandUsage(name, command) {
     const seeAlso = command.seeAlso();
     if (seeAlso) {
         sections.push({ header: green('See Also:'), content: seeAlso });
+    }
+    const extraSection = command.extraSection();
+    if (extraSection) {
+        sections.push({ header: purple(extraSection.title + ':'), content: extraSection.details });
     }
     return command_line_usage(sections).trimStart();
 }
@@ -15937,14 +16107,6 @@ function printError(e) {
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/android-arm-eabi");
-
-
-/***/ }),
-
-/***/ 4404:
-/***/ ((module) => {
-
-module.exports = eval("require")("@cargo-messages/darwin-arm64");
 
 
 /***/ }),
@@ -16263,7 +16425,7 @@ module.exports = (__nccwpck_require__(1869)/* .lazy */ .Vo)({
     'win32-x64-msvc': () => __nccwpck_require__(1324),
     'aarch64-pc-windows-msvc': () => __nccwpck_require__(7894),
     'darwin-x64': () => __nccwpck_require__(2990),
-    'darwin-arm64': () => __nccwpck_require__(4404),
+    'darwin-arm64': () => __nccwpck_require__(9074),
     'linux-x64-gnu': () => __nccwpck_require__(1316),
     'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
     'android-arm-eabi': () => __nccwpck_require__(1738)

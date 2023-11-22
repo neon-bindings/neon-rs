@@ -1,6 +1,6 @@
 import commandLineArgs from 'command-line-args';
-import { Command, CommandDetail } from '../command.js';
-import { getCurrentTarget, isNodeTarget, isRustTarget } from '../target.js';
+import { Command, CommandDetail, CommandSection } from '../command.js';
+import { expandTargetFamily, getCurrentTarget, isNodeTarget, isRustTarget, isTargetFamilyKey } from '../target.js';
 import { SourceManifest } from '../manifest.js';
 
 const OPTIONS = [
@@ -16,7 +16,11 @@ export default class AddTarget implements Command {
     static syntax(): string { return 'neon add-target [<target> | -p <plat> -a <arch> [--abi <abi>]] [-b <file>]'; }
     static options(): CommandDetail[] {
       return [
-        { name: '<target>', summary: 'Full target name, in either Node or Rust convention. (Default: current target)' },
+        { name: '<target>', summary: 'Full target name, in either Node or Rust convention.' },
+        {
+          name: '',
+          summary: 'This may be a target name in either Node or Rust convention, or one of the Neon target family presets described below. (Default: current target)'
+        },
         { name: '-p, --platform <plat>', summary: 'Target platform name. (Default: current platform)' },
         { name: '-a, --arch <arch>', summary: 'Target architecture name. (Default: current arch)' },
         { name: '--abi <abi>', summary: 'Target ABI name. (Default: current ABI)' },
@@ -28,9 +32,20 @@ export default class AddTarget implements Command {
         { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
     ];
     }
-    static seeAlso(): CommandDetail[] | void {
-      return [
-      ];
+    static seeAlso(): CommandDetail[] | void { }
+    static extraSection(): CommandSection | void {
+      return {
+        title: 'Target Family Presets',
+        details: [
+          { name: 'linux', summary: 'Common desktop Linux targets.' },
+          { name: 'macos', summary: 'Common desktop macOS targets.' },
+          { name: 'windows', summary: 'Common desktop Windows targets.' },
+          { name: 'mobile', summary: 'Common mobile and tablet targets.' },
+          { name: 'desktop', summary: 'All common desktop targets.' },
+          { name: 'common', summary: 'All common targets.' },
+          { name: 'extended', summary: 'All supported targets.' }
+        ]
+      };
     }
   
     private _platform: string | null;
@@ -67,7 +82,11 @@ export default class AddTarget implements Command {
         }
         this._target = options._unknown[0];
       } else {
-        this._target = null;
+        this._target = `${options.platform}-${options.arch}`;
+
+        if (!!options.abi) {
+          this._target = `${this._target}-${options.abi}`;
+        }
       }
     }
 
@@ -87,6 +106,8 @@ export default class AddTarget implements Command {
       } else if (isNodeTarget(this._target)) {
         this.log(`adding Node target ${this._target}`);
         return sourceManifest.addNodeTarget(this._target);
+      } else if (isTargetFamilyKey(this._target)) {
+        return sourceManifest.addTargets(expandTargetFamily(this._target));
       } else {
         throw new Error(`unrecognized target ${this._target}`);
       }

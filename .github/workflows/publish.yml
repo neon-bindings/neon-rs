@@ -65,7 +65,7 @@ jobs:
         uses: neon-actions/build@v0.4
         with:
           working-directory: ./pkgs/cargo-messages
-          target: ${{ matrix.target }}
+          input-directory: npm/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           npm-publish: false
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
@@ -102,7 +102,7 @@ jobs:
         uses: neon-actions/build@v0.4
         with:
           working-directory: ./pkgs/cargo-messages
-          target: ${{ matrix.target }}
+          input-directory: npm/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           npm-publish: false
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
@@ -139,7 +139,7 @@ jobs:
         uses: neon-actions/build@v0.4
         with:
           working-directory: ./pkgs/cargo-messages
-          target: ${{ matrix.target }}
+          input-directory: npm/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           use-cross: true
           npm-publish: false

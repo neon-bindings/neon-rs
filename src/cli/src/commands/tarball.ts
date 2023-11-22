@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
-import { Command, CommandDetail } from '../command.js';
+import { Command, CommandDetail, CommandSection } from '../command.js';
 import { getCurrentTarget, getTargetDescriptor, isRustTarget } from '../target.js';
 import { SourceManifest, BinaryManifest } from '../manifest.js';
 
@@ -36,6 +36,7 @@ export default class Tarball implements Command {
       { name: 'cross-rs', summary: '<https://github.com/cross-rs/cross>' }
     ];
   }
+  static extraSection(): CommandSection | void { }
 
   private _target: string | null;
   private _addon: string;

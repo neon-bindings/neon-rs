@@ -1,5 +1,5 @@
 import { printMainUsage, printCommandUsage } from '../print.js';
-import { Command, CommandName, CommandDetail, asCommandName } from '../command.js';
+import { Command, CommandName, CommandDetail, CommandSection, asCommandName } from '../command.js';
 
 export default class Help implements Command {
   static summary(): string { return 'Display help information about Neon.'; }
@@ -10,6 +10,7 @@ export default class Help implements Command {
     ];
   }
   static seeAlso(): CommandDetail[] | void { }
+  static extraSection(): CommandSection | void { }
 
   private _name?: CommandName;
 

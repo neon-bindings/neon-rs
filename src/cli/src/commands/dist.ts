@@ -1,7 +1,7 @@
 import { createReadStream } from 'node:fs';
 import { copyFile } from 'node:fs/promises';
 import commandLineArgs from 'command-line-args';
-import { Command, CommandDetail } from '../command.js';
+import { Command, CommandDetail, CommandSection } from '../command.js';
 import { CargoMessages, CargoReader } from 'cargo-messages';
 
 // FIXME: add options to infer crate name from manifests
@@ -44,6 +44,7 @@ export default class Dist implements Command {
       { name: 'cross-rs', summary: '<https://github.com/cross-rs/cross>' }
     ];
   }
+  static extraSection(): CommandSection | void { }
 
   private _log: string | null;
   private _file: string | null;
