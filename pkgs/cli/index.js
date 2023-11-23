@@ -12656,6 +12656,9 @@ class Tarball {
 
 
 
+function optionArray(option) {
+    return option == null ? [] : [option];
+}
 const add_target_OPTIONS = [
     { name: 'bundle', alias: 'b', type: String, defaultValue: null },
     { name: 'platform', alias: 'p', type: String, defaultValue: null },
@@ -12746,18 +12749,15 @@ class AddTarget {
     async addTarget(sourceManifest) {
         if (!this._target) {
             this.log('adding default system target');
-            const pair = await sourceManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg)));
-            return pair ? [pair] : [];
+            return optionArray(await sourceManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg))));
         }
         else if (isRustTarget(this._target)) {
             this.log(`adding Rust target ${this._target}`);
-            const pair = await sourceManifest.addRustTarget(this._target);
-            return pair ? [pair] : [];
+            return optionArray(await sourceManifest.addRustTarget(this._target));
         }
         else if (isNodeTarget(this._target)) {
             this.log(`adding Node target ${this._target}`);
-            const pair = await sourceManifest.addNodeTarget(this._target);
-            return pair ? [pair] : [];
+            return optionArray(await sourceManifest.addNodeTarget(this._target));
         }
         else if (isTargetFamilyKey(this._target)) {
             return sourceManifest.addTargets(expandTargetFamily(this._target));
