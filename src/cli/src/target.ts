@@ -2,6 +2,7 @@ import { execa } from 'execa';
 
 import RUST from '../data/rust.json';
 import NODE from '../data/node.json';
+import FAMILY from '../data/family.json';
 
 export type RustTarget = keyof(typeof RUST);
 
@@ -25,6 +26,46 @@ export function assertIsNodeTarget(x: unknown): asserts x is NodeTarget {
   if (!isNodeTarget(x)) {
     throw new RangeError(`invalid Node target: ${x}`);
   }
+}
+
+export type TargetFamilyKey = keyof(typeof FAMILY);
+
+export function isTargetFamilyKey(x: unknown): x is TargetFamilyKey {
+  return (typeof x === 'string') && (x in FAMILY);
+}
+
+export function assertIsTargetFamilyKey(x: unknown): asserts x is TargetFamilyKey {
+  if (!isTargetFamilyKey(x)) {
+    throw new RangeError(`invalid target family name: ${x}`);
+  }
+}
+
+export type TargetPair = { node: NodeTarget, rust: RustTarget };
+export type TargetMap = { [key in NodeTarget]?: RustTarget };
+
+export type TargetFamily =
+    TargetFamilyKey
+  | TargetFamilyKey[]
+  | TargetMap;
+
+function lookupTargetFamily(key: TargetFamilyKey): TargetFamily {
+  return FAMILY[key] as TargetFamily;
+}
+
+function merge(maps: TargetMap[]): TargetMap {
+  const merged = Object.create(null);
+  for (const map of maps) {
+    Object.assign(merged, map);
+  }
+  return merged;
+}
+
+export function expandTargetFamily(family: TargetFamily): TargetMap {
+  return isTargetFamilyKey(family)
+    ? expandTargetFamily(lookupTargetFamily(family))
+    : Array.isArray(family)
+    ? merge(family.map(expandTargetFamily))
+    : family;
 }
 
 export type TargetDescriptor = {

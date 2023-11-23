@@ -18,6 +18,10 @@ function green(text: string): string {
   return chalk.bold.greenBright(text);
 }
 
+function purple(text: string): string {
+  return chalk.bold.magentaBright(text);
+}
+
 function commandUsage(name: CommandName, command: CommandStatics): string {
   const sections = [
     {
@@ -37,6 +41,11 @@ function commandUsage(name: CommandName, command: CommandStatics): string {
   const seeAlso = command.seeAlso();
   if (seeAlso) {
     sections.push({ header: green('See Also:'), content: seeAlso });
+  }
+
+  const extraSection = command.extraSection();
+  if (extraSection) {
+    sections.push({ header: purple(extraSection.title + ':'), content: extraSection.details });
   }
 
   return commandLineUsage(sections).trimStart();

@@ -2,7 +2,7 @@ import { execa } from 'execa';
 import commandLineArgs from 'command-line-args';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { Command, CommandDetail } from '../command.js';
+import { Command, CommandDetail, CommandSection } from '../command.js';
 import { SourceManifest } from '../manifest.js';
 
 const OPTIONS = [
@@ -28,6 +28,7 @@ export default class UpdateTargets implements Command {
       { name: 'ncc', summary: '<https://github.com/vercel/ncc>' }
     ];
   }
+  static extraSection(): CommandSection | void { }
 
   private _bundle: string | null;
   private _verbose: boolean;

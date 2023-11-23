@@ -2,7 +2,7 @@ import { execa } from 'execa';
 import commandLineArgs from 'command-line-args';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { Command, CommandDetail } from '../command.js';
+import { Command, CommandDetail, CommandSection } from '../command.js';
 
 const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
@@ -43,6 +43,7 @@ export default class Bump implements Command {
       { name: 'npm version', summary: '<https://docs.npmjs.com/cli/commands/npm-version>' }
     ];
   }
+  static extraSection(): CommandSection | void { }
 
   private _verbose: boolean;
   private _dir: string | null;

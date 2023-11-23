@@ -3,17 +3,21 @@ import Bump from './commands/bump.js';
 import Tarball from './commands/tarball.js';
 import AddTarget from './commands/add-target.js';
 import UpdateTargets from './commands/update-targets.js';
+import RustTarget from './commands/rust-target.js';
 import Help from './commands/help.js';
 
 export interface Command {
   run(): Promise<void>;
 }
 
+export type CommandSection = { title: string, details: CommandDetail[] };
+
 export interface CommandStatics {
   summary(): string;
   syntax(): string;
   options(): CommandDetail[];
   seeAlso(): CommandDetail[] | void;
+  extraSection(): CommandSection | void;
 }
 
 export type CommandClass = (new (argv: string[]) => Command) & CommandStatics;
@@ -31,7 +35,8 @@ export enum CommandName {
   Tarball = 'tarball',
   AddTarget = 'add-target',
   InstallBuilds = 'install-builds', // deprecated but retained for compat
-  UpdateTargets = 'update-targets'
+  UpdateTargets = 'update-targets',
+  RustTarget = 'rust-target'
 };
 
 export function isCommandName(s: string): s is CommandName {
@@ -54,7 +59,8 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Tarball]: Tarball,
   [CommandName.AddTarget]: AddTarget,
   [CommandName.InstallBuilds]: UpdateTargets, // deprecated but retained for compat
-  [CommandName.UpdateTargets]: UpdateTargets
+  [CommandName.UpdateTargets]: UpdateTargets,
+  [CommandName.RustTarget]: RustTarget
 };
 
 export function commandFor(name: CommandName): CommandClass {
@@ -68,6 +74,7 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.Bump, summary: Bump.summary() },
     { name: CommandName.Tarball, summary: Tarball.summary() },
     { name: CommandName.AddTarget, summary: AddTarget.summary() },
-    { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() }
+    { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() },
+    { name: CommandName.RustTarget, summary: RustTarget.summary() }
   ];
 }
