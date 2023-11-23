@@ -40,6 +40,7 @@ export function assertIsTargetFamilyKey(x: unknown): asserts x is TargetFamilyKe
   }
 }
 
+export type TargetPair = { node: NodeTarget, rust: RustTarget };
 export type TargetMap = { [key in NodeTarget]?: RustTarget };
 
 export type TargetFamily =

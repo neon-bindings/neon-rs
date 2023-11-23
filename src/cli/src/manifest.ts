@@ -1,7 +1,7 @@
 import { execa } from 'execa';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor, node2Rust, rust2Node, TargetMap } from './target.js';
+import { RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor, node2Rust, rust2Node, TargetMap, TargetPair } from './target.js';
 
 export interface BinaryCfg {
   type: "binary",
@@ -372,33 +372,34 @@ export class SourceManifest extends AbstractManifest {
     return new BinaryManifest(json);
   }
 
-  async addTargetPair(node: NodeTarget, rust: RustTarget): Promise<boolean> {
+  async addTargetPair(pair: TargetPair): Promise<TargetPair | null> {
+    const { node, rust } = pair;
     const targets = this.cfg().targets;
 
     if (targets[node] === rust) {
-      return false;
+      return null;
     }
 
     targets[node] = rust;
     await this.save();
-    return true;
+    return pair;
   }
 
-  async addNodeTarget(target: NodeTarget): Promise<boolean> {
+  async addNodeTarget(target: NodeTarget): Promise<TargetPair | null> {
     const rt = node2Rust(target);
     if (rt.length > 1) {
       throw new Error(`multiple Rust targets found for Node target ${target}; please specify one of ${rt.join(', ')}`);
     }
-    return await this.addTargetPair(target, rt[0]);
+    return await this.addTargetPair({ node: target, rust: rt[0] });
   }
 
-  async addRustTarget(target: RustTarget): Promise<boolean> {
-    return await this.addTargetPair(rust2Node(target), target);
+  async addRustTarget(target: RustTarget): Promise<TargetPair | null> {
+    return await this.addTargetPair({ node: rust2Node(target), rust: target });
   }
 
-  async addTargets(family: TargetMap): Promise<boolean> {
+  async addTargets(family: TargetMap): Promise<TargetPair[]> {
     const targets = this.cfg().targets;
-    let modified = false;
+    let modified = [];
 
     for (const [key, value] of Object.entries(family)) {
       const node: NodeTarget = key as NodeTarget;
@@ -409,10 +410,10 @@ export class SourceManifest extends AbstractManifest {
       }
 
       targets[node] = rust;
-      modified = true;
+      modified.push({ node, rust });
     }
 
-    if (modified) {
+    if (modified.length) {
       await this.save();
     }
 

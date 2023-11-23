@@ -12421,28 +12421,29 @@ class SourceManifest extends AbstractManifest {
         }
         return new BinaryManifest(json);
     }
-    async addTargetPair(node, rust) {
+    async addTargetPair(pair) {
+        const { node, rust } = pair;
         const targets = this.cfg().targets;
         if (targets[node] === rust) {
-            return false;
+            return null;
         }
         targets[node] = rust;
         await this.save();
-        return true;
+        return pair;
     }
     async addNodeTarget(target) {
         const rt = node2Rust(target);
         if (rt.length > 1) {
             throw new Error(`multiple Rust targets found for Node target ${target}; please specify one of ${rt.join(', ')}`);
         }
-        return await this.addTargetPair(target, rt[0]);
+        return await this.addTargetPair({ node: target, rust: rt[0] });
     }
     async addRustTarget(target) {
-        return await this.addTargetPair(rust2Node(target), target);
+        return await this.addTargetPair({ node: rust2Node(target), rust: target });
     }
     async addTargets(family) {
         const targets = this.cfg().targets;
-        let modified = false;
+        let modified = [];
         for (const [key, value] of Object.entries(family)) {
             const node = key;
             const rust = value;
@@ -12450,9 +12451,9 @@ class SourceManifest extends AbstractManifest {
                 continue;
             }
             targets[node] = rust;
-            modified = true;
+            modified.push({ node, rust });
         }
-        if (modified) {
+        if (modified.length) {
             await this.save();
         }
         return modified;
@@ -12653,27 +12654,31 @@ class Tarball {
 
 
 
+
+
 const add_target_OPTIONS = [
     { name: 'bundle', alias: 'b', type: String, defaultValue: null },
     { name: 'platform', alias: 'p', type: String, defaultValue: null },
     { name: 'arch', alias: 'a', type: String, defaultValue: null },
     { name: 'abi', type: String, defaultValue: null },
+    { name: 'out-dir', alias: 'o', type: String, defaultValue: 'npm' },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 class AddTarget {
     static summary() { return 'Add a new build target to package.json.'; }
-    static syntax() { return 'neon add-target [<target> | -p <plat> -a <arch> [--abi <abi>]] [-b <file>]'; }
+    static syntax() { return 'neon add-target [<t> | -p <p> -a <arch> [--abi <abi>]] [-o <d>] [-b <f>]'; }
     static options() {
         return [
-            { name: '<target>', summary: 'Full target name, in either Node or Rust convention.' },
+            { name: '<t>', summary: 'Full target name, in either Node or Rust convention.' },
             {
                 name: '',
                 summary: 'This may be a target name in either Node or Rust convention, or one of the Neon target family presets described below. (Default: current target)'
             },
-            { name: '-p, --platform <plat>', summary: 'Target platform name. (Default: current platform)' },
+            { name: '-p, --platform <p>', summary: 'Target platform name. (Default: current platform)' },
             { name: '-a, --arch <arch>', summary: 'Target architecture name. (Default: current arch)' },
             { name: '--abi <abi>', summary: 'Target ABI name. (Default: current ABI)' },
-            { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata.' },
+            { name: '-o, --out-dir <d>', summary: 'Output directory for target template tree. (Default: npm)' },
+            { name: '-b, --bundle <f>', summary: 'File to generate bundling metadata.' },
             {
                 name: '',
                 summary: 'This generated file ensures support for bundlers (e.g. @vercel/ncc), which rely on static analysis to detect and enable any addons used by the library.'
@@ -12700,6 +12705,7 @@ class AddTarget {
     _arch;
     _abi;
     _target;
+    _outDir;
     _bundle;
     _verbose;
     constructor(argv) {
@@ -12707,6 +12713,7 @@ class AddTarget {
         this._platform = options.platform || null;
         this._arch = options.arch || null;
         this._abi = options.abi || null;
+        this._outDir = options['out-dir'] || external_node_path_namespaceObject.join(process.cwd(), 'dist');
         this._bundle = options.bundle || null;
         this._verbose = !!options.verbose;
         if (options.platform && !options.arch) {
@@ -12739,15 +12746,18 @@ class AddTarget {
     async addTarget(sourceManifest) {
         if (!this._target) {
             this.log('adding default system target');
-            return sourceManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg)));
+            const pair = await sourceManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg)));
+            return pair ? [pair] : [];
         }
         else if (isRustTarget(this._target)) {
             this.log(`adding Rust target ${this._target}`);
-            return sourceManifest.addRustTarget(this._target);
+            const pair = await sourceManifest.addRustTarget(this._target);
+            return pair ? [pair] : [];
         }
         else if (isNodeTarget(this._target)) {
             this.log(`adding Node target ${this._target}`);
-            return sourceManifest.addNodeTarget(this._target);
+            const pair = await sourceManifest.addNodeTarget(this._target);
+            return pair ? [pair] : [];
         }
         else if (isTargetFamilyKey(this._target)) {
             return sourceManifest.addTargets(expandTargetFamily(this._target));
@@ -12756,12 +12766,29 @@ class AddTarget {
             throw new Error(`unrecognized target ${this._target}`);
         }
     }
+    async createTemplateTree(sourceManifest, pair) {
+        const { node, rust } = pair;
+        const binaryManifest = sourceManifest.manifestFor(rust);
+        this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
+        const treeDir = external_node_path_namespaceObject.join(this._outDir, node);
+        this.log(`creating ${treeDir}`);
+        await promises_namespaceObject.mkdir(treeDir, { recursive: true });
+        this.log(`created ${treeDir}`);
+        this.log(`creating ${treeDir}/package.json`);
+        await binaryManifest.save(treeDir);
+        this.log(`creating ${treeDir}/README.md`);
+        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(treeDir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
+    }
     async run() {
         this.log(`reading package.json`);
         const sourceManifest = await SourceManifest.load();
         this.log(`manifest: ${sourceManifest.stringify()}`);
-        if (await this.addTarget(sourceManifest)) {
+        const modified = await this.addTarget(sourceManifest);
+        if (modified.length) {
             sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
+            for (const pair of modified) {
+                await this.createTemplateTree(sourceManifest, pair);
+            }
         }
     }
 }
