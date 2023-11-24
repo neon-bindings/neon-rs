@@ -142,6 +142,7 @@ jobs:
           input-directory: npm/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           use-cross: true
+          target: ${{ matrix.target }}
           npm-publish: false
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
