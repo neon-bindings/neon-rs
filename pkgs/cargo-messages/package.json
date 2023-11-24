@@ -29,7 +29,7 @@
     "test": "cargo test",
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist -v",
-    "precross": "cross build --message-format=json --release > cross.log || bash -c 'echo BEGIN LOG && cat cross.log && echo END LOG && exit 1'",
+    "precross": "bash -c 'pwd' && cross build --message-format=json --release > cross.log || bash -c 'echo BEGIN LOG && cat cross.log && echo END LOG && exit 1'",
     "cross": "neon dist -v -m /target < cross.log",
     "pack-target": "neon tarball -v",
     "prepack": "neon update-targets -v 2>update-targets.log",
