@@ -1,7 +1,7 @@
 import { execa } from 'execa';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor, node2Rust, rust2Node, TargetMap, TargetPair } from './target.js';
+import { assertIsTargetPreset, RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor, node2Rust, rust2Node, TargetFamily, TargetMap, TargetPair, TargetPreset, expandTargetFamily } from './target.js';
 
 export interface BinaryCfg {
   type: "binary",
@@ -75,6 +75,22 @@ function assertIsTargetMap(json: unknown, path: string): asserts json is TargetM
   }
 }
 
+function assertIsTargetFamily(json: unknown, path: string): asserts json is TargetFamily {
+  if (typeof json === 'string') {
+    assertIsTargetPreset(json);
+    return;
+  }
+
+  if (Array.isArray(json)) {
+    for (const elt of json) {
+      assertIsTargetPreset(elt);
+    }
+    return;
+  }
+
+  assertIsTargetMap(json, path);
+}
+
 function assertIsBinaryV1(json: unknown): asserts json is BinaryV1 {
   assertHasProps(['binary'], json, "neon");
   const binary = json.binary;
@@ -116,7 +132,7 @@ function assertIsSourceV1(json: unknown): asserts json is SourceV1 {
 export interface SourceCfg {
   type: "source";
   org: string;
-  targets: TargetMap;
+  targets: TargetFamily;
 }
 
 function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
@@ -127,7 +143,7 @@ function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
   if (typeof json.org !== 'string') {
     throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
   }
-  assertIsTargetMap(json.targets, "neon.targets");
+  assertIsTargetFamily(json.targets, "neon.targets");
 }
 
 type Preamble = {
@@ -299,14 +315,18 @@ function normalizeSourceCfg(json: object): boolean {
   return true;
 }
 
+type AddTargetsOptions = { targetsSrc?: TargetMap };
+
 export class SourceManifest extends AbstractManifest {
   private _sourceJSON: HasSourceCfg;
+  private _expandedTargets: TargetMap;
 
   constructor(json: unknown) {
     super(json);
     this._upgraded = normalizeSourceCfg(this._json);
     assertHasSourceCfg(this._json);
     this._sourceJSON = this._json;
+    this._expandedTargets = expandTargetFamily(this._sourceJSON.neon.targets);
   }
 
   static async load(dir?: string | undefined): Promise<SourceManifest> {
@@ -319,18 +339,22 @@ export class SourceManifest extends AbstractManifest {
 
   packageNames(): string[] {
     const cfg = this.cfg();
-    return Object.keys(cfg.targets).map(key => `${cfg.org}/${key}`);
+    return Object.keys(this._expandedTargets).map(key => `${cfg.org}/${key}`);
   }
 
   packageFor(target: RustTarget): string | undefined {
     const cfg = this.cfg();
-    for (const key in cfg.targets) {
-      const value = cfg.targets[key as NodeTarget];
+    for (const key in this._expandedTargets) {
+      const value = this._expandedTargets[key as NodeTarget];
       if (value === target) {
         return `${cfg.org}/${key}`;
       }
     }
     return undefined;
+  }
+
+  rustTargetFor(node: NodeTarget): RustTarget | undefined {
+    return this._expandedTargets[node];
   }
 
   manifestFor(target: RustTarget): BinaryManifest {
@@ -374,13 +398,12 @@ export class SourceManifest extends AbstractManifest {
 
   async addTargetPair(pair: TargetPair): Promise<TargetPair | null> {
     const { node, rust } = pair;
-    const targets = this.cfg().targets;
 
-    if (targets[node] === rust) {
+    if (this._expandedTargets[node] === rust) {
       return null;
     }
 
-    targets[node] = rust;
+    this._expandedTargets[node] = rust;
     await this.save();
     return pair;
   }
@@ -397,27 +420,53 @@ export class SourceManifest extends AbstractManifest {
     return await this.addTargetPair({ node: rust2Node(target), rust: target });
   }
 
-  async addTargets(family: TargetMap): Promise<TargetPair[]> {
-    const targets = this.cfg().targets;
-    let modified = [];
+  filterNewTargets(family: TargetMap): TargetPair[] {
+    let newTargets = [];
 
     for (const [key, value] of Object.entries(family)) {
       const node: NodeTarget = key as NodeTarget;
       const rust: RustTarget = value;
 
-      if (targets[node] === rust) {
+      if (this._expandedTargets[node] === rust) {
         continue;
       }
 
-      targets[node] = rust;
-      modified.push({ node, rust });
+      newTargets.push({ node, rust });
     }
 
-    if (modified.length) {
-      await this.save();
+    return newTargets;
+  }
+
+  async addTargets(family: TargetMap, opts: AddTargetsOptions = {}): Promise<TargetPair[]> {
+    let newTargets = this.filterNewTargets(family);
+    if (!newTargets.length) {
+      return [];
     }
 
-    return modified;
+    for (const { node, rust } of newTargets) {
+      if (opts.targetsSrc) {
+        opts.targetsSrc[node] = rust;
+      }
+      this._expandedTargets[node] = rust;
+    }
+    await this.save();
+    return newTargets;
+  }
+
+  async addTargetPreset(preset: TargetPreset): Promise<TargetPair[]> {
+    const targetsSrc = this.cfg().targets;
+
+    if (typeof targetsSrc === 'string') {
+      this.cfg().targets = [targetsSrc, preset];
+      return this.addTargets(expandTargetFamily(preset));
+    }
+
+    if (Array.isArray(targetsSrc)) {
+      targetsSrc.push(preset);
+      return this.addTargets(expandTargetFamily(preset));
+    }
+
+    return this.addTargets(expandTargetFamily(preset), { targetsSrc });
   }
 
   async updateTargets(log: (msg: string) => void, bundle: string | null) {

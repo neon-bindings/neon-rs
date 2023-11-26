@@ -84,8 +84,7 @@ export default class RustTarget implements Command {
     const sourceManifest = await SourceManifest.load();
     this.log(`manifest: ${sourceManifest.stringify()}`);
 
-    const targets = sourceManifest.cfg().targets;
-    const rust = targets[this._target];
+    const rust = sourceManifest.rustTargetFor(this._target);
     if (!rust) {
       throw new Error(`no Rust target found for ${this._target}`);
     }

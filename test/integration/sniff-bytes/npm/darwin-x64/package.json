@@ -1,0 +1,24 @@
+{
+  "name": "@sniff-bytes/darwin-x64",
+  "description": "Prebuilt binary package for `@neon-integration-tests/sniff-bytes` on `darwin-x64`.",
+  "version": "1.0.0",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "index.node",
+  "files": [
+    "index.node"
+  ],
+  "neon": {
+    "type": "binary",
+    "rust": "x86_64-apple-darwin",
+    "node": "darwin-x64",
+    "platform": "darwin",
+    "arch": "x64",
+    "abi": null
+  },
+  "license": "MIT"
+}

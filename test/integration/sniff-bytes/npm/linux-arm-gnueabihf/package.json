@@ -1,0 +1,24 @@
+{
+  "name": "@sniff-bytes/linux-arm-gnueabihf",
+  "description": "Prebuilt binary package for `@neon-integration-tests/sniff-bytes` on `linux-arm-gnueabihf`.",
+  "version": "1.0.0",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm"
+  ],
+  "main": "index.node",
+  "files": [
+    "index.node"
+  ],
+  "neon": {
+    "type": "binary",
+    "rust": "armv7-unknown-linux-gnueabihf",
+    "node": "linux-arm-gnueabihf",
+    "platform": "linux",
+    "arch": "arm",
+    "abi": "gnueabihf"
+  },
+  "license": "MIT"
+}

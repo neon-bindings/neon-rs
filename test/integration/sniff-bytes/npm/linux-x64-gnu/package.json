@@ -1,7 +1,7 @@
 {
   "name": "@sniff-bytes/linux-x64-gnu",
-  "description": "Prebuilt binary package for `sniff-bytes` on `linux-x64-gnu`.",
-  "version": "1.0",
+  "description": "Prebuilt binary package for `@neon-integration-tests/sniff-bytes` on `linux-x64-gnu`.",
+  "version": "1.0.0",
   "os": [
     "linux"
   ],
@@ -12,7 +12,6 @@
   "files": [
     "index.node"
   ],
-  "license": "MIT",
   "neon": {
     "type": "binary",
     "rust": "x86_64-unknown-linux-gnu",
@@ -20,5 +19,6 @@
     "platform": "linux",
     "arch": "x64",
     "abi": "gnu"
-  }
+  },
+  "license": "MIT"
 }
