@@ -28,15 +28,15 @@ export function assertIsNodeTarget(x: unknown): asserts x is NodeTarget {
   }
 }
 
-export type TargetFamilyKey = keyof(typeof FAMILY);
+export type TargetPreset = keyof(typeof FAMILY);
 
-export function isTargetFamilyKey(x: unknown): x is TargetFamilyKey {
+export function isTargetPreset(x: unknown): x is TargetPreset {
   return (typeof x === 'string') && (x in FAMILY);
 }
 
-export function assertIsTargetFamilyKey(x: unknown): asserts x is TargetFamilyKey {
-  if (!isTargetFamilyKey(x)) {
-    throw new RangeError(`invalid target family name: ${x}`);
+export function assertIsTargetPreset(x: unknown): asserts x is TargetPreset {
+  if (!isTargetPreset(x)) {
+    throw new RangeError(`invalid target family preset: ${x}`);
   }
 }
 
@@ -44,11 +44,11 @@ export type TargetPair = { node: NodeTarget, rust: RustTarget };
 export type TargetMap = { [key in NodeTarget]?: RustTarget };
 
 export type TargetFamily =
-    TargetFamilyKey
-  | TargetFamilyKey[]
+    TargetPreset
+  | TargetPreset[]
   | TargetMap;
 
-function lookupTargetFamily(key: TargetFamilyKey): TargetFamily {
+function lookupTargetFamily(key: TargetPreset): TargetFamily {
   return FAMILY[key] as TargetFamily;
 }
 
@@ -61,7 +61,7 @@ function merge(maps: TargetMap[]): TargetMap {
 }
 
 export function expandTargetFamily(family: TargetFamily): TargetMap {
-  return isTargetFamilyKey(family)
+  return isTargetPreset(family)
     ? expandTargetFamily(lookupTargetFamily(family))
     : Array.isArray(family)
     ? merge(family.map(expandTargetFamily))

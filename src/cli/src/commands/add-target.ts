@@ -2,7 +2,7 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { expandTargetFamily, getCurrentTarget, isNodeTarget, isRustTarget, isTargetFamilyKey, NodeTarget, RustTarget, TargetPair } from '../target.js';
+import { getCurrentTarget, isNodeTarget, isRustTarget, isTargetPreset, TargetPair } from '../target.js';
 import { SourceManifest } from '../manifest.js';
 
 function optionArray<T>(option: T | undefined | null): T[] {
@@ -116,8 +116,8 @@ export default class AddTarget implements Command {
       } else if (isNodeTarget(this._target)) {
         this.log(`adding Node target ${this._target}`);
         return optionArray(await sourceManifest.addNodeTarget(this._target));
-      } else if (isTargetFamilyKey(this._target)) {
-        return sourceManifest.addTargets(expandTargetFamily(this._target));
+      } else if (isTargetPreset(this._target)) {
+        return sourceManifest.addTargetPreset(this._target);
       } else {
         throw new Error(`unrecognized target ${this._target}`);
       }

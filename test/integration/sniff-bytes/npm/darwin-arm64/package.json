@@ -1,7 +1,7 @@
 {
   "name": "@sniff-bytes/darwin-arm64",
-  "description": "Prebuilt binary package for `sniff-bytes` on `darwin-arm64`.",
-  "version": "0.1.11",
+  "description": "Prebuilt binary package for `@neon-integration-tests/sniff-bytes` on `darwin-arm64`.",
+  "version": "1.0.0",
   "os": [
     "darwin"
   ],
@@ -12,7 +12,6 @@
   "files": [
     "index.node"
   ],
-  "license": "MIT",
   "neon": {
     "type": "binary",
     "rust": "aarch64-apple-darwin",
@@ -20,5 +19,6 @@
     "platform": "darwin",
     "arch": "arm64",
     "abi": null
-  }
+  },
+  "license": "MIT"
 }

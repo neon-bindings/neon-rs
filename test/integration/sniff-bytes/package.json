@@ -36,10 +36,10 @@
   "neon": {
     "type": "source",
     "org": "@sniff-bytes",
-    "targets": {
-      "linux-x64-gnu": "x86_64-unknown-linux-gnu",
-      "darwin-arm64": "aarch64-apple-darwin"
-    }
+    "targets": [
+      "linux",
+      "macos"
+    ]
   },
   "devDependencies": {
     "@neon-rs/cli": "*",
@@ -51,6 +51,8 @@
   },
   "optionalDependencies": {
     "@sniff-bytes/darwin-arm64": "1.0.0",
+    "@sniff-bytes/darwin-x64": "1.0.0",
+    "@sniff-bytes/linux-arm-gnueabihf": "1.0.0",
     "@sniff-bytes/linux-x64-gnu": "1.0.0"
   }
 }
