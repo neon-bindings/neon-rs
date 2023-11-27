@@ -11,7 +11,7 @@ const OPTIONS = [
 ];
 
 export default class RustTarget implements Command {
-  static summary(): string { return 'Look up the Rust target triple for a given build target.'; }
+  static summary(): string { return 'Display the Rust target triple for a given build target.'; }
   static syntax(): string { return 'neon rust-target <target> | (-p <plat> -a <arch> [--abi <abi>])'; }
   static options(): CommandDetail[] {
     return [

@@ -2,7 +2,7 @@ import { execa } from 'execa';
 
 import RUST from '../data/rust.json';
 import NODE from '../data/node.json';
-import FAMILY from '../data/family.json';
+import PRESET from '../data/preset.json';
 
 export type RustTarget = keyof(typeof RUST);
 
@@ -28,10 +28,10 @@ export function assertIsNodeTarget(x: unknown): asserts x is NodeTarget {
   }
 }
 
-export type TargetPreset = keyof(typeof FAMILY);
+export type TargetPreset = keyof(typeof PRESET);
 
 export function isTargetPreset(x: unknown): x is TargetPreset {
-  return (typeof x === 'string') && (x in FAMILY);
+  return (typeof x === 'string') && (x in PRESET);
 }
 
 export function assertIsTargetPreset(x: unknown): asserts x is TargetPreset {
@@ -48,8 +48,8 @@ export type TargetFamily =
   | TargetPreset[]
   | TargetMap;
 
-function lookupTargetFamily(key: TargetPreset): TargetFamily {
-  return FAMILY[key] as TargetFamily;
+function lookupTargetPreset(key: TargetPreset): TargetFamily {
+  return PRESET[key] as TargetFamily;
 }
 
 function merge(maps: TargetMap[]): TargetMap {
@@ -60,9 +60,13 @@ function merge(maps: TargetMap[]): TargetMap {
   return merged;
 }
 
+export function expandTargetPreset(preset: TargetPreset): TargetMap {
+  return expandTargetFamily(lookupTargetPreset(preset));
+}
+
 export function expandTargetFamily(family: TargetFamily): TargetMap {
   return isTargetPreset(family)
-    ? expandTargetFamily(lookupTargetFamily(family))
+    ? expandTargetPreset(family)
     : Array.isArray(family)
     ? merge(family.map(expandTargetFamily))
     : family;
