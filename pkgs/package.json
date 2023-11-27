@@ -13,6 +13,6 @@
     "version": "neon bump -v --workspaces"
   },
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.167"
+    "@neon-rs/cli": "^0.0.168"
   }
 }

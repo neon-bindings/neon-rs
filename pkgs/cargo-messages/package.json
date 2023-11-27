@@ -37,7 +37,7 @@
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.167"
+    "@neon-rs/cli": "^0.0.168"
   },
   "repository": {
     "type": "git",
@@ -57,15 +57,7 @@
   "neon": {
     "type": "source",
     "org": "@cargo-messages",
-    "targets": {
-      "win32-x64-msvc": "x86_64-pc-windows-msvc",
-      "win32-arm64-msvc": "aarch64-pc-windows-msvc",
-      "darwin-x64": "x86_64-apple-darwin",
-      "darwin-arm64": "aarch64-apple-darwin",
-      "linux-x64-gnu": "x86_64-unknown-linux-gnu",
-      "linux-arm-gnueabihf": "armv7-unknown-linux-gnueabihf",
-      "android-arm-eabi": "armv7-linux-androideabi"
-    }
+    "targets": "extended"
   },
   "optionalDependencies": {
     "@cargo-messages/android-arm-eabi": "0.0.168",
