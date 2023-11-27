@@ -2,6 +2,13 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
+/***/ 9074:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = require(__nccwpck_require__.ab + "index.node")
+
+/***/ }),
+
 /***/ 1869:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -10245,7 +10252,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 3235:
+/***/ 6153:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -12029,8 +12036,8 @@ var temp = __nccwpck_require__(591);
 const rust_namespaceObject = JSON.parse('{"aarch64-apple-darwin":"darwin-arm64","x86_64-apple-darwin":"darwin-x64","aarch64-apple-ios":"ios-arm64","x86_64-apple-ios":"ios-x64","aarch64-linux-android":"android-arm64","armv7-linux-androideabi":"android-arm-eabi","i686-linux-android":"android-ia32","x86_64-linux-android":"android-x64","aarch64-pc-windows-msvc":"win32-arm64-msvc","i686-pc-windows-gnu":"win32-ia32-gnu","i686-pc-windows-msvc":"win32-ia32-msvc","x86_64-pc-windows-gnu":"win32-x64-gnu","x86_64-pc-windows-msvc":"win32-x64-msvc","aarch64-unknown-linux-gnu":"linux-arm64-gnu","aarch64-unknown-linux-musl":"linux-arm64-musl","arm-unknown-linux-gnueabihf":"linux-arm-gnueabihf","arm-unknown-linux-musleabihf":"linux-arm-musleabihf","armv7-unknown-linux-gnueabihf":"linux-arm-gnueabihf","armv7-unknown-linux-musleabihf":"linux-arm-musleabihf","i686-unknown-linux-gnu":"linux-ia32-gnu","i686-unknown-linux-musl":"linux-ia32-musl","mips-unknown-linux-gnu":"linux-mips-gnu","mips-unknown-linux-musl":"linux-mips-musl","mips64-unknown-linux-gnuabi64":"linux-mips64-gnuabi64","mips64-unknown-linux-muslabi64":"linux-mips64-muslabi64","mips64el-unknown-linux-gnuabi64":"linux-mips64el-gnuabi64","mips64el-unknown-linux-muslabi64":"linux-mips64el-muslabi64","mipsel-unknown-linux-gnu":"linux-mipsel-gnu","mipsel-unknown-linux-musl":"linux-mipsel-musl","powerpc-unknown-linux-gnu":"linux-powerpc-gnu","powerpc64-unknown-linux-gnu":"linux-powerpc64-gnu","powerpc64le-unknown-linux-gnu":"linux-powerpc64le-gnu","riscv64gc-unknown-linux-gnu":"linux-riscv64gc-gnu","s390x-unknown-linux-gnu":"linux-s390x-gnu","sparc64-unknown-linux-gnu":"linux-sparc64-gnu","x86_64-unknown-linux-gnu":"linux-x64-gnu","x86_64-unknown-linux-gnux32":"linux-x64-gnux32","x86_64-unknown-linux-musl":"linux-x64-musl","i686-unknown-freebsd":"freebsd-ia32","x86_64-unknown-freebsd":"freebsd-x64"}');
 ;// CONCATENATED MODULE: ./data/node.json
 const node_namespaceObject = JSON.parse('{"darwin-arm64":{"platform":"darwin","arch":"arm64","abi":null,"llvm":["aarch64-apple-darwin"]},"darwin-x64":{"platform":"darwin","arch":"x64","abi":null,"llvm":["x86_64-apple-darwin"]},"ios-arm64":{"platform":"ios","arch":"arm64","abi":null,"llvm":["aarch64-apple-ios"]},"ios-x64":{"platform":"ios","arch":"x64","abi":null,"llvm":["x86_64-apple-ios"]},"android-arm64":{"platform":"android","arch":"arm64","abi":null,"llvm":["aarch64-linux-android"]},"android-arm-eabi":{"platform":"android","arch":"arm","abi":"eabi","llvm":["armv7-linux-androideabi"]},"android-ia32":{"platform":"android","arch":"ia32","abi":null,"llvm":["i686-linux-android"]},"android-x64":{"platform":"android","arch":"x64","abi":null,"llvm":["x86_64-linux-android"]},"win32-arm64-msvc":{"platform":"win32","arch":"arm64","abi":"msvc","llvm":["aarch64-pc-windows-msvc"]},"win32-ia32-gnu":{"platform":"win32","arch":"ia32","abi":"gnu","llvm":["i686-pc-windows-gnu"]},"win32-ia32-msvc":{"platform":"win32","arch":"ia32","abi":"msvc","llvm":["i686-pc-windows-msvc"]},"win32-x64-gnu":{"platform":"win32","arch":"x64","abi":"gnu","llvm":["x86_64-pc-windows-gnu"]},"win32-x64-msvc":{"platform":"win32","arch":"x64","abi":"msvc","llvm":["x86_64-pc-windows-msvc"]},"linux-arm64-gnu":{"platform":"linux","arch":"arm64","abi":"gnu","llvm":["aarch64-unknown-linux-gnu"]},"linux-arm64-musl":{"platform":"linux","arch":"arm64","abi":"musl","llvm":["aarch64-unknown-linux-musl"]},"linux-arm-gnueabihf":{"platform":"linux","arch":"arm","abi":"gnueabihf","llvm":["arm-unknown-linux-gnueabihf","armv7-unknown-linux-gnueabihf"]},"linux-arm-musleabihf":{"platform":"linux","arch":"arm","abi":"musleabihf","llvm":["arm-unknown-linux-musleabihf","armv7-unknown-linux-musleabihf"]},"linux-ia32-gnu":{"platform":"linux","arch":"ia32","abi":"gnu","llvm":["i686-unknown-linux-gnu"]},"linux-ia32-musl":{"platform":"linux","arch":"ia32","abi":"musl","llvm":["i686-unknown-linux-musl"]},"linux-mips-gnu":{"platform":"linux","arch":"mips","abi":"gnu","llvm":["mips-unknown-linux-gnu"]},"linux-mips-musl":{"platform":"linux","arch":"mips","abi":"musl","llvm":["mips-unknown-linux-musl"]},"linux-mips64-gnuabi64":{"platform":"linux","arch":"mips64","abi":"gnuabi64","llvm":["mips64-unknown-linux-gnuabi64"]},"linux-mips64-muslabi64":{"platform":"linux","arch":"mips64","abi":"muslabi64","llvm":["mips64-unknown-linux-muslabi64"]},"linux-mips64el-gnuabi64":{"platform":"linux","arch":"mips64el","abi":"gnuabi64","llvm":["mips64el-unknown-linux-gnuabi64"]},"linux-mips64el-muslabi64":{"platform":"linux","arch":"mips64el","abi":"muslabi64","llvm":["mips64el-unknown-linux-muslabi64"]},"linux-mipsel-gnu":{"platform":"linux","arch":"mipsel","abi":"gnu","llvm":["mipsel-unknown-linux-gnu"]},"linux-mipsel-musl":{"platform":"linux","arch":"mipsel","abi":"musl","llvm":["mipsel-unknown-linux-musl"]},"linux-powerpc-gnu":{"platform":"linux","arch":"powerpc","abi":"gnu","llvm":["powerpc-unknown-linux-gnu"]},"linux-powerpc64-gnu":{"platform":"linux","arch":"powerpc64","abi":"gnu","llvm":["powerpc64-unknown-linux-gnu"]},"linux-powerpc64le-gnu":{"platform":"linux","arch":"powerpc64le","abi":"gnu","llvm":["powerpc64le-unknown-linux-gnu"]},"linux-riscv64gc-gnu":{"platform":"linux","arch":"riscv64gc","abi":"gnu","llvm":["riscv64gc-unknown-linux-gnu"]},"linux-s390x-gnu":{"platform":"linux","arch":"s390x","abi":"gnu","llvm":["s390x-unknown-linux-gnu"]},"linux-sparc64-gnu":{"platform":"linux","arch":"sparc64","abi":"gnu","llvm":["sparc64-unknown-linux-gnu"]},"linux-x64-gnu":{"platform":"linux","arch":"x64","abi":"gnu","llvm":["x86_64-unknown-linux-gnu"]},"linux-x64-gnux32":{"platform":"linux","arch":"x64","abi":"gnux32","llvm":["x86_64-unknown-linux-gnux32"]},"linux-x64-musl":{"platform":"linux","arch":"x64","abi":"musl","llvm":["x86_64-unknown-linux-musl"]},"freebsd-ia32":{"platform":"freebsd","arch":"ia32","abi":null,"llvm":["i686-unknown-freebsd"]},"freebsd-x64":{"platform":"freebsd","arch":"x64","abi":null,"llvm":["x86_64-unknown-freebsd"]}}');
-;// CONCATENATED MODULE: ./data/family.json
-const family_namespaceObject = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
+;// CONCATENATED MODULE: ./data/preset.json
+const preset_namespaceObject = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
 ;// CONCATENATED MODULE: ./src/target.ts
 
 
@@ -12053,15 +12060,15 @@ function assertIsNodeTarget(x) {
     }
 }
 function isTargetPreset(x) {
-    return (typeof x === 'string') && (x in family_namespaceObject);
+    return (typeof x === 'string') && (x in preset_namespaceObject);
 }
 function assertIsTargetPreset(x) {
     if (!isTargetPreset(x)) {
         throw new RangeError(`invalid target family preset: ${x}`);
     }
 }
-function lookupTargetFamily(key) {
-    return family_namespaceObject[key];
+function lookupTargetPreset(key) {
+    return preset_namespaceObject[key];
 }
 function merge(maps) {
     const merged = Object.create(null);
@@ -12070,9 +12077,12 @@ function merge(maps) {
     }
     return merged;
 }
+function expandTargetPreset(preset) {
+    return expandTargetFamily(lookupTargetPreset(preset));
+}
 function expandTargetFamily(family) {
     return isTargetPreset(family)
-        ? expandTargetFamily(lookupTargetFamily(family))
+        ? expandTargetPreset(family)
         : Array.isArray(family)
             ? merge(family.map(expandTargetFamily))
             : family;
@@ -12887,7 +12897,7 @@ const rust_target_OPTIONS = [
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 class RustTarget {
-    static summary() { return 'Look up the Rust target triple for a given build target.'; }
+    static summary() { return 'Display the Rust target triple for a given build target.'; }
     static syntax() { return 'neon rust-target <target> | (-p <plat> -a <arch> [--abi <abi>])'; }
     static options() {
         return [
@@ -12955,6 +12965,55 @@ class RustTarget {
     }
 }
 
+;// CONCATENATED MODULE: ./src/commands/preset.ts
+
+
+const preset_OPTIONS = [
+    { name: 'pretty', alias: 'p', type: Boolean, defaultValue: false },
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+class Preset {
+    static summary() { return 'Display the target JSON data for a given preset.'; }
+    static syntax() { return 'neon preset [-p] [-v] <preset>'; }
+    static options() {
+        return [
+            { name: '<preset>', summary: 'The target family preset to look up.' },
+            { name: '-p, --pretty', summary: 'Pretty-print the JSON output. (Default: false)' },
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
+        ];
+    }
+    static seeAlso() { }
+    static extraSection() { }
+    _pretty;
+    _verbose;
+    _preset;
+    constructor(argv) {
+        const options = dist_default()(preset_OPTIONS, { argv, partial: true });
+        this._pretty = options.pretty || false;
+        this._verbose = !!options.verbose;
+        if (!options._unknown || options._unknown.length === 0) {
+            throw new Error("Missing argument, expected <preset>");
+        }
+        if (options._unknown.length > 1) {
+            throw new Error(`Unexpected argument ${options._unknown[1]}`);
+        }
+        assertIsTargetPreset(options._unknown[0]);
+        this._preset = options._unknown[0];
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon preset] " + msg);
+        }
+    }
+    async run() {
+        const map = expandTargetPreset(this._preset);
+        const output = this._pretty
+            ? JSON.stringify(map, null, 2)
+            : JSON.stringify(map);
+        console.log(output);
+    }
+}
+
 // EXTERNAL MODULE: ./src/print.ts + 26 modules
 var print = __nccwpck_require__(9050);
 ;// CONCATENATED MODULE: ./src/commands/help.ts
@@ -12995,6 +13054,7 @@ class Help {
 
 
 
+
 var CommandName;
 (function (CommandName) {
     CommandName["Help"] = "help";
@@ -13006,6 +13066,7 @@ var CommandName;
     CommandName["InstallBuilds"] = "install-builds";
     CommandName["UpdateTargets"] = "update-targets";
     CommandName["RustTarget"] = "rust-target";
+    CommandName["Preset"] = "preset";
 })(CommandName || (CommandName = {}));
 ;
 function isCommandName(s) {
@@ -13027,7 +13088,8 @@ const COMMANDS = {
     [CommandName.AddTarget]: AddTarget,
     [CommandName.InstallBuilds]: UpdateTargets,
     [CommandName.UpdateTargets]: UpdateTargets,
-    [CommandName.RustTarget]: RustTarget
+    [CommandName.RustTarget]: RustTarget,
+    [CommandName.Preset]: Preset
 };
 function commandFor(name) {
     return COMMANDS[name];
@@ -13040,7 +13102,8 @@ function summaries() {
         { name: CommandName.Tarball, summary: Tarball.summary() },
         { name: CommandName.AddTarget, summary: AddTarget.summary() },
         { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() },
-        { name: CommandName.RustTarget, summary: RustTarget.summary() }
+        { name: CommandName.RustTarget, summary: RustTarget.summary() },
+        { name: CommandName.Preset, summary: Preset.summary() }
     ];
 }
 
@@ -13054,7 +13117,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3235);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(6153);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -16077,8 +16140,8 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 /* harmony default export */ const chalk_source = (chalk);
 
-// EXTERNAL MODULE: ./src/command.ts + 39 modules
-var command = __nccwpck_require__(3235);
+// EXTERNAL MODULE: ./src/command.ts + 40 modules
+var command = __nccwpck_require__(6153);
 ;// CONCATENATED MODULE: ./src/print.ts
 
 
@@ -16164,14 +16227,6 @@ function printError(e) {
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/android-arm-eabi");
-
-
-/***/ }),
-
-/***/ 4404:
-/***/ ((module) => {
-
-module.exports = eval("require")("@cargo-messages/darwin-arm64");
 
 
 /***/ }),
@@ -16490,7 +16545,7 @@ module.exports = (__nccwpck_require__(1869)/* .lazy */ .Vo)({
     'win32-x64-msvc': () => __nccwpck_require__(1324),
     'aarch64-pc-windows-msvc': () => __nccwpck_require__(7894),
     'darwin-x64': () => __nccwpck_require__(2990),
-    'darwin-arm64': () => __nccwpck_require__(4404),
+    'darwin-arm64': () => __nccwpck_require__(9074),
     'linux-x64-gnu': () => __nccwpck_require__(1316),
     'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
     'android-arm-eabi': () => __nccwpck_require__(1738)

@@ -4,6 +4,7 @@ import Tarball from './commands/tarball.js';
 import AddTarget from './commands/add-target.js';
 import UpdateTargets from './commands/update-targets.js';
 import RustTarget from './commands/rust-target.js';
+import Preset from './commands/preset.js';
 import Help from './commands/help.js';
 
 export interface Command {
@@ -36,7 +37,8 @@ export enum CommandName {
   AddTarget = 'add-target',
   InstallBuilds = 'install-builds', // deprecated but retained for compat
   UpdateTargets = 'update-targets',
-  RustTarget = 'rust-target'
+  RustTarget = 'rust-target',
+  Preset = 'preset'
 };
 
 export function isCommandName(s: string): s is CommandName {
@@ -60,7 +62,8 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.AddTarget]: AddTarget,
   [CommandName.InstallBuilds]: UpdateTargets, // deprecated but retained for compat
   [CommandName.UpdateTargets]: UpdateTargets,
-  [CommandName.RustTarget]: RustTarget
+  [CommandName.RustTarget]: RustTarget,
+  [CommandName.Preset]: Preset
 };
 
 export function commandFor(name: CommandName): CommandClass {
@@ -75,6 +78,7 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.Tarball, summary: Tarball.summary() },
     { name: CommandName.AddTarget, summary: AddTarget.summary() },
     { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() },
-    { name: CommandName.RustTarget, summary: RustTarget.summary() }
+    { name: CommandName.RustTarget, summary: RustTarget.summary() },
+    { name: CommandName.Preset, summary: Preset.summary() }
   ];
 }

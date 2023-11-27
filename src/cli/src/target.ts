@@ -60,9 +60,13 @@ function merge(maps: TargetMap[]): TargetMap {
   return merged;
 }
 
+export function expandTargetPreset(preset: TargetPreset): TargetMap {
+  return expandTargetFamily(lookupTargetPreset(preset));
+}
+
 export function expandTargetFamily(family: TargetFamily): TargetMap {
   return isTargetPreset(family)
-    ? expandTargetFamily(lookupTargetPreset(family))
+    ? expandTargetPreset(family)
     : Array.isArray(family)
     ? merge(family.map(expandTargetFamily))
     : family;
