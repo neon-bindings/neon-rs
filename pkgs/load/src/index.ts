@@ -180,8 +180,25 @@ export function __UNSTABLE_loader(loaders: Record<string, () => Record<string, a
   };
 }
 
-export function __UNSTABLE_proxy(loaders: Record<string, () => Record<string, any>>): any {
+export type ModuleObject = Record<string, any>;
+export type TargetTable = Record<string, () => ModuleObject>;
+
+export type ProxyOptions = {
+  targets: TargetTable,
+  debug?: () => ModuleObject
+};
+
+function isTargetTable(options: TargetTable | ProxyOptions): options is TargetTable {
+  return !('targets' in options);
+}
+
+export function proxy(options: TargetTable | ProxyOptions): any {
+  if (isTargetTable(options)) {
+    options = { targets: options };
+  }
+
   const target = currentTarget();
+  const loaders = options.targets;
   if (!loaders.hasOwnProperty(target)) {
     throw new Error(`no precompiled module found for ${target}`);
   }
@@ -190,7 +207,17 @@ export function __UNSTABLE_proxy(loaders: Record<string, () => Record<string, an
 
   function load(): Record<string, any> {
     if (!loaded) {
-      loaded = loader();
+      if (options.debug) {
+        try {
+          loaded = options.debug();
+        } catch (_e) {
+          loaded = null;
+        }
+      }
+
+      if (!loaded) {
+        loaded = loader();
+      }
     }
     return loaded;
   }
@@ -232,4 +259,8 @@ export function __UNSTABLE_proxy(loaders: Record<string, () => Record<string, an
   };
 
   return new Proxy({}, handler);
+}
+
+export function __UNSTABLE_proxy(options: TargetTable | ProxyOptions): any {
+  return proxy(options);
 }
