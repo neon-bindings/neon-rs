@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lazy = exports.bin = exports.currentTarget = void 0;
+exports.__UNSTABLE_proxy = exports.__UNSTABLE_loader = exports.lazy = exports.bin = exports.currentTarget = void 0;
 function currentTarget() {
     let os = null;
     switch (process.platform) {
@@ -134,3 +134,70 @@ function lazy(optionsOrLoaders, exports) {
         : lazyV2(optionsOrLoaders);
 }
 exports.lazy = lazy;
+function __UNSTABLE_loader(loaders) {
+    const target = currentTarget();
+    if (!loaders.hasOwnProperty(target)) {
+        throw new Error(`no precompiled module found for ${target}`);
+    }
+    const loader = loaders[target];
+    let loaded = null;
+    return () => {
+        if (loaded) {
+            return loaded;
+        }
+        loaded = loader();
+        return loaded;
+    };
+}
+exports.__UNSTABLE_loader = __UNSTABLE_loader;
+function __UNSTABLE_proxy(loaders) {
+    const target = currentTarget();
+    if (!loaders.hasOwnProperty(target)) {
+        throw new Error(`no precompiled module found for ${target}`);
+    }
+    const loader = loaders[target];
+    let loaded = null;
+    function load() {
+        if (!loaded) {
+            loaded = loader();
+        }
+        return loaded;
+    }
+    const handler = {
+        has(_target, key) {
+            return Reflect.has(load(), key);
+        },
+        get(_target, key) {
+            return Reflect.get(load(), key);
+        },
+        ownKeys(_target) {
+            return Reflect.ownKeys(load());
+        },
+        defineProperty(_target, _key, _descriptor) {
+            throw new Error('attempt to modify read-only Neon module proxy');
+        },
+        deleteProperty(_target, _key) {
+            throw new Error('attempt to modify read-only Neon module proxy');
+        },
+        set(_target, _key, _val) {
+            throw new Error('attempt to modify read-only Neon module proxy');
+        },
+        setPrototypeOf(_target, _proto) {
+            throw new Error('attempt to modify read-only Neon module proxy');
+        },
+        getPrototypeOf(_target) {
+            return Object.getPrototypeOf(load());
+        },
+        isExtensible(_target) {
+            return Reflect.isExtensible(load());
+        },
+        preventExtensions(_target) {
+            return Reflect.preventExtensions(load());
+        },
+        getOwnPropertyDescriptor(_target, key) {
+            return Reflect.getOwnPropertyDescriptor(load(), key);
+        }
+    };
+    return new Proxy({}, handler);
+}
+exports.__UNSTABLE_proxy = __UNSTABLE_proxy;

@@ -7,3 +7,5 @@ export type LazyOptions = {
 };
 export declare function lazy(loaders: Record<string, () => any>, exports: string[]): any;
 export declare function lazy(options: LazyOptions): any;
+export declare function __UNSTABLE_loader(loaders: Record<string, () => Record<string, any>>): () => Record<string, any>;
+export declare function __UNSTABLE_proxy(loaders: Record<string, () => Record<string, any>>): any;
