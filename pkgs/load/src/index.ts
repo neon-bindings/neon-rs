@@ -163,3 +163,73 @@ export function lazy(optionsOrLoaders: LazyOptions | Record<string, () => any>, 
     ? lazyV1(optionsOrLoaders as Record<string, () => any>, exports)
     : lazyV2(optionsOrLoaders as LazyOptions);
 }
+
+export function __UNSTABLE_loader(loaders: Record<string, () => Record<string, any>>): () => Record<string, any> {
+  const target = currentTarget();
+  if (!loaders.hasOwnProperty(target)) {
+    throw new Error(`no precompiled module found for ${target}`);
+  }
+  const loader = loaders[target];
+  let loaded: Record<string, any> | null = null;
+  return () => {
+    if (loaded) {
+      return loaded;
+    }
+    loaded = loader();
+    return loaded;
+  };
+}
+
+export function __UNSTABLE_proxy(loaders: Record<string, () => Record<string, any>>): any {
+  const target = currentTarget();
+  if (!loaders.hasOwnProperty(target)) {
+    throw new Error(`no precompiled module found for ${target}`);
+  }
+  const loader = loaders[target];
+  let loaded: Record<string, any> | null = null;
+
+  function load(): Record<string, any> {
+    if (!loaded) {
+      loaded = loader();
+    }
+    return loaded;
+  }
+
+  const handler = {
+    has(_target: any, key: string) {
+      return Reflect.has(load(), key);
+    },
+    get(_target: any, key: string) {
+      return Reflect.get(load(), key);
+    },
+    ownKeys(_target: any) {
+      return Reflect.ownKeys(load());
+    },
+    defineProperty(_target: any, _key: string, _descriptor: any) {
+      throw new Error('attempt to modify read-only Neon module proxy');
+    },
+    deleteProperty(_target: any, _key: string) {
+      throw new Error('attempt to modify read-only Neon module proxy');
+    },
+    set(_target: any, _key: string, _val: any) {
+      throw new Error('attempt to modify read-only Neon module proxy');
+    },
+    setPrototypeOf(_target: any, _proto: any) {
+      throw new Error('attempt to modify read-only Neon module proxy');
+    },
+    getPrototypeOf(_target: any) {
+      return Object.getPrototypeOf(load());
+    },
+    isExtensible(_target: any) {
+      return Reflect.isExtensible(load());
+    },
+    preventExtensions(_target: any) {
+      return Reflect.preventExtensions(load());
+    },
+    getOwnPropertyDescriptor(_target: any, key: string) {
+      return Reflect.getOwnPropertyDescriptor(load(), key);
+    }
+  };
+
+  return new Proxy({}, handler);
+}
