@@ -1,7 +1,7 @@
 {
   "name": "@cargo-messages/linux-x64-gnu",
   "description": "Prebuilt binary package for `cargo-messages` on `linux-x64-gnu`.",
-  "version": "0.0.168",
+  "version": "0.0.169",
   "os": [
     "linux"
   ],
