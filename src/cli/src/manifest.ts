@@ -2,6 +2,7 @@ import { execa } from 'execa';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { assertIsTargetPreset, RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor, node2Rust, rust2Node, TargetFamily, TargetMap, TargetPair, TargetPreset, expandTargetFamily } from './target.js';
+import js, { ASTPath, ObjectExpression } from 'jscodeshift';
 
 export interface BinaryCfg {
   type: "binary",
@@ -408,7 +409,37 @@ export class SourceManifest extends AbstractManifest {
       return;
     }
 
-    // FIXME: Use JSCodeShift to update the source.
+    const loader = await fs.readFile(cfg.load, 'utf8');
+
+    function isTargetTable(p: ASTPath<ObjectExpression>) {
+      return p.value.properties.every(p => {
+        return p.type === 'Property' &&
+          p.key.type === 'Literal' &&
+          isNodeTarget(p.key.value);
+      });
+    }
+
+    const result = js(loader)
+      .find(js.ObjectExpression)
+      .filter(isTargetTable)
+      .replaceWith((p: ASTPath<ObjectExpression>) => {
+        const newProps = targets.map(target => {
+          return js.property(
+            'init',
+            js.literal(target),
+            js.arrowFunctionExpression(
+              [],
+              js.callExpression(
+                js.identifier('require'),
+                [js.literal(`${cfg.org}/${target}`)]
+              )
+            )
+          );
+        });
+        return js.objectExpression([...p.value.properties, ...newProps]);
+      })
+      .toSource({ quote: 'single' });
+    await fs.writeFile(cfg.load, result, 'utf8');
   }
 
   async addTargetPair(pair: TargetPair): Promise<TargetPair | null> {
@@ -490,6 +521,7 @@ export class SourceManifest extends AbstractManifest {
     const packages = this.packageNames();
     const specs = packages.map(name => `${name}@${this.version}`);
 
+    // FIXME: just edit the package.json with JSON.{parse, stringify}
     log(`npm install --save-exact -O ${specs.join(' ')}`);
     const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
     if (result.exitCode !== 0) {
