@@ -8,7 +8,7 @@ import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 var __webpack_unused_export__;
 
 __webpack_unused_export__ = ({ value: true });
-exports.AO = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
+__webpack_unused_export__ = exports.sj = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
 function currentTarget() {
     let os = null;
     switch (process.platform) {
@@ -225,11 +225,11 @@ function proxy(options) {
     };
     return new Proxy({}, handler);
 }
-__webpack_unused_export__ = proxy;
+exports.sj = proxy;
 function __UNSTABLE_proxy(options) {
     return proxy(options);
 }
-exports.AO = __UNSTABLE_proxy;
+__webpack_unused_export__ = __UNSTABLE_proxy;
 
 
 /***/ }),
@@ -16628,7 +16628,7 @@ module.exports = {
 /***/ 6459:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = (__nccwpck_require__(8938)/* .__UNSTABLE_proxy */ .AO)({
+module.exports = (__nccwpck_require__(8938)/* .proxy */ .sj)({
   'darwin-x64': () => __nccwpck_require__(2990),
   'win32-x64-msvc': () => __nccwpck_require__(1324),
   'win32-arm64-msvc': () => __nccwpck_require__(7894),

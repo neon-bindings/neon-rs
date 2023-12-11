@@ -60,12 +60,12 @@
     "targets": "extended"
   },
   "optionalDependencies": {
-    "@cargo-messages/android-arm-eabi": "0.0.173",
-    "@cargo-messages/darwin-arm64": "0.0.173",
-    "@cargo-messages/darwin-x64": "0.0.173",
-    "@cargo-messages/linux-arm-gnueabihf": "0.0.173",
-    "@cargo-messages/linux-x64-gnu": "0.0.173",
-    "@cargo-messages/win32-arm64-msvc": "0.0.173",
-    "@cargo-messages/win32-x64-msvc": "0.0.173"
+    "@cargo-messages/android-arm-eabi": "0.0.174",
+    "@cargo-messages/darwin-arm64": "0.0.174",
+    "@cargo-messages/darwin-x64": "0.0.174",
+    "@cargo-messages/linux-arm-gnueabihf": "0.0.174",
+    "@cargo-messages/linux-x64-gnu": "0.0.174",
+    "@cargo-messages/win32-arm64-msvc": "0.0.174",
+    "@cargo-messages/win32-x64-msvc": "0.0.174"
   }
 }
