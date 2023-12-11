@@ -402,6 +402,15 @@ export class SourceManifest extends AbstractManifest {
     return new BinaryManifest(json);
   }
 
+  async addLoaderTargets(targets: NodeTarget[]) {
+    const cfg = this.cfg();
+    if (!cfg.load) {
+      return;
+    }
+
+    // FIXME: Use JSCodeShift to update the source.
+  }
+
   async addTargetPair(pair: TargetPair): Promise<TargetPair | null> {
     const { node, rust } = pair;
 
@@ -411,6 +420,7 @@ export class SourceManifest extends AbstractManifest {
 
     this._expandedTargets[node] = rust;
     await this.save();
+    await this.addLoaderTargets([node]);
     return pair;
   }
 
@@ -456,6 +466,7 @@ export class SourceManifest extends AbstractManifest {
       this._expandedTargets[node] = rust;
     }
     await this.save();
+    await this.addLoaderTargets(newTargets.map(({node}) => node));
     return newTargets;
   }
 
