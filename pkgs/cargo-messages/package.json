@@ -57,7 +57,8 @@
   "neon": {
     "type": "source",
     "org": "@cargo-messages",
-    "targets": "extended"
+    "targets": "extended",
+    "load": "./lib/load.cjs"
   },
   "optionalDependencies": {
     "@cargo-messages/android-arm-eabi": "0.0.175",
