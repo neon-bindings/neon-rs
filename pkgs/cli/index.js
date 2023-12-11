@@ -46067,7 +46067,6 @@ var jscodeshift_default = /*#__PURE__*/__nccwpck_require__.n(jscodeshift);
 
 
 
-
 function assertIsObject(json, path) {
     if (!json || typeof json !== 'object') {
         throw new TypeError(`expected "${path}" property to be an object, found ${json}`);
@@ -46462,16 +46461,16 @@ class SourceManifest extends AbstractManifest {
         return this.addTargets(expandTargetFamily(preset), { targetsSrc });
     }
     async updateTargets(log, bundle) {
-        const packages = this.packageNames();
-        const specs = packages.map(name => `${name}@${this.version}`);
-        // FIXME: just edit the package.json with JSON.{parse, stringify}
-        log(`npm install --save-exact -O ${specs.join(' ')}`);
-        const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
-        if (result.exitCode !== 0) {
-            log(`npm failed with exit code ${result.exitCode}`);
-            console.error(result.stderr);
-            process.exit(result.exitCode);
+        if (!this._json.optionalDependencies) {
+            this._json.optionalDependencies = {};
         }
+        const packages = this.packageNames();
+        for (const pkg of packages) {
+            if (!(pkg in this._json.optionalDependencies)) {
+                this._json.optionalDependencies[pkg] = this.version;
+            }
+        }
+        this.save();
         log(`package.json after: ${await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(process.cwd(), "package.json"))}`);
         if (!bundle) {
             return;

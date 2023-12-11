@@ -155,7 +155,8 @@ function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
 
 type Preamble = {
   name: string,
-  version: string
+  version: string,
+  optionalDependencies?: Record<string, string> | undefined
 };
 
 function assertIsPreamble(json: unknown): asserts json is Preamble {
@@ -518,17 +519,19 @@ export class SourceManifest extends AbstractManifest {
   }
 
   async updateTargets(log: (msg: string) => void, bundle: string | null) {
-    const packages = this.packageNames();
-    const specs = packages.map(name => `${name}@${this.version}`);
-
-    // FIXME: just edit the package.json with JSON.{parse, stringify}
-    log(`npm install --save-exact -O ${specs.join(' ')}`);
-    const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
-    if (result.exitCode !== 0) {
-      log(`npm failed with exit code ${result.exitCode}`);
-      console.error(result.stderr);
-      process.exit(result.exitCode);
+    if (!this._json.optionalDependencies) {
+      this._json.optionalDependencies = {};
     }
+
+    const packages = this.packageNames();
+
+    for (const pkg of packages) {
+      if (!(pkg in this._json.optionalDependencies)) {
+        this._json.optionalDependencies[pkg] = this.version;
+      }
+    }
+
+    this.save();
     log(`package.json after: ${await fs.readFile(path.join(process.cwd(), "package.json"))}`);
 
     if (!bundle) {
