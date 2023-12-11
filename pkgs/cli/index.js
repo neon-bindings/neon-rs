@@ -8,7 +8,7 @@ import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 var __webpack_unused_export__;
 
 __webpack_unused_export__ = ({ value: true });
-exports.AO = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
+__webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
 function currentTarget() {
     let os = null;
     switch (process.platform) {
@@ -208,7 +208,7 @@ function __UNSTABLE_proxy(loaders) {
     };
     return new Proxy({}, handler);
 }
-exports.AO = __UNSTABLE_proxy;
+__webpack_unused_export__ = __UNSTABLE_proxy;
 
 
 /***/ }),
@@ -16607,39 +16607,16 @@ module.exports = {
 /***/ 7037:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = (__nccwpck_require__(1869)/* .__UNSTABLE_proxy */ .AO)({
+module.exports = (__nccwpck_require__(1869).proxy)({
   'darwin-x64': () => __nccwpck_require__(2990),
   'win32-x64-msvc': () => __nccwpck_require__(1324),
-  'aarch64-pc-windows-msvc': () => __nccwpck_require__(7894),
+  'win32-arm64-msvc': () => __nccwpck_require__(7894),
   'darwin-x64': () => __nccwpck_require__(2990),
   'darwin-arm64': () => __nccwpck_require__(4404),
   'linux-x64-gnu': () => __nccwpck_require__(1316),
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
   'android-arm-eabi': () => __nccwpck_require__(1738)
 });
-
-// module.exports = require('@neon-rs/load').lazy({
-//   targets: {
-//     'darwin-x64': () => require('@cargo-messages/darwin-x64'),
-//     'win32-x64-msvc': () => require('@cargo-messages/win32-x64-msvc'),
-//     'aarch64-pc-windows-msvc': () => require('@cargo-messages/win32-arm64-msvc'),
-//     'darwin-x64': () => require('@cargo-messages/darwin-x64'),
-//     'darwin-arm64': () => require('@cargo-messages/darwin-arm64'),
-//     'linux-x64-gnu': () => require('@cargo-messages/linux-x64-gnu'),
-//     'linux-arm-gnueabihf': () => require('@cargo-messages/linux-arm-gnueabihf'),
-//     'android-arm-eabi': () => require('@cargo-messages/android-arm-eabi')
-//   },
-//   exports: [
-//     'findArtifact',
-//     'findFileByCrateType',
-//     'fromStdin',
-//     'fromFile',
-//     'createReader',
-//     'compilerArtifactCrateName',
-//     'compilerArtifactFindFileByCrateType',
-//     'readline'
-//   ]
-// });
 
 
 /***/ })
