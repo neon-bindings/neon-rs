@@ -133,6 +133,7 @@ export interface SourceCfg {
   type: "source";
   org: string;
   targets: TargetFamily;
+  load?: string;
 }
 
 function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
@@ -144,6 +145,11 @@ function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
     throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
   }
   assertIsTargetFamily(json.targets, "neon.targets");
+  if ('load' in json) {
+    if (typeof json.load !== 'string' && typeof json.load !== 'undefined') {
+      throw new TypeError(`expected "neon.load" to be a string, found ${json.load}`);
+    }
+  }
 }
 
 type Preamble = {
