@@ -52,7 +52,7 @@
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "dependencies": {
-    "@neon-rs/load": "^0.0.171"
+    "@neon-rs/load": "^0.0.173"
   },
   "neon": {
     "type": "source",

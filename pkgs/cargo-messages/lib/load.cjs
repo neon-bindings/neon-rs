@@ -1,4 +1,4 @@
-module.exports = require('@neon-rs/load').__UNSTABLE_proxy({
+module.exports = require('@neon-rs/load').proxy({
   'darwin-x64': () => require('@cargo-messages/darwin-x64'),
   'win32-x64-msvc': () => require('@cargo-messages/win32-x64-msvc'),
   'win32-arm64-msvc': () => require('@cargo-messages/win32-arm64-msvc'),
