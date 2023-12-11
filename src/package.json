@@ -13,6 +13,7 @@
     "version": "node ../pkgs/cli bump -v --workspaces"
   },
   "dependencies": {
+    "cargo-messages": "0.0.168",
     "execa": "^7.1.1"
   },
   "devDependencies": {

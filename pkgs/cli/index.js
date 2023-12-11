@@ -2,13 +2,20 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
+/***/ 8486:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = require(__nccwpck_require__.ab + "index.node")
+
+/***/ }),
+
 /***/ 1869:
 /***/ ((__unused_webpack_module, exports) => {
 
 var __webpack_unused_export__;
 
 __webpack_unused_export__ = ({ value: true });
-__webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
+exports.Vo = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
 function currentTarget() {
     let os = null;
     switch (process.platform) {
@@ -141,74 +148,7 @@ function lazy(optionsOrLoaders, exports) {
         ? lazyV1(optionsOrLoaders, exports)
         : lazyV2(optionsOrLoaders);
 }
-__webpack_unused_export__ = lazy;
-function __UNSTABLE_loader(loaders) {
-    const target = currentTarget();
-    if (!loaders.hasOwnProperty(target)) {
-        throw new Error(`no precompiled module found for ${target}`);
-    }
-    const loader = loaders[target];
-    let loaded = null;
-    return () => {
-        if (loaded) {
-            return loaded;
-        }
-        loaded = loader();
-        return loaded;
-    };
-}
-__webpack_unused_export__ = __UNSTABLE_loader;
-function __UNSTABLE_proxy(loaders) {
-    const target = currentTarget();
-    if (!loaders.hasOwnProperty(target)) {
-        throw new Error(`no precompiled module found for ${target}`);
-    }
-    const loader = loaders[target];
-    let loaded = null;
-    function load() {
-        if (!loaded) {
-            loaded = loader();
-        }
-        return loaded;
-    }
-    const handler = {
-        has(_target, key) {
-            return Reflect.has(load(), key);
-        },
-        get(_target, key) {
-            return Reflect.get(load(), key);
-        },
-        ownKeys(_target) {
-            return Reflect.ownKeys(load());
-        },
-        defineProperty(_target, _key, _descriptor) {
-            throw new Error('attempt to modify read-only Neon module proxy');
-        },
-        deleteProperty(_target, _key) {
-            throw new Error('attempt to modify read-only Neon module proxy');
-        },
-        set(_target, _key, _val) {
-            throw new Error('attempt to modify read-only Neon module proxy');
-        },
-        setPrototypeOf(_target, _proto) {
-            throw new Error('attempt to modify read-only Neon module proxy');
-        },
-        getPrototypeOf(_target) {
-            return Object.getPrototypeOf(load());
-        },
-        isExtensible(_target) {
-            return Reflect.isExtensible(load());
-        },
-        preventExtensions(_target) {
-            return Reflect.preventExtensions(load());
-        },
-        getOwnPropertyDescriptor(_target, key) {
-            return Reflect.getOwnPropertyDescriptor(load(), key);
-        }
-    };
-    return new Proxy({}, handler);
-}
-__webpack_unused_export__ = __UNSTABLE_proxy;
+exports.Vo = lazy;
 
 
 /***/ }),
@@ -10312,7 +10252,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 6153:
+/***/ 1430:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -10333,9 +10273,9 @@ const promises_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.ur
 // EXTERNAL MODULE: ../node_modules/command-line-args/dist/index.js
 var dist = __nccwpck_require__(7898);
 var dist_default = /*#__PURE__*/__nccwpck_require__.n(dist);
-// EXTERNAL MODULE: ../node_modules/cargo-messages/lib/index.cjs
-var lib = __nccwpck_require__(5112);
-;// CONCATENATED MODULE: ../node_modules/cargo-messages/lib/index.mjs
+// EXTERNAL MODULE: ./node_modules/cargo-messages/lib/index.cjs
+var lib = __nccwpck_require__(3993);
+;// CONCATENATED MODULE: ./node_modules/cargo-messages/lib/index.mjs
 
 
 ;// CONCATENATED MODULE: ./src/commands/dist.ts
@@ -13177,7 +13117,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(6153);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(1430);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -16201,7 +16141,7 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 /* harmony default export */ const chalk_source = (chalk);
 
 // EXTERNAL MODULE: ./src/command.ts + 40 modules
-var command = __nccwpck_require__(6153);
+var command = __nccwpck_require__(1430);
 ;// CONCATENATED MODULE: ./src/print.ts
 
 
@@ -16287,14 +16227,6 @@ function printError(e) {
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/android-arm-eabi");
-
-
-/***/ }),
-
-/***/ 4404:
-/***/ ((module) => {
-
-module.exports = eval("require")("@cargo-messages/darwin-arm64");
 
 
 /***/ }),
@@ -16444,10 +16376,10 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("util");
 
 /***/ }),
 
-/***/ 5112:
+/***/ 3993:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const addon = __nccwpck_require__(7037);
+const addon = __nccwpck_require__(6459);
 const readline = __nccwpck_require__(1747);
 
 const PRIVATE = {};
@@ -16604,18 +16536,41 @@ module.exports = {
 
 /***/ }),
 
-/***/ 7037:
+/***/ 6459:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-module.exports = (__nccwpck_require__(1869).proxy)({
-  'darwin-x64': () => __nccwpck_require__(2990),
-  'win32-x64-msvc': () => __nccwpck_require__(1324),
-  'win32-arm64-msvc': () => __nccwpck_require__(7894),
-  'darwin-x64': () => __nccwpck_require__(2990),
-  'darwin-arm64': () => __nccwpck_require__(4404),
-  'linux-x64-gnu': () => __nccwpck_require__(1316),
-  'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
-  'android-arm-eabi': () => __nccwpck_require__(1738)
+// module.exports = require('@neon-rs/load').__UNSTABLE_proxy({
+//   'darwin-x64': () => require('@cargo-messages/darwin-x64'),
+//   'win32-x64-msvc': () => require('@cargo-messages/win32-x64-msvc'),
+//   'aarch64-pc-windows-msvc': () => require('@cargo-messages/win32-arm64-msvc'),
+//   'darwin-x64': () => require('@cargo-messages/darwin-x64'),
+//   'darwin-arm64': () => require('@cargo-messages/darwin-arm64'),
+//   'linux-x64-gnu': () => require('@cargo-messages/linux-x64-gnu'),
+//   'linux-arm-gnueabihf': () => require('@cargo-messages/linux-arm-gnueabihf'),
+//   'android-arm-eabi': () => require('@cargo-messages/android-arm-eabi')
+// });
+
+module.exports = (__nccwpck_require__(1869)/* .lazy */ .Vo)({
+  targets: {
+    'darwin-x64': () => __nccwpck_require__(2990),
+    'win32-x64-msvc': () => __nccwpck_require__(1324),
+    'aarch64-pc-windows-msvc': () => __nccwpck_require__(7894),
+    'darwin-x64': () => __nccwpck_require__(2990),
+    'darwin-arm64': () => __nccwpck_require__(8486),
+    'linux-x64-gnu': () => __nccwpck_require__(1316),
+    'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
+    'android-arm-eabi': () => __nccwpck_require__(1738)
+  },
+  exports: [
+    'findArtifact',
+    'findFileByCrateType',
+    'fromStdin',
+    'fromFile',
+    'createReader',
+    'compilerArtifactCrateName',
+    'compilerArtifactFindFileByCrateType',
+    'readline'
+  ]
 });
 
 
