@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.__UNSTABLE_proxy = exports.__UNSTABLE_loader = exports.lazy = exports.bin = exports.currentTarget = void 0;
+exports.__UNSTABLE_proxy = exports.proxy = exports.__UNSTABLE_loader = exports.lazy = exports.bin = exports.currentTarget = void 0;
 function currentTarget() {
     let os = null;
     switch (process.platform) {
@@ -150,8 +150,15 @@ function __UNSTABLE_loader(loaders) {
     };
 }
 exports.__UNSTABLE_loader = __UNSTABLE_loader;
-function __UNSTABLE_proxy(loaders) {
+function isTargetTable(options) {
+    return !('targets' in options);
+}
+function proxy(options) {
+    if (isTargetTable(options)) {
+        options = { targets: options };
+    }
     const target = currentTarget();
+    const loaders = options.targets;
     if (!loaders.hasOwnProperty(target)) {
         throw new Error(`no precompiled module found for ${target}`);
     }
@@ -159,7 +166,17 @@ function __UNSTABLE_proxy(loaders) {
     let loaded = null;
     function load() {
         if (!loaded) {
-            loaded = loader();
+            if (options.debug) {
+                try {
+                    loaded = options.debug();
+                }
+                catch (_e) {
+                    loaded = null;
+                }
+            }
+            if (!loaded) {
+                loaded = loader();
+            }
         }
         return loaded;
     }
@@ -199,5 +216,9 @@ function __UNSTABLE_proxy(loaders) {
         }
     };
     return new Proxy({}, handler);
+}
+exports.proxy = proxy;
+function __UNSTABLE_proxy(options) {
+    return proxy(options);
 }
 exports.__UNSTABLE_proxy = __UNSTABLE_proxy;

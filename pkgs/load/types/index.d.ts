@@ -8,4 +8,11 @@ export type LazyOptions = {
 export declare function lazy(loaders: Record<string, () => any>, exports: string[]): any;
 export declare function lazy(options: LazyOptions): any;
 export declare function __UNSTABLE_loader(loaders: Record<string, () => Record<string, any>>): () => Record<string, any>;
-export declare function __UNSTABLE_proxy(loaders: Record<string, () => Record<string, any>>): any;
+export type ModuleObject = Record<string, any>;
+export type TargetTable = Record<string, () => ModuleObject>;
+export type ProxyOptions = {
+    targets: TargetTable;
+    debug?: () => ModuleObject;
+};
+export declare function proxy(options: TargetTable | ProxyOptions): any;
+export declare function __UNSTABLE_proxy(options: TargetTable | ProxyOptions): any;
