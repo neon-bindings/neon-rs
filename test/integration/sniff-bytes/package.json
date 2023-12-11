@@ -39,7 +39,8 @@
     "targets": [
       "linux",
       "macos"
-    ]
+    ],
+    "load": "./lib/load.cjs"
   },
   "devDependencies": {
     "@neon-rs/cli": "*",

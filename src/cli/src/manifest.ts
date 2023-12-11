@@ -2,6 +2,7 @@ import { execa } from 'execa';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { assertIsTargetPreset, RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor, node2Rust, rust2Node, TargetFamily, TargetMap, TargetPair, TargetPreset, expandTargetFamily } from './target.js';
+import js, { ASTPath, ObjectExpression } from 'jscodeshift';
 
 export interface BinaryCfg {
   type: "binary",
@@ -133,6 +134,7 @@ export interface SourceCfg {
   type: "source";
   org: string;
   targets: TargetFamily;
+  load?: string;
 }
 
 function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
@@ -144,11 +146,17 @@ function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
     throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
   }
   assertIsTargetFamily(json.targets, "neon.targets");
+  if ('load' in json) {
+    if (typeof json.load !== 'string' && typeof json.load !== 'undefined') {
+      throw new TypeError(`expected "neon.load" to be a string, found ${json.load}`);
+    }
+  }
 }
 
 type Preamble = {
   name: string,
-  version: string
+  version: string,
+  optionalDependencies?: Record<string, string> | undefined
 };
 
 function assertIsPreamble(json: unknown): asserts json is Preamble {
@@ -396,6 +404,45 @@ export class SourceManifest extends AbstractManifest {
     return new BinaryManifest(json);
   }
 
+  async addLoaderTargets(targets: NodeTarget[]) {
+    const cfg = this.cfg();
+    if (!cfg.load) {
+      return;
+    }
+
+    const loader = await fs.readFile(cfg.load, 'utf8');
+
+    function isTargetTable(p: ASTPath<ObjectExpression>) {
+      return p.value.properties.every(p => {
+        return p.type === 'Property' &&
+          p.key.type === 'Literal' &&
+          isNodeTarget(p.key.value);
+      });
+    }
+
+    const result = js(loader)
+      .find(js.ObjectExpression)
+      .filter(isTargetTable)
+      .replaceWith((p: ASTPath<ObjectExpression>) => {
+        const newProps = targets.map(target => {
+          return js.property(
+            'init',
+            js.literal(target),
+            js.arrowFunctionExpression(
+              [],
+              js.callExpression(
+                js.identifier('require'),
+                [js.literal(`${cfg.org}/${target}`)]
+              )
+            )
+          );
+        });
+        return js.objectExpression([...p.value.properties, ...newProps]);
+      })
+      .toSource({ quote: 'single' });
+    await fs.writeFile(cfg.load, result, 'utf8');
+  }
+
   async addTargetPair(pair: TargetPair): Promise<TargetPair | null> {
     const { node, rust } = pair;
 
@@ -405,6 +452,7 @@ export class SourceManifest extends AbstractManifest {
 
     this._expandedTargets[node] = rust;
     await this.save();
+    await this.addLoaderTargets([node]);
     return pair;
   }
 
@@ -450,6 +498,7 @@ export class SourceManifest extends AbstractManifest {
       this._expandedTargets[node] = rust;
     }
     await this.save();
+    await this.addLoaderTargets(newTargets.map(({node}) => node));
     return newTargets;
   }
 
@@ -470,16 +519,19 @@ export class SourceManifest extends AbstractManifest {
   }
 
   async updateTargets(log: (msg: string) => void, bundle: string | null) {
-    const packages = this.packageNames();
-    const specs = packages.map(name => `${name}@${this.version}`);
-
-    log(`npm install --save-exact -O ${specs.join(' ')}`);
-    const result = await execa('npm', ['install', '--save-exact', '-O', ...specs], { shell: true });
-    if (result.exitCode !== 0) {
-      log(`npm failed with exit code ${result.exitCode}`);
-      console.error(result.stderr);
-      process.exit(result.exitCode);
+    if (!this._json.optionalDependencies) {
+      this._json.optionalDependencies = {};
     }
+
+    const packages = this.packageNames();
+
+    for (const pkg of packages) {
+      if (!(pkg in this._json.optionalDependencies)) {
+        this._json.optionalDependencies[pkg] = this.version;
+      }
+    }
+
+    this.save();
     log(`package.json after: ${await fs.readFile(path.join(process.cwd(), "package.json"))}`);
 
     if (!bundle) {
