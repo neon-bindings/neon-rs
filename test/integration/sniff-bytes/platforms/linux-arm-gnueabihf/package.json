@@ -16,7 +16,7 @@
     "type": "binary",
     "rust": "armv7-unknown-linux-gnueabihf",
     "node": "linux-arm-gnueabihf",
-    "platform": "linux",
+    "os": "linux",
     "arch": "arm",
     "abi": "gnueabihf"
   },
