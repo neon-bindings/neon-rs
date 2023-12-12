@@ -30,7 +30,7 @@
     "type": "binary",
     "rust": "armv7-linux-androideabi",
     "node": "android-arm-eabi",
-    "platform": "android",
+    "os": "android",
     "arch": "arm",
     "abi": "eabi"
   }

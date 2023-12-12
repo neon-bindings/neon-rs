@@ -30,7 +30,7 @@
     "type": "binary",
     "rust": "aarch64-pc-windows-msvc",
     "node": "win32-arm64-msvc",
-    "platform": "win32",
+    "os": "win32",
     "arch": "arm64",
     "abi": "msvc"
   }
