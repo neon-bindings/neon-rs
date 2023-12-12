@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.__UNSTABLE_proxy = exports.proxy = exports.__UNSTABLE_loader = exports.lazy = exports.bin = exports.currentTarget = void 0;
-function currentTarget() {
+exports.__UNSTABLE_proxy = exports.proxy = exports.__UNSTABLE_loader = exports.lazy = exports.bin = exports.currentTarget = exports.currentPlatform = void 0;
+function currentPlatform() {
     let os = null;
     switch (process.platform) {
         case 'android':
@@ -57,6 +57,11 @@ function currentTarget() {
     }
     throw new Error(`Neon: unsupported system: ${process.platform}`);
 }
+exports.currentPlatform = currentPlatform;
+// DEPRECATE(0.1)
+function currentTarget() {
+    return currentPlatform();
+}
 exports.currentTarget = currentTarget;
 function isGlibc() {
     // Cast to unknown to work around a bug in the type definition:
@@ -89,25 +94,34 @@ function* interleave(a1, a2) {
     }
 }
 function bin(scope, ...rest) {
-    return [...interleave(scope, rest)].join("") + "/" + currentTarget();
+    return [...interleave(scope, rest)].join("") + "/" + currentPlatform();
 }
 exports.bin = bin;
+// DEPRECATE(0.1)
 function lazyV1(loaders, exports) {
     return lazyV2({
         targets: loaders,
         exports
     });
 }
+// DEPRECATE(0.1)
 function lazyV2(options) {
-    const loaders = options.targets;
+    return lazyV3({
+        platforms: options.targets,
+        exports: options.exports,
+        debug: options.debug
+    });
+}
+function lazyV3(options) {
+    const loaders = options.platforms;
     let loaded = null;
     function load() {
         if (loaded) {
             return loaded;
         }
-        const target = currentTarget();
-        if (!loaders.hasOwnProperty(target)) {
-            throw new Error(`no precompiled module found for ${target}`);
+        const platform = currentPlatform();
+        if (!loaders.hasOwnProperty(platform)) {
+            throw new Error(`no precompiled module found for ${platform}`);
         }
         if (options.debug) {
             try {
@@ -118,7 +132,7 @@ function lazyV2(options) {
             }
         }
         if (!loaded) {
-            loaded = loaders[target]();
+            loaded = loaders[platform]();
         }
         return loaded;
     }
@@ -129,17 +143,19 @@ function lazyV2(options) {
     return module;
 }
 function lazy(optionsOrLoaders, exports) {
-    return exports
-        ? lazyV1(optionsOrLoaders, exports)
-        : lazyV2(optionsOrLoaders);
+    return (!exports && !('targets' in optionsOrLoaders))
+        ? lazyV3(optionsOrLoaders)
+        : !exports
+            ? lazyV2(optionsOrLoaders)
+            : lazyV1(optionsOrLoaders, exports);
 }
 exports.lazy = lazy;
 function __UNSTABLE_loader(loaders) {
-    const target = currentTarget();
-    if (!loaders.hasOwnProperty(target)) {
-        throw new Error(`no precompiled module found for ${target}`);
+    const platform = currentPlatform();
+    if (!loaders.hasOwnProperty(platform)) {
+        throw new Error(`no precompiled module found for ${platform}`);
     }
-    const loader = loaders[target];
+    const loader = loaders[platform];
     let loaded = null;
     return () => {
         if (loaded) {
@@ -150,19 +166,25 @@ function __UNSTABLE_loader(loaders) {
     };
 }
 exports.__UNSTABLE_loader = __UNSTABLE_loader;
-function isTargetTable(options) {
-    return !('targets' in options);
+// DEPRECATE(0.1)
+function isDeprecatedProxyOptions(options) {
+    return 'targets' in options;
+}
+function isProxyOptions(options) {
+    return 'platforms' in options;
 }
 function proxy(options) {
-    if (isTargetTable(options)) {
-        options = { targets: options };
+    const opts = isProxyOptions(options)
+        ? options
+        : !isDeprecatedProxyOptions(options)
+            ? { platforms: options }
+            : { platforms: options.targets, debug: options.debug };
+    const platform = currentPlatform();
+    const loaders = opts.platforms;
+    if (!loaders.hasOwnProperty(platform)) {
+        throw new Error(`no precompiled module found for ${platform}`);
     }
-    const target = currentTarget();
-    const loaders = options.targets;
-    if (!loaders.hasOwnProperty(target)) {
-        throw new Error(`no precompiled module found for ${target}`);
-    }
-    const loader = loaders[target];
+    const loader = loaders[platform];
     let loaded = null;
     function load() {
         if (!loaded) {
@@ -218,6 +240,7 @@ function proxy(options) {
     return new Proxy({}, handler);
 }
 exports.proxy = proxy;
+// DEPRECATE(0.1)
 function __UNSTABLE_proxy(options) {
     return proxy(options);
 }
