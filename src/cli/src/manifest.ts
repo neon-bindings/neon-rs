@@ -1,14 +1,13 @@
-import { execa } from 'execa';
 import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
-import { assertIsTargetPreset, RustTarget, NodeTarget, isRustTarget, isNodeTarget, assertIsRustTarget, assertIsNodeTarget, getTargetDescriptor, node2Rust, rust2Node, TargetFamily, TargetMap, TargetPair, TargetPreset, expandTargetFamily } from './target.js';
+import { assertIsPlatformPreset, RustTarget, NodePlatform, isRustTarget, isNodePlatform, assertIsRustTarget, assertIsNodePlatform, getTargetDescriptor, node2Rust, rust2Node, PlatformFamily, PlatformMap, TargetPair, PlatformPreset, expandPlatformFamily } from './platform.js';
 import js, { ASTPath, ObjectExpression } from 'jscodeshift';
 
 export interface BinaryCfg {
   type: "binary",
   rust: RustTarget,
-  node: NodeTarget,
-  platform: string,
+  node: NodePlatform,
+  os: string,
   arch: string,
   abi: string | null
 }
@@ -18,12 +17,21 @@ type SourceV1 = {[key in RustTarget]?: string};
 type BinaryV1 = {
   binary: {
     rust: RustTarget,
-    node: NodeTarget,
+    node: NodePlatform,
     platform: string,
     arch: string,
     abi: string | null
   }
 };
+
+type BinaryV2 = {
+  type: "binary",
+  rust: RustTarget,
+  node: NodePlatform,
+  platform: string,
+  arch: string,
+  abi: string | null
+}
 
 function assertIsObject(json: unknown, path: string): asserts json is object {
   if (!json || typeof json !== 'object') {
@@ -42,15 +50,66 @@ function assertHasProps<K extends string>(keys: ReadonlyArray<K>, json: unknown,
 }
 
 function assertIsBinaryCfg(json: unknown): asserts json is BinaryCfg {
-  assertHasProps(['type', 'rust', 'node', 'platform', 'arch', 'abi'], json, "neon");
+  assertHasProps(['type', 'rust', 'node', 'os', 'arch', 'abi'], json, "neon");
   if (json.type !== 'binary') {
     throw new TypeError(`expected "neon.type" property to be "binary", found ${json.type}`)
   }
   if (typeof json.rust !== 'string' || !isRustTarget(json.rust)) {
     throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
   }
-  if (typeof json.node !== 'string' || !isNodeTarget(json.node)) {
+  if (typeof json.node !== 'string' || !isNodePlatform(json.node)) {
     throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
+  }
+  if (typeof json.os !== 'string') {
+    throw new TypeError(`expected "neon.os" to be a string, found ${json.os}`);
+  }
+  if (typeof json.arch !== 'string') {
+    throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
+  }
+  if (json.abi !== null && typeof json.abi !== 'string') {
+    throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
+  }
+}
+
+function assertIsPlatformMap(json: unknown, path: string): asserts json is PlatformMap {
+  assertIsObject(json, path);
+  for (const key in json) {
+    const value: unknown = json[key as keyof typeof json];
+    if (!isNodePlatform(key)) {
+      throw new TypeError(`platform table key ${key} is not a valid Node platform`);
+    }
+    if (typeof value !== 'string' || !isRustTarget(value)) {
+      throw new TypeError(`platform table value ${value} is not a valid Rust target`);
+    }
+  }
+}
+
+function assertIsPlatformFamily(json: unknown, path: string): asserts json is PlatformFamily {
+  if (typeof json === 'string') {
+    assertIsPlatformPreset(json);
+    return;
+  }
+
+  if (Array.isArray(json)) {
+    for (const elt of json) {
+      assertIsPlatformPreset(elt);
+    }
+    return;
+  }
+
+  assertIsPlatformMap(json, path);
+}
+
+function assertIsBinaryV2(json: unknown): asserts json is BinaryV2 {
+  if (!json || typeof json !== 'object') {
+    throw new TypeError(`expected "neon" to be an object, found ${json}`);
+  }
+  assertHasProps(['rust', 'node', 'platform', 'arch', 'abi'], json, "neon");
+  if (!isRustTarget(json.rust)) {
+    throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
+  }
+  if (!isNodePlatform(json.node)) {
+    throw new TypeError(`expected "neon.node" to be a valid Node platform, found ${json.node}`);
   }
   if (typeof json.platform !== 'string') {
     throw new TypeError(`expected "neon.platform" to be a string, found ${json.platform}`);
@@ -61,35 +120,6 @@ function assertIsBinaryCfg(json: unknown): asserts json is BinaryCfg {
   if (json.abi !== null && typeof json.abi !== 'string') {
     throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
   }
-}
-
-function assertIsTargetMap(json: unknown, path: string): asserts json is TargetMap {
-  assertIsObject(json, path);
-  for (const key in json) {
-    const value: unknown = json[key as keyof typeof json];
-    if (!isNodeTarget(key)) {
-      throw new TypeError(`target table key ${key} is not a valid Node target`);
-    }
-    if (typeof value !== 'string' || !isRustTarget(value)) {
-      throw new TypeError(`target table value ${value} is not a valid Rust target`);
-    }
-  }
-}
-
-function assertIsTargetFamily(json: unknown, path: string): asserts json is TargetFamily {
-  if (typeof json === 'string') {
-    assertIsTargetPreset(json);
-    return;
-  }
-
-  if (Array.isArray(json)) {
-    for (const elt of json) {
-      assertIsTargetPreset(elt);
-    }
-    return;
-  }
-
-  assertIsTargetMap(json, path);
 }
 
 function assertIsBinaryV1(json: unknown): asserts json is BinaryV1 {
@@ -103,8 +133,8 @@ function assertIsBinaryV1(json: unknown): asserts json is BinaryV1 {
   if (typeof binary.rust !== 'string' || !isRustTarget(binary.rust)) {
     throw new TypeError(`expected "neon.binary.rust" to be a valid Rust target, found ${binary.rust}`);
   }
-  if (!isNodeTarget(binary.node)) {
-    throw new TypeError(`expected "neon.binary.node" to be a valid Node target, found ${binary.node}`);
+  if (!isNodePlatform(binary.node)) {
+    throw new TypeError(`expected "neon.binary.node" to be a valid Node platform, found ${binary.node}`);
   }
   if (typeof binary.platform !== 'string') {
     throw new TypeError(`expected "neon.binary.platform" to be a string, found ${binary.platform}`);
@@ -133,19 +163,19 @@ function assertIsSourceV1(json: unknown): asserts json is SourceV1 {
 export interface SourceCfg {
   type: "source";
   org: string;
-  targets: TargetFamily;
+  platforms: PlatformFamily;
   load?: string;
 }
 
 function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
-  assertHasProps(['type', 'org', 'targets'], json, "neon");
+  assertHasProps(['type', 'org', 'platforms'], json, "neon");
   if (json.type !== 'source') {
     throw new TypeError(`expected "neon.type" property to be "source", found ${json.type}`)
   }
   if (typeof json.org !== 'string') {
     throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
   }
-  assertIsTargetFamily(json.targets, "neon.targets");
+  assertIsPlatformFamily(json.platforms, "neon.platforms");
   if ('load' in json) {
     if (typeof json.load !== 'string' && typeof json.load !== 'undefined') {
       throw new TypeError(`expected "neon.load" to be a string, found ${json.load}`);
@@ -249,6 +279,20 @@ export class BinaryManifest extends AbstractManifest {
 function normalizeBinaryCfg(json: object): boolean {
   assertHasCfg(json);
 
+  // V3 format: {
+  //   neon: {
+  //     type: 'binary',
+  //     rust: RustTarget,
+  //     node: NodeTarget,
+  //     os: string,
+  //     arch: string,
+  //     abi: string | null
+  //   }
+  // }
+  if ('type' in json.neon && 'os' in json.neon) {
+    return false;
+  }
+
   // V2 format: {
   //   neon: {
   //     type: 'binary',
@@ -260,7 +304,8 @@ function normalizeBinaryCfg(json: object): boolean {
   //   }
   // }
   if ('type' in json.neon) {
-    return false;
+    json.neon = upgradeBinaryV2(json.neon);
+    return true;
   }
 
   // V1 format: {
@@ -281,15 +326,35 @@ function normalizeBinaryCfg(json: object): boolean {
 function normalizeSourceCfg(json: object): boolean {
   assertHasCfg(json);
 
+  // V4 format: {
+  //   neon: {
+  //     type: 'source',
+  //     org: string,
+  //     platforms: PlatformFamily,
+  //     load?: string | undefined
+  //   }
+  // }
+  if ('type' in json.neon && 'platforms' in json.neon) {
+    return false;
+  }
+
   // V3 format: {
   //   neon: {
   //     type: 'source',
   //     org: string,
-  //     targets: { Node => Rust }
+  //     targets: PlatformFamily
   //   }
   // }
   if ('type' in json.neon) {
-    return false;
+    const org: unknown = json.neon['org' as keyof typeof json.neon];
+    const targets: unknown = json.neon['targets' as keyof typeof json.neon];
+    assertIsPlatformFamily(targets, "neon.targets");
+    json.neon = {
+      type: 'source',
+      org,
+      platforms: targets
+    };
+    return true;
   }
 
   // V2 format: {
@@ -299,14 +364,14 @@ function normalizeSourceCfg(json: object): boolean {
   //   }
   // }
   if ('org' in json.neon) {
-    const targets: unknown = json.neon['targets' as keyof typeof json.neon];
+    const platforms: unknown = json.neon['targets' as keyof typeof json.neon];
 
-    assertIsTargetMap(targets, "neon.targets");
+    assertIsPlatformMap(platforms, "neon.targets");
 
     json.neon = {
       type: 'source',
       org: json.neon.org,
-      targets
+      platforms
     };
 
     return true;
@@ -323,18 +388,23 @@ function normalizeSourceCfg(json: object): boolean {
   return true;
 }
 
-type AddTargetsOptions = { targetsSrc?: TargetMap };
+type AddPlatformsOptions = { platformsSrc?: PlatformMap };
 
+// The source manifest is the source of truth for all Neon
+// project metadata. This means you never need to go searching
+// for any other files to query the Neon project's metadata.
+// (Some data is replicated in the binary manifests, however,
+// since they are independently published in npm.)
 export class SourceManifest extends AbstractManifest {
   private _sourceJSON: HasSourceCfg;
-  private _expandedTargets: TargetMap;
+  private _expandedPlatforms: PlatformMap;
 
   constructor(json: unknown) {
     super(json);
     this._upgraded = normalizeSourceCfg(this._json);
     assertHasSourceCfg(this._json);
     this._sourceJSON = this._json;
-    this._expandedTargets = expandTargetFamily(this._sourceJSON.neon.targets);
+    this._expandedPlatforms = expandPlatformFamily(this._sourceJSON.neon.platforms);
   }
 
   static async load(dir?: string | undefined): Promise<SourceManifest> {
@@ -347,13 +417,13 @@ export class SourceManifest extends AbstractManifest {
 
   packageNames(): string[] {
     const cfg = this.cfg();
-    return Object.keys(this._expandedTargets).map(key => `${cfg.org}/${key}`);
+    return Object.keys(this._expandedPlatforms).map(key => `${cfg.org}/${key}`);
   }
 
   packageFor(target: RustTarget): string | undefined {
     const cfg = this.cfg();
-    for (const key in this._expandedTargets) {
-      const value = this._expandedTargets[key as NodeTarget];
+    for (const key in this._expandedPlatforms) {
+      const value = this._expandedPlatforms[key as NodePlatform];
       if (value === target) {
         return `${cfg.org}/${key}`;
       }
@@ -361,8 +431,8 @@ export class SourceManifest extends AbstractManifest {
     return undefined;
   }
 
-  rustTargetFor(node: NodeTarget): RustTarget | undefined {
-    return this._expandedTargets[node];
+  rustTargetFor(node: NodePlatform): RustTarget | undefined {
+    return this._expandedPlatforms[node];
   }
 
   manifestFor(target: RustTarget): BinaryManifest {
@@ -370,14 +440,14 @@ export class SourceManifest extends AbstractManifest {
     const name = this.packageFor(target);
 
     if (!name) {
-      throw new Error(`Rust target ${target} not found in "neon.targets" table.`);
+      throw new Error(`Rust target ${target} not found in "neon.platforms" table.`);
     }
 
     const json: any = {
       name,
       description: `Prebuilt binary package for \`${this.name}\` on \`${targetInfo.node}\`.`,
       version: this.version,
-      os: [targetInfo.platform],
+      os: [targetInfo.os],
       cpu: [targetInfo.arch],
       main: "index.node",
       files: ["index.node"],
@@ -385,7 +455,7 @@ export class SourceManifest extends AbstractManifest {
         type: "binary",
         rust: target,
         node: targetInfo.node,
-        platform: targetInfo.platform,
+        os: targetInfo.os,
         arch: targetInfo.arch,
         abi: targetInfo.abi
       }
@@ -404,7 +474,7 @@ export class SourceManifest extends AbstractManifest {
     return new BinaryManifest(json);
   }
 
-  async addLoaderTargets(targets: NodeTarget[]) {
+  async updateLoader(platforms: NodePlatform[]) {
     const cfg = this.cfg();
     if (!cfg.load) {
       return;
@@ -412,27 +482,27 @@ export class SourceManifest extends AbstractManifest {
 
     const loader = await fs.readFile(cfg.load, 'utf8');
 
-    function isTargetTable(p: ASTPath<ObjectExpression>) {
+    function isPlatformTable(p: ASTPath<ObjectExpression>) {
       return p.value.properties.every(p => {
         return p.type === 'Property' &&
           p.key.type === 'Literal' &&
-          isNodeTarget(p.key.value);
+          isNodePlatform(p.key.value);
       });
     }
 
     const result = js(loader)
       .find(js.ObjectExpression)
-      .filter(isTargetTable)
+      .filter(isPlatformTable)
       .replaceWith((p: ASTPath<ObjectExpression>) => {
-        const newProps = targets.map(target => {
+        const newProps = platforms.map(platform => {
           return js.property(
             'init',
-            js.literal(target),
+            js.literal(platform),
             js.arrowFunctionExpression(
               [],
               js.callExpression(
                 js.identifier('require'),
-                [js.literal(`${cfg.org}/${target}`)]
+                [js.literal(`${cfg.org}/${platform}`)]
               )
             )
           );
@@ -446,36 +516,36 @@ export class SourceManifest extends AbstractManifest {
   async addTargetPair(pair: TargetPair): Promise<TargetPair | null> {
     const { node, rust } = pair;
 
-    if (this._expandedTargets[node] === rust) {
+    if (this._expandedPlatforms[node] === rust) {
       return null;
     }
 
-    this._expandedTargets[node] = rust;
+    this._expandedPlatforms[node] = rust;
     await this.save();
-    await this.addLoaderTargets([node]);
+    await this.updateLoader([node]);
     return pair;
   }
 
-  async addNodeTarget(target: NodeTarget): Promise<TargetPair | null> {
-    const rt = node2Rust(target);
-    if (rt.length > 1) {
-      throw new Error(`multiple Rust targets found for Node target ${target}; please specify one of ${rt.join(', ')}`);
+  async addNodePlatform(platform: NodePlatform): Promise<TargetPair | null> {
+    const targets = node2Rust(platform);
+    if (targets.length > 1) {
+      throw new Error(`multiple Rust targets found for Node platform ${platform}; please specify one of ${targets.join(', ')}`);
     }
-    return await this.addTargetPair({ node: target, rust: rt[0] });
+    return await this.addTargetPair({ node: platform, rust: targets[0] });
   }
 
   async addRustTarget(target: RustTarget): Promise<TargetPair | null> {
     return await this.addTargetPair({ node: rust2Node(target), rust: target });
   }
 
-  filterNewTargets(family: TargetMap): TargetPair[] {
+  filterNewTargets(family: PlatformMap): TargetPair[] {
     let newTargets = [];
 
     for (const [key, value] of Object.entries(family)) {
-      const node: NodeTarget = key as NodeTarget;
+      const node: NodePlatform = key as NodePlatform;
       const rust: RustTarget = value;
 
-      if (this._expandedTargets[node] === rust) {
+      if (this._expandedPlatforms[node] === rust) {
         continue;
       }
 
@@ -485,37 +555,37 @@ export class SourceManifest extends AbstractManifest {
     return newTargets;
   }
 
-  async addTargets(family: TargetMap, opts: AddTargetsOptions = {}): Promise<TargetPair[]> {
+  async addPlatforms(family: PlatformMap, opts: AddPlatformsOptions = {}): Promise<TargetPair[]> {
     let newTargets = this.filterNewTargets(family);
     if (!newTargets.length) {
       return [];
     }
 
     for (const { node, rust } of newTargets) {
-      if (opts.targetsSrc) {
-        opts.targetsSrc[node] = rust;
+      if (opts.platformsSrc) {
+        opts.platformsSrc[node] = rust;
       }
-      this._expandedTargets[node] = rust;
+      this._expandedPlatforms[node] = rust;
     }
     await this.save();
-    await this.addLoaderTargets(newTargets.map(({node}) => node));
+    await this.updateLoader(newTargets.map(({node}) => node));
     return newTargets;
   }
 
-  async addTargetPreset(preset: TargetPreset): Promise<TargetPair[]> {
-    const targetsSrc = this.cfg().targets;
+  async addPlatformPreset(preset: PlatformPreset): Promise<TargetPair[]> {
+    const platformsSrc = this.cfg().platforms;
 
-    if (typeof targetsSrc === 'string') {
-      this.cfg().targets = [targetsSrc, preset];
-      return this.addTargets(expandTargetFamily(preset));
+    if (typeof platformsSrc === 'string') {
+      this.cfg().platforms = [platformsSrc, preset];
+      return this.addPlatforms(expandPlatformFamily(preset));
     }
 
-    if (Array.isArray(targetsSrc)) {
-      targetsSrc.push(preset);
-      return this.addTargets(expandTargetFamily(preset));
+    if (Array.isArray(platformsSrc)) {
+      platformsSrc.push(preset);
+      return this.addPlatforms(expandPlatformFamily(preset));
     }
 
-    return this.addTargets(expandTargetFamily(preset), { targetsSrc });
+    return this.addPlatforms(expandPlatformFamily(preset), { platformsSrc });
   }
 
   async updateTargets(log: (msg: string) => void, bundle: string | null) {
@@ -561,18 +631,18 @@ export type Manifest = SourceManifest | BinaryManifest;
 
 function upgradeSourceV1(object: SourceV1): SourceCfg
 {
-  function splitSwap([key, value]: [string, string]): [NodeTarget, RustTarget] {
+  function splitSwap([key, value]: [string, string]): [NodePlatform, RustTarget] {
     if (!/^@.*\//.test(value)) {
       throw new TypeError(`expected namespaced npm package name, found ${value}`);
     }
 
     const pkg = value.split('/')[1];
-    assertIsNodeTarget(pkg);
+    assertIsNodePlatform(pkg);
     assertIsRustTarget(key);
     return [pkg, key];
   }
 
-  const entries: [NodeTarget, RustTarget][] = Object.entries(object).map(splitSwap);
+  const entries: [NodePlatform, RustTarget][] = Object.entries(object).map(splitSwap);
 
   const orgs: Set<string> = new Set(Object.values(object).map(v => v.split('/')[0]));
 
@@ -585,7 +655,7 @@ function upgradeSourceV1(object: SourceV1): SourceCfg
   return {
     type: 'source',
     org: [...orgs][0],
-    targets: Object.fromEntries(entries)
+    platforms: Object.fromEntries(entries)
   };
 }
 
@@ -595,8 +665,20 @@ function upgradeBinaryV1(json: object): BinaryCfg {
     type: 'binary',
     rust: json.binary.rust,
     node: json.binary.node,
-    platform: json.binary.platform,
+    os: json.binary.platform,
     arch: json.binary.arch,
     abi: json.binary.abi
+  };
+}
+
+function upgradeBinaryV2(json: object): BinaryCfg {
+  assertIsBinaryV2(json);
+  return {
+    type: 'binary',
+    rust: json.rust,
+    node: json.node,
+    os: json.platform,
+    arch: json.arch,
+    abi: json.abi
   };
 }

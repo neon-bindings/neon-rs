@@ -1,4 +1,4 @@
-export function currentTarget(): string {
+export function currentPlatform(): string {
   let os = null;
 
   switch (process.platform) {
@@ -62,6 +62,11 @@ export function currentTarget(): string {
   throw new Error(`Neon: unsupported system: ${process.platform}`);
 }
 
+// DEPRECATE(0.1)
+export function currentTarget(): string {
+  return currentPlatform();
+}
+
 function isGlibc(): boolean {
   // Cast to unknown to work around a bug in the type definition:
   // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/40140
@@ -101,15 +106,23 @@ function* interleave<T>(a1: T[], a2: T[]): Generator<T> {
 }
 
 export function bin(scope: string[], ...rest: string[]): string {
-  return [...interleave(scope, rest)].join("") + "/" + currentTarget();
+  return [...interleave(scope, rest)].join("") + "/" + currentPlatform();
 }
 
-export type LazyOptions = {
+// DEPRECATE(0.1)
+type __DEPRECATED_LazyOptions = {
   targets: Record<string, () => any>,
   exports: string[],
   debug?: () => any
 };
 
+export type LazyOptions = {
+  platforms: Record<string, () => any>,
+  exports: string[],
+  debug?: () => any
+};
+
+// DEPRECATE(0.1)
 function lazyV1(loaders: Record<string, () => any>, exports: string[]): any {
   return lazyV2({
     targets: loaders,
@@ -117,8 +130,17 @@ function lazyV1(loaders: Record<string, () => any>, exports: string[]): any {
   });
 }
 
-function lazyV2(options: LazyOptions): any {
-  const loaders = options.targets;
+// DEPRECATE(0.1)
+function lazyV2(options: __DEPRECATED_LazyOptions): any {
+  return lazyV3({
+    platforms: options.targets,
+    exports: options.exports,
+    debug: options.debug
+  });
+}
+
+function lazyV3(options: LazyOptions): any {
+  const loaders = options.platforms;
   let loaded: any = null;
 
   function load() {
@@ -126,10 +148,10 @@ function lazyV2(options: LazyOptions): any {
       return loaded;
     }
 
-    const target = currentTarget();
+    const platform = currentPlatform();
 
-    if (!loaders.hasOwnProperty(target)) {
-      throw new Error(`no precompiled module found for ${target}`);
+    if (!loaders.hasOwnProperty(platform)) {
+      throw new Error(`no precompiled module found for ${platform}`);
     }
 
     if (options.debug) {
@@ -141,7 +163,7 @@ function lazyV2(options: LazyOptions): any {
     }
 
     if (!loaded) {
-      loaded = loaders[target]();
+      loaded = loaders[platform]();
     }
 
     return loaded;
@@ -157,19 +179,22 @@ function lazyV2(options: LazyOptions): any {
 }
 
 export function lazy(loaders: Record<string, () => any>, exports: string[]): any;
+export function lazy(options: __DEPRECATED_LazyOptions): any;
 export function lazy(options: LazyOptions): any;
-export function lazy(optionsOrLoaders: LazyOptions | Record<string, () => any>, exports?: string[] | undefined): any {
-  return exports
-    ? lazyV1(optionsOrLoaders as Record<string, () => any>, exports)
-    : lazyV2(optionsOrLoaders as LazyOptions);
+export function lazy(optionsOrLoaders: LazyOptions | Record<string, () => any> | __DEPRECATED_LazyOptions, exports?: string[] | undefined): any {
+  return (!exports && !('targets' in optionsOrLoaders))
+    ? lazyV3(optionsOrLoaders as LazyOptions)
+    : !exports
+    ? lazyV2(optionsOrLoaders as __DEPRECATED_LazyOptions)
+    : lazyV1(optionsOrLoaders as Record<string, () => any>, exports);
 }
 
 export function __UNSTABLE_loader(loaders: Record<string, () => Record<string, any>>): () => Record<string, any> {
-  const target = currentTarget();
-  if (!loaders.hasOwnProperty(target)) {
-    throw new Error(`no precompiled module found for ${target}`);
+  const platform = currentPlatform();
+  if (!loaders.hasOwnProperty(platform)) {
+    throw new Error(`no precompiled module found for ${platform}`);
   }
-  const loader = loaders[target];
+  const loader = loaders[platform];
   let loaded: Record<string, any> | null = null;
   return () => {
     if (loaded) {
@@ -181,28 +206,41 @@ export function __UNSTABLE_loader(loaders: Record<string, () => Record<string, a
 }
 
 export type ModuleObject = Record<string, any>;
-export type TargetTable = Record<string, () => ModuleObject>;
+export type PlatformTable = Record<string, () => ModuleObject>;
 
-export type ProxyOptions = {
-  targets: TargetTable,
+// DEPRECATE(0.1)
+export type __DEPRECATED_ProxyOptions = {
+  targets: PlatformTable,
   debug?: () => ModuleObject
 };
 
-function isTargetTable(options: TargetTable | ProxyOptions): options is TargetTable {
-  return !('targets' in options);
+export type ProxyOptions = {
+  platforms: PlatformTable,
+  debug?: () => ModuleObject
+};
+
+// DEPRECATE(0.1)
+function isDeprecatedProxyOptions(options: PlatformTable | ProxyOptions | __DEPRECATED_ProxyOptions): options is __DEPRECATED_ProxyOptions {
+  return 'targets' in options;
 }
 
-export function proxy(options: TargetTable | ProxyOptions): any {
-  if (isTargetTable(options)) {
-    options = { targets: options };
-  }
+function isProxyOptions(options: PlatformTable | ProxyOptions | __DEPRECATED_ProxyOptions): options is ProxyOptions {
+  return 'platforms' in options;
+}
 
-  const target = currentTarget();
-  const loaders = options.targets;
-  if (!loaders.hasOwnProperty(target)) {
-    throw new Error(`no precompiled module found for ${target}`);
+export function proxy(options: PlatformTable | ProxyOptions | __DEPRECATED_ProxyOptions): any {
+  const opts: ProxyOptions = isProxyOptions(options)
+    ? options
+    : !isDeprecatedProxyOptions(options)
+    ? { platforms: options }
+    : { platforms: options.targets, debug: options.debug };
+
+  const platform = currentPlatform();
+  const loaders = opts.platforms;
+  if (!loaders.hasOwnProperty(platform)) {
+    throw new Error(`no precompiled module found for ${platform}`);
   }
-  const loader = loaders[target];
+  const loader = loaders[platform];
   let loaded: Record<string, any> | null = null;
 
   function load(): Record<string, any> {
@@ -261,6 +299,7 @@ export function proxy(options: TargetTable | ProxyOptions): any {
   return new Proxy({}, handler);
 }
 
-export function __UNSTABLE_proxy(options: TargetTable | ProxyOptions): any {
+// DEPRECATE(0.1)
+export function __UNSTABLE_proxy(options: PlatformTable | ProxyOptions | __DEPRECATED_ProxyOptions): any {
   return proxy(options);
 }

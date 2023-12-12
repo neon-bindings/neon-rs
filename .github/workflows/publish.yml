@@ -3,6 +3,7 @@ name: publish
 env:
   NODE_VERSION: 18.x
   NPM_REGISTRY: 'https://registry.npmjs.org'
+  NEON_PLATFORMS_DIR: platforms
 
 on:
   push:
@@ -65,7 +66,7 @@ jobs:
         uses: neon-actions/build@v0.5
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: npm/${{ matrix.target }}
+          input-directory: ${{ env.NEON_PLATFORMS_DIR }}/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           npm-publish: false
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
@@ -102,7 +103,7 @@ jobs:
         uses: neon-actions/build@v0.5
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: npm/${{ matrix.target }}
+          input-directory: ${{ env.NEON_PLATFORMS_DIR }}/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           npm-publish: false
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
@@ -139,7 +140,7 @@ jobs:
         uses: neon-actions/build@v0.5
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: npm/${{ matrix.target }}
+          input-directory: ${{ env.NEON_PLATFORMS_DIR }}/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           use-cross: true
           target: ${{ matrix.target }}

@@ -16,7 +16,7 @@
     "type": "binary",
     "rust": "aarch64-apple-darwin",
     "node": "darwin-arm64",
-    "platform": "darwin",
+    "os": "darwin",
     "arch": "arm64",
     "abi": null
   },

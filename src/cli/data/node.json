@@ -1,228 +1,228 @@
 {
   "darwin-arm64": {
-    "platform": "darwin",
+    "os": "darwin",
     "arch": "arm64",
     "abi": null,
     "llvm": ["aarch64-apple-darwin"]
   },
   "darwin-x64": {
-    "platform": "darwin",
+    "os": "darwin",
     "arch": "x64",
     "abi": null,
     "llvm": ["x86_64-apple-darwin"]
   },
   "ios-arm64": {
-    "platform": "ios",
+    "os": "ios",
     "arch": "arm64",
     "abi": null,
     "llvm": ["aarch64-apple-ios"]
   },
   "ios-x64": {
-    "platform": "ios",
+    "os": "ios",
     "arch": "x64",
     "abi": null,
     "llvm": ["x86_64-apple-ios"]
   },
   "android-arm64": {
-    "platform": "android",
+    "os": "android",
     "arch": "arm64",
     "abi": null,
     "llvm": ["aarch64-linux-android"]
   },
   "android-arm-eabi": {
-    "platform": "android",
+    "os": "android",
     "arch": "arm",
     "abi": "eabi",
     "llvm": ["armv7-linux-androideabi"]
   },
   "android-ia32": {
-    "platform": "android",
+    "os": "android",
     "arch": "ia32",
     "abi": null,
     "llvm": ["i686-linux-android"]
   },
   "android-x64": {
-    "platform": "android",
+    "os": "android",
     "arch": "x64",
     "abi": null,
     "llvm": ["x86_64-linux-android"]
   },
   "win32-arm64-msvc": {
-    "platform": "win32",
+    "os": "win32",
     "arch": "arm64",
     "abi": "msvc",
     "llvm": ["aarch64-pc-windows-msvc"]
   },
   "win32-ia32-gnu": {
-    "platform": "win32",
+    "os": "win32",
     "arch": "ia32",
     "abi": "gnu",
     "llvm": ["i686-pc-windows-gnu"]
   },
   "win32-ia32-msvc": {
-    "platform": "win32",
+    "os": "win32",
     "arch": "ia32",
     "abi": "msvc",
     "llvm": ["i686-pc-windows-msvc"]
   },
   "win32-x64-gnu": {
-    "platform": "win32",
+    "os": "win32",
     "arch": "x64",
     "abi": "gnu",
     "llvm": ["x86_64-pc-windows-gnu"]
   },
   "win32-x64-msvc": {
-    "platform": "win32",
+    "os": "win32",
     "arch": "x64",
     "abi": "msvc",
     "llvm": ["x86_64-pc-windows-msvc"]
   },
   "linux-arm64-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "arm64",
     "abi": "gnu",
     "llvm": ["aarch64-unknown-linux-gnu"]
   },
   "linux-arm64-musl": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "arm64",
     "abi": "musl",
     "llvm": ["aarch64-unknown-linux-musl"]
   },
   "linux-arm-gnueabihf": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "arm",
     "abi": "gnueabihf",
     "llvm": ["arm-unknown-linux-gnueabihf", "armv7-unknown-linux-gnueabihf"]
   },
   "linux-arm-musleabihf": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "arm",
     "abi": "musleabihf",
     "llvm": ["arm-unknown-linux-musleabihf", "armv7-unknown-linux-musleabihf"]
   },
   "linux-ia32-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "ia32",
     "abi": "gnu",
     "llvm": ["i686-unknown-linux-gnu"]
   },
   "linux-ia32-musl": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "ia32",
     "abi": "musl",
     "llvm": ["i686-unknown-linux-musl"]
   },
   "linux-mips-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "mips",
     "abi": "gnu",
     "llvm": ["mips-unknown-linux-gnu"]
   },
   "linux-mips-musl": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "mips",
     "abi": "musl",
     "llvm": ["mips-unknown-linux-musl"]
   },
   "linux-mips64-gnuabi64": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "mips64",
     "abi": "gnuabi64",
     "llvm": ["mips64-unknown-linux-gnuabi64"]
   },
   "linux-mips64-muslabi64": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "mips64",
     "abi": "muslabi64",
     "llvm": ["mips64-unknown-linux-muslabi64"]
   },
   "linux-mips64el-gnuabi64": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "mips64el",
     "abi": "gnuabi64",
     "llvm": ["mips64el-unknown-linux-gnuabi64"]
   },
   "linux-mips64el-muslabi64": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "mips64el",
     "abi": "muslabi64",
     "llvm": ["mips64el-unknown-linux-muslabi64"]
   },
   "linux-mipsel-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "mipsel",
     "abi": "gnu",
     "llvm": ["mipsel-unknown-linux-gnu"]
   },
   "linux-mipsel-musl": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "mipsel",
     "abi": "musl",
     "llvm": ["mipsel-unknown-linux-musl"]
   },
   "linux-powerpc-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "powerpc",
     "abi": "gnu",
     "llvm": ["powerpc-unknown-linux-gnu"]
   },
   "linux-powerpc64-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "powerpc64",
     "abi": "gnu",
     "llvm": ["powerpc64-unknown-linux-gnu"]
   },
   "linux-powerpc64le-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "powerpc64le",
     "abi": "gnu",
     "llvm": ["powerpc64le-unknown-linux-gnu"]
   },
   "linux-riscv64gc-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "riscv64gc",
     "abi": "gnu",
     "llvm": ["riscv64gc-unknown-linux-gnu"]
   },
   "linux-s390x-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "s390x",
     "abi": "gnu",
     "llvm": ["s390x-unknown-linux-gnu"]
   },
   "linux-sparc64-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "sparc64",
     "abi": "gnu",
     "llvm": ["sparc64-unknown-linux-gnu"]
   },
   "linux-x64-gnu": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "x64",
     "abi": "gnu",
     "llvm": ["x86_64-unknown-linux-gnu"]
   },
   "linux-x64-gnux32": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "x64",
     "abi": "gnux32",
     "llvm": ["x86_64-unknown-linux-gnux32"]
   },
   "linux-x64-musl": {
-    "platform": "linux",
+    "os": "linux",
     "arch": "x64",
     "abi": "musl",
     "llvm": ["x86_64-unknown-linux-musl"]
   },
   "freebsd-ia32": {
-    "platform": "freebsd",
+    "os": "freebsd",
     "arch": "ia32",
     "abi": null,
     "llvm": ["i686-unknown-freebsd"]
   },
   "freebsd-x64": {
-    "platform": "freebsd",
+    "os": "freebsd",
     "arch": "x64",
     "abi": null,
     "llvm": ["x86_64-unknown-freebsd"]

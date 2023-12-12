@@ -16,43 +16,43 @@ export function assertIsRustTarget(x: unknown): asserts x is RustTarget {
   }
 }
 
-export type NodeTarget = keyof(typeof NODE);
+export type NodePlatform = keyof(typeof NODE);
 
-export function isNodeTarget(x: unknown): x is NodeTarget {
+export function isNodePlatform(x: unknown): x is NodePlatform {
   return (typeof x === 'string') && (x in NODE);
 }
 
-export function assertIsNodeTarget(x: unknown): asserts x is NodeTarget {
-  if (!isNodeTarget(x)) {
-    throw new RangeError(`invalid Node target: ${x}`);
+export function assertIsNodePlatform(x: unknown): asserts x is NodePlatform {
+  if (!isNodePlatform(x)) {
+    throw new RangeError(`invalid platform: ${x}`);
   }
 }
 
-export type TargetPreset = keyof(typeof PRESET);
+export type PlatformPreset = keyof(typeof PRESET);
 
-export function isTargetPreset(x: unknown): x is TargetPreset {
+export function isPlatformPreset(x: unknown): x is PlatformPreset {
   return (typeof x === 'string') && (x in PRESET);
 }
 
-export function assertIsTargetPreset(x: unknown): asserts x is TargetPreset {
-  if (!isTargetPreset(x)) {
-    throw new RangeError(`invalid target family preset: ${x}`);
+export function assertIsPlatformPreset(x: unknown): asserts x is PlatformPreset {
+  if (!isPlatformPreset(x)) {
+    throw new RangeError(`invalid platform family preset: ${x}`);
   }
 }
 
-export type TargetPair = { node: NodeTarget, rust: RustTarget };
-export type TargetMap = { [key in NodeTarget]?: RustTarget };
+export type TargetPair = { node: NodePlatform, rust: RustTarget };
+export type PlatformMap = { [key in NodePlatform]?: RustTarget };
 
-export type TargetFamily =
-    TargetPreset
-  | TargetPreset[]
-  | TargetMap;
+export type PlatformFamily =
+    PlatformPreset
+  | PlatformPreset[]
+  | PlatformMap;
 
-function lookupTargetPreset(key: TargetPreset): TargetFamily {
-  return PRESET[key] as TargetFamily;
+function lookupPlatformPreset(key: PlatformPreset): PlatformFamily {
+  return PRESET[key] as PlatformFamily;
 }
 
-function merge(maps: TargetMap[]): TargetMap {
+function merge(maps: PlatformMap[]): PlatformMap {
   const merged = Object.create(null);
   for (const map of maps) {
     Object.assign(merged, map);
@@ -60,29 +60,29 @@ function merge(maps: TargetMap[]): TargetMap {
   return merged;
 }
 
-export function expandTargetPreset(preset: TargetPreset): TargetMap {
-  return expandTargetFamily(lookupTargetPreset(preset));
+export function expandPlatformPreset(preset: PlatformPreset): PlatformMap {
+  return expandPlatformFamily(lookupPlatformPreset(preset));
 }
 
-export function expandTargetFamily(family: TargetFamily): TargetMap {
-  return isTargetPreset(family)
-    ? expandTargetPreset(family)
+export function expandPlatformFamily(family: PlatformFamily): PlatformMap {
+  return isPlatformPreset(family)
+    ? expandPlatformPreset(family)
     : Array.isArray(family)
-    ? merge(family.map(expandTargetFamily))
+    ? merge(family.map(expandPlatformFamily))
     : family;
 }
 
-export type TargetDescriptor = {
-  node: NodeTarget,
-  platform: string,
+export type PlatformDescriptor = {
+  node: NodePlatform,
+  os: string,
   arch: string,
   abi: string | null,
   llvm: RustTarget[]
 };
 
-export function getTargetDescriptor(target: RustTarget): TargetDescriptor {
+export function getTargetDescriptor(target: RustTarget): PlatformDescriptor {
   const node = RUST[target];
-  if (!isNodeTarget(node)) {
+  if (!isNodePlatform(node)) {
     throw new Error(`Rust target ${target} not supported`);
   }
 
@@ -95,23 +95,23 @@ export function getTargetDescriptor(target: RustTarget): TargetDescriptor {
 
   return {
     node,
-    platform: nodeDescriptor.platform,
+    os: nodeDescriptor.os,
     arch: nodeDescriptor.arch,
     abi: nodeDescriptor.abi,
     llvm: nodeDescriptor.llvm as RustTarget[]
   };
 }
 
-export function node2Rust(target: NodeTarget): RustTarget[] {
+export function node2Rust(target: NodePlatform): RustTarget[] {
   return NODE[target].llvm.map(rt => {
     assertIsRustTarget(rt);
     return rt;
   });
 }
 
-export function rust2Node(target: RustTarget): NodeTarget {
+export function rust2Node(target: RustTarget): NodePlatform {
   const nt = RUST[target];
-  assertIsNodeTarget(nt);
+  assertIsNodePlatform(nt);
   return nt;
 }
 

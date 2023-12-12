@@ -1,7 +1,4 @@
-import { execa } from 'execa';
 import commandLineArgs from 'command-line-args';
-import * as fs from 'node:fs/promises';
-import * as path from 'node:path';
 import { Command, CommandDetail, CommandSection } from '../command.js';
 import { SourceManifest } from '../manifest.js';
 
@@ -10,9 +7,9 @@ const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 
-export default class UpdateTargets implements Command {
+export default class UpdatePlatforms implements Command {
   static summary(): string { return 'Update dependencies for all build targets in package.json.'; }
-  static syntax(): string { return 'neon update-targets [-b <file>]'; }
+  static syntax(): string { return 'neon update-platforms [-b <file>]'; }
   static options(): CommandDetail[] {
     return [
       { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata.' },
@@ -42,7 +39,7 @@ export default class UpdateTargets implements Command {
 
   log(msg: string) {
     if (this._verbose) {
-      console.error("[neon update-targets] " + msg);
+      console.error("[neon update-platforms] " + msg);
     }
   }
 
