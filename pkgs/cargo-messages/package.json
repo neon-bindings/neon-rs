@@ -32,7 +32,7 @@
     "cross": "cross build --message-format=json --release | neon dist -v -m /target",
     "pack-target": "neon tarball -v",
     "prepack": "neon update-targets -v 2>update-targets.log",
-    "version": "neon bump -v --binaries npm"
+    "version": "neon bump -v --binaries platforms"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",

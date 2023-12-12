@@ -2,6 +2,7 @@ name: CI
 
 env:
   NODE_VERSION: 18.x
+  NEON_PLATFORMS_DIR: platforms
 
 on:
   push:
@@ -44,7 +45,7 @@ jobs:
         uses: neon-actions/build@v0.5
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: npm/linux-x64-gnu
+          input-directory: ${{ env.NEON_PLATFORMS_DIR }}/linux-x64-gnu
           node-version: ${{ env.NODE_VERSION }}
           use-cross: false
           npm-publish: false
