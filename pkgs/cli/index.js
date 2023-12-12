@@ -2,6 +2,13 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
+/***/ 4365:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = require(__nccwpck_require__.ab + "index.node")
+
+/***/ }),
+
 /***/ 8938:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -44171,7 +44178,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 1430:
+/***/ 5834:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -45954,10 +45961,10 @@ var temp = __nccwpck_require__(591);
 ;// CONCATENATED MODULE: ./data/rust.json
 const rust_namespaceObject = JSON.parse('{"aarch64-apple-darwin":"darwin-arm64","x86_64-apple-darwin":"darwin-x64","aarch64-apple-ios":"ios-arm64","x86_64-apple-ios":"ios-x64","aarch64-linux-android":"android-arm64","armv7-linux-androideabi":"android-arm-eabi","i686-linux-android":"android-ia32","x86_64-linux-android":"android-x64","aarch64-pc-windows-msvc":"win32-arm64-msvc","i686-pc-windows-gnu":"win32-ia32-gnu","i686-pc-windows-msvc":"win32-ia32-msvc","x86_64-pc-windows-gnu":"win32-x64-gnu","x86_64-pc-windows-msvc":"win32-x64-msvc","aarch64-unknown-linux-gnu":"linux-arm64-gnu","aarch64-unknown-linux-musl":"linux-arm64-musl","arm-unknown-linux-gnueabihf":"linux-arm-gnueabihf","arm-unknown-linux-musleabihf":"linux-arm-musleabihf","armv7-unknown-linux-gnueabihf":"linux-arm-gnueabihf","armv7-unknown-linux-musleabihf":"linux-arm-musleabihf","i686-unknown-linux-gnu":"linux-ia32-gnu","i686-unknown-linux-musl":"linux-ia32-musl","mips-unknown-linux-gnu":"linux-mips-gnu","mips-unknown-linux-musl":"linux-mips-musl","mips64-unknown-linux-gnuabi64":"linux-mips64-gnuabi64","mips64-unknown-linux-muslabi64":"linux-mips64-muslabi64","mips64el-unknown-linux-gnuabi64":"linux-mips64el-gnuabi64","mips64el-unknown-linux-muslabi64":"linux-mips64el-muslabi64","mipsel-unknown-linux-gnu":"linux-mipsel-gnu","mipsel-unknown-linux-musl":"linux-mipsel-musl","powerpc-unknown-linux-gnu":"linux-powerpc-gnu","powerpc64-unknown-linux-gnu":"linux-powerpc64-gnu","powerpc64le-unknown-linux-gnu":"linux-powerpc64le-gnu","riscv64gc-unknown-linux-gnu":"linux-riscv64gc-gnu","s390x-unknown-linux-gnu":"linux-s390x-gnu","sparc64-unknown-linux-gnu":"linux-sparc64-gnu","x86_64-unknown-linux-gnu":"linux-x64-gnu","x86_64-unknown-linux-gnux32":"linux-x64-gnux32","x86_64-unknown-linux-musl":"linux-x64-musl","i686-unknown-freebsd":"freebsd-ia32","x86_64-unknown-freebsd":"freebsd-x64"}');
 ;// CONCATENATED MODULE: ./data/node.json
-const node_namespaceObject = JSON.parse('{"darwin-arm64":{"platform":"darwin","arch":"arm64","abi":null,"llvm":["aarch64-apple-darwin"]},"darwin-x64":{"platform":"darwin","arch":"x64","abi":null,"llvm":["x86_64-apple-darwin"]},"ios-arm64":{"platform":"ios","arch":"arm64","abi":null,"llvm":["aarch64-apple-ios"]},"ios-x64":{"platform":"ios","arch":"x64","abi":null,"llvm":["x86_64-apple-ios"]},"android-arm64":{"platform":"android","arch":"arm64","abi":null,"llvm":["aarch64-linux-android"]},"android-arm-eabi":{"platform":"android","arch":"arm","abi":"eabi","llvm":["armv7-linux-androideabi"]},"android-ia32":{"platform":"android","arch":"ia32","abi":null,"llvm":["i686-linux-android"]},"android-x64":{"platform":"android","arch":"x64","abi":null,"llvm":["x86_64-linux-android"]},"win32-arm64-msvc":{"platform":"win32","arch":"arm64","abi":"msvc","llvm":["aarch64-pc-windows-msvc"]},"win32-ia32-gnu":{"platform":"win32","arch":"ia32","abi":"gnu","llvm":["i686-pc-windows-gnu"]},"win32-ia32-msvc":{"platform":"win32","arch":"ia32","abi":"msvc","llvm":["i686-pc-windows-msvc"]},"win32-x64-gnu":{"platform":"win32","arch":"x64","abi":"gnu","llvm":["x86_64-pc-windows-gnu"]},"win32-x64-msvc":{"platform":"win32","arch":"x64","abi":"msvc","llvm":["x86_64-pc-windows-msvc"]},"linux-arm64-gnu":{"platform":"linux","arch":"arm64","abi":"gnu","llvm":["aarch64-unknown-linux-gnu"]},"linux-arm64-musl":{"platform":"linux","arch":"arm64","abi":"musl","llvm":["aarch64-unknown-linux-musl"]},"linux-arm-gnueabihf":{"platform":"linux","arch":"arm","abi":"gnueabihf","llvm":["arm-unknown-linux-gnueabihf","armv7-unknown-linux-gnueabihf"]},"linux-arm-musleabihf":{"platform":"linux","arch":"arm","abi":"musleabihf","llvm":["arm-unknown-linux-musleabihf","armv7-unknown-linux-musleabihf"]},"linux-ia32-gnu":{"platform":"linux","arch":"ia32","abi":"gnu","llvm":["i686-unknown-linux-gnu"]},"linux-ia32-musl":{"platform":"linux","arch":"ia32","abi":"musl","llvm":["i686-unknown-linux-musl"]},"linux-mips-gnu":{"platform":"linux","arch":"mips","abi":"gnu","llvm":["mips-unknown-linux-gnu"]},"linux-mips-musl":{"platform":"linux","arch":"mips","abi":"musl","llvm":["mips-unknown-linux-musl"]},"linux-mips64-gnuabi64":{"platform":"linux","arch":"mips64","abi":"gnuabi64","llvm":["mips64-unknown-linux-gnuabi64"]},"linux-mips64-muslabi64":{"platform":"linux","arch":"mips64","abi":"muslabi64","llvm":["mips64-unknown-linux-muslabi64"]},"linux-mips64el-gnuabi64":{"platform":"linux","arch":"mips64el","abi":"gnuabi64","llvm":["mips64el-unknown-linux-gnuabi64"]},"linux-mips64el-muslabi64":{"platform":"linux","arch":"mips64el","abi":"muslabi64","llvm":["mips64el-unknown-linux-muslabi64"]},"linux-mipsel-gnu":{"platform":"linux","arch":"mipsel","abi":"gnu","llvm":["mipsel-unknown-linux-gnu"]},"linux-mipsel-musl":{"platform":"linux","arch":"mipsel","abi":"musl","llvm":["mipsel-unknown-linux-musl"]},"linux-powerpc-gnu":{"platform":"linux","arch":"powerpc","abi":"gnu","llvm":["powerpc-unknown-linux-gnu"]},"linux-powerpc64-gnu":{"platform":"linux","arch":"powerpc64","abi":"gnu","llvm":["powerpc64-unknown-linux-gnu"]},"linux-powerpc64le-gnu":{"platform":"linux","arch":"powerpc64le","abi":"gnu","llvm":["powerpc64le-unknown-linux-gnu"]},"linux-riscv64gc-gnu":{"platform":"linux","arch":"riscv64gc","abi":"gnu","llvm":["riscv64gc-unknown-linux-gnu"]},"linux-s390x-gnu":{"platform":"linux","arch":"s390x","abi":"gnu","llvm":["s390x-unknown-linux-gnu"]},"linux-sparc64-gnu":{"platform":"linux","arch":"sparc64","abi":"gnu","llvm":["sparc64-unknown-linux-gnu"]},"linux-x64-gnu":{"platform":"linux","arch":"x64","abi":"gnu","llvm":["x86_64-unknown-linux-gnu"]},"linux-x64-gnux32":{"platform":"linux","arch":"x64","abi":"gnux32","llvm":["x86_64-unknown-linux-gnux32"]},"linux-x64-musl":{"platform":"linux","arch":"x64","abi":"musl","llvm":["x86_64-unknown-linux-musl"]},"freebsd-ia32":{"platform":"freebsd","arch":"ia32","abi":null,"llvm":["i686-unknown-freebsd"]},"freebsd-x64":{"platform":"freebsd","arch":"x64","abi":null,"llvm":["x86_64-unknown-freebsd"]}}');
+const node_namespaceObject = JSON.parse('{"darwin-arm64":{"os":"darwin","arch":"arm64","abi":null,"llvm":["aarch64-apple-darwin"]},"darwin-x64":{"os":"darwin","arch":"x64","abi":null,"llvm":["x86_64-apple-darwin"]},"ios-arm64":{"os":"ios","arch":"arm64","abi":null,"llvm":["aarch64-apple-ios"]},"ios-x64":{"os":"ios","arch":"x64","abi":null,"llvm":["x86_64-apple-ios"]},"android-arm64":{"os":"android","arch":"arm64","abi":null,"llvm":["aarch64-linux-android"]},"android-arm-eabi":{"os":"android","arch":"arm","abi":"eabi","llvm":["armv7-linux-androideabi"]},"android-ia32":{"os":"android","arch":"ia32","abi":null,"llvm":["i686-linux-android"]},"android-x64":{"os":"android","arch":"x64","abi":null,"llvm":["x86_64-linux-android"]},"win32-arm64-msvc":{"os":"win32","arch":"arm64","abi":"msvc","llvm":["aarch64-pc-windows-msvc"]},"win32-ia32-gnu":{"os":"win32","arch":"ia32","abi":"gnu","llvm":["i686-pc-windows-gnu"]},"win32-ia32-msvc":{"os":"win32","arch":"ia32","abi":"msvc","llvm":["i686-pc-windows-msvc"]},"win32-x64-gnu":{"os":"win32","arch":"x64","abi":"gnu","llvm":["x86_64-pc-windows-gnu"]},"win32-x64-msvc":{"os":"win32","arch":"x64","abi":"msvc","llvm":["x86_64-pc-windows-msvc"]},"linux-arm64-gnu":{"os":"linux","arch":"arm64","abi":"gnu","llvm":["aarch64-unknown-linux-gnu"]},"linux-arm64-musl":{"os":"linux","arch":"arm64","abi":"musl","llvm":["aarch64-unknown-linux-musl"]},"linux-arm-gnueabihf":{"os":"linux","arch":"arm","abi":"gnueabihf","llvm":["arm-unknown-linux-gnueabihf","armv7-unknown-linux-gnueabihf"]},"linux-arm-musleabihf":{"os":"linux","arch":"arm","abi":"musleabihf","llvm":["arm-unknown-linux-musleabihf","armv7-unknown-linux-musleabihf"]},"linux-ia32-gnu":{"os":"linux","arch":"ia32","abi":"gnu","llvm":["i686-unknown-linux-gnu"]},"linux-ia32-musl":{"os":"linux","arch":"ia32","abi":"musl","llvm":["i686-unknown-linux-musl"]},"linux-mips-gnu":{"os":"linux","arch":"mips","abi":"gnu","llvm":["mips-unknown-linux-gnu"]},"linux-mips-musl":{"os":"linux","arch":"mips","abi":"musl","llvm":["mips-unknown-linux-musl"]},"linux-mips64-gnuabi64":{"os":"linux","arch":"mips64","abi":"gnuabi64","llvm":["mips64-unknown-linux-gnuabi64"]},"linux-mips64-muslabi64":{"os":"linux","arch":"mips64","abi":"muslabi64","llvm":["mips64-unknown-linux-muslabi64"]},"linux-mips64el-gnuabi64":{"os":"linux","arch":"mips64el","abi":"gnuabi64","llvm":["mips64el-unknown-linux-gnuabi64"]},"linux-mips64el-muslabi64":{"os":"linux","arch":"mips64el","abi":"muslabi64","llvm":["mips64el-unknown-linux-muslabi64"]},"linux-mipsel-gnu":{"os":"linux","arch":"mipsel","abi":"gnu","llvm":["mipsel-unknown-linux-gnu"]},"linux-mipsel-musl":{"os":"linux","arch":"mipsel","abi":"musl","llvm":["mipsel-unknown-linux-musl"]},"linux-powerpc-gnu":{"os":"linux","arch":"powerpc","abi":"gnu","llvm":["powerpc-unknown-linux-gnu"]},"linux-powerpc64-gnu":{"os":"linux","arch":"powerpc64","abi":"gnu","llvm":["powerpc64-unknown-linux-gnu"]},"linux-powerpc64le-gnu":{"os":"linux","arch":"powerpc64le","abi":"gnu","llvm":["powerpc64le-unknown-linux-gnu"]},"linux-riscv64gc-gnu":{"os":"linux","arch":"riscv64gc","abi":"gnu","llvm":["riscv64gc-unknown-linux-gnu"]},"linux-s390x-gnu":{"os":"linux","arch":"s390x","abi":"gnu","llvm":["s390x-unknown-linux-gnu"]},"linux-sparc64-gnu":{"os":"linux","arch":"sparc64","abi":"gnu","llvm":["sparc64-unknown-linux-gnu"]},"linux-x64-gnu":{"os":"linux","arch":"x64","abi":"gnu","llvm":["x86_64-unknown-linux-gnu"]},"linux-x64-gnux32":{"os":"linux","arch":"x64","abi":"gnux32","llvm":["x86_64-unknown-linux-gnux32"]},"linux-x64-musl":{"os":"linux","arch":"x64","abi":"musl","llvm":["x86_64-unknown-linux-musl"]},"freebsd-ia32":{"os":"freebsd","arch":"ia32","abi":null,"llvm":["i686-unknown-freebsd"]},"freebsd-x64":{"os":"freebsd","arch":"x64","abi":null,"llvm":["x86_64-unknown-freebsd"]}}');
 ;// CONCATENATED MODULE: ./data/preset.json
 const preset_namespaceObject = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
-;// CONCATENATED MODULE: ./src/target.ts
+;// CONCATENATED MODULE: ./src/platform.ts
 
 
 
@@ -45970,23 +45977,23 @@ function assertIsRustTarget(x) {
         throw new RangeError(`invalid Rust target: ${x}`);
     }
 }
-function isNodeTarget(x) {
+function isNodePlatform(x) {
     return (typeof x === 'string') && (x in node_namespaceObject);
 }
-function assertIsNodeTarget(x) {
-    if (!isNodeTarget(x)) {
-        throw new RangeError(`invalid Node target: ${x}`);
+function assertIsNodePlatform(x) {
+    if (!isNodePlatform(x)) {
+        throw new RangeError(`invalid platform: ${x}`);
     }
 }
-function isTargetPreset(x) {
+function isPlatformPreset(x) {
     return (typeof x === 'string') && (x in preset_namespaceObject);
 }
-function assertIsTargetPreset(x) {
-    if (!isTargetPreset(x)) {
-        throw new RangeError(`invalid target family preset: ${x}`);
+function assertIsPlatformPreset(x) {
+    if (!isPlatformPreset(x)) {
+        throw new RangeError(`invalid platform family preset: ${x}`);
     }
 }
-function lookupTargetPreset(key) {
+function lookupPlatformPreset(key) {
     return preset_namespaceObject[key];
 }
 function merge(maps) {
@@ -45996,19 +46003,19 @@ function merge(maps) {
     }
     return merged;
 }
-function expandTargetPreset(preset) {
-    return expandTargetFamily(lookupTargetPreset(preset));
+function expandPlatformPreset(preset) {
+    return expandPlatformFamily(lookupPlatformPreset(preset));
 }
-function expandTargetFamily(family) {
-    return isTargetPreset(family)
-        ? expandTargetPreset(family)
+function expandPlatformFamily(family) {
+    return isPlatformPreset(family)
+        ? expandPlatformPreset(family)
         : Array.isArray(family)
-            ? merge(family.map(expandTargetFamily))
+            ? merge(family.map(expandPlatformFamily))
             : family;
 }
 function getTargetDescriptor(target) {
     const node = rust_namespaceObject[target];
-    if (!isNodeTarget(node)) {
+    if (!isNodePlatform(node)) {
         throw new Error(`Rust target ${target} not supported`);
     }
     const nodeDescriptor = node_namespaceObject[node];
@@ -46018,7 +46025,7 @@ function getTargetDescriptor(target) {
     }
     return {
         node,
-        platform: nodeDescriptor.platform,
+        os: nodeDescriptor.os,
         arch: nodeDescriptor.arch,
         abi: nodeDescriptor.abi,
         llvm: nodeDescriptor.llvm
@@ -46032,7 +46039,7 @@ function node2Rust(target) {
 }
 function rust2Node(target) {
     const nt = rust_namespaceObject[target];
-    assertIsNodeTarget(nt);
+    assertIsNodePlatform(nt);
     return nt;
 }
 async function getCurrentTarget(log) {
@@ -46082,7 +46089,7 @@ function assertIsBinaryCfg(json) {
     if (typeof json.rust !== 'string' || !isRustTarget(json.rust)) {
         throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
     }
-    if (typeof json.node !== 'string' || !isNodeTarget(json.node)) {
+    if (typeof json.node !== 'string' || !isNodePlatform(json.node)) {
         throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
     }
     if (typeof json.platform !== 'string') {
@@ -46095,30 +46102,51 @@ function assertIsBinaryCfg(json) {
         throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
     }
 }
-function assertIsTargetMap(json, path) {
+function assertIsPlatformMap(json, path) {
     assertIsObject(json, path);
     for (const key in json) {
         const value = json[key];
-        if (!isNodeTarget(key)) {
-            throw new TypeError(`target table key ${key} is not a valid Node target`);
+        if (!isNodePlatform(key)) {
+            throw new TypeError(`platform table key ${key} is not a valid Node platform`);
         }
         if (typeof value !== 'string' || !isRustTarget(value)) {
-            throw new TypeError(`target table value ${value} is not a valid Rust target`);
+            throw new TypeError(`platform table value ${value} is not a valid Rust target`);
         }
     }
 }
-function assertIsTargetFamily(json, path) {
+function assertIsPlatformFamily(json, path) {
     if (typeof json === 'string') {
-        assertIsTargetPreset(json);
+        assertIsPlatformPreset(json);
         return;
     }
     if (Array.isArray(json)) {
         for (const elt of json) {
-            assertIsTargetPreset(elt);
+            assertIsPlatformPreset(elt);
         }
         return;
     }
-    assertIsTargetMap(json, path);
+    assertIsPlatformMap(json, path);
+}
+function assertIsBinaryV2(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected "neon" to be an object, found ${json}`);
+    }
+    assertHasProps(['rust', 'node', 'os', 'arch', 'abi'], json, "neon");
+    if (!isRustTarget(json.rust)) {
+        throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
+    }
+    if (!isNodePlatform(json.node)) {
+        throw new TypeError(`expected "neon.node" to be a valid Node platform, found ${json.node}`);
+    }
+    if (typeof json.os !== 'string') {
+        throw new TypeError(`expected "neon.os" to be a string, found ${json.os}`);
+    }
+    if (typeof json.arch !== 'string') {
+        throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
+    }
+    if (json.abi !== null && typeof json.abi !== 'string') {
+        throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
+    }
 }
 function assertIsBinaryV1(json) {
     assertHasProps(['binary'], json, "neon");
@@ -46130,8 +46158,8 @@ function assertIsBinaryV1(json) {
     if (typeof binary.rust !== 'string' || !isRustTarget(binary.rust)) {
         throw new TypeError(`expected "neon.binary.rust" to be a valid Rust target, found ${binary.rust}`);
     }
-    if (!isNodeTarget(binary.node)) {
-        throw new TypeError(`expected "neon.binary.node" to be a valid Node target, found ${binary.node}`);
+    if (!isNodePlatform(binary.node)) {
+        throw new TypeError(`expected "neon.binary.node" to be a valid Node platform, found ${binary.node}`);
     }
     if (typeof binary.platform !== 'string') {
         throw new TypeError(`expected "neon.binary.platform" to be a string, found ${binary.platform}`);
@@ -46156,14 +46184,14 @@ function assertIsSourceV1(json) {
     }
 }
 function assertIsSourceCfg(json) {
-    assertHasProps(['type', 'org', 'targets'], json, "neon");
+    assertHasProps(['type', 'org', 'platforms'], json, "neon");
     if (json.type !== 'source') {
         throw new TypeError(`expected "neon.type" property to be "source", found ${json.type}`);
     }
     if (typeof json.org !== 'string') {
         throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
     }
-    assertIsTargetFamily(json.targets, "neon.targets");
+    assertIsPlatformFamily(json.platforms, "neon.platforms");
     if ('load' in json) {
         if (typeof json.load !== 'string' && typeof json.load !== 'undefined') {
             throw new TypeError(`expected "neon.load" to be a string, found ${json.load}`);
@@ -46238,6 +46266,19 @@ class BinaryManifest extends AbstractManifest {
 }
 function normalizeBinaryCfg(json) {
     assertHasCfg(json);
+    // V3 format: {
+    //   neon: {
+    //     type: 'binary',
+    //     rust: RustTarget,
+    //     node: NodeTarget,
+    //     os: string,
+    //     arch: string,
+    //     abi: string | null
+    //   }
+    // }
+    if ('type' in json.neon && 'os' in json.neon) {
+        return false;
+    }
     // V2 format: {
     //   neon: {
     //     type: 'binary',
@@ -46249,7 +46290,8 @@ function normalizeBinaryCfg(json) {
     //   }
     // }
     if ('type' in json.neon) {
-        return false;
+        json.neon = upgradeBinaryV2(json.neon);
+        return true;
     }
     // V1 format: {
     //   neon: {
@@ -46267,6 +46309,17 @@ function normalizeBinaryCfg(json) {
 }
 function normalizeSourceCfg(json) {
     assertHasCfg(json);
+    // V4 format: {
+    //   neon: {
+    //     type: 'source',
+    //     org: string,
+    //     platforms: PlatformFamily,
+    //     load?: string | undefined
+    //   }
+    // }
+    if ('type' in json.neon && 'platforms' in json.neon) {
+        return false;
+    }
     // V3 format: {
     //   neon: {
     //     type: 'source',
@@ -46275,7 +46328,15 @@ function normalizeSourceCfg(json) {
     //   }
     // }
     if ('type' in json.neon) {
-        return false;
+        const org = json.neon['org'];
+        const targets = json.neon['targets'];
+        assertIsPlatformMap(targets, "neon.targets");
+        json.neon = {
+            type: 'source',
+            org,
+            platforms: targets
+        };
+        return true;
     }
     // V2 format: {
     //   neon: {
@@ -46284,12 +46345,12 @@ function normalizeSourceCfg(json) {
     //   }
     // }
     if ('org' in json.neon) {
-        const targets = json.neon['targets'];
-        assertIsTargetMap(targets, "neon.targets");
+        const platforms = json.neon['targets'];
+        assertIsPlatformMap(platforms, "neon.targets");
         json.neon = {
             type: 'source',
             org: json.neon.org,
-            targets
+            platforms
         };
         return true;
     }
@@ -46303,15 +46364,20 @@ function normalizeSourceCfg(json) {
     json.neon = upgradeSourceV1(targets);
     return true;
 }
+// The source manifest is the source of truth for all Neon
+// project metadata. This means you never need to go searching
+// for any other files to query the Neon project's metadata.
+// (Some data is replicated in the binary manifests, however,
+// since they are independently published in npm.)
 class SourceManifest extends AbstractManifest {
     _sourceJSON;
-    _expandedTargets;
+    _expandedPlatforms;
     constructor(json) {
         super(json);
         this._upgraded = normalizeSourceCfg(this._json);
         assertHasSourceCfg(this._json);
         this._sourceJSON = this._json;
-        this._expandedTargets = expandTargetFamily(this._sourceJSON.neon.targets);
+        this._expandedPlatforms = expandPlatformFamily(this._sourceJSON.neon.platforms);
     }
     static async load(dir) {
         return new SourceManifest(await readManifest(dir));
@@ -46321,12 +46387,12 @@ class SourceManifest extends AbstractManifest {
     }
     packageNames() {
         const cfg = this.cfg();
-        return Object.keys(this._expandedTargets).map(key => `${cfg.org}/${key}`);
+        return Object.keys(this._expandedPlatforms).map(key => `${cfg.org}/${key}`);
     }
     packageFor(target) {
         const cfg = this.cfg();
-        for (const key in this._expandedTargets) {
-            const value = this._expandedTargets[key];
+        for (const key in this._expandedPlatforms) {
+            const value = this._expandedPlatforms[key];
             if (value === target) {
                 return `${cfg.org}/${key}`;
             }
@@ -46334,19 +46400,19 @@ class SourceManifest extends AbstractManifest {
         return undefined;
     }
     rustTargetFor(node) {
-        return this._expandedTargets[node];
+        return this._expandedPlatforms[node];
     }
     manifestFor(target) {
         const targetInfo = getTargetDescriptor(target);
         const name = this.packageFor(target);
         if (!name) {
-            throw new Error(`Rust target ${target} not found in "neon.targets" table.`);
+            throw new Error(`Rust target ${target} not found in "neon.platforms" table.`);
         }
         const json = {
             name,
             description: `Prebuilt binary package for \`${this.name}\` on \`${targetInfo.node}\`.`,
             version: this.version,
-            os: [targetInfo.platform],
+            os: [targetInfo.os],
             cpu: [targetInfo.arch],
             main: "index.node",
             files: ["index.node"],
@@ -46354,7 +46420,7 @@ class SourceManifest extends AbstractManifest {
                 type: "binary",
                 rust: target,
                 node: targetInfo.node,
-                platform: targetInfo.platform,
+                os: targetInfo.os,
                 arch: targetInfo.arch,
                 abi: targetInfo.abi
             }
@@ -46369,25 +46435,25 @@ class SourceManifest extends AbstractManifest {
         }
         return new BinaryManifest(json);
     }
-    async addLoaderTargets(targets) {
+    async updateLoader(platforms) {
         const cfg = this.cfg();
         if (!cfg.load) {
             return;
         }
         const loader = await promises_namespaceObject.readFile(cfg.load, 'utf8');
-        function isTargetTable(p) {
+        function isPlatformTable(p) {
             return p.value.properties.every(p => {
                 return p.type === 'Property' &&
                     p.key.type === 'Literal' &&
-                    isNodeTarget(p.key.value);
+                    isNodePlatform(p.key.value);
             });
         }
         const result = jscodeshift_default()(loader)
             .find((jscodeshift_default()).ObjectExpression)
-            .filter(isTargetTable)
+            .filter(isPlatformTable)
             .replaceWith((p) => {
-            const newProps = targets.map(target => {
-                return jscodeshift_default().property('init', jscodeshift_default().literal(target), jscodeshift_default().arrowFunctionExpression([], jscodeshift_default().callExpression(jscodeshift_default().identifier('require'), [jscodeshift_default().literal(`${cfg.org}/${target}`)])));
+            const newProps = platforms.map(platform => {
+                return jscodeshift_default().property('init', jscodeshift_default().literal(platform), jscodeshift_default().arrowFunctionExpression([], jscodeshift_default().callExpression(jscodeshift_default().identifier('require'), [jscodeshift_default().literal(`${cfg.org}/${platform}`)])));
             });
             return jscodeshift_default().objectExpression([...p.value.properties, ...newProps]);
         })
@@ -46396,20 +46462,20 @@ class SourceManifest extends AbstractManifest {
     }
     async addTargetPair(pair) {
         const { node, rust } = pair;
-        if (this._expandedTargets[node] === rust) {
+        if (this._expandedPlatforms[node] === rust) {
             return null;
         }
-        this._expandedTargets[node] = rust;
+        this._expandedPlatforms[node] = rust;
         await this.save();
-        await this.addLoaderTargets([node]);
+        await this.updateLoader([node]);
         return pair;
     }
-    async addNodeTarget(target) {
-        const rt = node2Rust(target);
-        if (rt.length > 1) {
-            throw new Error(`multiple Rust targets found for Node target ${target}; please specify one of ${rt.join(', ')}`);
+    async addNodePlatform(platform) {
+        const targets = node2Rust(platform);
+        if (targets.length > 1) {
+            throw new Error(`multiple Rust targets found for Node platform ${platform}; please specify one of ${targets.join(', ')}`);
         }
-        return await this.addTargetPair({ node: target, rust: rt[0] });
+        return await this.addTargetPair({ node: platform, rust: targets[0] });
     }
     async addRustTarget(target) {
         return await this.addTargetPair({ node: rust2Node(target), rust: target });
@@ -46419,39 +46485,39 @@ class SourceManifest extends AbstractManifest {
         for (const [key, value] of Object.entries(family)) {
             const node = key;
             const rust = value;
-            if (this._expandedTargets[node] === rust) {
+            if (this._expandedPlatforms[node] === rust) {
                 continue;
             }
             newTargets.push({ node, rust });
         }
         return newTargets;
     }
-    async addTargets(family, opts = {}) {
+    async addPlatforms(family, opts = {}) {
         let newTargets = this.filterNewTargets(family);
         if (!newTargets.length) {
             return [];
         }
         for (const { node, rust } of newTargets) {
-            if (opts.targetsSrc) {
-                opts.targetsSrc[node] = rust;
+            if (opts.platformsSrc) {
+                opts.platformsSrc[node] = rust;
             }
-            this._expandedTargets[node] = rust;
+            this._expandedPlatforms[node] = rust;
         }
         await this.save();
-        await this.addLoaderTargets(newTargets.map(({ node }) => node));
+        await this.updateLoader(newTargets.map(({ node }) => node));
         return newTargets;
     }
-    async addTargetPreset(preset) {
-        const targetsSrc = this.cfg().targets;
-        if (typeof targetsSrc === 'string') {
-            this.cfg().targets = [targetsSrc, preset];
-            return this.addTargets(expandTargetFamily(preset));
+    async addPlatformPreset(preset) {
+        const platformsSrc = this.cfg().platforms;
+        if (typeof platformsSrc === 'string') {
+            this.cfg().platforms = [platformsSrc, preset];
+            return this.addPlatforms(expandPlatformFamily(preset));
         }
-        if (Array.isArray(targetsSrc)) {
-            targetsSrc.push(preset);
-            return this.addTargets(expandTargetFamily(preset));
+        if (Array.isArray(platformsSrc)) {
+            platformsSrc.push(preset);
+            return this.addPlatforms(expandPlatformFamily(preset));
         }
-        return this.addTargets(expandTargetFamily(preset), { targetsSrc });
+        return this.addPlatforms(expandPlatformFamily(preset), { platformsSrc });
     }
     async updateTargets(log, bundle) {
         if (!this._json.optionalDependencies) {
@@ -46489,7 +46555,7 @@ function upgradeSourceV1(object) {
             throw new TypeError(`expected namespaced npm package name, found ${value}`);
         }
         const pkg = value.split('/')[1];
-        assertIsNodeTarget(pkg);
+        assertIsNodePlatform(pkg);
         assertIsRustTarget(key);
         return [pkg, key];
     }
@@ -46504,7 +46570,7 @@ function upgradeSourceV1(object) {
     return {
         type: 'source',
         org: [...orgs][0],
-        targets: Object.fromEntries(entries)
+        platforms: Object.fromEntries(entries)
     };
 }
 function upgradeBinaryV1(json) {
@@ -46513,9 +46579,20 @@ function upgradeBinaryV1(json) {
         type: 'binary',
         rust: json.binary.rust,
         node: json.binary.node,
-        platform: json.binary.platform,
+        os: json.binary.platform,
         arch: json.binary.arch,
         abi: json.binary.abi
+    };
+}
+function upgradeBinaryV2(json) {
+    assertIsBinaryV2(json);
+    return {
+        type: 'binary',
+        rust: json.rust,
+        node: json.node,
+        os: json.platform,
+        arch: json.arch,
+        abi: json.abi
     };
 }
 
@@ -46598,12 +46675,14 @@ class Tarball {
         const version = sourceManifest.version;
         const binaryManifest = await BinaryManifest.load(this._inDir);
         const cfg = binaryManifest.cfg();
+        // Since the source manifest is the source of truth, any time there's a
+        // metadata mismatch between source and binary manifests, binary is wrong.
         if (this._target && (cfg.rust !== this._target)) {
             throw new Error(`Specified target ${this._target} does not match target ${cfg.rust} in ${this._inDir}`);
         }
         const targetInfo = getTargetDescriptor(cfg.rust);
         cfg.node = targetInfo.node;
-        cfg.platform = targetInfo.platform;
+        cfg.os = targetInfo.os;
         cfg.arch = targetInfo.arch;
         cfg.abi = targetInfo.abi;
         // FIXME: make it possible to disable this
@@ -46646,7 +46725,7 @@ class Tarball {
     ;
 }
 
-;// CONCATENATED MODULE: ./src/commands/add-target.ts
+;// CONCATENATED MODULE: ./src/commands/add-platform.ts
 
 
 
@@ -46655,29 +46734,29 @@ class Tarball {
 function optionArray(option) {
     return option == null ? [] : [option];
 }
-const add_target_OPTIONS = [
+const add_platform_OPTIONS = [
     { name: 'bundle', alias: 'b', type: String, defaultValue: null },
-    { name: 'platform', alias: 'p', type: String, defaultValue: null },
-    { name: 'arch', alias: 'a', type: String, defaultValue: null },
+    { name: 'os', type: String, defaultValue: null },
+    { name: 'arch', type: String, defaultValue: null },
     { name: 'abi', type: String, defaultValue: null },
-    { name: 'out-dir', alias: 'o', type: String, defaultValue: 'npm' },
+    { name: 'out-dir', alias: 'o', type: String, defaultValue: 'platforms' },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-class AddTarget {
-    static summary() { return 'Add a new build target to package.json.'; }
-    static syntax() { return 'neon add-target [<t> | -p <p> -a <arch> [--abi <abi>]] [-o <d>] [-b <f>]'; }
+class AddPlatform {
+    static summary() { return 'Add a platform or platform preset to a Neon project.'; }
+    static syntax() { return 'neon add-platform [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
     static options() {
         return [
-            { name: '<t>', summary: 'Full target name, in either Node or Rust convention.' },
+            { name: '<p>', summary: 'A Node platform or platform preset.' },
             {
                 name: '',
-                summary: 'This may be a target name in either Node or Rust convention, or one of the Neon target family presets described below. (Default: current target)'
+                summary: 'This can be a specific Node platform or one of the Neon platform family presets described below. (Default: current platform)'
             },
-            { name: '-p, --platform <p>', summary: 'Target platform name. (Default: current platform)' },
-            { name: '-a, --arch <arch>', summary: 'Target architecture name. (Default: current arch)' },
-            { name: '--abi <abi>', summary: 'Target ABI name. (Default: current ABI)' },
-            { name: '-o, --out-dir <d>', summary: 'Output directory for target template tree. (Default: npm)' },
-            { name: '-b, --bundle <f>', summary: 'File to generate bundling metadata.' },
+            { name: '--os <a>', summary: 'Platform OS name. (Default: current OS)' },
+            { name: '--arch <b>', summary: 'Platform architecture name. (Default: current arch)' },
+            { name: '--abi <c>', summary: 'Platform ABI name. (Default: current ABI)' },
+            { name: '-o, --out-dir <d>', summary: 'Output directory for platform template tree. (Default: ./platforms)' },
+            { name: '-b, --bundle <f>', summary: 'File to generate bundling metadata. (Default: none)' },
             {
                 name: '',
                 summary: 'This generated file ensures support for bundlers (e.g. @vercel/ncc), which rely on static analysis to detect and enable any addons used by the library.'
@@ -46688,78 +46767,78 @@ class AddTarget {
     static seeAlso() { }
     static extraSection() {
         return {
-            title: 'Target Family Presets',
+            title: 'Platform Family Presets',
             details: [
-                { name: 'linux', summary: 'Common desktop Linux targets.' },
-                { name: 'macos', summary: 'Common desktop macOS targets.' },
-                { name: 'windows', summary: 'Common desktop Windows targets.' },
-                { name: 'mobile', summary: 'Common mobile and tablet targets.' },
-                { name: 'desktop', summary: 'All common desktop targets.' },
-                { name: 'common', summary: 'All common targets.' },
-                { name: 'extended', summary: 'All supported targets.' }
+                { name: 'linux', summary: 'Common desktop Linux platforms.' },
+                { name: 'macos', summary: 'Common desktop macOS platforms.' },
+                { name: 'windows', summary: 'Common desktop Windows platforms.' },
+                { name: 'mobile', summary: 'Common mobile and tablet platforms.' },
+                { name: 'desktop', summary: 'All common desktop platforms.' },
+                { name: 'common', summary: 'All common platforms.' },
+                { name: 'extended', summary: 'All supported platforms.' }
             ]
         };
     }
-    _platform;
+    _os;
     _arch;
     _abi;
-    _target;
+    _platform;
     _outDir;
     _bundle;
     _verbose;
     constructor(argv) {
-        const options = dist_default()(add_target_OPTIONS, { argv, partial: true });
-        this._platform = options.platform || null;
+        const options = dist_default()(add_platform_OPTIONS, { argv, partial: true });
+        this._os = options.os || null;
         this._arch = options.arch || null;
         this._abi = options.abi || null;
-        this._outDir = options['out-dir'] || external_node_path_namespaceObject.join(process.cwd(), 'dist');
+        this._outDir = options['out-dir'];
         this._bundle = options.bundle || null;
         this._verbose = !!options.verbose;
-        if (options.platform && !options.arch) {
-            throw new Error("Option --platform requires option --arch to be specified as well.");
+        if (options.os && !options.arch) {
+            throw new Error("Option --os requires option --arch to be specified as well.");
         }
-        if (!options.platform && options.arch) {
-            throw new Error("Option --arch requires option --platform to be specified as well.");
+        if (!options.os && options.arch) {
+            throw new Error("Option --arch requires option --os to be specified as well.");
         }
-        if (options.abi && (!options.platform || !options.arch)) {
-            throw new Error("Option --abi requires both options --platform and --arch to be specified as well.");
+        if (options.abi && (!options.os || !options.arch)) {
+            throw new Error("Option --abi requires both options --os and --arch to be specified as well.");
         }
-        if (!options.platform && !options.arch && !options.abi) {
+        if (!options.os && !options.arch && !options.abi) {
             if (!options._unknown || options._unknown.length === 0) {
-                throw new Error("No arguments found, expected <target> or -p and -a options.");
+                throw new Error("No arguments found, expected platform or --os and --arch options.");
             }
-            this._target = options._unknown[0];
+            this._platform = options._unknown[0];
         }
         else {
-            this._target = `${options.platform}-${options.arch}`;
+            this._platform = `${options.os}-${options.arch}`;
             if (!!options.abi) {
-                this._target = `${this._target}-${options.abi}`;
+                this._platform = `${this._platform}-${options.abi}`;
             }
         }
     }
     log(msg) {
         if (this._verbose) {
-            console.error("[neon add-target] " + msg);
+            console.error("[neon add-platform] " + msg);
         }
     }
-    async addTarget(sourceManifest) {
-        if (!this._target) {
-            this.log('adding default system target');
+    async addPlatform(sourceManifest) {
+        if (!this._platform) {
+            this.log('adding default system platform');
             return optionArray(await sourceManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg))));
         }
-        else if (isRustTarget(this._target)) {
-            this.log(`adding Rust target ${this._target}`);
-            return optionArray(await sourceManifest.addRustTarget(this._target));
+        else if (isRustTarget(this._platform)) {
+            this.log(`adding Rust target ${this._platform}`);
+            return optionArray(await sourceManifest.addRustTarget(this._platform));
         }
-        else if (isNodeTarget(this._target)) {
-            this.log(`adding Node target ${this._target}`);
-            return optionArray(await sourceManifest.addNodeTarget(this._target));
+        else if (isNodePlatform(this._platform)) {
+            this.log(`adding Node platform ${this._platform}`);
+            return optionArray(await sourceManifest.addNodePlatform(this._platform));
         }
-        else if (isTargetPreset(this._target)) {
-            return sourceManifest.addTargetPreset(this._target);
+        else if (isPlatformPreset(this._platform)) {
+            return sourceManifest.addPlatformPreset(this._platform);
         }
         else {
-            throw new Error(`unrecognized target ${this._target}`);
+            throw new Error(`unrecognized platform or preset ${this._platform}`);
         }
     }
     async createTemplateTree(sourceManifest, pair) {
@@ -46779,7 +46858,7 @@ class AddTarget {
         this.log(`reading package.json`);
         const sourceManifest = await SourceManifest.load();
         this.log(`manifest: ${sourceManifest.stringify()}`);
-        const modified = await this.addTarget(sourceManifest);
+        const modified = await this.addPlatform(sourceManifest);
         if (modified.length) {
             sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
             for (const pair of modified) {
@@ -46789,16 +46868,16 @@ class AddTarget {
     }
 }
 
-;// CONCATENATED MODULE: ./src/commands/update-targets.ts
+;// CONCATENATED MODULE: ./src/commands/update-platforms.ts
 
 
-const update_targets_OPTIONS = [
+const update_platforms_OPTIONS = [
     { name: 'bundle', alias: 'b', type: String, defaultValue: null },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-class UpdateTargets {
+class UpdatePlatforms {
     static summary() { return 'Update dependencies for all build targets in package.json.'; }
-    static syntax() { return 'neon update-targets [-b <file>]'; }
+    static syntax() { return 'neon update-platforms [-b <file>]'; }
     static options() {
         return [
             { name: '-b, --bundle <file>', summary: 'File to generate bundling metadata.' },
@@ -46818,13 +46897,13 @@ class UpdateTargets {
     _bundle;
     _verbose;
     constructor(argv) {
-        const options = dist_default()(update_targets_OPTIONS, { argv });
+        const options = dist_default()(update_platforms_OPTIONS, { argv });
         this._bundle = options.bundle || null;
         this._verbose = !!options.verbose;
     }
     log(msg) {
         if (this._verbose) {
-            console.error("[neon update-targets] " + msg);
+            console.error("[neon update-platforms] " + msg);
         }
     }
     async run() {
@@ -46846,62 +46925,62 @@ class UpdateTargets {
 
 
 const rust_target_OPTIONS = [
-    { name: 'platform', alias: 'p', type: String, defaultValue: null },
-    { name: 'arch', alias: 'a', type: String, defaultValue: null },
+    { name: 'os', type: String, defaultValue: null },
+    { name: 'arch', type: String, defaultValue: null },
     { name: 'abi', type: String, defaultValue: null },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 class RustTarget {
-    static summary() { return 'Display the Rust target triple for a given build target.'; }
-    static syntax() { return 'neon rust-target <target> | (-p <plat> -a <arch> [--abi <abi>])'; }
+    static summary() { return 'Display the Rust target triple configured for a platform.'; }
+    static syntax() { return 'neon rust-target <platform> | (--os <os> --arch <arch> [--abi <abi>])'; }
     static options() {
         return [
-            { name: '<target>', summary: 'Full target name in Node convention.' },
-            { name: '-p, --platform <plat>', summary: 'Target platform name.' },
-            { name: '-a, --arch <arch>', summary: 'Target architecture name.' },
+            { name: '<platform>', summary: 'Full platform name in Node convention.' },
+            { name: '--os <os>', summary: 'Target OS name.' },
+            { name: '--arch <arch>', summary: 'Target architecture name.' },
             { name: '--abi <abi>', summary: 'Target ABI name. (Default: null)' },
             { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
         ];
     }
     static seeAlso() { }
     static extraSection() { }
-    _platform;
+    _os;
     _arch;
     _abi;
-    _target;
+    _platform;
     _verbose;
     constructor(argv) {
         const options = dist_default()(rust_target_OPTIONS, { argv, partial: true });
-        this._platform = options.platform || null;
+        this._os = options.os || null;
         this._arch = options.arch || null;
         this._abi = options.abi || null;
         this._verbose = !!options.verbose;
-        if (options.platform && !options.arch) {
-            throw new Error("Option --platform requires option --arch to be specified as well.");
+        if (options.os && !options.arch) {
+            throw new Error("Option --os requires option --arch to be specified as well.");
         }
-        if (!options.platform && options.arch) {
-            throw new Error("Option --arch requires option --platform to be specified as well.");
+        if (!options.os && options.arch) {
+            throw new Error("Option --arch requires option --os to be specified as well.");
         }
-        if (options.abi && (!options.platform || !options.arch)) {
-            throw new Error("Option --abi requires both options --platform and --arch to be specified as well.");
+        if (options.abi && (!options.os || !options.arch)) {
+            throw new Error("Option --abi requires both options --os and --arch to be specified as well.");
         }
-        let target;
-        if (!options.platform && !options.arch && !options.abi) {
+        let platform;
+        if (!options.os && !options.arch && !options.abi) {
             if (!options._unknown || options._unknown.length === 0) {
-                throw new Error("No arguments found, expected <target> or -p and -a options.");
+                throw new Error("No arguments found, expected platform or --os and --arch options.");
             }
-            target = options._unknown[0];
+            platform = options._unknown[0];
         }
         else {
-            target = `${options.platform}-${options.arch}`;
+            platform = `${options.os}-${options.arch}`;
             if (!!options.abi) {
-                target = `${target}-${options.abi}`;
+                platform = `${platform}-${options.abi}`;
             }
         }
-        if (!isNodeTarget(target)) {
-            throw new Error(`${target} is not a valid Node target.`);
+        if (!isNodePlatform(platform)) {
+            throw new Error(`${platform} is not a valid Node platform.`);
         }
-        this._target = target;
+        this._platform = platform;
     }
     log(msg) {
         if (this._verbose) {
@@ -46912,9 +46991,9 @@ class RustTarget {
         this.log(`reading package.json`);
         const sourceManifest = await SourceManifest.load();
         this.log(`manifest: ${sourceManifest.stringify()}`);
-        const rust = sourceManifest.rustTargetFor(this._target);
+        const rust = sourceManifest.rustTargetFor(this._platform);
         if (!rust) {
-            throw new Error(`no Rust target found for ${this._target}`);
+            throw new Error(`no Rust target found for ${this._platform}`);
         }
         console.log(rust);
     }
@@ -46928,7 +47007,7 @@ const preset_OPTIONS = [
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 class Preset {
-    static summary() { return 'Display the target JSON data for a given preset.'; }
+    static summary() { return 'Display the JSON target data for a platform preset.'; }
     static syntax() { return 'neon preset [-p] [-v] <preset>'; }
     static options() {
         return [
@@ -46952,7 +47031,7 @@ class Preset {
         if (options._unknown.length > 1) {
             throw new Error(`Unexpected argument ${options._unknown[1]}`);
         }
-        assertIsTargetPreset(options._unknown[0]);
+        assertIsPlatformPreset(options._unknown[0]);
         this._preset = options._unknown[0];
     }
     log(msg) {
@@ -46961,7 +47040,7 @@ class Preset {
         }
     }
     async run() {
-        const map = expandTargetPreset(this._preset);
+        const map = expandPlatformPreset(this._preset);
         const output = this._pretty
             ? JSON.stringify(map, null, 2)
             : JSON.stringify(map);
@@ -47018,8 +47097,10 @@ var CommandName;
     CommandName["PackBuild"] = "pack-build";
     CommandName["Tarball"] = "tarball";
     CommandName["AddTarget"] = "add-target";
+    CommandName["AddPlatform"] = "add-platform";
     CommandName["InstallBuilds"] = "install-builds";
     CommandName["UpdateTargets"] = "update-targets";
+    CommandName["UpdatePlatforms"] = "update-platforms";
     CommandName["RustTarget"] = "rust-target";
     CommandName["Preset"] = "preset";
 })(CommandName || (CommandName = {}));
@@ -47040,9 +47121,11 @@ const COMMANDS = {
     [CommandName.Bump]: Bump,
     [CommandName.PackBuild]: Tarball,
     [CommandName.Tarball]: Tarball,
-    [CommandName.AddTarget]: AddTarget,
-    [CommandName.InstallBuilds]: UpdateTargets,
-    [CommandName.UpdateTargets]: UpdateTargets,
+    [CommandName.AddTarget]: AddPlatform,
+    [CommandName.AddPlatform]: AddPlatform,
+    [CommandName.InstallBuilds]: UpdatePlatforms,
+    [CommandName.UpdateTargets]: UpdatePlatforms,
+    [CommandName.UpdatePlatforms]: UpdatePlatforms,
     [CommandName.RustTarget]: RustTarget,
     [CommandName.Preset]: Preset
 };
@@ -47055,8 +47138,8 @@ function summaries() {
         { name: CommandName.Dist, summary: Dist.summary() },
         { name: CommandName.Bump, summary: Bump.summary() },
         { name: CommandName.Tarball, summary: Tarball.summary() },
-        { name: CommandName.AddTarget, summary: AddTarget.summary() },
-        { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() },
+        { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
+        { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
         { name: CommandName.RustTarget, summary: RustTarget.summary() },
         { name: CommandName.Preset, summary: Preset.summary() }
     ];
@@ -47072,7 +47155,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(1430);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(5834);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -50096,7 +50179,7 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 /* harmony default export */ const chalk_source = (chalk);
 
 // EXTERNAL MODULE: ./src/command.ts + 40 modules
-var command = __nccwpck_require__(1430);
+var command = __nccwpck_require__(5834);
 ;// CONCATENATED MODULE: ./src/print.ts
 
 
@@ -50182,14 +50265,6 @@ function printError(e) {
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/android-arm-eabi");
-
-
-/***/ }),
-
-/***/ 4404:
-/***/ ((module) => {
-
-module.exports = eval("require")("@cargo-messages/darwin-arm64");
 
 
 /***/ }),
@@ -64974,7 +65049,7 @@ module.exports = (__nccwpck_require__(8938)/* .proxy */ .sj)({
   'win32-x64-msvc': () => __nccwpck_require__(1324),
   'win32-arm64-msvc': () => __nccwpck_require__(7894),
   'darwin-x64': () => __nccwpck_require__(2990),
-  'darwin-arm64': () => __nccwpck_require__(4404),
+  'darwin-arm64': () => __nccwpck_require__(4365),
   'linux-x64-gnu': () => __nccwpck_require__(1316),
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
   'android-arm-eabi': () => __nccwpck_require__(1738)

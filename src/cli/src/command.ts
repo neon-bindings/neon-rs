@@ -1,8 +1,8 @@
 import Dist from './commands/dist.js';
 import Bump from './commands/bump.js';
 import Tarball from './commands/tarball.js';
-import AddTarget from './commands/add-target.js';
-import UpdateTargets from './commands/update-targets.js';
+import AddPlatform from './commands/add-platform.js';
+import UpdatePlatforms from './commands/update-platforms.js';
 import RustTarget from './commands/rust-target.js';
 import Preset from './commands/preset.js';
 import Help from './commands/help.js';
@@ -32,11 +32,13 @@ export enum CommandName {
   Help = 'help',
   Dist = 'dist',
   Bump = 'bump',
-  PackBuild = 'pack-build', // deprecated but retained for compat
+  PackBuild = 'pack-build', // DEPRECATED(0.1)
   Tarball = 'tarball',
-  AddTarget = 'add-target',
-  InstallBuilds = 'install-builds', // deprecated but retained for compat
-  UpdateTargets = 'update-targets',
+  AddTarget = 'add-target', // DEPRECATED(0.1)
+  AddPlatform = 'add-platform',
+  InstallBuilds = 'install-builds', // DEPRECATED(0.1)
+  UpdateTargets = 'update-targets', // DEPRECATED(0.1)
+  UpdatePlatforms = 'update-platforms',
   RustTarget = 'rust-target',
   Preset = 'preset'
 };
@@ -57,11 +59,13 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Help]: Help,
   [CommandName.Dist]: Dist,
   [CommandName.Bump]: Bump,
-  [CommandName.PackBuild]: Tarball, // deprecated but retained for compat
+  [CommandName.PackBuild]: Tarball, // DEPRECATED(0.1)
   [CommandName.Tarball]: Tarball,
-  [CommandName.AddTarget]: AddTarget,
-  [CommandName.InstallBuilds]: UpdateTargets, // deprecated but retained for compat
-  [CommandName.UpdateTargets]: UpdateTargets,
+  [CommandName.AddTarget]: AddPlatform, // DEPRECATED(0.1)
+  [CommandName.AddPlatform]: AddPlatform,
+  [CommandName.InstallBuilds]: UpdatePlatforms, // DEPRECATED(0.1)
+  [CommandName.UpdateTargets]: UpdatePlatforms, // DEPRECATED(0.1)
+  [CommandName.UpdatePlatforms]: UpdatePlatforms,
   [CommandName.RustTarget]: RustTarget,
   [CommandName.Preset]: Preset
 };
@@ -76,8 +80,8 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.Dist, summary: Dist.summary() },
     { name: CommandName.Bump, summary: Bump.summary() },
     { name: CommandName.Tarball, summary: Tarball.summary() },
-    { name: CommandName.AddTarget, summary: AddTarget.summary() },
-    { name: CommandName.UpdateTargets, summary: UpdateTargets.summary() },
+    { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
+    { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
     { name: CommandName.RustTarget, summary: RustTarget.summary() },
     { name: CommandName.Preset, summary: Preset.summary() }
   ];

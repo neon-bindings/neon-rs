@@ -4,7 +4,7 @@ import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { getCurrentTarget, getTargetDescriptor, isRustTarget } from '../target.js';
+import { getCurrentTarget, getTargetDescriptor, isRustTarget } from '../platform.js';
 import { SourceManifest, BinaryManifest } from '../manifest.js';
 
 const mktemp = temp.track().mkdir;
@@ -96,6 +96,8 @@ export default class Tarball implements Command {
 
     const cfg = binaryManifest.cfg();
 
+    // Since the source manifest is the source of truth, any time there's a
+    // metadata mismatch between source and binary manifests, binary is wrong.
     if (this._target && (cfg.rust !== this._target)) {
       throw new Error(`Specified target ${this._target} does not match target ${cfg.rust} in ${this._inDir}`);
     }
@@ -103,7 +105,7 @@ export default class Tarball implements Command {
     const targetInfo = getTargetDescriptor(cfg.rust);
 
     cfg.node = targetInfo.node;
-    cfg.platform = targetInfo.platform;
+    cfg.os = targetInfo.os;
     cfg.arch = targetInfo.arch;
     cfg.abi = targetInfo.abi;
 

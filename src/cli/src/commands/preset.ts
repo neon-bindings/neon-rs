@@ -1,6 +1,6 @@
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { assertIsTargetPreset, expandTargetPreset, TargetPreset } from '../target.js';
+import { assertIsPlatformPreset, expandPlatformPreset, PlatformPreset } from '../platform.js';
 
 const OPTIONS = [
   { name: 'pretty', alias: 'p', type: Boolean, defaultValue: false },
@@ -8,7 +8,7 @@ const OPTIONS = [
 ];
 
 export default class Preset implements Command {
-  static summary(): string { return 'Display the target JSON data for a given preset.'; }
+  static summary(): string { return 'Display the JSON target data for a platform preset.'; }
   static syntax(): string { return 'neon preset [-p] [-v] <preset>'; }
   static options(): CommandDetail[] {
     return [
@@ -22,7 +22,7 @@ export default class Preset implements Command {
   
   private _pretty: boolean;
   private _verbose: boolean;
-  private _preset: TargetPreset;
+  private _preset: PlatformPreset;
   
   constructor(argv: string[]) {
     const options = commandLineArgs(OPTIONS, { argv, partial: true });
@@ -38,7 +38,7 @@ export default class Preset implements Command {
       throw new Error(`Unexpected argument ${options._unknown[1]}`);
     }
 
-    assertIsTargetPreset(options._unknown[0]);
+    assertIsPlatformPreset(options._unknown[0]);
     this._preset = options._unknown[0];
   }
 
@@ -49,7 +49,7 @@ export default class Preset implements Command {
   }
   
   async run() {
-    const map = expandTargetPreset(this._preset);
+    const map = expandPlatformPreset(this._preset);
     const output = this._pretty
       ? JSON.stringify(map, null, 2)
       : JSON.stringify(map);
