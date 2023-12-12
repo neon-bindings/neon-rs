@@ -8,7 +8,8 @@ const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
   { name: 'dir', alias: 'd', type: String, defaultValue: null },
   { name: 'workspaces', type: Boolean, defaultValue: false },
-  { name: 'binaries', alias: 'b', type: String, defaultValue: null }
+  { name: 'bins', alias: 'b', type: String, defaultValue: null },
+  { name: 'binaries', type: String, defaultValue: null }
 ];
 
 async function subdirs(dir: string): Promise<string[]> {
@@ -32,7 +33,7 @@ export default class Bump implements Command {
     return [
       { name: '-d, --dir <dir>', summary: 'Run `npm version <version>` in another directory.' },
       { name: '--workspaces', summary: 'Run `npm version --workspaces <version>` in the current directory.' },
-      { name: '-b, --binaries <dir>', summary: 'Run `npm version --force <version>` on all binary packages in <dir>.' },
+      { name: '-b, --bins <dir>', summary: 'Run `npm version --force <version>` on all binary packages in <dir>.' },
       { name: '', summary: 'The --force parameter causes npm to ignore `os` and `cpu` constraints in the binary packages\' manifests that might not match the current system.' },
       { name: '<version>', summary: 'The new package version. (Default: $npm_package_version)' },
       { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
@@ -57,7 +58,7 @@ export default class Bump implements Command {
     this._verbose = options.verbose;
     this._dir = options.dir || null;
     this._workspaces = options.workspaces;
-    this._binaries = options.binaries || null;
+    this._binaries = options.bins || options.binaries || null;
 
     if ([this._dir, this._workspaces, this._binaries].filter(x => !!x).length > 1) {
       throw new Error("Only one of --dir, --workspaces, or --binaries can be specified.");

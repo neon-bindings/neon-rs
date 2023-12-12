@@ -2,6 +2,13 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
+/***/ 8486:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports = require(__nccwpck_require__.ab + "index.node")
+
+/***/ }),
+
 /***/ 8938:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -45876,7 +45883,8 @@ const bump_OPTIONS = [
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false },
     { name: 'dir', alias: 'd', type: String, defaultValue: null },
     { name: 'workspaces', type: Boolean, defaultValue: false },
-    { name: 'binaries', alias: 'b', type: String, defaultValue: null }
+    { name: 'bins', alias: 'b', type: String, defaultValue: null },
+    { name: 'binaries', type: String, defaultValue: null }
 ];
 async function subdirs(dir) {
     const entries = await promises_namespaceObject.readdir(dir);
@@ -45895,7 +45903,7 @@ class Bump {
         return [
             { name: '-d, --dir <dir>', summary: 'Run `npm version <version>` in another directory.' },
             { name: '--workspaces', summary: 'Run `npm version --workspaces <version>` in the current directory.' },
-            { name: '-b, --binaries <dir>', summary: 'Run `npm version --force <version>` on all binary packages in <dir>.' },
+            { name: '-b, --bins <dir>', summary: 'Run `npm version --force <version>` on all binary packages in <dir>.' },
             { name: '', summary: 'The --force parameter causes npm to ignore `os` and `cpu` constraints in the binary packages\' manifests that might not match the current system.' },
             { name: '<version>', summary: 'The new package version. (Default: $npm_package_version)' },
             { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
@@ -45917,7 +45925,7 @@ class Bump {
         this._verbose = options.verbose;
         this._dir = options.dir || null;
         this._workspaces = options.workspaces;
-        this._binaries = options.binaries || null;
+        this._binaries = options.bins || options.binaries || null;
         if ([this._dir, this._workspaces, this._binaries].filter(x => !!x).length > 1) {
             throw new Error("Only one of --dir, --workspaces, or --binaries can be specified.");
         }
@@ -50281,14 +50289,6 @@ function printError(e) {
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/android-arm-eabi");
-
-
-/***/ }),
-
-/***/ 4404:
-/***/ ((module) => {
-
-module.exports = eval("require")("@cargo-messages/darwin-arm64");
 
 
 /***/ }),
@@ -65073,7 +65073,7 @@ module.exports = (__nccwpck_require__(8938)/* .proxy */ .sj)({
   'win32-x64-msvc': () => __nccwpck_require__(1324),
   'win32-arm64-msvc': () => __nccwpck_require__(7894),
   'darwin-x64': () => __nccwpck_require__(2990),
-  'darwin-arm64': () => __nccwpck_require__(4404),
+  'darwin-arm64': () => __nccwpck_require__(8486),
   'linux-x64-gnu': () => __nccwpck_require__(1316),
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
   'android-arm-eabi': () => __nccwpck_require__(1738)
