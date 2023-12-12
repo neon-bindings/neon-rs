@@ -46082,7 +46082,7 @@ function assertHasProps(keys, json, path) {
     }
 }
 function assertIsBinaryCfg(json) {
-    assertHasProps(['type', 'rust', 'node', 'platform', 'arch', 'abi'], json, "neon");
+    assertHasProps(['type', 'rust', 'node', 'os', 'arch', 'abi'], json, "neon");
     if (json.type !== 'binary') {
         throw new TypeError(`expected "neon.type" property to be "binary", found ${json.type}`);
     }
@@ -46092,8 +46092,8 @@ function assertIsBinaryCfg(json) {
     if (typeof json.node !== 'string' || !isNodePlatform(json.node)) {
         throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
     }
-    if (typeof json.platform !== 'string') {
-        throw new TypeError(`expected "neon.platform" to be a string, found ${json.platform}`);
+    if (typeof json.os !== 'string') {
+        throw new TypeError(`expected "neon.os" to be a string, found ${json.os}`);
     }
     if (typeof json.arch !== 'string') {
         throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
