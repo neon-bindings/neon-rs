@@ -31,13 +31,13 @@
     "build": "cargo build --message-format=json --release | neon dist -v",
     "cross": "cross build --message-format=json --release | neon dist -v -m /target",
     "pack-target": "neon tarball -v",
-    "prepack": "neon update-targets -v 2>update-targets.log",
+    "prepack": "neon update-platforms -v 2>update-platforms.log",
     "version": "neon bump -v --binaries platforms"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.168"
+    "@neon-rs/cli": "^0.0.177"
   },
   "repository": {
     "type": "git",
@@ -52,12 +52,12 @@
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "dependencies": {
-    "@neon-rs/load": "^0.0.173"
+    "@neon-rs/load": "^0.0.177"
   },
   "neon": {
     "type": "source",
     "org": "@cargo-messages",
-    "targets": "extended",
+    "platforms": "extended",
     "load": "./lib/load.cjs"
   },
   "optionalDependencies": {
