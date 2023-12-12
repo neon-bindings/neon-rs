@@ -342,13 +342,13 @@ function normalizeSourceCfg(json: object): boolean {
   //   neon: {
   //     type: 'source',
   //     org: string,
-  //     targets: { Node => Rust }
+  //     targets: PlatformFamily
   //   }
   // }
   if ('type' in json.neon) {
     const org: unknown = json.neon['org' as keyof typeof json.neon];
     const targets: unknown = json.neon['targets' as keyof typeof json.neon];
-    assertIsPlatformMap(targets, "neon.targets");
+    assertIsPlatformFamily(targets, "neon.targets");
     json.neon = {
       type: 'source',
       org,
