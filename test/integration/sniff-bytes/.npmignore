@@ -1,1 +1,6 @@
-npm
+platforms
+src
+target
+Cargo.lock
+Cargo.toml
+tsconfig.json
