@@ -1,4 +1,4 @@
-const addon = require('./load.js');
+const addon = require('./load.cjs');
 
 export type FileFormat = {
   name: string,
