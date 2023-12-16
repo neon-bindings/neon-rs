@@ -2,13 +2,6 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
-/***/ 8486:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = require(__nccwpck_require__.ab + "index.node")
-
-/***/ }),
-
 /***/ 8938:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -50293,6 +50286,14 @@ module.exports = eval("require")("@cargo-messages/android-arm-eabi");
 
 /***/ }),
 
+/***/ 4404:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/darwin-arm64");
+
+
+/***/ }),
+
 /***/ 2990:
 /***/ ((module) => {
 
@@ -65073,7 +65074,7 @@ module.exports = (__nccwpck_require__(8938)/* .proxy */ .sj)({
   'win32-x64-msvc': () => __nccwpck_require__(1324),
   'win32-arm64-msvc': () => __nccwpck_require__(7894),
   'darwin-x64': () => __nccwpck_require__(2990),
-  'darwin-arm64': () => __nccwpck_require__(8486),
+  'darwin-arm64': () => __nccwpck_require__(4404),
   'linux-x64-gnu': () => __nccwpck_require__(1316),
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
   'android-arm-eabi': () => __nccwpck_require__(1738)
