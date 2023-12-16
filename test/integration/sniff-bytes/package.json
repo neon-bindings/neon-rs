@@ -7,29 +7,31 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./types/index.d.mts",
+        "types": "./lib/index.d.mts",
         "default": "./lib/index.mjs"
       },
       "require": {
-        "types": "./types/index.d.cts",
+        "types": "./lib/index.d.cts",
         "default": "./lib/index.cjs"
       }
     }
   },
-  "types": "./types/index.d.cts",
+  "types": "./lib/index.d.cts",
   "main": "./lib/index.cjs",
   "files": [
-    "lib/index.cjs",
-    "lib/load.cjs",
-    "lib/index.mjs",
-    "types/index.d.cts",
-    "types/index.d.mts"
+    "lib/**/*.cjs",
+    "lib/**/*.d.cts",
+    "lib/**/*.mjs",
+    "lib/**/*.d.mts",
+    "lib/**/*.js",
+    "lib/**/*.d.ts"
   ],
   "scripts": {
-    "test": "cargo test",
-    "debug": "cargo build --message-format=json | neon dist",
-    "build": "cargo build --message-format=json --release | neon dist -v -n sniff-bytes",
-    "cross": "cross build --message-format=json --release | neon dist -v -n sniff-bytes -m /target",
+    "tsc": "tsc",
+    "test": "tsc && cargo test",
+    "debug": "tsc && cargo build --message-format=json | neon dist",
+    "build": "tsc && cargo build --message-format=json --release | neon dist -v -n sniff-bytes",
+    "cross": "tsc && cross build --message-format=json --release | neon dist -v -n sniff-bytes -m /target",
     "prepack": "neon update-platforms -v"
   },
   "license": "MIT",
@@ -44,7 +46,8 @@
   },
   "devDependencies": {
     "@neon-rs/cli": "*",
-    "@tsconfig/node16": "^16.1.0",
+    "@tsconfig/node18": "^18.2.2",
+    "@types/node": "^20.10.4",
     "typescript": "^5.2.2"
   },
   "dependencies": {
