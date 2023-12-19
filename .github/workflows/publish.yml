@@ -71,6 +71,13 @@ jobs:
           target: ${{ matrix.target }}
           npm-publish: false
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
+      - name: Inspect
+        shell: bash
+        run: |
+          cd dist
+          tar -zxvf cargo-messages-darwin-arm64-*.tgz package/index.node
+          lipo -info ./package/index.node | sed -En -e 's/^(Non-|Architectures in the )fat file: .+( is architecture| are): (.*)$/\3/p'
+        working-directory: ./pkgs/cargo-messages
 
   windows-builds:
     name: Builds (Windows)
