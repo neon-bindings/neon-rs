@@ -68,6 +68,7 @@ jobs:
           working-directory: ./pkgs/cargo-messages
           input-directory: ${{ env.NEON_PLATFORMS_DIR }}/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
+          target: ${{ matrix.target }}
           npm-publish: false
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
