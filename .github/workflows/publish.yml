@@ -39,7 +39,7 @@ jobs:
     needs: [setup]
     strategy:
       matrix:
-        target: [darwin-arm64, darwin-x64]
+        platform: [darwin-arm64, darwin-x64]
     runs-on: macos-latest
     permissions:
       contents: write
@@ -63,19 +63,17 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.5
+        uses: neon-actions/build@v0.6
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: ${{ env.NEON_PLATFORMS_DIR }}/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
-          target: ${{ matrix.target }}
-          npm-publish: false
+          platform: ${{ matrix.platform }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
       - name: Inspect
         shell: bash
         run: |
           cd dist
-          tar -zxvf cargo-messages-${{ matrix.target }}-*.tgz package/index.node
+          tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
           lipo -info ./package/index.node | sed -En -e 's/^(Non-|Architectures in the )fat file: .+( is architecture| are): (.*)$/\3/p'
         working-directory: ./pkgs/cargo-messages
 
@@ -84,7 +82,7 @@ jobs:
     needs: [setup]
     strategy:
       matrix:
-        target: [win32-x64-msvc, win32-arm64-msvc]
+        platform: [win32-x64-msvc, win32-arm64-msvc]
     runs-on: windows-latest
     permissions:
       contents: write
@@ -108,12 +106,11 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.5
+        uses: neon-actions/build@v0.6
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: ${{ env.NEON_PLATFORMS_DIR }}/${{ matrix.target }}
+          platform: ${{ matrix.platform }}
           node-version: ${{ env.NODE_VERSION }}
-          npm-publish: false
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   other-builds:
@@ -121,7 +118,7 @@ jobs:
     needs: [setup]
     strategy:
       matrix:
-        target: [linux-arm-gnueabihf, linux-x64-gnu, android-arm-eabi]
+        platform: [linux-arm-gnueabihf, linux-x64-gnu, android-arm-eabi]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -145,14 +142,12 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.5
+        uses: neon-actions/build@v0.6
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: ${{ env.NEON_PLATFORMS_DIR }}/${{ matrix.target }}
           node-version: ${{ env.NODE_VERSION }}
           use-cross: true
-          target: ${{ matrix.target }}
-          npm-publish: false
+          platform: ${{ matrix.platform }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   publish:
