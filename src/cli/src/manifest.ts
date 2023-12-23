@@ -431,6 +431,10 @@ export class SourceManifest extends AbstractManifest {
     return undefined;
   }
 
+  allPlatforms(): PlatformMap {
+    return this._expandedPlatforms;
+  }
+
   rustTargetFor(node: NodePlatform): RustTarget | undefined {
     return this._expandedPlatforms[node];
   }

@@ -3,6 +3,8 @@ import Bump from './commands/bump.js';
 import Tarball from './commands/tarball.js';
 import AddPlatform from './commands/add-platform.js';
 import UpdatePlatforms from './commands/update-platforms.js';
+import ListPlatforms from './commands/list-platforms.js';
+import CurrentPlatform from './commands/current-platform.js';
 import RustTarget from './commands/rust-target.js';
 import Preset from './commands/preset.js';
 import Help from './commands/help.js';
@@ -39,7 +41,9 @@ export enum CommandName {
   InstallBuilds = 'install-builds', // DEPRECATED(0.1)
   UpdateTargets = 'update-targets', // DEPRECATED(0.1)
   UpdatePlatforms = 'update-platforms',
-  RustTarget = 'rust-target',
+  ListPlatforms = 'list-platforms',
+  CurrentPlatform = 'current-platform',
+  RustTarget = 'rust-target', // DEPRECATED(0.1)
   Preset = 'preset'
 };
 
@@ -66,7 +70,9 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.InstallBuilds]: UpdatePlatforms, // DEPRECATED(0.1)
   [CommandName.UpdateTargets]: UpdatePlatforms, // DEPRECATED(0.1)
   [CommandName.UpdatePlatforms]: UpdatePlatforms,
-  [CommandName.RustTarget]: RustTarget,
+  [CommandName.ListPlatforms]: ListPlatforms,
+  [CommandName.CurrentPlatform]: CurrentPlatform,
+  [CommandName.RustTarget]: RustTarget, // DEPRECATED(0.1)
   [CommandName.Preset]: Preset
 };
 
@@ -81,7 +87,8 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.Bump, summary: Bump.summary() },
     { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
     { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
-    { name: CommandName.RustTarget, summary: RustTarget.summary() },
+    { name: CommandName.ListPlatforms, summary: ListPlatforms.summary() },
+    { name: CommandName.CurrentPlatform, summary: CurrentPlatform.summary() },
     { name: CommandName.Preset, summary: Preset.summary() }
   ];
 }
