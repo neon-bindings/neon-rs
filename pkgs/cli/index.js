@@ -46729,7 +46729,7 @@ class Tarball {
             this.log(`npm pack failed with exit code ${result.exitCode}`);
             process.exit(result.exitCode);
         }
-        // FIXME: comment linking to the npm issue this fixes
+        // NOTE: This is a workaround for https://github.com/npm/cli/issues/3405
         const tarball = JSON.parse(result.stdout)[0].filename.replace('@', '').replace('/', '-');
         this.log(`tarball filename: ${tarball}`);
         const dest = external_node_path_namespaceObject.join(this._outDir, tarball);
@@ -47154,7 +47154,6 @@ function summaries() {
         { name: CommandName.Help, summary: Help.summary() },
         { name: CommandName.Dist, summary: Dist.summary() },
         { name: CommandName.Bump, summary: Bump.summary() },
-        { name: CommandName.Tarball, summary: Tarball.summary() },
         { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
         { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
         { name: CommandName.RustTarget, summary: RustTarget.summary() },

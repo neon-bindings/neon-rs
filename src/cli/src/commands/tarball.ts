@@ -146,7 +146,7 @@ export default class Tarball implements Command {
       process.exit(result.exitCode);
     }
 
-    // FIXME: comment linking to the npm issue this fixes
+    // NOTE: This is a workaround for https://github.com/npm/cli/issues/3405
     const tarball = JSON.parse(result.stdout)[0].filename.replace('@', '').replace('/', '-');
     this.log(`tarball filename: ${tarball}`);
 
