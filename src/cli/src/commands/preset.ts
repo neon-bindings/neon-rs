@@ -3,31 +3,28 @@ import { Command, CommandDetail, CommandSection } from '../command.js';
 import { assertIsPlatformPreset, expandPlatformPreset, PlatformPreset } from '../platform.js';
 
 const OPTIONS = [
-  { name: 'pretty', alias: 'p', type: Boolean, defaultValue: false },
+  { name: 'pretty', alias: 'p', type: Boolean, defaultValue: true },
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 
 export default class Preset implements Command {
   static summary(): string { return 'Display the JSON target data for a platform preset.'; }
-  static syntax(): string { return 'neon preset [-p] [-v] <preset>'; }
+  static syntax(): string { return 'neon preset [-v] <preset>'; }
   static options(): CommandDetail[] {
     return [
       { name: '<preset>', summary: 'The target family preset to look up.' },
-      { name: '-p, --pretty', summary: 'Pretty-print the JSON output. (Default: false)' },
       { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
     ];
   }
   static seeAlso(): CommandDetail[] | void { }
   static extraSection(): CommandSection | void { }
   
-  private _pretty: boolean;
   private _verbose: boolean;
   private _preset: PlatformPreset;
   
   constructor(argv: string[]) {
     const options = commandLineArgs(OPTIONS, { argv, partial: true });
   
-    this._pretty = options.pretty || false;
     this._verbose = !!options.verbose;
 
     if (!options._unknown || options._unknown.length === 0) {
@@ -50,9 +47,6 @@ export default class Preset implements Command {
   
   async run() {
     const map = expandPlatformPreset(this._preset);
-    const output = this._pretty
-      ? JSON.stringify(map, null, 2)
-      : JSON.stringify(map);
-    console.log(output);
+    console.log(JSON.stringify(map, null, 2));
   }
 }
