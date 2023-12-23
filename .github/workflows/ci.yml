@@ -42,7 +42,7 @@ jobs:
         shell: bash
         run: npm ci --verbose
       - name: Build
-        uses: neon-actions/build@v0.6.2
+        uses: neon-actions/build@v0.6.3
         with:
           working-directory: ./pkgs/cargo-messages
           platform: linux-x64-gnu
