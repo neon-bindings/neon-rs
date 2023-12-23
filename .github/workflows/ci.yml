@@ -42,13 +42,12 @@ jobs:
         shell: bash
         run: npm ci --verbose
       - name: Build
-        uses: neon-actions/build@v0.5
+        uses: neon-actions/build@v0.6.7
         with:
           working-directory: ./pkgs/cargo-messages
-          input-directory: ${{ env.NEON_PLATFORMS_DIR }}/linux-x64-gnu
+          platform: linux-x64-gnu
           node-version: ${{ env.NODE_VERSION }}
           use-cross: false
-          npm-publish: false
           github-release: false
       - name: Start npm Proxy
         shell: bash
@@ -59,7 +58,7 @@ jobs:
         shell: bash
         working-directory: ./test/integration/proxy
         timeout-minutes: 3
-        run: ./publish.sh
+        run: ./publish.sh linux-x64-gnu
       # Since package integrity checksums may vary depending on what versions
       # are available in the proxy registry, we don't put the lockfile for this
       # test in source control. This means we have to use `npm i`, not `npm ci`.

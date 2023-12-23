@@ -33,7 +33,7 @@ export enum CommandName {
   Dist = 'dist',
   Bump = 'bump',
   PackBuild = 'pack-build', // DEPRECATED(0.1)
-  Tarball = 'tarball',
+  Tarball = 'tarball', // DEPRECATED(0.1)
   AddTarget = 'add-target', // DEPRECATED(0.1)
   AddPlatform = 'add-platform',
   InstallBuilds = 'install-builds', // DEPRECATED(0.1)
@@ -60,7 +60,7 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Dist]: Dist,
   [CommandName.Bump]: Bump,
   [CommandName.PackBuild]: Tarball, // DEPRECATED(0.1)
-  [CommandName.Tarball]: Tarball,
+  [CommandName.Tarball]: Tarball, // DEPRECATED(0.1)
   [CommandName.AddTarget]: AddPlatform, // DEPRECATED(0.1)
   [CommandName.AddPlatform]: AddPlatform,
   [CommandName.InstallBuilds]: UpdatePlatforms, // DEPRECATED(0.1)
@@ -79,7 +79,6 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.Help, summary: Help.summary() },
     { name: CommandName.Dist, summary: Dist.summary() },
     { name: CommandName.Bump, summary: Bump.summary() },
-    { name: CommandName.Tarball, summary: Tarball.summary() },
     { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
     { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
     { name: CommandName.RustTarget, summary: RustTarget.summary() },
