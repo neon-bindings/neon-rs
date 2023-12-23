@@ -29,7 +29,7 @@ npm i
 npm run build
 mkdir -p dist
 # NOTE: `xargs basename` is a workaround for https://github.com/npm/cli/issues/3405
-PACKAGE_TARBALL=$((cd platforms/$CURRENT_PLATFORM && npm pack --json | jq '.[0].filename' | xargs basename))
+PACKAGE_TARBALL=$( (cd platforms/$CURRENT_PLATFORM && npm pack --json | jq '.[0].filename' | xargs basename) )
 mv ./platforms/${CURRENT_PLATFORM}/${PACKAGE_TARBALL} ./dist/
 npm publish ./dist/${PACKAGE_TARBALL} --registry $PROXY_SERVER
 npm publish --registry $PROXY_SERVER
