@@ -63,7 +63,7 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.6.8
+        uses: neon-actions/build@v0.6.10
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
@@ -106,7 +106,7 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.6.8
+        uses: neon-actions/build@v0.6.10
         with:
           working-directory: ./pkgs/cargo-messages
           platform: ${{ matrix.platform }}
@@ -142,7 +142,7 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.6.8
+        uses: neon-actions/build@v0.6.10
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
