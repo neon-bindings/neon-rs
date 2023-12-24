@@ -30,14 +30,13 @@
     "debug": "cargo build --message-format=json | neon dist",
     "build": "cargo build --message-format=json --release | neon dist -v",
     "cross": "cross build --message-format=json --release | neon dist -v -m /target",
-    "pack-target": "neon tarball -v",
     "prepack": "neon update-platforms -v 2>update-platforms.log",
     "version": "neon bump -v --binaries platforms"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.177"
+    "@neon-rs/cli": "^0.0.182"
   },
   "repository": {
     "type": "git",
@@ -52,7 +51,7 @@
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "dependencies": {
-    "@neon-rs/load": "^0.0.177"
+    "@neon-rs/load": "^0.0.182"
   },
   "neon": {
     "type": "source",
@@ -61,12 +60,12 @@
     "load": "./lib/load.cjs"
   },
   "optionalDependencies": {
-    "@cargo-messages/android-arm-eabi": "0.0.177",
-    "@cargo-messages/darwin-arm64": "0.0.177",
-    "@cargo-messages/darwin-x64": "0.0.177",
-    "@cargo-messages/linux-arm-gnueabihf": "0.0.177",
-    "@cargo-messages/linux-x64-gnu": "0.0.177",
-    "@cargo-messages/win32-arm64-msvc": "0.0.177",
-    "@cargo-messages/win32-x64-msvc": "0.0.177"
+    "@cargo-messages/android-arm-eabi": "0.0.182",
+    "@cargo-messages/darwin-arm64": "0.0.182",
+    "@cargo-messages/darwin-x64": "0.0.182",
+    "@cargo-messages/linux-arm-gnueabihf": "0.0.182",
+    "@cargo-messages/linux-x64-gnu": "0.0.182",
+    "@cargo-messages/win32-arm64-msvc": "0.0.182",
+    "@cargo-messages/win32-x64-msvc": "0.0.182"
   }
 }
