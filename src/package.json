@@ -2,7 +2,7 @@
   "name": "src",
   "description": "Workspace tree of source packages to be bundled with ncc",
   "private": true,
-  "version": "0.0.181",
+  "version": "0.0.182",
   "workspaces": [
     "cli",
     "install"
