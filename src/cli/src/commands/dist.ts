@@ -21,6 +21,17 @@ function createInputStream(file: string | null): NodeJS.ReadableStream {
   return file ? createReadStream(file) : process.stdin;
 }
 
+function basename(crateName: string): string {
+  return crateName.replace(/^@[^/]*\//, '');
+}
+
+function ensureDefined(str: string | undefined, msg: string): string {
+  if (str === undefined) {
+    throw new Error(`${msg} is not defined`);
+  }
+  return str;
+}
+
 export default class Dist implements Command {
   static summary(): string { return 'Generate a binary .node file from a cargo output log.'; }
   static syntax(): string { return 'neon dist [-n <name>] [-f <dylib>|[-l <log>] [-m <path>]] [-o <dist>]'; }
@@ -73,9 +84,12 @@ export default class Dist implements Command {
     this._file = options.file ?? null;
     this._mount = options.mount;
     this._manifestPath = options['manifest-path'];
-    this._crateName = options.name || process.env['npm_package_name'];
+    this._crateName = options.name ||
+      basename(ensureDefined(process.env['npm_package_name'], '$npm_package_name'));
     this._out = options.out;
     this._verbose = !!options.verbose;
+
+    this.log(`crate name = "${this._crateName}"`);
   }
 
   async findArtifact(): Promise<string> {
@@ -119,6 +133,12 @@ export default class Dist implements Command {
     // }
 
     // return file;
+  }
+
+  log(msg: string) {
+    if (this._verbose) {
+      console.error("[neon dist] " + msg);
+    }
   }
 
   async run() {
