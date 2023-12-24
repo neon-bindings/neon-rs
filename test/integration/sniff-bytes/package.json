@@ -28,8 +28,8 @@
   "scripts": {
     "test": "cargo test",
     "debug": "cargo build --message-format=json | neon dist",
-    "build": "cargo build --message-format=json --release | neon dist -v -n sniff-bytes",
-    "cross": "cross build --message-format=json --release | neon dist -v -n sniff-bytes -m /target",
+    "build": "cargo build --message-format=json --release | neon dist -v",
+    "cross": "cross build --message-format=json --release | neon dist -v -m /target",
     "prepack": "neon update-platforms -v"
   },
   "license": "MIT",
