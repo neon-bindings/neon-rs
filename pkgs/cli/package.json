@@ -1,6 +1,6 @@
 {
   "name": "@neon-rs/cli",
-  "version": "0.0.182",
+  "version": "0.0.183",
   "description": "Command-line build tool for Neon modules.",
   "type": "module",
   "exports": "./index.js",
