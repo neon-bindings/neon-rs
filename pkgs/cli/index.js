@@ -44495,6 +44495,15 @@ const OPTIONS = [
 function createInputStream(file) {
     return file ? (0,external_node_fs_namespaceObject.createReadStream)(file) : process.stdin;
 }
+function basename(crateName) {
+    return crateName.replace(/^@[^/]*\//, '');
+}
+function ensureDefined(str, msg) {
+    if (str === undefined) {
+        throw new Error(`${msg} is not defined`);
+    }
+    return str;
+}
 class Dist {
     static summary() { return 'Generate a binary .node file from a cargo output log.'; }
     static syntax() { return 'neon dist [-n <name>] [-f <dylib>|[-l <log>] [-m <path>]] [-o <dist>]'; }
@@ -44541,9 +44550,11 @@ class Dist {
         this._file = options.file ?? null;
         this._mount = options.mount;
         this._manifestPath = options['manifest-path'];
-        this._crateName = options.name || process.env['npm_package_name'];
+        this._crateName = options.name ||
+            basename(ensureDefined(process.env['npm_package_name'], '$npm_package_name'));
         this._out = options.out;
         this._verbose = !!options.verbose;
+        this.log(`crate name = "${this._crateName}"`);
     }
     async findArtifact() {
         const reader = new lib.CargoReader(createInputStream(this._log), {
@@ -44579,6 +44590,11 @@ class Dist {
         //   throw new Error(`No cdylib artifact found for crate ${this._crateName}`);
         // }
         // return file;
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon dist] " + msg);
+        }
     }
     async run() {
         const file = this._file || (await this.findArtifact());
