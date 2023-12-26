@@ -115,7 +115,8 @@ jobs:
       - name: Inspect
         shell: bash
         run: |
-          expected_arch=$(npx @neon-rs/cli list-platforms | jq -r ${{ matrix.platform }})
+          expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
+          # expected_arch=$(npx @neon-rs/cli list-platforms | jq -r ${{ matrix.platform }})
           cd dist
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
           cd package
