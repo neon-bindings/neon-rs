@@ -118,7 +118,10 @@ jobs:
           cd dist
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
           cd package
-          7z l index.node | egrep '^CPU\s*=\s*[a-zA-Z_0-9]+$'
+          actual_arch=$(7z l index.node | egrep '^CPU\s*=\s*\w+$' | awk '{ print tolower($3); }')
+          expected_arch=$(npx @neon-rs/cli list-platforms | jq -r ${{ matrix.platform }})
+          echo "expected: $expected_arch"
+          echo "actual: $actual_arch"
         working-directory: ./pkgs/cargo-messages
 
   other-builds:
