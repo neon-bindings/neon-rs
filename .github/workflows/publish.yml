@@ -118,7 +118,7 @@ jobs:
           cd dist
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
           cd package
-          7z l index.node
+          7z l index.node | grep '^CPU\s+=\s[a-zA-Z_0-9]+$'
         working-directory: ./pkgs/cargo-messages
 
   other-builds:
