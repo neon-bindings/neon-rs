@@ -118,7 +118,7 @@ jobs:
           cd dist
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
           cd package
-          dumpbin /HEADERS index.node
+          7z l index.node
         working-directory: ./pkgs/cargo-messages
 
   other-builds:
