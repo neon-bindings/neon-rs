@@ -177,9 +177,7 @@ jobs:
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
           cd package
           echo -e "***** readelf -h *****"
-          readelf -h index.node
-          echo -e "***** readelf -l *****"
-          readelf -l index.node
+          readelf -h index.node | egrep '^\s*Machine:' | sed -E 's/\s*Machine:\s*//'
           # actual_arch=$(lipo -archs index.node | sed 's/^x86_/x/')
           # if [ $actual_arch != $expected_arch ]; then
           #   echo -e "cargo-messages packed for ${{ matrix.platform }} contains build for wrong arch ($actual_arch)"
