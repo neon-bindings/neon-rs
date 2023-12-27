@@ -121,8 +121,10 @@ jobs:
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
           cd package
           actual_arch=$(7z l index.node | egrep '^CPU\s*=\s*\w+$' | awk '{ print tolower($3); }')
-          echo "expected: $expected_arch"
-          echo "actual: $actual_arch"
+          if [ $actual_arch != $expected_arch ]; then
+            echo -e "cargo-messages packed for ${{ matrix.platform }} contains build for wrong arch ($actual_arch)"
+            exit 1
+          fi
         working-directory: ./pkgs/cargo-messages
 
   other-builds:
