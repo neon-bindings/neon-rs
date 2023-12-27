@@ -72,6 +72,8 @@ jobs:
       - name: Inspect
         shell: bash
         run: |
+          echo "runner.arch=${{ runner.arch }}"
+          echo "runner.os=${{ runner.os }}"
           expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
           cd dist
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
@@ -121,6 +123,8 @@ jobs:
       - name: Inspect
         shell: bash
         run: |
+          echo "runner.arch=${{ runner.arch }}"
+          echo "runner.os=${{ runner.os }}"
           expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
           # expected_arch=$(npx @neon-rs/cli list-platforms | jq -r ${{ matrix.platform }})
           cd dist
@@ -172,6 +176,8 @@ jobs:
       - name: Inspect
         shell: bash
         run: |
+          echo "runner.arch=${{ runner.arch }}"
+          echo "runner.os=${{ runner.os }}"
           expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
           cd dist
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
