@@ -75,21 +75,6 @@ jobs:
           working-directory: ./pkgs/cargo-messages
           tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
           platform: ${{ matrix.platform }}
-      - name: Inspect
-        shell: bash
-        run: |
-          echo "runner.arch=${{ runner.arch }}"
-          echo "runner.os=${{ runner.os }}"
-          expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
-          cd dist
-          tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
-          cd package
-          actual_arch=$(lipo -archs index.node | sed 's/^x86_/x/')
-          if [ $actual_arch != $expected_arch ]; then
-            echo -e "cargo-messages packed for ${{ matrix.platform }} contains build for wrong arch ($actual_arch)"
-            exit 1
-          fi
-        working-directory: ./pkgs/cargo-messages
 
   windows-builds:
     name: Builds (Windows)
@@ -126,6 +111,12 @@ jobs:
           platform: ${{ matrix.platform }}
           node-version: ${{ env.NODE_VERSION }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
+      - name: Validate
+        uses: neon-actions/validate@v0.1.2
+        with:
+          working-directory: ./pkgs/cargo-messages
+          tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
+          platform: ${{ matrix.platform }}
       - name: Inspect
         shell: bash
         run: |
@@ -179,6 +170,12 @@ jobs:
           use-cross: true
           platform: ${{ matrix.platform }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
+      - name: Validate
+        uses: neon-actions/validate@v0.1.2
+        with:
+          working-directory: ./pkgs/cargo-messages
+          tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
+          platform: ${{ matrix.platform }}
       - name: Inspect
         shell: bash
         run: |
