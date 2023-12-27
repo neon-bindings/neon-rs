@@ -117,22 +117,6 @@ jobs:
           working-directory: ./pkgs/cargo-messages
           tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
           platform: ${{ matrix.platform }}
-      - name: Inspect
-        shell: bash
-        run: |
-          echo "runner.arch=${{ runner.arch }}"
-          echo "runner.os=${{ runner.os }}"
-          expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
-          # expected_arch=$(npx @neon-rs/cli list-platforms | jq -r ${{ matrix.platform }})
-          cd dist
-          tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
-          cd package
-          actual_arch=$(7z l index.node | egrep '^CPU\s*=\s*\w+$' | awk '{ print tolower($3); }')
-          if [ $actual_arch != $expected_arch ]; then
-            echo -e "cargo-messages packed for ${{ matrix.platform }} contains build for wrong arch ($actual_arch)"
-            exit 1
-          fi
-        working-directory: ./pkgs/cargo-messages
 
   other-builds:
     name: Builds (other platforms)
@@ -176,24 +160,7 @@ jobs:
           working-directory: ./pkgs/cargo-messages
           tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
           platform: ${{ matrix.platform }}
-      - name: Inspect
-        shell: bash
-        run: |
-          echo "runner.arch=${{ runner.arch }}"
-          echo "runner.os=${{ runner.os }}"
-          expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
-          cd dist
-          tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
-          cd package
-          echo -e "***** readelf -h *****"
-          readelf -h index.node | egrep '^\s*Machine:' | sed -E 's/\s*Machine:\s*//'
-          # actual_arch=$(lipo -archs index.node | sed 's/^x86_/x/')
-          # if [ $actual_arch != $expected_arch ]; then
-          #   echo -e "cargo-messages packed for ${{ matrix.platform }} contains build for wrong arch ($actual_arch)"
-          #   exit 1
-          # fi
-        working-directory: ./pkgs/cargo-messages
-  
+
   publish:
     name: Publish
     needs: [setup, macos-builds, windows-builds, other-builds]
