@@ -176,7 +176,10 @@ jobs:
           cd dist
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
           cd package
+          echo -e "***** objdump -f *****"
           objdump -f index.node
+          echo -e "***** objdump -a *****"
+          objdump -a index.node
           # actual_arch=$(lipo -archs index.node | sed 's/^x86_/x/')
           # if [ $actual_arch != $expected_arch ]; then
           #   echo -e "cargo-messages packed for ${{ matrix.platform }} contains build for wrong arch ($actual_arch)"
