@@ -70,7 +70,7 @@ jobs:
           platform: ${{ matrix.platform }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
       - name: Validate
-        uses: neon-actions/validate@v0.1
+        uses: neon-actions/validate@v0.1.1
         with:
           working-directory: ./pkgs/cargo-messages
           tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
