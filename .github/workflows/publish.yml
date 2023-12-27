@@ -72,9 +72,15 @@ jobs:
       - name: Inspect
         shell: bash
         run: |
+          expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
           cd dist
           tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
-          lipo -archs ./package/index.node
+          cd package
+          actual_arch=$(lipo -archs index.node | sed 's/^x86_/x/')
+          if [ $actual_arch != $expected_arch ]; then
+            echo -e "cargo-messages packed for ${{ matrix.platform }} contains build for wrong arch ($actual_arch)"
+            exit 1
+          fi
         working-directory: ./pkgs/cargo-messages
 
   windows-builds:
@@ -163,7 +169,21 @@ jobs:
           use-cross: true
           platform: ${{ matrix.platform }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
-
+      - name: Inspect
+        shell: bash
+        run: |
+          expected_arch=$(node -e 'console.log("${{ matrix.platform }}".split("-")[1])')
+          cd dist
+          tar -zxvf cargo-messages-${{ matrix.platform }}-*.tgz package/index.node
+          cd package
+          objdump -f index.node
+          # actual_arch=$(lipo -archs index.node | sed 's/^x86_/x/')
+          # if [ $actual_arch != $expected_arch ]; then
+          #   echo -e "cargo-messages packed for ${{ matrix.platform }} contains build for wrong arch ($actual_arch)"
+          #   exit 1
+          # fi
+        working-directory: ./pkgs/cargo-messages
+  
   publish:
     name: Publish
     needs: [setup, macos-builds, windows-builds, other-builds]
