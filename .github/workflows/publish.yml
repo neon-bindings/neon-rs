@@ -63,18 +63,12 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.6.10
+        uses: neon-actions/build@v0.7
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
           platform: ${{ matrix.platform }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
-      - name: Validate
-        uses: neon-actions/validate@v0.1.2
-        with:
-          working-directory: ./pkgs/cargo-messages
-          tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
-          platform: ${{ matrix.platform }}
 
   windows-builds:
     name: Builds (Windows)
@@ -105,18 +99,12 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.6.10
+        uses: neon-actions/build@v0.7
         with:
           working-directory: ./pkgs/cargo-messages
           platform: ${{ matrix.platform }}
           node-version: ${{ env.NODE_VERSION }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
-      - name: Validate
-        uses: neon-actions/validate@v0.1.2
-        with:
-          working-directory: ./pkgs/cargo-messages
-          tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
-          platform: ${{ matrix.platform }}
 
   other-builds:
     name: Builds (other platforms)
@@ -147,19 +135,13 @@ jobs:
           git branch -a
           git status
       - name: Build
-        uses: neon-actions/build@v0.6.10
+        uses: neon-actions/build@v0.7
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
           use-cross: true
           platform: ${{ matrix.platform }}
           github-release: ${{ needs.setup.outputs.action == 'publish' }}
-      - name: Validate
-        uses: neon-actions/validate@v0.1.2
-        with:
-          working-directory: ./pkgs/cargo-messages
-          tarballs: dist/cargo-messages-${{ matrix.platform }}-*.tgz
-          platform: ${{ matrix.platform }}
 
   publish:
     name: Publish
