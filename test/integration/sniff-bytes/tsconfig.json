@@ -1,3 +1,9 @@
 {
-  "extends": "@tsconfig/node16/tsconfig.json"
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "compilerOptions": {
+    "module": "node16",
+    "declaration": true,
+    "outDir": "lib",
+  },
+  "exclude": ["lib"]
 }
