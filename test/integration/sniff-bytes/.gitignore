@@ -5,3 +5,5 @@ npm-debug.log*
 dist
 package-lock.json
 lib
+cargo.log
+cross.log

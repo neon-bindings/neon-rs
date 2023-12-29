@@ -29,9 +29,13 @@
   "scripts": {
     "tsc": "tsc",
     "test": "tsc && cargo test",
-    "debug": "tsc && cargo build --message-format=json | neon dist",
-    "build": "tsc && cargo build --message-format=json --release | neon dist -v",
-    "cross": "tsc && cross build --message-format=json --release | neon dist -v -m /target",
+    "cargo-build": "tsc && cargo build --message-format=json > cargo.log",
+    "cross-build": "tsc && cross build --message-format=json > cross.log",
+    "postcargo-build": "neon dist < cargo.log",
+    "postcross-build": "neon dist -m /target < cross.log",
+    "debug": "npm run cargo-build --",
+    "build": "npm run cargo-build -- --release --",
+    "cross": "npm run cross-build -- --release --",
     "prepack": "neon update-platforms -v"
   },
   "license": "MIT",
