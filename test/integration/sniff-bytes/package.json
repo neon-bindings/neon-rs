@@ -40,7 +40,7 @@
   },
   "license": "MIT",
   "neon": {
-    "type": "source",
+    "type": "library",
     "org": "@sniff-bytes",
     "platforms": [
       "linux",

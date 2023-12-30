@@ -1,6 +1,6 @@
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { SourceManifest } from '../manifest.js';
+import { LibraryManifest } from '../manifest.js';
 
 const OPTIONS = [
   { name: 'bundle', alias: 'b', type: String, defaultValue: null },
@@ -45,16 +45,16 @@ export default class UpdatePlatforms implements Command {
 
   async run() {
     this.log(`reading package.json (CWD=${process.cwd()})`);
-    const sourceManifest = await SourceManifest.load();
-    const version = sourceManifest.version;
-    this.log(`package.json before: ${sourceManifest.stringify()}`);
+    const libManifest = await LibraryManifest.load();
+    const version = libManifest.version;
+    this.log(`package.json before: ${libManifest.stringify()}`);
     this.log(`determined version: ${version}`);
 
-    if (sourceManifest.upgraded) {
+    if (libManifest.upgraded) {
       this.log(`upgrading manifest format`);
-      await sourceManifest.save();
+      await libManifest.save();
     }
 
-    sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
+    libManifest.updateTargets(msg => this.log(msg), this._bundle);
   }
 }

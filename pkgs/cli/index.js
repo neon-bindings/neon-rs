@@ -46459,7 +46459,7 @@ function assertIsBinaryV1(json) {
         throw new TypeError(`expected "neon.binary.abi" to be a string or null, found ${binary.abi}`);
     }
 }
-function assertIsSourceV1(json) {
+function assertIsLibraryV1(json) {
     assertIsObject(json, "neon");
     for (const key in json) {
         const value = json[key];
@@ -46471,10 +46471,10 @@ function assertIsSourceV1(json) {
         }
     }
 }
-function assertIsSourceCfg(json) {
+function assertIsLibraryCfg(json) {
     assertHasProps(['type', 'org', 'platforms'], json, "neon");
-    if (json.type !== 'source') {
-        throw new TypeError(`expected "neon.type" property to be "source", found ${json.type}`);
+    if (json.type !== 'library') {
+        throw new TypeError(`expected "neon.type" property to be "library", found ${json.type}`);
     }
     if (typeof json.org !== 'string') {
         throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
@@ -46529,9 +46529,9 @@ function assertHasBinaryCfg(json) {
     assertHasCfg(json);
     assertIsBinaryCfg(json.neon);
 }
-function assertHasSourceCfg(json) {
+function assertHasLibraryCfg(json) {
     assertHasCfg(json);
-    assertIsSourceCfg(json.neon);
+    assertIsLibraryCfg(json.neon);
 }
 async function readManifest(dir) {
     dir = dir ?? process.cwd();
@@ -46595,8 +46595,17 @@ function normalizeBinaryCfg(json) {
     json.neon = upgradeBinaryV1(json.neon);
     return true;
 }
-function normalizeSourceCfg(json) {
+function normalizeLibraryCfg(json) {
     assertHasCfg(json);
+    // V5 format: {
+    //   type: 'library',
+    //   org: string,
+    //   platforms: PlatformFamily,
+    //   load?: string | undefined
+    // }
+    if ('type' in json.neon && json.neon.type === 'library') {
+        return false;
+    }
     // V4 format: {
     //   neon: {
     //     type: 'source',
@@ -46606,7 +46615,8 @@ function normalizeSourceCfg(json) {
     //   }
     // }
     if ('type' in json.neon && 'platforms' in json.neon) {
-        return false;
+        json.neon.type = 'library';
+        return true;
     }
     // V3 format: {
     //   neon: {
@@ -46620,7 +46630,7 @@ function normalizeSourceCfg(json) {
         const targets = json.neon['targets'];
         assertIsPlatformFamily(targets, "neon.targets");
         json.neon = {
-            type: 'source',
+            type: 'library',
             org,
             platforms: targets
         };
@@ -46636,7 +46646,7 @@ function normalizeSourceCfg(json) {
         const platforms = json.neon['targets'];
         assertIsPlatformMap(platforms, "neon.targets");
         json.neon = {
-            type: 'source',
+            type: 'library',
             org: json.neon.org,
             platforms
         };
@@ -46648,8 +46658,8 @@ function normalizeSourceCfg(json) {
     //   }
     // }
     const targets = json.neon['targets'];
-    assertIsSourceV1(targets);
-    json.neon = upgradeSourceV1(targets);
+    assertIsLibraryV1(targets);
+    json.neon = upgradeLibraryV1(targets);
     return true;
 }
 // The source manifest is the source of truth for all Neon
@@ -46657,18 +46667,18 @@ function normalizeSourceCfg(json) {
 // for any other files to query the Neon project's metadata.
 // (Some data is replicated in the binary manifests, however,
 // since they are independently published in npm.)
-class SourceManifest extends AbstractManifest {
+class LibraryManifest extends AbstractManifest {
     _sourceJSON;
     _expandedPlatforms;
     constructor(json) {
         super(json);
-        this._upgraded = normalizeSourceCfg(this._json);
-        assertHasSourceCfg(this._json);
+        this._upgraded = normalizeLibraryCfg(this._json);
+        assertHasLibraryCfg(this._json);
         this._sourceJSON = this._json;
         this._expandedPlatforms = expandPlatformFamily(this._sourceJSON.neon.platforms);
     }
     static async load(dir) {
-        return new SourceManifest(await readManifest(dir));
+        return new LibraryManifest(await readManifest(dir));
     }
     cfg() {
         return this._sourceJSON.neon;
@@ -46840,7 +46850,7 @@ if (0) {
         await promises_namespaceObject.writeFile(bundle, PREAMBLE + requires + '\n}\n');
     }
 }
-function upgradeSourceV1(object) {
+function upgradeLibraryV1(object) {
     function splitSwap([key, value]) {
         if (!/^@.*\//.test(value)) {
             throw new TypeError(`expected namespaced npm package name, found ${value}`);
@@ -46859,7 +46869,7 @@ function upgradeSourceV1(object) {
         throw new Error(`multiple npm orgs found: ${orgs}`);
     }
     return {
-        type: 'source',
+        type: 'library',
         org: [...orgs][0],
         platforms: Object.fromEntries(entries)
     };
@@ -46941,12 +46951,12 @@ class Tarball {
             console.error("[neon tarball] " + msg);
         }
     }
-    async createTempDir(sourceManifest) {
+    async createTempDir(libManifest) {
         const target = this._target || await getCurrentTarget(msg => this.log(msg));
         if (!isRustTarget(target)) {
             throw new Error(`Rust target ${target} not supported.`);
         }
-        const binaryManifest = sourceManifest.manifestFor(target);
+        const binaryManifest = libManifest.manifestFor(target);
         this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
         this.log("creating temp dir");
         const tmpdir = await mktemp('neon-');
@@ -46959,11 +46969,11 @@ class Tarball {
         await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(tmpdir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
         return tmpdir;
     }
-    async prepareInDir(sourceManifest) {
+    async prepareInDir(libManifest) {
         if (!this._inDir) {
-            return await this.createTempDir(sourceManifest);
+            return await this.createTempDir(libManifest);
         }
-        const version = sourceManifest.version;
+        const version = libManifest.version;
         const binaryManifest = await BinaryManifest.load(this._inDir);
         const cfg = binaryManifest.cfg();
         // Since the source manifest is the source of truth, any time there's a
@@ -46990,9 +47000,9 @@ class Tarball {
         this.log(`creating directory ${this._outDir}`);
         await promises_namespaceObject.mkdir(this._outDir, { recursive: true });
         this.log(`reading package.json`);
-        const sourceManifest = await SourceManifest.load();
-        this.log(`manifest: ${sourceManifest.stringify()}`);
-        const inDir = await this.prepareInDir(sourceManifest);
+        const libManifest = await LibraryManifest.load();
+        this.log(`manifest: ${libManifest.stringify()}`);
+        const inDir = await this.prepareInDir(libManifest);
         this.log(`npm pack --json`);
         const result = await execa("npm", ["pack", "--json"], {
             shell: true,
@@ -47112,29 +47122,29 @@ class AddPlatform {
             console.error("[neon add-platform] " + msg);
         }
     }
-    async addPlatform(sourceManifest) {
+    async addPlatform(libManifest) {
         if (!this._platform) {
             this.log('adding default system platform');
-            return optionArray(await sourceManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg))));
+            return optionArray(await libManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg))));
         }
         else if (isRustTarget(this._platform)) {
             this.log(`adding Rust target ${this._platform}`);
-            return optionArray(await sourceManifest.addRustTarget(this._platform));
+            return optionArray(await libManifest.addRustTarget(this._platform));
         }
         else if (isNodePlatform(this._platform)) {
             this.log(`adding Node platform ${this._platform}`);
-            return optionArray(await sourceManifest.addNodePlatform(this._platform));
+            return optionArray(await libManifest.addNodePlatform(this._platform));
         }
         else if (isPlatformPreset(this._platform)) {
-            return sourceManifest.addPlatformPreset(this._platform);
+            return libManifest.addPlatformPreset(this._platform);
         }
         else {
             throw new Error(`unrecognized platform or preset ${this._platform}`);
         }
     }
-    async createTemplateTree(sourceManifest, pair) {
+    async createTemplateTree(libManifest, pair) {
         const { node, rust } = pair;
-        const binaryManifest = sourceManifest.manifestFor(rust);
+        const binaryManifest = libManifest.manifestFor(rust);
         this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
         const treeDir = external_node_path_namespaceObject.join(this._outDir, node);
         this.log(`creating ${treeDir}`);
@@ -47147,13 +47157,13 @@ class AddPlatform {
     }
     async run() {
         this.log(`reading package.json`);
-        const sourceManifest = await SourceManifest.load();
-        this.log(`manifest: ${sourceManifest.stringify()}`);
-        const modified = await this.addPlatform(sourceManifest);
+        const libManifest = await LibraryManifest.load();
+        this.log(`manifest: ${libManifest.stringify()}`);
+        const modified = await this.addPlatform(libManifest);
         if (modified.length) {
-            sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
+            libManifest.updateTargets(msg => this.log(msg), this._bundle);
             for (const pair of modified) {
-                await this.createTemplateTree(sourceManifest, pair);
+                await this.createTemplateTree(libManifest, pair);
             }
         }
     }
@@ -47199,15 +47209,15 @@ class UpdatePlatforms {
     }
     async run() {
         this.log(`reading package.json (CWD=${process.cwd()})`);
-        const sourceManifest = await SourceManifest.load();
-        const version = sourceManifest.version;
-        this.log(`package.json before: ${sourceManifest.stringify()}`);
+        const libManifest = await LibraryManifest.load();
+        const version = libManifest.version;
+        this.log(`package.json before: ${libManifest.stringify()}`);
         this.log(`determined version: ${version}`);
-        if (sourceManifest.upgraded) {
+        if (libManifest.upgraded) {
             this.log(`upgrading manifest format`);
-            await sourceManifest.save();
+            await libManifest.save();
         }
-        sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
+        libManifest.updateTargets(msg => this.log(msg), this._bundle);
     }
 }
 
@@ -47239,9 +47249,9 @@ class ListPlatforms {
     }
     async run() {
         this.log(`reading package.json`);
-        const sourceManifest = await SourceManifest.load();
-        this.log(`manifest: ${sourceManifest.stringify()}`);
-        const platforms = sourceManifest.allPlatforms();
+        const libManifest = await LibraryManifest.load();
+        this.log(`manifest: ${libManifest.stringify()}`);
+        const platforms = libManifest.allPlatforms();
         console.log(JSON.stringify(platforms, null, 2));
     }
 }
@@ -47363,9 +47373,9 @@ class RustTarget {
     }
     async run() {
         this.log(`reading package.json`);
-        const sourceManifest = await SourceManifest.load();
-        this.log(`manifest: ${sourceManifest.stringify()}`);
-        const rust = sourceManifest.rustTargetFor(this._platform);
+        const libManifest = await LibraryManifest.load();
+        this.log(`manifest: ${libManifest.stringify()}`);
+        const rust = libManifest.rustTargetFor(this._platform);
         if (!rust) {
             throw new Error(`no Rust target found for ${this._platform}`);
         }

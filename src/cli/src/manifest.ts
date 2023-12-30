@@ -12,7 +12,7 @@ export interface BinaryCfg {
   abi: string | null
 }
 
-type SourceV1 = {[key in RustTarget]?: string};
+type LibraryV1 = {[key in RustTarget]?: string};
 
 type BinaryV1 = {
   binary: {
@@ -147,7 +147,7 @@ function assertIsBinaryV1(json: unknown): asserts json is BinaryV1 {
   }
 }
 
-function assertIsSourceV1(json: unknown): asserts json is SourceV1 {
+function assertIsLibraryV1(json: unknown): asserts json is LibraryV1 {
   assertIsObject(json, "neon");
   for (const key in json) {
     const value: unknown = json[key as keyof typeof json];
@@ -160,17 +160,17 @@ function assertIsSourceV1(json: unknown): asserts json is SourceV1 {
   }
 }
 
-export interface SourceCfg {
-  type: "source";
+export interface LibraryCfg {
+  type: "library";
   org: string;
   platforms: PlatformFamily;
   load?: string;
 }
 
-function assertIsSourceCfg(json: unknown): asserts json is SourceCfg {
+function assertIsLibraryCfg(json: unknown): asserts json is LibraryCfg {
   assertHasProps(['type', 'org', 'platforms'], json, "neon");
-  if (json.type !== 'source') {
-    throw new TypeError(`expected "neon.type" property to be "source", found ${json.type}`)
+  if (json.type !== 'library') {
+    throw new TypeError(`expected "neon.type" property to be "library", found ${json.type}`)
   }
   if (typeof json.org !== 'string') {
     throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
@@ -232,7 +232,7 @@ class AbstractManifest implements Preamble {
 }
 
 type HasBinaryCfg = { neon: BinaryCfg };
-type HasSourceCfg = { neon: SourceCfg };
+type HasLibraryCfg = { neon: LibraryCfg };
 type HasCfg = { neon: object };
 
 function assertHasCfg(json: object): asserts json is HasCfg {
@@ -247,9 +247,9 @@ function assertHasBinaryCfg(json: object): asserts json is HasBinaryCfg {
   assertIsBinaryCfg(json.neon);
 }
 
-function assertHasSourceCfg(json: object): asserts json is HasSourceCfg {
+function assertHasLibraryCfg(json: object): asserts json is HasLibraryCfg {
   assertHasCfg(json);
-  assertIsSourceCfg(json.neon);
+  assertIsLibraryCfg(json.neon);
 }
 
 async function readManifest(dir?: string | undefined): Promise<unknown> {
@@ -323,8 +323,18 @@ function normalizeBinaryCfg(json: object): boolean {
   return true;
 }
 
-function normalizeSourceCfg(json: object): boolean {
+function normalizeLibraryCfg(json: object): boolean {
   assertHasCfg(json);
+
+  // V5 format: {
+  //   type: 'library',
+  //   org: string,
+  //   platforms: PlatformFamily,
+  //   load?: string | undefined
+  // }
+  if ('type' in json.neon && json.neon.type === 'library') {
+    return false;
+  }
 
   // V4 format: {
   //   neon: {
@@ -335,7 +345,8 @@ function normalizeSourceCfg(json: object): boolean {
   //   }
   // }
   if ('type' in json.neon && 'platforms' in json.neon) {
-    return false;
+    json.neon.type = 'library';
+    return true;
   }
 
   // V3 format: {
@@ -350,7 +361,7 @@ function normalizeSourceCfg(json: object): boolean {
     const targets: unknown = json.neon['targets' as keyof typeof json.neon];
     assertIsPlatformFamily(targets, "neon.targets");
     json.neon = {
-      type: 'source',
+      type: 'library',
       org,
       platforms: targets
     };
@@ -369,7 +380,7 @@ function normalizeSourceCfg(json: object): boolean {
     assertIsPlatformMap(platforms, "neon.targets");
 
     json.neon = {
-      type: 'source',
+      type: 'library',
       org: json.neon.org,
       platforms
     };
@@ -383,8 +394,8 @@ function normalizeSourceCfg(json: object): boolean {
   //   }
   // }
   const targets: unknown = json.neon['targets' as keyof typeof json.neon];
-  assertIsSourceV1(targets);
-  json.neon = upgradeSourceV1(targets);
+  assertIsLibraryV1(targets);
+  json.neon = upgradeLibraryV1(targets);
   return true;
 }
 
@@ -395,23 +406,23 @@ type AddPlatformsOptions = { platformsSrc?: PlatformMap };
 // for any other files to query the Neon project's metadata.
 // (Some data is replicated in the binary manifests, however,
 // since they are independently published in npm.)
-export class SourceManifest extends AbstractManifest {
-  private _sourceJSON: HasSourceCfg;
+export class LibraryManifest extends AbstractManifest {
+  private _sourceJSON: HasLibraryCfg;
   private _expandedPlatforms: PlatformMap;
 
   constructor(json: unknown) {
     super(json);
-    this._upgraded = normalizeSourceCfg(this._json);
-    assertHasSourceCfg(this._json);
+    this._upgraded = normalizeLibraryCfg(this._json);
+    assertHasLibraryCfg(this._json);
     this._sourceJSON = this._json;
     this._expandedPlatforms = expandPlatformFamily(this._sourceJSON.neon.platforms);
   }
 
-  static async load(dir?: string | undefined): Promise<SourceManifest> {
-    return new SourceManifest(await readManifest(dir));
+  static async load(dir?: string | undefined): Promise<LibraryManifest> {
+    return new LibraryManifest(await readManifest(dir));
   }
 
-  cfg(): SourceCfg {
+  cfg(): LibraryCfg {
     return this._sourceJSON.neon;
   }
 
@@ -631,9 +642,9 @@ if (0) {
   }
 }
 
-export type Manifest = SourceManifest | BinaryManifest;
+export type Manifest = LibraryManifest | BinaryManifest;
 
-function upgradeSourceV1(object: SourceV1): SourceCfg
+function upgradeLibraryV1(object: LibraryV1): LibraryCfg
 {
   function splitSwap([key, value]: [string, string]): [NodePlatform, RustTarget] {
     if (!/^@.*\//.test(value)) {
@@ -657,7 +668,7 @@ function upgradeSourceV1(object: SourceV1): SourceCfg
   }
 
   return {
-    type: 'source',
+    type: 'library',
     org: [...orgs][0],
     platforms: Object.fromEntries(entries)
   };

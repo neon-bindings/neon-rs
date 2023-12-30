@@ -1,6 +1,6 @@
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { SourceManifest } from '../manifest.js';
+import { LibraryManifest } from '../manifest.js';
 
 const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
@@ -33,9 +33,9 @@ export default class ListPlatforms implements Command {
   
   async run() {
     this.log(`reading package.json`);
-    const sourceManifest = await SourceManifest.load();
-    this.log(`manifest: ${sourceManifest.stringify()}`);
-    const platforms = sourceManifest.allPlatforms();
+    const libManifest = await LibraryManifest.load();
+    this.log(`manifest: ${libManifest.stringify()}`);
+    const platforms = libManifest.allPlatforms();
     console.log(JSON.stringify(platforms, null, 2));
   }
 }
