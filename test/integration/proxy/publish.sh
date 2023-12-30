@@ -26,7 +26,8 @@ npx npm-cli-adduser -u ${PROXY_USER} -p ${PROXY_PASSWORD} -e ${PROXY_EMAIL} -r $
 
 cd test/integration/sniff-bytes
 npm i
-npm run build -- -o platforms/${CURRENT_PLATFORM}/index.node
+npm run build
+mv index.node platforms/${CURRENT_PLATFORM}/
 mkdir -p dist
 # NOTE: `xargs basename` is a workaround for https://github.com/npm/cli/issues/3405
 PACKAGE_TARBALL=$( (cd platforms/$CURRENT_PLATFORM && npm pack --json | jq '.[0].filename' | xargs basename) )
