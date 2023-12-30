@@ -5,7 +5,7 @@ import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
 import { Command, CommandDetail, CommandSection } from '../command.js';
 import { getCurrentTarget, getTargetDescriptor, isRustTarget } from '../platform.js';
-import { SourceManifest, BinaryManifest } from '../manifest.js';
+import { LibraryManifest, BinaryManifest } from '../manifest.js';
 
 const mktemp = temp.track().mkdir;
 
@@ -60,14 +60,14 @@ export default class Tarball implements Command {
     }
   }
 
-  async createTempDir(sourceManifest: SourceManifest): Promise<string> {
+  async createTempDir(libManifest: LibraryManifest): Promise<string> {
     const target = this._target || await getCurrentTarget(msg => this.log(msg));
 
     if (!isRustTarget(target)) {
       throw new Error(`Rust target ${target} not supported.`);
     }
 
-    const binaryManifest = sourceManifest.manifestFor(target);
+    const binaryManifest = libManifest.manifestFor(target);
     this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
 
     this.log("creating temp dir");
@@ -86,12 +86,12 @@ export default class Tarball implements Command {
     return tmpdir;
   }
 
-  async prepareInDir(sourceManifest: SourceManifest): Promise<string> {
+  async prepareInDir(libManifest: LibraryManifest): Promise<string> {
     if (!this._inDir) {
-      return await this.createTempDir(sourceManifest);
+      return await this.createTempDir(libManifest);
     }
 
-    const version = sourceManifest.version;
+    const version = libManifest.version;
     const binaryManifest = await BinaryManifest.load(this._inDir);
 
     const cfg = binaryManifest.cfg();
@@ -129,10 +129,10 @@ export default class Tarball implements Command {
     await fs.mkdir(this._outDir, { recursive: true });
 
     this.log(`reading package.json`);
-    const sourceManifest = await SourceManifest.load();
-    this.log(`manifest: ${sourceManifest.stringify()}`);
+    const libManifest = await LibraryManifest.load();
+    this.log(`manifest: ${libManifest.stringify()}`);
 
-    const inDir = await this.prepareInDir(sourceManifest);
+    const inDir = await this.prepareInDir(libManifest);
 
     this.log(`npm pack --json`);
     const result = await execa("npm", ["pack", "--json"], {

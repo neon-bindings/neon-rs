@@ -1,7 +1,7 @@
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
 import { isNodePlatform, NodePlatform } from '../platform.js';
-import { SourceManifest } from '../manifest.js';
+import { LibraryManifest } from '../manifest.js';
 
 const OPTIONS = [
   { name: 'os', type: String, defaultValue: null },
@@ -81,10 +81,10 @@ export default class RustTarget implements Command {
   
   async run() {
     this.log(`reading package.json`);
-    const sourceManifest = await SourceManifest.load();
-    this.log(`manifest: ${sourceManifest.stringify()}`);
+    const libManifest = await LibraryManifest.load();
+    this.log(`manifest: ${libManifest.stringify()}`);
 
-    const rust = sourceManifest.rustTargetFor(this._platform);
+    const rust = libManifest.rustTargetFor(this._platform);
     if (!rust) {
       throw new Error(`no Rust target found for ${this._platform}`);
     }

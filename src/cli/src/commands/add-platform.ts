@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
 import { getCurrentTarget, isNodePlatform, isRustTarget, isPlatformPreset, TargetPair } from '../platform.js';
-import { SourceManifest } from '../manifest.js';
+import { LibraryManifest } from '../manifest.js';
 
 function optionArray<T>(option: T | undefined | null): T[] {
   return option == null ? [] : [option];
@@ -106,26 +106,26 @@ export default class AddPlatform implements Command {
       }
     }
   
-    async addPlatform(sourceManifest: SourceManifest): Promise<TargetPair[]> {
+    async addPlatform(libManifest: LibraryManifest): Promise<TargetPair[]> {
       if (!this._platform) {
         this.log('adding default system platform');
-        return optionArray(await sourceManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg))));
+        return optionArray(await libManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg))));
       } else if (isRustTarget(this._platform)) {
         this.log(`adding Rust target ${this._platform}`);
-        return optionArray(await sourceManifest.addRustTarget(this._platform));
+        return optionArray(await libManifest.addRustTarget(this._platform));
       } else if (isNodePlatform(this._platform)) {
         this.log(`adding Node platform ${this._platform}`);
-        return optionArray(await sourceManifest.addNodePlatform(this._platform));
+        return optionArray(await libManifest.addNodePlatform(this._platform));
       } else if (isPlatformPreset(this._platform)) {
-        return sourceManifest.addPlatformPreset(this._platform);
+        return libManifest.addPlatformPreset(this._platform);
       } else {
         throw new Error(`unrecognized platform or preset ${this._platform}`);
       }
     }
 
-    async createTemplateTree(sourceManifest: SourceManifest, pair: TargetPair): Promise<void> {
+    async createTemplateTree(libManifest: LibraryManifest, pair: TargetPair): Promise<void> {
       const { node, rust } = pair;
-      const binaryManifest = sourceManifest.manifestFor(rust);
+      const binaryManifest = libManifest.manifestFor(rust);
       this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
 
       const treeDir = path.join(this._outDir, node);
@@ -143,14 +143,14 @@ export default class AddPlatform implements Command {
 
     async run() {
       this.log(`reading package.json`);
-      const sourceManifest = await SourceManifest.load();
-      this.log(`manifest: ${sourceManifest.stringify()}`);
+      const libManifest = await LibraryManifest.load();
+      this.log(`manifest: ${libManifest.stringify()}`);
 
-      const modified = await this.addPlatform(sourceManifest);
+      const modified = await this.addPlatform(libManifest);
       if (modified.length) {
-        sourceManifest.updateTargets(msg => this.log(msg), this._bundle);
+        libManifest.updateTargets(msg => this.log(msg), this._bundle);
         for (const pair of modified) {
-          await this.createTemplateTree(sourceManifest, pair);
+          await this.createTemplateTree(libManifest, pair);
         }
       }
     }
