@@ -46473,8 +46473,8 @@ function assertIsLibraryV1(json) {
 }
 function assertIsLibraryCfg(json) {
     assertHasProps(['type', 'org', 'platforms'], json, "neon");
-    if (json.type !== 'source') {
-        throw new TypeError(`expected "neon.type" property to be "source", found ${json.type}`);
+    if (json.type !== 'library') {
+        throw new TypeError(`expected "neon.type" property to be "library", found ${json.type}`);
     }
     if (typeof json.org !== 'string') {
         throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
@@ -46597,6 +46597,15 @@ function normalizeBinaryCfg(json) {
 }
 function normalizeLibraryCfg(json) {
     assertHasCfg(json);
+    // V5 format: {
+    //   type: 'library',
+    //   org: string,
+    //   platforms: PlatformFamily,
+    //   load?: string | undefined
+    // }
+    if ('type' in json.neon && json.neon.type === 'library') {
+        return false;
+    }
     // V4 format: {
     //   neon: {
     //     type: 'source',
@@ -46606,7 +46615,8 @@ function normalizeLibraryCfg(json) {
     //   }
     // }
     if ('type' in json.neon && 'platforms' in json.neon) {
-        return false;
+        json.neon.type = 'library';
+        return true;
     }
     // V3 format: {
     //   neon: {
@@ -46620,7 +46630,7 @@ function normalizeLibraryCfg(json) {
         const targets = json.neon['targets'];
         assertIsPlatformFamily(targets, "neon.targets");
         json.neon = {
-            type: 'source',
+            type: 'library',
             org,
             platforms: targets
         };
@@ -46636,7 +46646,7 @@ function normalizeLibraryCfg(json) {
         const platforms = json.neon['targets'];
         assertIsPlatformMap(platforms, "neon.targets");
         json.neon = {
-            type: 'source',
+            type: 'library',
             org: json.neon.org,
             platforms
         };
@@ -46859,7 +46869,7 @@ function upgradeLibraryV1(object) {
         throw new Error(`multiple npm orgs found: ${orgs}`);
     }
     return {
-        type: 'source',
+        type: 'library',
         org: [...orgs][0],
         platforms: Object.fromEntries(entries)
     };

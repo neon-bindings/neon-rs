@@ -161,7 +161,7 @@ function assertIsLibraryV1(json: unknown): asserts json is LibraryV1 {
 }
 
 export interface LibraryCfg {
-  type: "source";
+  type: "library";
   org: string;
   platforms: PlatformFamily;
   load?: string;
@@ -169,8 +169,8 @@ export interface LibraryCfg {
 
 function assertIsLibraryCfg(json: unknown): asserts json is LibraryCfg {
   assertHasProps(['type', 'org', 'platforms'], json, "neon");
-  if (json.type !== 'source') {
-    throw new TypeError(`expected "neon.type" property to be "source", found ${json.type}`)
+  if (json.type !== 'library') {
+    throw new TypeError(`expected "neon.type" property to be "library", found ${json.type}`)
   }
   if (typeof json.org !== 'string') {
     throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
@@ -326,6 +326,16 @@ function normalizeBinaryCfg(json: object): boolean {
 function normalizeLibraryCfg(json: object): boolean {
   assertHasCfg(json);
 
+  // V5 format: {
+  //   type: 'library',
+  //   org: string,
+  //   platforms: PlatformFamily,
+  //   load?: string | undefined
+  // }
+  if ('type' in json.neon && json.neon.type === 'library') {
+    return false;
+  }
+
   // V4 format: {
   //   neon: {
   //     type: 'source',
@@ -335,7 +345,8 @@ function normalizeLibraryCfg(json: object): boolean {
   //   }
   // }
   if ('type' in json.neon && 'platforms' in json.neon) {
-    return false;
+    json.neon.type = 'library';
+    return true;
   }
 
   // V3 format: {
@@ -350,7 +361,7 @@ function normalizeLibraryCfg(json: object): boolean {
     const targets: unknown = json.neon['targets' as keyof typeof json.neon];
     assertIsPlatformFamily(targets, "neon.targets");
     json.neon = {
-      type: 'source',
+      type: 'library',
       org,
       platforms: targets
     };
@@ -369,7 +380,7 @@ function normalizeLibraryCfg(json: object): boolean {
     assertIsPlatformMap(platforms, "neon.targets");
 
     json.neon = {
-      type: 'source',
+      type: 'library',
       org: json.neon.org,
       platforms
     };
@@ -657,7 +668,7 @@ function upgradeLibraryV1(object: LibraryV1): LibraryCfg
   }
 
   return {
-    type: 'source',
+    type: 'library',
     org: [...orgs][0],
     platforms: Object.fromEntries(entries)
   };
