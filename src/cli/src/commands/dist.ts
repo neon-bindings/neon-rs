@@ -13,7 +13,7 @@ const OPTIONS = [
   { name: 'log', alias: 'l', type: String, defaultValue: null },
   { name: 'mount', alias: 'm', type: String, defaultValue: null },
   { name: 'manifest-path', type: String, defaultValue: null },
-  { name: 'out', alias: 'o', type: String, defaultValue: 'index.node' },
+  { name: 'out', alias: 'o', type: String, defaultValue: null },
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 
@@ -45,7 +45,7 @@ export default class Dist implements Command {
         summary: 'Mounted path of target directory in virtual filesystem. This is used to map paths from the log data back to their real paths, needed when tools such as cross-rs report messages from within a mounted Docker filesystem.'
       },
       { name: '--manifest-path <path>', summary: 'Real path to Cargo.toml. (Default: cargo behavior)' },
-      { name: '-o, --out <dist>', summary: 'Copy output to file <dist>. (Default: index.node)' },
+      { name: '-o, --out <dist>', summary: 'Copy output to file <dist>. (Default: $NEON_DIST_OUTPUT or index.node)' },
       { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
     ];
   }
@@ -86,7 +86,9 @@ export default class Dist implements Command {
     this._manifestPath = options['manifest-path'];
     this._crateName = options.name ||
       basename(ensureDefined(process.env['npm_package_name'], '$npm_package_name'));
-    this._out = options.out;
+    this._out = options.out ||
+      process.env['NEON_DIST_OUTPUT'] ||
+      'index.node';
     this._verbose = !!options.verbose;
 
     this.log(`crate name = "${this._crateName}"`);
