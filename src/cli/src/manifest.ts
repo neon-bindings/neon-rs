@@ -600,6 +600,12 @@ export class LibraryManifest extends AbstractManifest {
       return this.addPlatforms(expandPlatformFamily(preset));
     }
 
+    // Edge case: an empty object can be treated like an empty array
+    if (Object.keys(platformsSrc).length === 0) {
+      this.cfg().platforms = [];
+      return await this.addPlatformPreset(preset);
+    }
+
     return this.addPlatforms(expandPlatformFamily(preset), { platformsSrc });
   }
 
