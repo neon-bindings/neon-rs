@@ -1,1 +1,4 @@
 dist
+cargo.log
+cross.log
+update-platforms.log

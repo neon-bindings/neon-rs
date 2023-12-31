@@ -27,16 +27,20 @@
   ],
   "scripts": {
     "test": "cargo test",
-    "debug": "cargo build --message-format=json | neon dist",
-    "build": "cargo build --message-format=json --release | neon dist -v",
-    "cross": "cross build --message-format=json --release | neon dist -v -m /target",
+    "cargo-build": "cargo build --message-format=json > cargo.log",
+    "cross-build": "cross build --message-format=json > cross.log",
+    "postcargo-build": "neon dist -v < cargo.log",
+    "postcross-build": "neon dist -v -m /target < cross.log",
+    "debug": "npm run cargo-build --",
+    "build": "npm run cargo-build -- --release --",
+    "cross": "npm run cross-build -- --release --",
     "prepack": "neon update-platforms -v 2>update-platforms.log",
     "version": "neon bump -v --binaries platforms"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.0.182"
+    "@neon-rs/cli": "^0.0.185"
   },
   "repository": {
     "type": "git",
@@ -51,7 +55,7 @@
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "dependencies": {
-    "@neon-rs/load": "^0.0.182"
+    "@neon-rs/load": "^0.0.185"
   },
   "neon": {
     "type": "source",
