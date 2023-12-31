@@ -28,12 +28,12 @@
   "scripts": {
     "test": "cargo test",
     "cargo-build": "cargo build --message-format=json > cargo.log",
-    "cross-build": "cross build --message-format=json > cross.log",
+    "cross-build": "cross build --message-format=json --release > cross.log",
     "postcargo-build": "neon dist -v < cargo.log",
     "postcross-build": "neon dist -v -m /target < cross.log",
     "debug": "npm run cargo-build --",
     "build": "npm run cargo-build -- --release --",
-    "cross": "npm run cross-build -- --release --",
+    "cross": "npm run cross-build",
     "prepack": "neon update-platforms -v 2>update-platforms.log",
     "version": "neon bump -v --binaries platforms"
   },
