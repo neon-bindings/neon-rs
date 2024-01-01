@@ -11,11 +11,10 @@ on:
   push:
     tags:
       - v*
-      - DRYRUN*
   workflow_dispatch:
     inputs:
       dryrun:
-        description: 'Dry-run only, do not publish to npm.'
+        description: 'Dry run (no npm publish).'
         required: false
         type: boolean
         default: true
