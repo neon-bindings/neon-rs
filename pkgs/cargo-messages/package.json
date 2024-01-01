@@ -58,7 +58,7 @@
     "@neon-rs/load": "^0.0.185"
   },
   "neon": {
-    "type": "source",
+    "type": "library",
     "org": "@cargo-messages",
     "platforms": "extended",
     "load": "./lib/load.cjs"
