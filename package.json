@@ -11,6 +11,6 @@
     "version-src": "node pkgs/cli bump -v --dir src",
     "version-pkgs": "node pkgs/cli bump -v --dir pkgs",
     "release": "npm version patch -m 'v%s' && git push --follow-tags",
-    "dryrun": "gh workflow run publish.yml"
+    "dryrun": "gh workflow run publish.yml -f dryrun=true"
   }
 }

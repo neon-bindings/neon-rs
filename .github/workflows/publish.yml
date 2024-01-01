@@ -11,6 +11,12 @@ on:
       - v*
       - DRYRUN*
   workflow_dispatch:
+    inputs:
+      dryrun:
+        description: 'Dry-run only, do not publish to npm.'
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   setup:
