@@ -44449,7 +44449,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 5291:
+/***/ 4528:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -47433,6 +47433,124 @@ class Preset {
     }
 }
 
+;// CONCATENATED MODULE: ./data/github.json
+const github_namespaceObject = JSON.parse('{"darwin-arm64":"macOS","darwin-x64":"macOS","ios-arm64":null,"ios-x64":null,"android-arm64":"Linux","android-arm-eabi":"Linux","android-ia32":null,"android-x64":"Linux","win32-arm64-msvc":"Windows","win32-ia32-gnu":null,"win32-ia32-msvc":null,"win32-x64-gnu":null,"win32-x64-msvc":"Windows","linux-arm64-gnu":"Linux","linux-arm64-musl":null,"linux-arm-gnueabihf":"Linux","linux-arm-musleabihf":null,"linux-ia32-gnu":null,"linux-ia32-musl":null,"linux-mips-gnu":null,"linux-mips-musl":null,"linux-mips64-gnuabi64":null,"linux-mips64-muslabi64":null,"linux-mips64el-gnuabi64":null,"linux-mips64el-muslabi64":null,"linux-mipsel-gnu":null,"linux-mipsel-musl":null,"linux-powerpc-gnu":null,"linux-powerpc64-gnu":null,"linux-powerpc64le-gnu":null,"linux-riscv64gc-gnu":null,"linux-s390x-gnu":null,"linux-sparc64-gnu":null,"linux-x64-gnu":"Linux","linux-x64-gnux32":null,"linux-x64-musl":null,"freebsd-ia32":null,"freebsd-x64":null}');
+;// CONCATENATED MODULE: ./src/ci/github.ts
+
+function sort(platforms) {
+    const macOS = new Set();
+    const Windows = new Set();
+    const Linux = new Set();
+    const unsupported = new Set();
+    for (const platform of platforms) {
+        switch (github_namespaceObject[platform]) {
+            case 'macOS':
+                macOS.add(platform);
+                break;
+            case 'Windows':
+                Windows.add(platform);
+                break;
+            case 'Linux':
+                Linux.add(platform);
+                break;
+            default:
+                unsupported.add(platform);
+                break;
+        }
+    }
+    return {
+        macOS: [...macOS],
+        Windows: [...Windows],
+        Linux: [...Linux],
+        unsupported: [...unsupported]
+    };
+}
+class GitHub {
+    metadata(platforms) {
+        return sort(Object.keys(platforms));
+    }
+}
+
+;// CONCATENATED MODULE: ./src/provider.ts
+
+var ProviderName;
+(function (ProviderName) {
+    ProviderName["GitHub"] = "github";
+})(ProviderName || (ProviderName = {}));
+;
+const PROVIDERS = {
+    [ProviderName.GitHub]: GitHub
+};
+function isProviderName(s) {
+    const keys = Object.values(ProviderName);
+    return keys.includes(s);
+}
+function asProviderName(name) {
+    if (!isProviderName(name)) {
+        throw new RangeError(`CI provider not recognized: ${name}`);
+    }
+    return name;
+}
+function providerFor(name) {
+    return PROVIDERS[name];
+}
+
+;// CONCATENATED MODULE: ./src/commands/ci.ts
+
+
+
+const ci_OPTIONS = [
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+class Ci {
+    static summary() { return 'Display CI metadata for this project\'s platforms.'; }
+    static syntax() { return 'neon ci [-v] <provider>'; }
+    static options() {
+        return [
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' },
+            { name: '<provider>', summary: 'CI provider, which can be one of the supported providers listed below.' }
+        ];
+    }
+    static seeAlso() {
+        return [
+            { name: 'GitHub Actions', summary: '<https://docs.github.com/actions>' }
+        ];
+    }
+    static extraSection() {
+        return {
+            title: 'CI Providers',
+            details: [
+                { name: 'github', summary: 'GitHub Actions.' }
+            ]
+        };
+    }
+    _verbose;
+    _provider;
+    constructor(argv) {
+        const options = dist_default()(ci_OPTIONS, { argv, partial: true });
+        this._verbose = !!options.verbose;
+        if (!options._unknown || options._unknown.length === 0) {
+            throw new Error("No arguments found, expected <provider>.");
+        }
+        const providerName = asProviderName(options._unknown[0]);
+        const providerCtor = providerFor(providerName);
+        this._provider = new providerCtor();
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon ci] " + msg);
+        }
+    }
+    async run() {
+        this.log(`reading package.json`);
+        const libManifest = await LibraryManifest.load();
+        this.log(`manifest: ${libManifest.stringify()}`);
+        const platforms = libManifest.allPlatforms();
+        const metadata = this._provider.metadata(platforms);
+        console.log(JSON.stringify(metadata, null, 2));
+    }
+}
+
 // EXTERNAL MODULE: ./src/print.ts + 26 modules
 var print = __nccwpck_require__(9050);
 ;// CONCATENATED MODULE: ./src/commands/help.ts
@@ -47476,6 +47594,7 @@ class Help {
 
 
 
+
 var CommandName;
 (function (CommandName) {
     CommandName["Help"] = "help";
@@ -47492,6 +47611,7 @@ var CommandName;
     CommandName["CurrentPlatform"] = "current-platform";
     CommandName["RustTarget"] = "rust-target";
     CommandName["Preset"] = "preset";
+    CommandName["Ci"] = "ci";
 })(CommandName || (CommandName = {}));
 ;
 function isCommandName(s) {
@@ -47518,7 +47638,8 @@ const COMMANDS = {
     [CommandName.ListPlatforms]: ListPlatforms,
     [CommandName.CurrentPlatform]: CurrentPlatform,
     [CommandName.RustTarget]: RustTarget,
-    [CommandName.Preset]: Preset
+    [CommandName.Preset]: Preset,
+    [CommandName.Ci]: Ci
 };
 function commandFor(name) {
     return COMMANDS[name];
@@ -47532,7 +47653,8 @@ function summaries() {
         { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
         { name: CommandName.ListPlatforms, summary: ListPlatforms.summary() },
         { name: CommandName.CurrentPlatform, summary: CurrentPlatform.summary() },
-        { name: CommandName.Preset, summary: Preset.summary() }
+        { name: CommandName.Preset, summary: Preset.summary() },
+        { name: CommandName.Ci, summary: Ci.summary() }
     ];
 }
 
@@ -47546,7 +47668,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(5291);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4528);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -50569,8 +50691,8 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 /* harmony default export */ const chalk_source = (chalk);
 
-// EXTERNAL MODULE: ./src/command.ts + 42 modules
-var command = __nccwpck_require__(5291);
+// EXTERNAL MODULE: ./src/command.ts + 46 modules
+var command = __nccwpck_require__(4528);
 ;// CONCATENATED MODULE: ./src/print.ts
 
 

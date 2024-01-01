@@ -7,6 +7,7 @@ import ListPlatforms from './commands/list-platforms.js';
 import CurrentPlatform from './commands/current-platform.js';
 import RustTarget from './commands/rust-target.js';
 import Preset from './commands/preset.js';
+import Ci from './commands/ci.js';
 import Help from './commands/help.js';
 
 export interface Command {
@@ -44,7 +45,8 @@ export enum CommandName {
   ListPlatforms = 'list-platforms',
   CurrentPlatform = 'current-platform',
   RustTarget = 'rust-target', // DEPRECATED(0.1)
-  Preset = 'preset'
+  Preset = 'preset',
+  Ci = 'ci'
 };
 
 export function isCommandName(s: string): s is CommandName {
@@ -73,7 +75,8 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.ListPlatforms]: ListPlatforms,
   [CommandName.CurrentPlatform]: CurrentPlatform,
   [CommandName.RustTarget]: RustTarget, // DEPRECATED(0.1)
-  [CommandName.Preset]: Preset
+  [CommandName.Preset]: Preset,
+  [CommandName.Ci]: Ci
 };
 
 export function commandFor(name: CommandName): CommandClass {
@@ -89,6 +92,7 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
     { name: CommandName.ListPlatforms, summary: ListPlatforms.summary() },
     { name: CommandName.CurrentPlatform, summary: CurrentPlatform.summary() },
-    { name: CommandName.Preset, summary: Preset.summary() }
+    { name: CommandName.Preset, summary: Preset.summary() },
+    { name: CommandName.Ci, summary: Ci.summary() }
   ];
 }
