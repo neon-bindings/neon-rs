@@ -36,6 +36,23 @@ jobs:
             echo type=publish
             echo "type=publish" >> "$GITHUB_OUTPUT"
           fi
+      # - name: Checkout Code
+      #   uses: actions/checkout@v3
+      # - name: Install Dependencies
+      #   shell: bash
+      #   run: npm ci
+      # - name: Install cargo-messages
+      #   shell: bash
+      #   run: npm ci
+      #   working-directory: ./pkgs/cargo-messages
+      # - name: Compute Platform Matrix
+      #   id: matrix
+      #   shell: bash
+      #   run: |
+      #     echo "macOS=$(npx @neon-rs/cli ci --github | jq -rc .macOS)" >> "$GITHUB_OUTPUT"
+      #     echo "Windows=$(npx @neon-rs/cli ci --github | jq -rc .Windows)" >> "$GITHUB_OUTPUT"
+      #     echo "Linux=$(npx @neon-rs/cli ci --github | jq -rc .Linux)" >> "$GITHUB_OUTPUT"
+      #   working-directory: ./pkgs/cargo-messages
       - id: matrix
         name: Compute Platform Matrix
         shell: bash
