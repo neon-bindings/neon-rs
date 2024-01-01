@@ -1,5 +1,7 @@
 name: publish
 
+run-name: ${{ (github.event == 'workflow_dispatch' && (format('Manual publish (dryrun={0})', inputs.dryrun))) || '' }}
+
 env:
   NODE_VERSION: 18.x
   NPM_REGISTRY: 'https://registry.npmjs.org'
