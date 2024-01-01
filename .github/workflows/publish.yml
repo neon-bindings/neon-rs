@@ -10,6 +10,7 @@ on:
     tags:
       - v*
       - DRYRUN*
+  workflow_dispatch:
 
 jobs:
   setup:
@@ -21,14 +22,11 @@ jobs:
       Windows: ${{ steps.matrix.outputs.Windows }}
       Linux: ${{ steps.matrix.outputs.Linux }}
     steps:
-      - name: Get Tag Name
-        uses: olegtarasov/get-tag@v2.1.2
-        id: tagName
       - id: action
         name: Determine Action Type
         shell: bash
         run: |
-          if [[ ${{ contains(steps.tagName.outputs.tag, 'DRYRUN') }} == true ]]
+          if [[ ${{ github.event_name == 'workflow_dispatch' }} ]]
           then
             echo type=dryrun
             echo "type=dryrun" >> "$GITHUB_OUTPUT"
