@@ -17,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       action: ${{ steps.action.outputs.type }}
+      macOS: ${{ steps.matrix.outputs.macOS }}
+      Windows: ${{ steps.matrix.outputs.Windows }}
+      Linux: ${{ steps.matrix.outputs.Linux }}
     steps:
       - name: Get Tag Name
         uses: olegtarasov/get-tag@v2.1.2
@@ -33,13 +36,20 @@ jobs:
             echo type=publish
             echo "type=publish" >> "$GITHUB_OUTPUT"
           fi
+      - id: matrix
+        name: Compute Platform Matrix
+        shell: bash
+        run: |
+          echo 'macOS=["darwin-arm64", "darwin-x64"]' >> "$GITHUB_OUTPUT"
+          echo 'Windows=["win32-x64-msvc", "win32-arm64-msvc"]' >> "$GITHUB_OUTPUT"
+          echo 'Linux=["linux-arm-gnueabihf", "linux-x64-gnu", "android-arm-eabi"]' >> "$GITHUB_OUTPUT"
 
   macos-builds:
     name: Builds (macOS)
     needs: [setup]
     strategy:
       matrix:
-        platform: [darwin-arm64, darwin-x64]
+        platform: ${{ fromJSON(needs.setup.outputs.macOS) }}
     runs-on: macos-latest
     permissions:
       contents: write
@@ -75,7 +85,7 @@ jobs:
     needs: [setup]
     strategy:
       matrix:
-        platform: [win32-x64-msvc, win32-arm64-msvc]
+        platform: ${{ fromJSON(needs.setup.outputs.Windows) }}
     runs-on: windows-latest
     permissions:
       contents: write
@@ -111,7 +121,7 @@ jobs:
     needs: [setup]
     strategy:
       matrix:
-        platform: [linux-arm-gnueabihf, linux-x64-gnu, android-arm-eabi]
+        platform: ${{ fromJSON(needs.setup.outputs.Linux) }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
