@@ -49,9 +49,9 @@ jobs:
       #   id: matrix
       #   shell: bash
       #   run: |
-      #     echo "macOS=$(npx @neon-rs/cli ci --github | jq -rc .macOS)" >> "$GITHUB_OUTPUT"
-      #     echo "Windows=$(npx @neon-rs/cli ci --github | jq -rc .Windows)" >> "$GITHUB_OUTPUT"
-      #     echo "Linux=$(npx @neon-rs/cli ci --github | jq -rc .Linux)" >> "$GITHUB_OUTPUT"
+      #     echo "macOS=$(npx @neon-rs/cli ci github | jq -rc .macOS)" >> "$GITHUB_OUTPUT"
+      #     echo "Windows=$(npx @neon-rs/cli ci github | jq -rc .Windows)" >> "$GITHUB_OUTPUT"
+      #     echo "Linux=$(npx @neon-rs/cli ci github | jq -rc .Linux)" >> "$GITHUB_OUTPUT"
       #   working-directory: ./pkgs/cargo-messages
       - id: matrix
         name: Compute Platform Matrix
