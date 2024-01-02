@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       action: ${{ steps.action.outputs.type }}
+      branch: ${{ steps.branch.outputs.branch }}
       macOS: ${{ steps.matrix.outputs.macOS }}
       Windows: ${{ steps.matrix.outputs.Windows }}
       Linux: ${{ steps.matrix.outputs.Linux }}
@@ -44,9 +45,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Compute Default Branch
+        id: branch
         shell: bash
         run: |
-          git remote show origin | grep 'HEAD branch' | awk '{ print $3; }'
+          branch=$(git remote show origin | grep 'HEAD branch' | awk '{ print $3; }')
+          echo $branch
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
       - name: Install Dependencies
         shell: bash
         run: npm ci
