@@ -43,6 +43,10 @@ jobs:
           fi
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Compute Default Branch
+        shell: bash
+        run: |
+          git remote show origin | grep 'HEAD branch' | awk '{ print $3; }'
       - name: Install Dependencies
         shell: bash
         run: npm ci
