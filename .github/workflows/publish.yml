@@ -6,6 +6,8 @@ env:
   NODE_VERSION: 18.x
   NPM_REGISTRY: 'https://registry.npmjs.org'
   NEON_PLATFORMS_DIR: platforms
+  ACTIONS_USER: github-actions
+  ACTIONS_EMAIL: github-actions@github.com
 
 on:
   push:
@@ -90,9 +92,9 @@ jobs:
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
         run: |
-          git checkout main
-          git config --global user.email 'ci@neon-bindings.com'
-          git config --global user.name 'Neon CI'
+          git checkout ${{ needs.setup.outputs.branch }}
+          git config --global user.name ${{ env.ACTIONS_USER }}
+          git config --global user.email ${{ env.ACTIONS_EMAIL }}
           git branch -a
           npm version patch -m 'dryrun'
           git branch -a
@@ -126,9 +128,9 @@ jobs:
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
         run: |
-          git checkout main
-          git config --global user.email 'ci@neon-bindings.com'
-          git config --global user.name 'Neon CI'
+          git checkout ${{ needs.setup.outputs.branch }}
+          git config --global user.name ${{ env.ACTIONS_USER }}
+          git config --global user.email ${{ env.ACTIONS_EMAIL }}
           git branch -a
           npm version patch -m 'dryrun'
           git branch -a
@@ -162,9 +164,9 @@ jobs:
         if: ${{ needs.setup.outputs.action == 'dryrun' }}
         shell: bash
         run: |
-          git checkout main
-          git config --global user.email 'ci@neon-bindings.com'
-          git config --global user.name 'Neon CI'
+          git checkout ${{ needs.setup.outputs.branch }}
+          git config --global user.name ${{ env.ACTIONS_USER }}
+          git config --global user.email ${{ env.ACTIONS_EMAIL }}
           git branch -a
           npm version patch -m 'dryrun'
           git branch -a
@@ -218,9 +220,9 @@ jobs:
         if: ${{ needs.setup.outputs.action == 'publish' }}
         shell: bash
         run: |
-          git checkout main
-          git config --global user.email 'ci@neon-bindings.com'
-          git config --global user.name 'Neon CI'
+          git checkout ${{ needs.setup.outputs.branch }}
+          git config --global user.name ${{ env.ACTIONS_USER }}
+          git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm run update-src
           git commit -a -m 'update cli to cargo-messages@latest'
           git push
