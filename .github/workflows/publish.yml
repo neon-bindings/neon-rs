@@ -43,6 +43,8 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     outputs:
       action: ${{ steps.action.outputs.type }}
       branch: ${{ steps.branch.outputs.branch }}
@@ -54,7 +56,8 @@ jobs:
         name: Determine Action Type
         shell: bash
         run: |
-          if [[ ${{ github.event_name == 'workflow_dispatch' }} ]]
+          event_name="${{ github.event_name }}"
+          if [[ $event_name = workflow_dispatch ]]
           then
             echo type=dryrun
             echo "type=dryrun" >> "$GITHUB_OUTPUT"
@@ -78,6 +81,23 @@ jobs:
         shell: bash
         run: npm ci
         working-directory: ./pkgs/cargo-messages
+      - name: Update Version (manual only)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun != true }}
+        shell: bash
+        run: |
+          git checkout ${{ steps.branch.outputs.branch }}
+          git config --global user.name ${{ env.ACTIONS_USER }}
+          git config --global user.email ${{ env.ACTIONS_EMAIL }}
+          version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
+          if [[ "$version" = "custom" ]]; then
+            echo -e 'Invalid GitHub workflow inputs: no custom version specified.'
+            exit 1
+          fi
+          npm version $version -m "v$version"
+          if [[ "$(git --porcelain --untracked-files=no)" != "" ]]; then
+            git commit -a -m "v$version"
+          fi
+          git push
       - name: Compute Platform Matrix
         id: matrix
         shell: bash
@@ -114,7 +134,11 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           git branch -a
-          npm version patch -m 'dryrun'
+          version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
+          npm version "$version" -m "[dryrun] v$version"
+          if [[ "$(git --porcelain --untracked-files=no)" != "" ]]; then
+            git commit -a -m "[dryrun] v$version"
+          fi
           git branch -a
           git status
       - name: Build
@@ -150,7 +174,11 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           git branch -a
-          npm version patch -m 'dryrun'
+          version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
+          npm version "$version" -m "[dryrun] v$version"
+          if [[ "$(git --porcelain --untracked-files=no)" != "" ]]; then
+            git commit -a -m "[dryrun] v$version"
+          fi
           git branch -a
           git status
       - name: Build
@@ -186,7 +214,11 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           git branch -a
-          npm version patch -m 'dryrun'
+          version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
+          npm version "$version" -m "[dryrun] v$version"
+          if [[ "$(git --porcelain --untracked-files=no)" != "" ]]; then
+            git commit -a -m "[dryrun] v$version"
+          fi
           git branch -a
           git status
       - name: Build
