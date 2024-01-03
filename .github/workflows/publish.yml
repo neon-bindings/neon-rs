@@ -20,6 +20,24 @@ on:
         required: false
         type: boolean
         default: true
+      releaseType:
+        description: 'Release type (or custom to specify version).'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prepatch
+          - preminor
+          - premajor
+          - prerelease
+          - custom
+      custom:
+        description: 'Custom version.'
+        required: false
+        default: ''
 
 jobs:
   setup:
