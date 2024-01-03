@@ -16,12 +16,12 @@ on:
   workflow_dispatch:
     inputs:
       dryrun:
-        description: 'Dry run (no npm publish).'
+        description: 'Dry run (no npm publish)'
         required: false
         type: boolean
         default: true
       releaseType:
-        description: 'Release type (or custom to specify version).'
+        description: 'Release type (or custom to specify)'
         required: true
         default: 'patch'
         type: choice
@@ -35,7 +35,7 @@ on:
           - prerelease
           - custom
       custom:
-        description: 'Custom version.'
+        description: 'Custom version'
         required: false
         default: ''
 
