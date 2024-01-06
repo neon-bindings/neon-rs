@@ -115,7 +115,7 @@ jobs:
 
   macos-builds:
     name: Builds (macOS)
-    if: ${{ github.event_name != 'workflow_dispatch' && inputs.dryrun == true }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dryrun == true }}
     needs: [setup]
     strategy:
       matrix:
@@ -159,7 +159,7 @@ jobs:
 
   windows-builds:
     name: Builds (Windows)
-    if: ${{ github.event_name != 'workflow_dispatch' && inputs.dryrun == true }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dryrun == true }}
     needs: [setup]
     strategy:
       matrix:
@@ -203,7 +203,7 @@ jobs:
 
   other-builds:
     name: Builds (other platforms)
-    if: ${{ github.event_name != 'workflow_dispatch' && inputs.dryrun == true }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dryrun == true }}
     needs: [setup]
     strategy:
       matrix:
@@ -248,7 +248,7 @@ jobs:
 
   publish:
     name: Publish
-    if: ${{ github.event_name != 'workflow_dispatch' && inputs.dryrun == true }}
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dryrun == true }}
     needs: [setup, macos-builds, windows-builds, other-builds]
     runs-on: ubuntu-latest
     permissions:
