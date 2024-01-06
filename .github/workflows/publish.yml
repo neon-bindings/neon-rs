@@ -106,7 +106,7 @@ jobs:
         run: npm ci
         working-directory: ./pkgs/cargo-messages
       - name: Trigger Release (manual only)
-        if: ${{ steps.action.outputs.action == 'tag' }}
+        if: ${{ steps.action.outputs.type == 'tag' }}
         shell: bash
         run: |
           git checkout ${{ steps.branch.outputs.branch }}
