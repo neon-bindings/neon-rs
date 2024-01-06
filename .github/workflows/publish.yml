@@ -1,6 +1,11 @@
 name: publish
 
-run-name: ${{ (github.event_name == 'workflow_dispatch' && (format('Manual publish{0}', (inputs.dryrun && ' (dry run)') || ''))) || '' }}
+run-name: |
+  ${{
+    (github.event_name == 'workflow_dispatch' && inputs.dryrun && 'Dry run') ||
+    (github.event_name == 'workflow_dispatch' && 'Tag and release') ||
+    format('Publish: {0}', github.event.head_commit.message)
+  }}
 
 env:
   NODE_VERSION: 18.x
