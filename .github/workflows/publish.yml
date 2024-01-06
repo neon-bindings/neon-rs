@@ -57,8 +57,8 @@ jobs:
         shell: bash
         run: |
           event_name="${{ github.event_name }}"
-          if [[ $event_name = workflow_dispatch ]]
-          then
+          dryrun="${{ inputs.dryrun }}"
+          if [[ $event_name = workflow_dispatch ]] && [[ $dryrun = true ]]; then
             echo type=dryrun
             echo "type=dryrun" >> "$GITHUB_OUTPUT"
           else
@@ -100,7 +100,7 @@ jobs:
             exit 1
           fi
           npm version $version -m "v$version"
-          if [[ "$(git --porcelain --untracked-files=no)" != "" ]]; then
+          if [[ "$(git status --porcelain --untracked-files=no)" != "" ]]; then
             git commit -a -m "v$version"
           fi
           git push
