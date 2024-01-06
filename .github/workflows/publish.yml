@@ -87,7 +87,7 @@ jobs:
         shell: bash
         run: npm ci
         working-directory: ./pkgs/cargo-messages
-      - name: Update Version (manual only)
+      - name: Trigger Release (manual only)
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun != true }}
         shell: bash
         env:
@@ -101,13 +101,7 @@ jobs:
             echo -e 'Invalid GitHub workflow inputs: no custom version specified.'
             exit 1
           fi
-          npm version $version -m "v%s"
-          new_version=$(jq -r .version < package.json)
-          if [[ "$(git status --porcelain --untracked-files=no)" != "" ]]; then
-            git commit -a -m "v${new_version}"
-            git tag -a "v${new_version}" -m "v${new_version}" -f
-          fi
-          git push --follow-tags
+          npm run release -- "$version"
       - name: Compute Platform Matrix
         id: matrix
         shell: bash
