@@ -10,7 +10,7 @@
     "cargo-messages"
   ],
   "scripts": {
-    "help": "neon help",
+    "help": "node ./cli help",
     "which": "echo $(which sh) && echo $(which neon) && echo $(which npm)",
     "version": "neon bump -v --workspaces"
   },
