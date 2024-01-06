@@ -52,6 +52,12 @@ jobs:
       Windows: ${{ steps.matrix.outputs.Windows }}
       Linux: ${{ steps.matrix.outputs.Linux }}
     steps:
+      - name: Validate Inputs
+        if: ${{ inputs.releaseType == 'custom' && inputs.custom == '' }}
+        shell: bash
+        run: |
+          echo '::error title=Inputs::Missing version number'
+          exit 1
       - id: action
         name: Determine Action Type
         shell: bash
@@ -59,12 +65,14 @@ jobs:
           event_name="${{ github.event_name }}"
           dryrun="${{ inputs.dryrun }}"
           if [[ $event_name = workflow_dispatch ]] && [[ $dryrun = true ]]; then
-            echo type=dryrun
-            echo "type=dryrun" >> "$GITHUB_OUTPUT"
+            type=dryrun
+          elif [[ $event_name = workflow_dispatch ]]; then
+            type=tag
           else
-            echo type=publish
-            echo "type=publish" >> "$GITHUB_OUTPUT"
+            type=publish
           fi
+          echo "type=$type"
+          echo "type=$type" >> "$GITHUB_OUTPUT"
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
@@ -90,18 +98,13 @@ jobs:
         run: npm ci
         working-directory: ./pkgs/cargo-messages
       - name: Trigger Release (manual only)
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun != true }}
+        if: ${{ steps.action.outputs.action == 'tag' }}
         shell: bash
         run: |
           git checkout ${{ steps.branch.outputs.branch }}
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
-          version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
-          if [[ "$version" = "custom" ]]; then
-            echo -e 'Error: ⚠️ missing version number in workflow inputs'
-            exit 1
-          fi
-          npm run release -- "$version"
+          npm run release -- '${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
       - name: Compute Platform Matrix
         id: matrix
         shell: bash
@@ -114,7 +117,7 @@ jobs:
 
   macos-builds:
     name: Builds (macOS)
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dryrun == true }}
+    if: ${{ needs.setup.outputs.action != 'tag' }}
     needs: [setup]
     strategy:
       matrix:
@@ -151,7 +154,7 @@ jobs:
 
   windows-builds:
     name: Builds (Windows)
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dryrun == true }}
+    if: ${{ needs.setup.outputs.action != 'tag' }}
     needs: [setup]
     strategy:
       matrix:
@@ -188,7 +191,7 @@ jobs:
 
   other-builds:
     name: Builds (other platforms)
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dryrun == true }}
+    if: ${{ needs.setup.outputs.action != 'tag' }}
     needs: [setup]
     strategy:
       matrix:
@@ -226,7 +229,7 @@ jobs:
 
   publish:
     name: Publish
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.dryrun == true }}
+    if: ${{ needs.setup.outputs.action == 'publish' }}
     needs: [setup, macos-builds, windows-builds, other-builds]
     runs-on: ubuntu-latest
     permissions:
