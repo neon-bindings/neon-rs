@@ -3,7 +3,10 @@ name: publish
 run-name: |
   ${{
     (github.event_name == 'workflow_dispatch' && inputs.dryrun && 'Dry run') ||
-    (github.event_name == 'workflow_dispatch' && 'Tag and release') ||
+    (github.event_name == 'workflow_dispatch' &&
+      format('Tag and release: {0}',
+        (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType)
+      ) ||
     format('Publish: {0}', github.event.head_commit.message)
   }}
 
