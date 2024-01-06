@@ -99,11 +99,12 @@ jobs:
             echo -e 'Invalid GitHub workflow inputs: no custom version specified.'
             exit 1
           fi
-          npm version $version -m "v$version"
+          npm version $version -m "v%s"
+          new_version=$(jq -r .version < package.json)
           if [[ "$(git status --porcelain --untracked-files=no)" != "" ]]; then
-            git commit -a -m "v$version"
+            git commit -a -m "v${new_version}"
           fi
-          git tag -a "v$version" -m "v$version"
+          git tag -a "v${new_version}" -m "v${new_version}"
           git push --follow-tags
       - name: Compute Platform Matrix
         id: matrix
@@ -130,6 +131,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Diagnostics
+        shell: bash
+        run: git log -10
       - name: Install Dependencies
         shell: bash
         run: npm ci
@@ -170,6 +174,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Diagnostics
+        shell: bash
+        run: git log -10
       - name: Install Dependencies
         shell: bash
         run: npm ci
@@ -210,6 +217,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Diagnostics
+        shell: bash
+        run: git log -10  
       - name: Install Dependencies
         shell: bash
         run: npm ci
@@ -248,6 +258,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Diagnostics
+        shell: bash
+        run: git log -10
       - name: Install Dependencies
         shell: bash
         run: npm ci
