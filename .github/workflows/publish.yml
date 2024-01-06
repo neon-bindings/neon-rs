@@ -99,6 +99,10 @@ jobs:
             echo -e 'Invalid GitHub workflow inputs: no custom version specified.'
             exit 1
           fi
+          # Diagnostics:
+          echo "=== BEGIN DIAGNOSTICS ==="
+          (cd pkgs && npm run help && npm run which)
+          echo "=== END DIAGNOSTICS ==="
           npm version $version -m "v$version"
           if [[ "$(git --porcelain --untracked-files=no)" != "" ]]; then
             git commit -a -m "v$version"
