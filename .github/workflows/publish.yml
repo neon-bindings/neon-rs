@@ -98,7 +98,7 @@ jobs:
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
           if [[ "$version" = "custom" ]]; then
-            echo -e 'Invalid GitHub workflow inputs: no custom version specified.'
+            echo -e 'Error: ⚠️ missing version number in workflow inputs'
             exit 1
           fi
           npm run release -- "$version"
@@ -106,7 +106,6 @@ jobs:
         id: matrix
         shell: bash
         run: |
-          echo '***** CI metadata for cargo-messages: *****'
           npx @neon-rs/cli ci github
           echo "macOS=$(npx @neon-rs/cli ci github | jq -rc .macOS)" >> "$GITHUB_OUTPUT"
           echo "Windows=$(npx @neon-rs/cli ci github | jq -rc .Windows)" >> "$GITHUB_OUTPUT"
@@ -141,14 +140,7 @@ jobs:
           git checkout ${{ needs.setup.outputs.branch }}
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
-          git branch -a
-          version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
-          npm version "$version" -m "[dryrun] v$version"
-          if [[ "$(git status --porcelain --untracked-files=no)" != "" ]]; then
-            git commit -a -m "[dryrun] v$version"
-          fi
-          git branch -a
-          git status
+          npm version '${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}' -m "[dryrun] v%s"
       - name: Build
         uses: neon-actions/build@v0.9
         with:
@@ -185,14 +177,7 @@ jobs:
           git checkout ${{ needs.setup.outputs.branch }}
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
-          git branch -a
-          version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
-          npm version "$version" -m "[dryrun] v$version"
-          if [[ "$(git status --porcelain --untracked-files=no)" != "" ]]; then
-            git commit -a -m "[dryrun] v$version"
-          fi
-          git branch -a
-          git status
+          npm version '${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}' -m "[dryrun] v%s"
       - name: Build
         uses: neon-actions/build@v0.9
         with:
@@ -229,14 +214,7 @@ jobs:
           git checkout ${{ needs.setup.outputs.branch }}
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
-          git branch -a
-          version='${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}'
-          npm version "$version" -m "[dryrun] v$version"
-          if [[ "$(git status --porcelain --untracked-files=no)" != "" ]]; then
-            git commit -a -m "[dryrun] v$version"
-          fi
-          git branch -a
-          git status
+          npm version '${{ (inputs.releaseType == 'custom' && inputs.custom) || inputs.releaseType }}' -m "[dryrun] v%s"
       - name: Build
         uses: neon-actions/build@v0.9
         with:
