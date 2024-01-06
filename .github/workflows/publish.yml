@@ -52,12 +52,10 @@ jobs:
       Windows: ${{ steps.matrix.outputs.Windows }}
       Linux: ${{ steps.matrix.outputs.Linux }}
     steps:
-      - name: Validate Inputs
+      - name: Validate Workflow Inputs
         if: ${{ inputs.releaseType == 'custom' && inputs.custom == '' }}
         shell: bash
-        run: |
-          echo '::error title=Inputs::Missing version number'
-          exit 1
+        run: echo '::error title=Inputs::Missing version number'
       - id: action
         name: Determine Action Type
         shell: bash
