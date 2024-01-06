@@ -67,6 +67,8 @@ jobs:
           fi
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.TAG_RELEASE_TOKEN }}
       - name: Install Node
         uses: actions/setup-node@v3
         with:
@@ -90,8 +92,6 @@ jobs:
       - name: Trigger Release (manual only)
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun != true }}
         shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.TAG_RELEASE_TOKEN }}
         run: |
           git checkout ${{ steps.branch.outputs.branch }}
           git config --global user.name ${{ env.ACTIONS_USER }}
