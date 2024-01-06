@@ -103,8 +103,8 @@ jobs:
           new_version=$(jq -r .version < package.json)
           if [[ "$(git status --porcelain --untracked-files=no)" != "" ]]; then
             git commit -a -m "v${new_version}"
+            git tag -a "v${new_version}" -m "v${new_version}" -f
           fi
-          git tag -a "v${new_version}" -m "v${new_version}"
           git push --follow-tags
       - name: Compute Platform Matrix
         id: matrix
