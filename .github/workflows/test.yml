@@ -31,11 +31,11 @@ jobs:
     steps:
       - name: Test For Secret
         env:
-          CHECKING_SECRET: ${{ secrets.DOES_NOT_EXIST }}
+          CHECKING_SECRET: ${{ secrets.NPM_TOKEN }}
         shell: bash
         run: |
           if [[ -z "$CHECKING_SECRET" ]]; then
-            echo "::error title=MissingToken::Secret DOES_NOT_EXIST not found"
+            echo "::error title=MissingToken::Secret NPM_TOKEN not found"
             exit 1
           fi
       - name: Checkout Code
