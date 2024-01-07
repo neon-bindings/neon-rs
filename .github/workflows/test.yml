@@ -1,5 +1,13 @@
 name: CI
 
+run-name: |
+  ${{
+    format('Test ({0}): {1}',
+      (github.event_name == 'pull_request' && 'PR') || 'push',
+      github.event.head_commit.message
+    )
+  }}
+
 env:
   NODE_VERSION: 18.x
   NEON_PLATFORMS_DIR: platforms
