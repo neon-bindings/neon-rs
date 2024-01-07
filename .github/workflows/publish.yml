@@ -100,7 +100,7 @@ jobs:
             echo "::error:: • a GitHub Personal Access Token;"
             echo "::error:: • with Read-Write access to this repo;"
             echo "::error:: • stored as a repo secret named TAG_TOKEN."
-            echo "::error::See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens for info about creating GitHub Personal Acecss Tokens."
+            echo "::error::See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens for info about creating GitHub Personal Access Tokens."
             echo "::error::See https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions for info about how to store GitHub repo secrets."
             exit 1
           fi
