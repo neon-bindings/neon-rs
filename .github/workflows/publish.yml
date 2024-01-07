@@ -70,7 +70,7 @@ jobs:
         name: Determine Action Type
         shell: bash
         run: |
-          case "${{ github.event_name }},${{ inputs.dryrun }}" of
+          case "${{ github.event_name }},${{ inputs.dryrun }}" in
             workflow_dispatch,true) type=dryrun ;;
             workflow_dispatch,) type=tag ;;
             *) type=publish ;;
