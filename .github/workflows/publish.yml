@@ -79,8 +79,8 @@ jobs:
           echo "type=$type" >> "$GITHUB_OUTPUT"
       - name: Validate Secrets
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKENX }}
-          TAG_TOKEN: ${{ secrets.TAG_TOKENX }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          TAG_TOKEN: ${{ secrets.TAG_TOKEN }}
         shell: bash
         run: |
           action=${{ steps.action.outputs.type }}
