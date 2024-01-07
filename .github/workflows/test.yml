@@ -30,11 +30,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test For Secret
-        if: ${{ !secrets.DOES_NOT_EXIST }}
+        env:
+          CHECKING_SECRET: ${{ secrets.DOES_NOT_EXIST }}
         shell: bash
         run: |
-          echo "::error title=MissingToken::Secret DOES_NOT_EXIST not found"
-          exit 1
+          if [[ -z "$CHECKING_SECRET" ]]; then
+            echo "::error title=MissingToken::Secret DOES_NOT_EXIST not found"
+            exit 1
+          fi
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
