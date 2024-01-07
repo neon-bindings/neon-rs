@@ -72,7 +72,7 @@ jobs:
         run: |
           case "${{ github.event_name }},${{ inputs.dryrun }}" in
             workflow_dispatch,true) type=dryrun ;;
-            workflow_dispatch,) type=tag ;;
+            workflow_dispatch,*) type=tag ;;
             *) type=publish ;;
           esac
           echo "type=$type"
