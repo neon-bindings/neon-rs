@@ -70,15 +70,11 @@ jobs:
         name: Determine Action Type
         shell: bash
         run: |
-          event_name="${{ github.event_name }}"
-          dryrun="${{ inputs.dryrun }}"
-          if [[ $event_name = workflow_dispatch ]] && [[ $dryrun = true ]]; then
-            type=dryrun
-          elif [[ $event_name = workflow_dispatch ]]; then
-            type=tag
-          else
-            type=publish
-          fi
+          case "${{ github.event_name }},${{ inputs.dryrun }}" of
+            workflow_dispatch,true) type=dryrun ;;
+            workflow_dispatch,) type=tag ;;
+            *) type=publish ;;
+          esac
           echo "type=$type"
           echo "type=$type" >> "$GITHUB_OUTPUT"
       - name: Checkout Code
