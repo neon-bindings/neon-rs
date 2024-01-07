@@ -29,6 +29,12 @@ jobs:
     name: Check Bundles
     runs-on: ubuntu-latest
     steps:
+      - name: Test For Secret
+        if: ${{ !secrets.DOES_NOT_EXIST }}
+        shell: bash
+        run: |
+          echo "::error title=MissingToken::Secret DOES_NOT_EXIST not found"
+          exit 1
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
