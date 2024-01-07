@@ -64,7 +64,7 @@ jobs:
         if: ${{ inputs.releaseType == 'custom' && inputs.custom == '' }}
         shell: bash
         run: |
-          echo '::error title=Inputs::Missing version number'
+          echo '::error::Missing version number'
           exit 1
       - id: action
         name: Determine Action Type
@@ -77,10 +77,31 @@ jobs:
           esac
           echo "type=$type"
           echo "type=$type" >> "$GITHUB_OUTPUT"
+      - name: Validate Secrets
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKENX }}
+          TAG_TOKEN: ${{ secrets.TAG_TOKENX }}
+        shell: bash
+        run: |
+          action=${{ steps.action.outputs.type }}
+          if [[ $action = publish ]] && [[ -z $NPM_TOKEN ]]; then
+            echo "::error::Secret NPM_TOKEN is not defined for this GitHub repo."
+            echo "::error::To publish to npm, this action requires an npm access token stored as a repo secret named NPM_TOKEN."
+            echo "::error::See https://docs.npmjs.com/about-access-tokens for info about creating npm tokens."
+            echo "::error::See https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions for info about how to store GitHub repo secrets."
+            exit 1
+          fi
+          if [[ $action = tag ]] && [[ -z $TAG_TOKEN ]]; then
+            echo "::error::Secret TAG_TOKEN is not defined for this GitHub repo."
+            echo "::error::To push a release tag, this action requires a GitHub Personal Access Token stored as a repo secret named TAG_TOKEN."
+            echo "::error::See https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens for info about creating GitHub Personal Acecss Tokens."
+            echo "::error::See https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions for info about how to store GitHub repo secrets."
+            exit 1
+          fi
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.TAG_RELEASE_TOKEN }}
+          token: ${{ secrets.TAG_TOKEN || github.token }}
       - name: Install Node
         uses: actions/setup-node@v3
         with:
