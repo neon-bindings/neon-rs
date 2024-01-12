@@ -29,6 +29,10 @@ jobs:
     name: Check Bundles
     runs-on: ubuntu-latest
     steps:
+      - name: Diagnostics
+        shell: bash
+        run: |
+          echo "${{toJSON(github.event)}}"
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
