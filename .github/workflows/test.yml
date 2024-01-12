@@ -4,7 +4,7 @@ run-name: |
   ${{
     format('Test ({0}): {1}',
       (github.event_name == 'pull_request' && 'PR') || 'push',
-      github.event.commits[0].message
+      github.event.pull_request.title
     )
   }}
 
