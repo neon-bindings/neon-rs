@@ -5,10 +5,11 @@
   "description": "Command-line tool to recursively run npm i or npm ci on a subfolder",
   "main": "./dist/index.js",
   "scripts": {
-    "bundle": "ncc build src/index.ts -o ../../pkgs/install",
-    "fix-newlines": "crlf --set=LF ../../pkgs/install/index.js",
+    "dist": "npm run bundle",
+    "bundle": "ncc build src/index.ts -o ../../dist/install",
+    "fix-newlines": "crlf --set=LF ../../dist/install/index.js",
     "postbundle": "npm run fix-newlines && npm run debug-bundle",
-    "debug-bundle": "(echo === BEGIN BUNDLE ===) && cat ../../pkgs/install/index.js && (echo === END BUNDLE ===)",
+    "debug-bundle": "(echo === BEGIN BUNDLE ===) && cat ../../dist/install/index.js && (echo === END BUNDLE ===)",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

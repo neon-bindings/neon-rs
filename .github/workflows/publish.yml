@@ -362,11 +362,11 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm run dist
-          git commit -a -m 'update cli to cargo-messages@latest'
+          git commit -a -m 'fresh cli build'
           git push
       - name: Publish (@neon-rs/cli)
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
-        working-directory: ./pkgs/cli
+        working-directory: ./dist/cli

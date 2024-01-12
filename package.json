@@ -5,11 +5,12 @@
   "description": "@neon-rs monorepo root",
   "workspaces": [],
   "scripts": {
-    "postinstall": "node pkgs/install src --workspaces --omit=optional && node pkgs/install pkgs --workspaces",
-    "update-src": "cd src && cd cli && npm run update-binaries && npm run update-cargo-messages && npm run bundle",
-    "version": "npm run version-src && npm run version-pkgs && git add .",
-    "version-src": "node pkgs/cli bump -v --dir src",
-    "version-pkgs": "node pkgs/cli bump -v --dir pkgs",
+    "postinstall": "node dist/install src --workspaces --omit=optional && node dist/install pkgs --workspaces && node dist/install dist --workspaces",
+    "dist": "cd src && npm run dist",
+    "version": "npm run version:src -- %s && npm run version:pkgs -- %s && npm run version:dist -- %s && git add .",
+    "version:src": "cd src && npm version",
+    "version:pkgs": "cd pkgs && npm version",
+    "version:dist": "cd dist && npm version",
     "remote-publish": "npm version -m 'v%s'",
     "postremote-publish": "git push --follow-tags",
     "dryrun": "gh workflow run publish.yml -f dryrun=true"

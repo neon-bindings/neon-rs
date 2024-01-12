@@ -1,6 +1,6 @@
 {
   "name": "src",
-  "description": "Workspace tree of source packages to be bundled with ncc",
+  "description": "Workspace tree of source packages requiring a `dist` step",
   "private": true,
   "version": "0.0.197",
   "workspaces": [
@@ -10,7 +10,10 @@
   "author": "Dave Herman <david.herman@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "version": "node ../pkgs/cli bump -v --workspaces"
+    "dist": "npm run dist:cli && npm run dist:install",
+    "dist:cli": "cd cli && npm run dist",
+    "dist:install": "cd install && npm run dist",
+    "version": "node ../dist/cli bump -v --workspaces"
   },
   "dependencies": {
     "cargo-messages": "0.0.168",
