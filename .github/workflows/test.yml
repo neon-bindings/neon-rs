@@ -3,7 +3,7 @@ name: Test
 run-name: |
   ${{
     format('Test ({0}): {1}',
-      (github.event_name == 'pull_request' && format('PR #{0}', github.event.number)) || 'push',
+      (github.event_name == 'pull_request' && format('PR {0}', github.event.number)) || 'push',
       github.event.pull_request.title
     )
   }}
