@@ -21,7 +21,7 @@ PROXY_EMAIL=ci@neon-bindings.com
 PROXY_SERVER=http://127.0.0.1:4873/
 
 npx npm-cli-adduser -u ${PROXY_USER} -p ${PROXY_PASSWORD} -e ${PROXY_EMAIL} -r ${PROXY_SERVER}
-(cd dist/load && npm publish --registry $PROXY_SERVER)
+(cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
 cd test/integration/sniff-bytes
