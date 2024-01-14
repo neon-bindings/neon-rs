@@ -73,6 +73,20 @@ jobs:
         run: |
           echo '::error::No custom version number provided'
           exit 1
+      # - id: dryrun
+      #   name: Dry-Run Event?
+      #   if: |
+      #     ${{
+      #       (github.event_name == 'workflow_dispatch' && inputs.dryrun == 'true') ||
+      #       (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun'))
+      #     }}
+      #   shell: bash
+      #   run: echo "dryrun=true" >> "$GITHUB_OUTPUT"
+      # - id: tag
+      #   name: Tag and Release Event?
+      #   if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun != 'true' }}
+      #   shell: bash
+      #   run: echo "tag=true" >> "$GITHUB_OUTPUT"
       - id: action
         name: Determine Action Type
         shell: bash
