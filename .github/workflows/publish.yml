@@ -7,6 +7,9 @@ run-name: |
       format('Trigger publish: {0}',
         (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType)
       ) ||
+    (github.event_name == 'issue_comment' &&
+     ((github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun') && 'Dry run') ||
+      'Issue comment (no action)')) ||
     format('Publish: {0}', github.event.head_commit.message)
   }}
 
@@ -116,6 +119,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.TAG_TOKEN || github.token }}
+          ref: ${{ github.event_name == 'issue_comment' && github.head_ref }}
+      - name: Diagnostics
+        shell: bash
+        run: |
+          echo 'ref: ${{ github.event_name == 'issue_comment' && github.head_ref }}'
+          git branch -a
       - name: Install Node
         uses: actions/setup-node@v3
         with:
