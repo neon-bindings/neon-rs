@@ -80,7 +80,7 @@ jobs:
           if [[ "${{ (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun')) }}" = "true" ]]; then
             echo PR comment includes directive '/dryrun'
             type=dryrun
-          elif [[ "${{ github.event_name == 'issue_comment' }}"]]; then
+          elif [[ "${{ github.event_name == 'issue_comment' }}" = "true" ]]; then
             echo Other issue comment (no action)
             type=skip
           else
