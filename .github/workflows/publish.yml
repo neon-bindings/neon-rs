@@ -204,6 +204,16 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
+          echo "***** Updated versions *****"
+          dist_dirs=(dist dist/cli dist/install)
+          pkgs_dirs=(pkgs pkgs/cargo-messages pkgs/load)
+          cmbin=pkgs/cargo-messages/platforms
+          bin_dirs=($cmbin/android-arm-eabi $cmbin/darwin-arm64 $cmbin/darwin-x64 $cmbin/linux-arm-gnueabihf $cmbin/linux-x64-gnu $cmbin/win32-arm64-msvc $cmbin/win32-x64-msvc)
+          src_dirs=(src src/cli src/install)
+          for d in . $dist_dirs $pkgs_dirs $bin_dirs $src_dirs ; do
+            echo "$d: $(jq -r .version $d/package.json)"
+          done
+          echo "****************************"
       - name: Build
         uses: neon-actions/build@v0.9
         with:
@@ -241,6 +251,16 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
+          echo "***** Updated versions *****"
+          dist_dirs=(dist dist/cli dist/install)
+          pkgs_dirs=(pkgs pkgs/cargo-messages pkgs/load)
+          cmbin=pkgs/cargo-messages/platforms
+          bin_dirs=($cmbin/android-arm-eabi $cmbin/darwin-arm64 $cmbin/darwin-x64 $cmbin/linux-arm-gnueabihf $cmbin/linux-x64-gnu $cmbin/win32-arm64-msvc $cmbin/win32-x64-msvc)
+          src_dirs=(src src/cli src/install)
+          for d in . $dist_dirs $pkgs_dirs $bin_dirs $src_dirs ; do
+            echo "$d: $(jq -r .version $d/package.json)"
+          done
+          echo "****************************"
       - name: Build
         uses: neon-actions/build@v0.9
         with:
@@ -278,6 +298,16 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
+          echo "***** Updated versions *****"
+          dist_dirs=(dist dist/cli dist/install)
+          pkgs_dirs=(pkgs pkgs/cargo-messages pkgs/load)
+          cmbin=pkgs/cargo-messages/platforms
+          bin_dirs=($cmbin/android-arm-eabi $cmbin/darwin-arm64 $cmbin/darwin-x64 $cmbin/linux-arm-gnueabihf $cmbin/linux-x64-gnu $cmbin/win32-arm64-msvc $cmbin/win32-x64-msvc)
+          src_dirs=(src src/cli src/install)
+          for d in . $dist_dirs $pkgs_dirs $bin_dirs $src_dirs ; do
+            echo "$d: $(jq -r .version $d/package.json)"
+          done
+          echo "****************************"
       - name: Build
         uses: neon-actions/build@v0.9
         with:
