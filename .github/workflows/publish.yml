@@ -115,11 +115,20 @@ jobs:
             echo "::error::See https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions for info about how to store GitHub repo secrets."
             exit 1
           fi
+      - name: PR Branch
+        if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request }}
+        id: pr-ref
+        shell: bash
+        run: echo "branch=$(gh pr view $PR_NO --repo $REPO --json headRefName --jq '.headRefName')"
+        env:
+          REPO: ${{ github.repository }}
+          PR_NO: ${{ github.event.issue.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.TAG_TOKEN || github.token }}
-          ref: ${{ github.event_name == 'issue_comment' && github.head_ref }}
+          ref: ${{ steps.pr-ref.outputs.branch || '' }}
       - name: Diagnostics
         shell: bash
         run: |
