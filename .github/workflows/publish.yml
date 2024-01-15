@@ -9,7 +9,7 @@ run-name: |
       ) ||
     (github.event_name == 'issue_comment' &&
      ((github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun') &&
-     format('Dry run (PR #{0})', github.event.number)) ||
+     format('Dry run (PR #{0})', github.event.issue.number)) ||
       'Issue comment (no action)')) ||
     format('Publish: {0}', github.event.head_commit.message)
   }}
