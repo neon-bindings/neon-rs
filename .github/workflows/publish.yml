@@ -81,7 +81,7 @@ jobs:
             echo PR comment includes directive '/dryrun'
             type=dryrun
           elif [[ "${{ github.event_name == 'issue_comment' }}" = "true" ]]; then
-            echo Other issue comment (no action)
+            echo 'Other issue comment (no action)'
             type=skip
           else
           case "${{ github.event_name }},${{ inputs.dryrun }}" in
