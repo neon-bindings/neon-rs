@@ -21,6 +21,8 @@ on:
   push:
     tags:
       - v*
+  issue_comment:
+    types: [created]
   workflow_dispatch:
     inputs:
       dryrun:
@@ -51,6 +53,7 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
+    if: ${{ !(github.event_name == 'issue_comment' && !github.event.issue.pull_request) }}
     permissions:
       contents: write
     outputs:
@@ -70,11 +73,16 @@ jobs:
         name: Determine Action Type
         shell: bash
         run: |
+          if [[ "${{ (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun')) }}" = "true" ]]; then
+            echo PR comment includes directive '/dryrun'
+            type=dryrun
+          else
           case "${{ github.event_name }},${{ inputs.dryrun }}" in
             workflow_dispatch,true) type=dryrun ;;
             workflow_dispatch,*) type=tag ;;
             *) type=publish ;;
           esac
+          fi
           echo "type=$type"
           echo "type=$type" >> "$GITHUB_OUTPUT"
       - name: Validate Secrets
