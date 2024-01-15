@@ -123,7 +123,11 @@ jobs:
       - name: Diagnostics
         shell: bash
         run: |
-          echo '${{ toJSON(github.event_name == 'issue_comment' && github.event.issue.pull_request) }}'
+          echo "***** github.event:"
+          echo '${{ toJSON(github.event) }}'
+          echo "***** github.repository:"
+          echo '${{ toJSON(github.repository) }}'
+          echo "***** github.head_ref:"
           echo 'ref: ${{ github.event_name == 'issue_comment' && github.head_ref }}'
           git branch -a
       - name: Install Node
