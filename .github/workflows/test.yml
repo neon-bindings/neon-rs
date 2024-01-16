@@ -3,8 +3,8 @@ name: Test
 run-name: |
   ${{
     format('Test ({0}): {1}',
-      (github.event_name == 'pull_request' && 'PR') || 'push',
-      github.event.head_commit.message
+      (github.event_name == 'pull_request' && format('PR #{0}', github.event.number)) || 'push',
+      github.event.pull_request.title
     )
   }}
 
@@ -29,6 +29,10 @@ jobs:
     name: Check Bundles
     runs-on: ubuntu-latest
     steps:
+      - name: Diagnostics
+        shell: bash
+        run: |
+          echo '${{toJSON(github.event)}}'
       - name: Checkout Code
         uses: actions/checkout@v3
         with:

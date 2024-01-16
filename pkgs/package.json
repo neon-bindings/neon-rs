@@ -2,14 +2,12 @@
   "name": "pkgs",
   "private": true,
   "version": "0.0.197",
-  "description": "workspace root for all publishable @neon-rs and related packages",
+  "description": "Workspace tree for @neon-rs and related packages not requiring a `dist` step",
   "workspaces": [
-    "install",
     "load",
-    "cli",
     "cargo-messages"
   ],
   "scripts": {
-    "version": "node ./cli bump -v --workspaces"
+    "version": "node ../dist/cli bump -v --workspaces"
   }
 }

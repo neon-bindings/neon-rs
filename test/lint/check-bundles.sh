@@ -8,7 +8,7 @@ echo "Checking that all bundled tools are up to date..."
 dirty_workspaces=()
 
 for input_workspace in `find src -type d -mindepth 1 -maxdepth 1 -not -name node_modules` ; do
-  output_workspace=$(echo $input_workspace | sed -e 's/^src/pkgs/')
+  output_workspace=$(echo $input_workspace | sed -e 's/^src/dist/')
   input_mtime=$(git log -1 --format=%ct $input_workspace)
   output_mtime=$(git log -1 --format=%ct $output_workspace)
   if [[ $input_mtime -gt $output_mtime ]] ; then
