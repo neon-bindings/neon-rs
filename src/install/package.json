@@ -8,8 +8,9 @@
     "dist": "npm run bundle",
     "bundle": "ncc build src/index.ts -o ../../dist/install",
     "fix-newlines": "crlf --set=LF ../../dist/install/index.js",
-    "postbundle": "npm run fix-newlines && npm run debug-bundle",
+    "postbundle": "npm run fix-newlines && npm run debug-bundle && npm run bundle-manifest",
     "debug-bundle": "(echo === BEGIN BUNDLE ===) && cat ../../dist/install/index.js && (echo === END BUNDLE ===)",
+    "bundle-manifest": "cat package.json | jq -f bundle.jq > ../../dist/install/package.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
