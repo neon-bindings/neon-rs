@@ -219,7 +219,9 @@ jobs:
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
           npm run dist
-          ./test/lint/check-versions.sh
+      - name: Check Versions
+        shell: bash
+        run: ./test/lint/check-versions.sh
       - name: Build
         uses: neon-actions/build@v0.9
         with:
@@ -258,7 +260,9 @@ jobs:
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
           npm run dist
-          ./test/lint/check-versions.sh
+      - name: Check Versions
+        shell: bash
+        run: ./test/lint/check-versions.sh
       - name: Build
         uses: neon-actions/build@v0.9
         with:
@@ -297,7 +301,9 @@ jobs:
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
           npm run dist
-          ./test/lint/check-versions.sh
+      - name: Check Versions
+        shell: bash
+        run: ./test/lint/check-versions.sh
       - name: Build
         uses: neon-actions/build@v0.9
         with:
