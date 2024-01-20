@@ -4,7 +4,6 @@ import commandLineCommands from 'command-line-commands';
 import { printErrorWithUsage, printError, printMainUsage } from './print.js';
 import { Command, CommandName, CommandClass, asCommandName, commandFor } from './command.js';
 
-/*
 import { createRequire } from 'node:module';
 
 const absoluteRequire = createRequire(import.meta.url);
@@ -13,7 +12,6 @@ const absoluteRequire = createRequire(import.meta.url);
 global['require'] = function(spec: string) {
   return absoluteRequire(spec);
 } as any;
-*/
 
 class Cli {
   parse(): Command {

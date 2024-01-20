@@ -47669,19 +47669,17 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
 /* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4528);
+/* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
+/* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
-/*
-import { createRequire } from 'node:module';
 
-const absoluteRequire = createRequire(import.meta.url);
-
+const absoluteRequire = (0,node_module__WEBPACK_IMPORTED_MODULE_3__.createRequire)(import.meta.url);
 // FIXME: do we really know this is necessary? if so, document it
-global['require'] = function(spec: string) {
-  return absoluteRequire(spec);
-} as any;
-*/
+global['require'] = function (spec) {
+    return absoluteRequire(spec);
+};
 class Cli {
     parse() {
         try {
@@ -50871,6 +50869,13 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("events");
 /***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("fs");
+
+/***/ }),
+
+/***/ 2033:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:module");
 
 /***/ }),
 
