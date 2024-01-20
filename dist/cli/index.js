@@ -47676,7 +47676,12 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 
 
 const absoluteRequire = (0,node_module__WEBPACK_IMPORTED_MODULE_3__.createRequire)(import.meta.url);
-// FIXME: do we really know this is necessary? if so, document it
+// When compiling with ncc, the default global `require` function does
+// not know how to find the binary `@cargo-messages/*` modules, but the
+// compiled result of `createRequire` does. So this replaces the global
+// `require` with that one. This way when the `cargo-messages` loader
+// module attempts to load the right binary module for the device, the
+// call to `require` succeeds.
 global['require'] = function (spec) {
     return absoluteRequire(spec);
 };

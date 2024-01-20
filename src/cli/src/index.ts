@@ -8,7 +8,12 @@ import { createRequire } from 'node:module';
 
 const absoluteRequire = createRequire(import.meta.url);
 
-// FIXME: do we really know this is necessary? if so, document it
+// When compiling with ncc, the default global `require` function does
+// not know how to find the binary `@cargo-messages/*` modules, but the
+// compiled result of `createRequire` does. So this replaces the global
+// `require` with that one. This way when the `cargo-messages` loader
+// module attempts to load the right binary module for the device, the
+// call to `require` succeeds.
 global['require'] = function(spec: string) {
   return absoluteRequire(spec);
 } as any;

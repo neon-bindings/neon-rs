@@ -19,9 +19,11 @@ done
 
 if [[ ${#dirty_workspaces[@]} -gt 0 ]] ; then
   echo
-  echo '💡 Re-run `npm run bundle` on the following workspaces before committing:'
+  echo '💡 Re-run `npm run dist` on the following workspaces before committing:'
   for workspace in ${dirty_workspaces[*]} ; do
     echo "  • $workspace"
   done
+  echo
+  echo 'Or simply run `npm run dist` in the root directory.'
   exit 1
 fi
