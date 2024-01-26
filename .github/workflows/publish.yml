@@ -84,7 +84,6 @@ jobs:
             workflow_dispatch,*) type=tag ;;
             *) type=publish ;;
           esac
-          fi
           echo "type=$type"
           echo "type=$type" >> "$GITHUB_OUTPUT"
       - name: Validate Secrets
