@@ -1,0 +1,180 @@
+name: Build
+
+env:
+  NODE_VERSION: 18.x
+  ACTIONS_USER: github-actions
+  ACTIONS_EMAIL: github-actions@github.com
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        description: 'Branch to check out'
+        required: false
+        type: string
+        default: ${{ github.event.repository.default_branch }}
+      version:
+        description: 'Version bump, or empty string for no version bump'
+        required: true
+        type: string
+      github-release:
+        description: 'Publish GitHub release?'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      macOS: ${{ steps.matrix.outputs.macOS }}
+      Windows: ${{ steps.matrix.outputs.Windows }}
+      Linux: ${{ steps.matrix.outputs.Linux }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.branch }}
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install Dependencies
+        shell: bash
+        run: npm ci
+      - name: Install cargo-messages
+        shell: bash
+        run: npm ci
+        working-directory: ./pkgs/cargo-messages
+      - name: Compute Platform Matrix
+        id: matrix
+        shell: bash
+        run: |
+          npx @neon-rs/cli ci github
+          echo "macOS=$(npx @neon-rs/cli ci github | jq -rc .macOS)" >> "$GITHUB_OUTPUT"
+          echo "Windows=$(npx @neon-rs/cli ci github | jq -rc .Windows)" >> "$GITHUB_OUTPUT"
+          echo "Linux=$(npx @neon-rs/cli ci github | jq -rc .Linux)" >> "$GITHUB_OUTPUT"
+        working-directory: ./pkgs/cargo-messages
+
+  macos-builds:
+    name: Builds (macOS)
+    needs: [setup]
+    strategy:
+      matrix:
+        platform: ${{ fromJSON(needs.setup.outputs.macOS) }}
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.branch }}
+      - name: Diagnostics
+        shell: bash
+        run: git log -10
+      - name: Install Dependencies
+        shell: bash
+        run: npm ci
+      - name: Bump Version
+        if: ${{ inputs.version }}
+        shell: bash
+        run: |
+          git config --global user.name ${{ env.ACTIONS_USER }}
+          git config --global user.email ${{ env.ACTIONS_EMAIL }}
+          npm version ${{ inputs.version }} -m "v%s"
+          npm run dist
+      - name: Check Versions
+        shell: bash
+        run: ./test/lint/check-versions.sh
+      - name: Build
+        uses: neon-actions/build@v0.9
+        with:
+          working-directory: ./pkgs/cargo-messages
+          node-version: ${{ env.NODE_VERSION }}
+          platform: ${{ matrix.platform }}
+          github-release: ${{ inputs.github-release }}
+
+  windows-builds:
+    name: Builds (Windows)
+    needs: [setup]
+    strategy:
+      matrix:
+        platform: ${{ fromJSON(needs.setup.outputs.Windows) }}
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.branch }}
+      - name: Diagnostics
+        shell: bash
+        run: git log -10
+      - name: Install Dependencies
+        shell: bash
+        run: npm ci
+      - name: Bump Version
+        if: ${{ inputs.version }}
+        shell: bash
+        run: |
+          git config --global user.name ${{ env.ACTIONS_USER }}
+          git config --global user.email ${{ env.ACTIONS_EMAIL }}
+          npm version ${{ inputs.version }} -m "v%s"
+          npm run dist
+      - name: Check Versions
+        shell: bash
+        run: ./test/lint/check-versions.sh
+      - name: Build
+        uses: neon-actions/build@v0.9
+        with:
+          working-directory: ./pkgs/cargo-messages
+          node-version: ${{ env.NODE_VERSION }}
+          platform: ${{ matrix.platform }}
+          github-release: ${{ inputs.github-release }}
+
+  other-builds:
+    name: Builds (other platforms)
+    needs: [setup]
+    strategy:
+      matrix:
+        platform: ${{ fromJSON(needs.setup.outputs.Linux) }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.branch }}
+      - name: Diagnostics
+        shell: bash
+        run: git log -10
+      - name: Install Dependencies
+        shell: bash
+        run: npm ci
+      - name: Bump Version
+        if: ${{ inputs.version }}
+        shell: bash
+        run: |
+          git config --global user.name ${{ env.ACTIONS_USER }}
+          git config --global user.email ${{ env.ACTIONS_EMAIL }}
+          npm version ${{ inputs.version }} -m "v%s"
+          npm run dist
+      - name: Check Versions
+        shell: bash
+        run: ./test/lint/check-versions.sh
+      - name: Build
+        uses: neon-actions/build@v0.9
+        with:
+          working-directory: ./pkgs/cargo-messages
+          node-version: ${{ env.NODE_VERSION }}
+          platform: ${{ matrix.platform }}
+          github-release: ${{ inputs.github-release }}
+

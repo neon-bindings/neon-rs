@@ -7,16 +7,11 @@ run-name: |
       format('Trigger publish: {0}',
         (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType)
       ) ||
-    (github.event_name == 'issue_comment' &&
-     ((github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun') &&
-     format('Dry run (PR #{0})', github.event.issue.number)) ||
-      'Issue comment (no action)')) ||
     format('Publish: {0}', github.event.head_commit.message)
   }}
 
 env:
   NODE_VERSION: 18.x
-  NPM_REGISTRY: 'https://registry.npmjs.org'
   NEON_PLATFORMS_DIR: platforms
   ACTIONS_USER: github-actions
   ACTIONS_EMAIL: github-actions@github.com
@@ -25,8 +20,6 @@ on:
   push:
     tags:
       - v*
-  issue_comment:
-    types: [created]
   workflow_dispatch:
     inputs:
       dryrun:
@@ -57,15 +50,10 @@ jobs:
   setup:
     name: Setup
     runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'issue_comment' || (github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun')) }}
     permissions:
       contents: write
     outputs:
       action: ${{ steps.action.outputs.type }}
-      branch: ${{ steps.pr-ref.outputs.branch || github.event.repository.default_branch }}
-      macOS: ${{ steps.matrix.outputs.macOS }}
-      Windows: ${{ steps.matrix.outputs.Windows }}
-      Linux: ${{ steps.matrix.outputs.Linux }}
     steps:
       - name: Validate Workflow Inputs
         if: ${{ inputs.bumpType == 'custom' && inputs.custom == '' }}
@@ -91,13 +79,6 @@ jobs:
         name: Determine Action Type
         shell: bash
         run: |
-          if [[ "${{ (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun')) }}" = "true" ]]; then
-            echo PR comment includes directive '/dryrun'
-            type=dryrun
-          elif [[ "${{ github.event_name == 'issue_comment' }}" = "true" ]]; then
-            echo 'Other issue comment (no action)'
-            type=skip
-          else
           case "${{ github.event_name }},${{ inputs.dryrun }}" in
             workflow_dispatch,true) type=dryrun ;;
             workflow_dispatch,*) type=tag ;;
@@ -133,45 +114,10 @@ jobs:
             echo "::error::See https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions for info about how to store GitHub repo secrets."
             exit 1
           fi
-      - name: PR Branch
-        if: ${{ github.event_name == 'issue_comment' && github.event.issue.pull_request }}
-        id: pr-ref
-        shell: bash
-        run: echo "branch=$(gh pr view $PR_NO --repo $REPO --json headRefName --jq '.headRefName')" >> "$GITHUB_OUTPUT"
-        env:
-          REPO: ${{ github.repository }}
-          PR_NO: ${{ github.event.issue.number }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.TAG_TOKEN || github.token }}
-          ref: ${{ steps.pr-ref.outputs.branch || github.event.repository.default_branch }}
-      - name: Diagnostics
-        shell: bash
-        run: |
-          echo "***** github.event:"
-          echo '${{ toJSON(github.event) }}'
-          echo "***** github.repository:"
-          echo '${{ toJSON(github.repository) }}'
-          echo "***** github.head_ref:"
-          echo 'ref: ${{ github.event_name == 'issue_comment' && github.head_ref }}'
-          echo "***** github.event.repository.default_branch:"
-          echo '${{ github.event.repository.default_branch }}'
-          git branch -a
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
-          cache: npm
-      - name: Install Dependencies
-        shell: bash
-        run: npm ci
-      - name: Install cargo-messages
-        shell: bash
-        run: npm ci
-        working-directory: ./pkgs/cargo-messages
       - name: Remote Publish (manual only)
         if: ${{ steps.action.outputs.type == 'tag' }}
         shell: bash
@@ -179,144 +125,21 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm run remote-publish -- '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
-      - name: Compute Platform Matrix
-        id: matrix
-        shell: bash
-        run: |
-          npx @neon-rs/cli ci github
-          echo "macOS=$(npx @neon-rs/cli ci github | jq -rc .macOS)" >> "$GITHUB_OUTPUT"
-          echo "Windows=$(npx @neon-rs/cli ci github | jq -rc .Windows)" >> "$GITHUB_OUTPUT"
-          echo "Linux=$(npx @neon-rs/cli ci github | jq -rc .Linux)" >> "$GITHUB_OUTPUT"
-        working-directory: ./pkgs/cargo-messages
 
-  macos-builds:
-    name: Builds (macOS)
+  build:
+    name: Build
     if: ${{ needs.setup.outputs.action != 'tag' }}
     needs: [setup]
-    strategy:
-      matrix:
-        platform: ${{ fromJSON(needs.setup.outputs.macOS) }}
-    runs-on: macos-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ needs.setup.outputs.branch }}
-      - name: Diagnostics
-        shell: bash
-        run: git log -10
-      - name: Install Dependencies
-        shell: bash
-        run: npm ci
-      - name: Bump Version (dry-run only)
-        if: ${{ needs.setup.outputs.action == 'dryrun' }}
-        shell: bash
-        run: |
-          git config --global user.name ${{ env.ACTIONS_USER }}
-          git config --global user.email ${{ env.ACTIONS_EMAIL }}
-          npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
-          npm run dist
-      - name: Check Versions
-        shell: bash
-        run: ./test/lint/check-versions.sh
-      - name: Build
-        uses: neon-actions/build@v0.9
-        with:
-          working-directory: ./pkgs/cargo-messages
-          node-version: ${{ env.NODE_VERSION }}
-          platform: ${{ matrix.platform }}
-          github-release: ${{ needs.setup.outputs.action == 'publish' }}
-
-  windows-builds:
-    name: Builds (Windows)
-    if: ${{ needs.setup.outputs.action != 'tag' }}
-    needs: [setup]
-    strategy:
-      matrix:
-        platform: ${{ fromJSON(needs.setup.outputs.Windows) }}
-    runs-on: windows-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ needs.setup.outputs.branch }}
-      - name: Diagnostics
-        shell: bash
-        run: git log -10
-      - name: Install Dependencies
-        shell: bash
-        run: npm ci
-      - name: Bump Version (dry-run only)
-        if: ${{ needs.setup.outputs.action == 'dryrun' }}
-        shell: bash
-        run: |
-          git config --global user.name ${{ env.ACTIONS_USER }}
-          git config --global user.email ${{ env.ACTIONS_EMAIL }}
-          npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
-          npm run dist
-      - name: Check Versions
-        shell: bash
-        run: ./test/lint/check-versions.sh
-      - name: Build
-        uses: neon-actions/build@v0.9
-        with:
-          working-directory: ./pkgs/cargo-messages
-          platform: ${{ matrix.platform }}
-          node-version: ${{ env.NODE_VERSION }}
-          github-release: ${{ needs.setup.outputs.action == 'publish' }}
-
-  other-builds:
-    name: Builds (other platforms)
-    if: ${{ needs.setup.outputs.action != 'tag' }}
-    needs: [setup]
-    strategy:
-      matrix:
-        platform: ${{ fromJSON(needs.setup.outputs.Linux) }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          ref: ${{ needs.setup.outputs.branch }}
-      - name: Diagnostics
-        shell: bash
-        run: git log -10  
-      - name: Install Dependencies
-        shell: bash
-        run: npm ci
-      - name: Bump Version (dry-run only)
-        if: ${{ needs.setup.outputs.action == 'dryrun' }}
-        shell: bash
-        run: |
-          git config --global user.name ${{ env.ACTIONS_USER }}
-          git config --global user.email ${{ env.ACTIONS_EMAIL }}
-          npm version ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }} -m "[dryrun] v%s"
-          npm run dist
-      - name: Check Versions
-        shell: bash
-        run: ./test/lint/check-versions.sh
-      - name: Build
-        uses: neon-actions/build@v0.9
-        with:
-          working-directory: ./pkgs/cargo-messages
-          node-version: ${{ env.NODE_VERSION }}
-          use-cross: true
-          platform: ${{ matrix.platform }}
-          github-release: ${{ needs.setup.outputs.action == 'publish' }}
+    uses: ./.github/workflows/build.yml
+    with:
+      branch: ${{ github.event.repository.default_branch }}
+      version: ${{ github.event_name == 'workflow_dispatch' && ((inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType) }}
+      github-release: ${{ needs.setup.outputs.action == 'publish' }}
 
   publish:
     name: Publish
     if: ${{ needs.setup.outputs.action == 'publish' }}
-    needs: [setup, macos-builds, windows-builds, other-builds]
+    needs: [setup, build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -325,7 +148,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ needs.setup.outputs.branch }}
       - name: Diagnostics
         shell: bash
         run: git log -10
@@ -339,7 +161,6 @@ jobs:
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
           fetch-binaries: "*.tgz"
           github-release: true
       - name: Build (@neon-rs/load)
