@@ -59,7 +59,7 @@ jobs:
         working-directory: ./pkgs/cargo-messages
 
   macos-builds:
-    name: Builds (macOS)
+    name: macOS
     needs: [setup]
     strategy:
       matrix:
@@ -99,7 +99,7 @@ jobs:
           github-release: ${{ inputs.github-release }}
 
   windows-builds:
-    name: Builds (Windows)
+    name: Windows
     needs: [setup]
     strategy:
       matrix:
@@ -139,7 +139,7 @@ jobs:
           github-release: ${{ inputs.github-release }}
 
   other-builds:
-    name: Builds (other platforms)
+    name: Other Platforms
     needs: [setup]
     strategy:
       matrix:
