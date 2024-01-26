@@ -24,8 +24,8 @@ on:
         default: false
 
 jobs:
-  setup:
-    name: Setup
+  platforms:
+    name: Platforms
     runs-on: ubuntu-latest
     outputs:
       macOS: ${{ steps.matrix.outputs.macOS }}
@@ -60,10 +60,10 @@ jobs:
 
   macos-builds:
     name: macOS
-    needs: [setup]
+    needs: [platforms]
     strategy:
       matrix:
-        platform: ${{ fromJSON(needs.setup.outputs.macOS) }}
+        platform: ${{ fromJSON(needs.platforms.outputs.macOS) }}
     runs-on: macos-latest
     permissions:
       contents: write
@@ -100,10 +100,10 @@ jobs:
 
   windows-builds:
     name: Windows
-    needs: [setup]
+    needs: [platforms]
     strategy:
       matrix:
-        platform: ${{ fromJSON(needs.setup.outputs.Windows) }}
+        platform: ${{ fromJSON(needs.platforms.outputs.Windows) }}
     runs-on: windows-latest
     permissions:
       contents: write
@@ -140,10 +140,10 @@ jobs:
 
   other-builds:
     name: Other Platforms
-    needs: [setup]
+    needs: [platforms]
     strategy:
       matrix:
-        platform: ${{ fromJSON(needs.setup.outputs.Linux) }}
+        platform: ${{ fromJSON(needs.platforms.outputs.Linux) }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
