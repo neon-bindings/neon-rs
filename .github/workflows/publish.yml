@@ -130,6 +130,8 @@ jobs:
     name: Build
     if: ${{ needs.setup.outputs.action != 'tag' }}
     needs: [setup]
+    permissions:
+      contents: write
     uses: ./.github/workflows/build.yml
     with:
       branch: ${{ github.event.repository.default_branch }}
