@@ -1,4 +1,4 @@
-name: Issue Comment
+name: Comments
 
 run-name: |
   ${{
