@@ -116,45 +116,52 @@ jobs:
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm run remote-publish -- '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
 
-  # diagnostics:
-  #   name: Diagnostics
-  #   needs: [setup]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Diagnostics
-  #       shell: bash
-  #       run: |
-  #         echo dryrun: '${{ needs.setup.outputs.dryrun }}'
-  #         echo tag: '${{ needs.setup.outputs.tag }}'
-  #         echo publish: '${{ needs.setup.outputs.publish }}'
-  #     - name: Dry run
-  #       if: ${{ needs.setup.outputs.dryrun }}
-  #       shell: bash
-  #       run: echo dry run
-  #     - name: Not dry run
-  #       if: ${{ !needs.setup.outputs.dryrun }}
-  #       shell: bash
-  #       run: echo not dry run
-  #     - name: Tag
-  #       if: ${{ needs.setup.outputs.tag }}
-  #       shell: bash
-  #       run: echo tag
-  #     - name: Not tag
-  #       if: ${{ !needs.setup.outputs.tag }}
-  #       shell: bash
-  #       run: echo not tag
-  #     - name: Publish
-  #       if: ${{ needs.setup.outputs.publish }}
-  #       shell: bash
-  #       run: echo publish
-  #     - name: Not publish
-  #       if: ${{ !needs.setup.outputs.publish }}
-  #       shell: bash
-  #       run: echo not publish
-  #     - name: Inputs
-  #       shell: bash
-  #       run: |
-  #         echo '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
+  diagnostics:
+    name: Diagnostics
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Diagnostics
+        shell: bash
+        run: |
+          echo dryrun: '${{ needs.setup.outputs.dryrun }}'
+          echo tag: '${{ needs.setup.outputs.tag }}'
+          echo publish: '${{ needs.setup.outputs.publish }}'
+      - name: Dry run
+        if: ${{ needs.setup.outputs.dryrun }}
+        shell: bash
+        run: echo dry run
+      - name: Not dry run
+        if: ${{ !needs.setup.outputs.dryrun }}
+        shell: bash
+        run: echo not dry run
+      - name: Tag
+        if: ${{ needs.setup.outputs.tag }}
+        shell: bash
+        run: echo tag
+      - name: Not tag
+        if: ${{ !needs.setup.outputs.tag }}
+        shell: bash
+        run: echo not tag
+      - name: Publish
+        if: ${{ needs.setup.outputs.publish }}
+        shell: bash
+        run: echo publish
+      - name: Not publish
+        if: ${{ !needs.setup.outputs.publish }}
+        shell: bash
+        run: echo not publish
+      - name: Inputs
+        shell: bash
+        run: |
+          echo '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
+      - name: Set Environment Variables
+        uses: ./.github/actions/setenv
+      - name: Show Env Variables
+        shell: bash
+        run: |
+          echo "$MICKEY_MOUSE_PANCAKES"
+          echo '${{ env.MICKEY_MOUSE_PANCAKES }}'
 
   build:
     name: Build
