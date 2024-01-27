@@ -175,6 +175,7 @@ jobs:
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
+          use-cross: true
           platform: ${{ matrix.platform }}
           github-release: ${{ inputs.github-release }}
 
