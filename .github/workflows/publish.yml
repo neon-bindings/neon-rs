@@ -158,7 +158,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Set Environment Variables
-        uses: ./.github/actions/setenv
+        uses: falti/dotenv-action@v1
       - name: Show Env Variables
         shell: bash
         run: |
