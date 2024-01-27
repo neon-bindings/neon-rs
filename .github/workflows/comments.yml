@@ -1,12 +1,10 @@
 name: Comments
 
 run-name: |
-  ${{
-     (github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/dryrun') &&
-      format('Dry run (PR #{0})', github.event.issue.number)) ||
-     'Issue comment (no action)'
-  }}
+  ${{ (github.event.issue.pull_request
+       && contains(github.event.comment.body, '/dryrun')
+       && format('Dry run (PR #{0})', github.event.issue.number))
+   || 'Issue comment (no action)' }}
 
 on:
   issue_comment:

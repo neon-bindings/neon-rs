@@ -9,7 +9,7 @@ on:
         type: string
         default: ${{ github.event.repository.default_branch }}
       version:
-        description: 'Version bump, or empty string for no version bump'
+        description: 'Version update, or empty string for no version update'
         required: true
         type: string
       github-release:

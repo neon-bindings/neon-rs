@@ -1,19 +1,21 @@
 name: Publish
 
 run-name: |
-  ${{
-    (github.event_name == 'workflow_dispatch' && inputs.dryrun && 'Dry run') ||
-    (github.event_name == 'workflow_dispatch' &&
-      format('Trigger publish: {0}',
-        (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType)
-      ) ||
-    format('Publish: {0}', github.event.head_commit.message)
-  }}
+  ${{ (github.event_name == 'workflow_dispatch' && inputs.dryrun
+       && 'Dry run')
+   || (github.event_name == 'workflow_dispatch'
+       && format('Tag release: {0}', (inputs.version == 'custom' && inputs.custom) || inputs.version))
+   || format('Publish: {0}', github.event.head_commit.message) }}
 
 on:
+  # Event: A maintainer has pushed a new release tag for publication.
   push:
     tags:
       - v*
+
+  # Event: A maintainer has used the GitHub Actions UI to initiate
+  #        either tagging a new release for publication or doing a
+  #        dry run.
   workflow_dispatch:
     inputs:
       dryrun:
@@ -21,8 +23,8 @@ on:
         required: false
         type: boolean
         default: true
-      bumpType:
-        description: 'Version bump type (or custom to specify)'
+      version:
+        description: 'Version component to update (or "custom" to provide exact version)'
         required: true
         default: 'patch'
         type: choice
@@ -52,7 +54,7 @@ jobs:
       publish: ${{ steps.publish.outputs.publish }}
     steps:
       - name: Validate Workflow Inputs
-        if: ${{ inputs.bumpType == 'custom' && inputs.custom == '' }}
+        if: ${{ inputs.version == 'custom' && inputs.custom == '' }}
         shell: bash
         run: |
           echo '::error::No custom version number provided'
@@ -108,13 +110,13 @@ jobs:
           path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
-      - name: Remote Publish (manual only)
+      - name: Tag Release (manual only)
         if: ${{ steps.tag.outputs.tag }}
         shell: bash
         run: |
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
-          npm run remote-publish -- '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
+          npm run tag -- '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
 
   diagnostics:
     name: Diagnostics
@@ -154,7 +156,7 @@ jobs:
       - name: Inputs
         shell: bash
         run: |
-          echo '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
+          echo '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Set Environment Variables
@@ -178,7 +180,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       branch: ${{ github.event.repository.default_branch }}
-      version: ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}
+      version: ${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}
       github-release: ${{ !!needs.setup.outputs.publish }}
 
   publish:
