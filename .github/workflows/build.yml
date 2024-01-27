@@ -71,6 +71,7 @@ jobs:
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
+          path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
       - name: Diagnostics
@@ -116,6 +117,7 @@ jobs:
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
+          path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
       - name: Diagnostics
@@ -161,6 +163,7 @@ jobs:
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
+          path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
       - name: Diagnostics

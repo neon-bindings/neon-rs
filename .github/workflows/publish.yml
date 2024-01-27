@@ -105,6 +105,7 @@ jobs:
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
+          path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
       - name: Remote Publish (manual only)
@@ -159,6 +160,7 @@ jobs:
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
+          path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
       - name: Show Env Variables
@@ -194,6 +196,7 @@ jobs:
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
+          path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
       - name: Diagnostics
