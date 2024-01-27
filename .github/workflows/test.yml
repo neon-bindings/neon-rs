@@ -6,10 +6,6 @@ run-name: |
     format('Test: {0}', github.event.head_commit.message)
   }}
 
-env:
-  NODE_VERSION: 18.x
-  NEON_PLATFORMS_DIR: platforms
-
 on:
   push:
     # Prevent duplicate runs of this workflow on our own internal PRs.
@@ -48,6 +44,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Set Environment Variables
+        uses: falti/dotenv-action@v1
+        with:
+          export-variables: true
+          keys-case: bypass
       - name: Install Dependencies
         shell: bash
         run: npm ci --verbose

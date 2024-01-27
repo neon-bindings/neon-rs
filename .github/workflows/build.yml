@@ -1,10 +1,5 @@
 name: Build
 
-env:
-  NODE_VERSION: 18.x
-  ACTIONS_USER: github-actions
-  ACTIONS_EMAIL: github-actions@github.com
-
 on:
   workflow_call:
     inputs:
@@ -73,6 +68,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ inputs.branch }}
+      - name: Set Environment Variables
+        uses: falti/dotenv-action@v1
+        with:
+          export-variables: true
+          keys-case: bypass
       - name: Diagnostics
         shell: bash
         run: git log -10
@@ -83,8 +83,8 @@ jobs:
         if: ${{ inputs.version }}
         shell: bash
         run: |
-          git config --global user.name ${{ env.ACTIONS_USER }}
-          git config --global user.email ${{ env.ACTIONS_EMAIL }}
+          git config --global user.name $ACTIONS_USER
+          git config --global user.email $ACTIONS_EMAIL
           npm version ${{ inputs.version }} -m "v%s"
           npm run dist
       - name: Check Versions
@@ -113,6 +113,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ inputs.branch }}
+      - name: Set Environment Variables
+        uses: falti/dotenv-action@v1
+        with:
+          export-variables: true
+          keys-case: bypass
       - name: Diagnostics
         shell: bash
         run: git log -10
@@ -123,8 +128,8 @@ jobs:
         if: ${{ inputs.version }}
         shell: bash
         run: |
-          git config --global user.name ${{ env.ACTIONS_USER }}
-          git config --global user.email ${{ env.ACTIONS_EMAIL }}
+          git config --global user.name $ACTIONS_USER
+          git config --global user.email $ACTIONS_EMAIL
           npm version ${{ inputs.version }} -m "v%s"
           npm run dist
       - name: Check Versions
@@ -153,6 +158,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ inputs.branch }}
+      - name: Set Environment Variables
+        uses: falti/dotenv-action@v1
+        with:
+          export-variables: true
+          keys-case: bypass
       - name: Diagnostics
         shell: bash
         run: git log -10
@@ -163,8 +173,8 @@ jobs:
         if: ${{ inputs.version }}
         shell: bash
         run: |
-          git config --global user.name ${{ env.ACTIONS_USER }}
-          git config --global user.email ${{ env.ACTIONS_EMAIL }}
+          git config --global user.name $ACTIONS_USER
+          git config --global user.email $ACTIONS_EMAIL
           npm version ${{ inputs.version }} -m "v%s"
           npm run dist
       - name: Check Versions
