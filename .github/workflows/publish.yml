@@ -156,16 +156,6 @@ jobs:
   #       run: |
   #         echo '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
 
-  # stuff:
-  #   name: Stuff
-  #   if: ${{ !needs.setup.outputs.tag }}
-  #   needs: [setup]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Stuff
-  #       shell: bash
-  #       run: echo stuff
-
   build:
     name: Build
     if: ${{ !needs.setup.outputs.tag }}
@@ -176,7 +166,7 @@ jobs:
     with:
       branch: ${{ github.event.repository.default_branch }}
       version: ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}
-      github-release: ${{ needs.setup.outputs.publish }}
+      github-release: ${{ !!needs.setup.outputs.publish }}
 
   publish:
     name: Publish
