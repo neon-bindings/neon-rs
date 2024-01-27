@@ -53,7 +53,6 @@ jobs:
     permissions:
       contents: write
     outputs:
-      action: ${{ steps.action.outputs.type }}
       dryrun: ${{ steps.dryrun.outputs.dryrun }}
       tag: ${{ steps.tag.outputs.tag }}
       publish: ${{ steps.publish.outputs.publish }}
@@ -65,49 +64,18 @@ jobs:
           echo '::error::No custom version number provided'
           exit 1
       - id: dryrun
-        name: Dry run event?
+        name: Validate Dry Run Event
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun }}
         shell: bash
         run: echo dryrun=true >> "$GITHUB_OUTPUT"
       - id: tag
-        name: Tag release event?
+        name: Validate Tag Event
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dryrun }}
         shell: bash
-        run: echo tag=true >> "$GITHUB_OUTPUT"
-      - id: publish
-        name: Publish event?
-        if: ${{ github.event_name == 'push' }}
-        shell: bash
-        run: echo publish=true >> "$GITHUB_OUTPUT"
-      - id: action
-        name: Determine Action Type
-        shell: bash
-        run: |
-          case "${{ github.event_name }},${{ inputs.dryrun }}" in
-            workflow_dispatch,true) type=dryrun ;;
-            workflow_dispatch,*) type=tag ;;
-            *) type=publish ;;
-          esac
-          echo "type=$type"
-          echo "type=$type" >> "$GITHUB_OUTPUT"
-      - name: Validate Secrets
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           TAG_TOKEN: ${{ secrets.TAG_TOKEN }}
-        shell: bash
         run: |
-          action=${{ steps.action.outputs.type }}
-          if [[ $action = publish ]] && [[ -z $NPM_TOKEN ]]; then
-            echo "::error::Secret NPM_TOKEN is not defined for this GitHub repo."
-            echo "::error::To publish to npm, this action requires:"
-            echo "::error:: • an npm access token;"
-            echo "::error:: • with Read-Write access to this project's npm packages;"
-            echo "::error:: • stored as a repo secret named NPM_TOKEN."
-            echo "::error::See https://docs.npmjs.com/about-access-tokens for info about creating npm tokens."
-            echo "::error::See https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions for info about how to store GitHub repo secrets."
-            exit 1
-          fi
-          if [[ $action = tag ]] && [[ -z $TAG_TOKEN ]]; then
+          if [[ -z $TAG_TOKEN ]]; then
             echo "::error::Secret TAG_TOKEN is not defined for this GitHub repo."
             echo "::error::To push a publish tag, this action requires:"
             echo "::error:: • a GitHub Personal Access Token;"
@@ -117,12 +85,31 @@ jobs:
             echo "::error::See https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions for info about how to store GitHub repo secrets."
             exit 1
           fi
+          echo tag=true >> "$GITHUB_OUTPUT"
+      - id: publish
+        name: Validate Publish Event
+        if: ${{ github.event_name == 'push' }}
+        shell: bash
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [[ -z $NPM_TOKEN ]]; then
+            echo "::error::Secret NPM_TOKEN is not defined for this GitHub repo."
+            echo "::error::To publish to npm, this action requires:"
+            echo "::error:: • an npm access token;"
+            echo "::error:: • with Read-Write access to this project's npm packages;"
+            echo "::error:: • stored as a repo secret named NPM_TOKEN."
+            echo "::error::See https://docs.npmjs.com/about-access-tokens for info about creating npm tokens."
+            echo "::error::See https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions for info about how to store GitHub repo secrets."
+            exit 1
+          fi
+          echo publish=true >> "$GITHUB_OUTPUT"
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.TAG_TOKEN || github.token }}
       - name: Remote Publish (manual only)
-        if: ${{ steps.action.outputs.type == 'tag' }}
+        if: ${{ steps.tag.outputs.tag }}
         shell: bash
         run: |
           git config --global user.name ${{ env.ACTIONS_USER }}
@@ -164,22 +151,26 @@ jobs:
         if: ${{ !needs.setup.outputs.publish }}
         shell: bash
         run: echo not publish
+      - name: Inputs
+        shell: bash
+        run: |
+          echo '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
 
   build:
     name: Build
-    if: ${{ needs.setup.outputs.action != 'tag' }}
+    if: ${{ !needs.setup.outputs.tag }}
     needs: [setup]
     permissions:
       contents: write
     uses: ./.github/workflows/build.yml
     with:
       branch: ${{ github.event.repository.default_branch }}
-      version: ${{ github.event_name == 'workflow_dispatch' && ((inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType) }}
-      github-release: ${{ needs.setup.outputs.action == 'publish' }}
+      version: ${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}
+      github-release: ${{ needs.setup.outputs.publish }}
 
   publish:
     name: Publish
-    if: ${{ needs.setup.outputs.action == 'publish' }}
+    if: ${{ needs.setup.outputs.publish }}
     needs: [setup, build]
     runs-on: ubuntu-latest
     permissions:
