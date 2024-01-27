@@ -54,6 +54,9 @@ jobs:
       contents: write
     outputs:
       action: ${{ steps.action.outputs.type }}
+      dryrun: ${{ steps.dryrun.outputs.dryrun }}
+      tag: ${{ steps.tag.outputs.tag }}
+      publish: ${{ steps.publish.outputs.publish }}
     steps:
       - name: Validate Workflow Inputs
         if: ${{ inputs.bumpType == 'custom' && inputs.custom == '' }}
@@ -61,20 +64,21 @@ jobs:
         run: |
           echo '::error::No custom version number provided'
           exit 1
-      # - id: dryrun
-      #   name: Dry-Run Event?
-      #   if: |
-      #     ${{
-      #       (github.event_name == 'workflow_dispatch' && inputs.dryrun == 'true') ||
-      #       (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '/dryrun'))
-      #     }}
-      #   shell: bash
-      #   run: echo "dryrun=true" >> "$GITHUB_OUTPUT"
-      # - id: tag
-      #   name: Tag and Release Event?
-      #   if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun != 'true' }}
-      #   shell: bash
-      #   run: echo "tag=true" >> "$GITHUB_OUTPUT"
+      - id: dryrun
+        name: Dry run event?
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun == 'true '}}
+        shell: bash
+        run: echo dryrun=true >> "$GITHUB_OUTPUT"
+      - id: tag
+        name: Tag release event?
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun != 'true' }}
+        shell: bash
+        run: echo tag=true >> "$GITHUB_OUTPUT"
+      - id: publish
+        name: Publish event?
+        if: ${{ github.event_name == 'push' }}
+        shell: bash
+        run: echo publish=true >> "$GITHUB_OUTPUT"
       - id: action
         name: Determine Action Type
         shell: bash
@@ -124,6 +128,42 @@ jobs:
           git config --global user.name ${{ env.ACTIONS_USER }}
           git config --global user.email ${{ env.ACTIONS_EMAIL }}
           npm run remote-publish -- '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
+
+  diagnostics:
+    name: Diagnostics
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Diagnostics
+        shell: bash
+        run: |
+          echo dryrun: '${{ needs.setup.outputs.dryrun }}'
+          echo tag: '${{ needs.setup.outputs.tag }}'
+          echo publish: '${{ needs.setup.outputs.publish }}'
+      - name: Dry run
+        if: ${{ needs.setup.outputs.dryrun }}
+        shell: bash
+        run: echo dry run
+      - name: Not dry run
+        if: ${{ !needs.setup.outputs.dryrun }}
+        shell: bash
+        run: echo not dry run
+      - name: Tag
+        if: ${{ needs.setup.outputs.tag }}
+        shell: bash
+        run: echo tag
+      - name: Not tag
+        if: ${{ !needs.setup.outputs.tag }}
+        shell: bash
+        run: echo not tag
+      - name: Publish
+        if: ${{ needs.setup.outputs.publish }}
+        shell: bash
+        run: echo publish
+      - name: Not publish
+        if: ${{ !needs.setup.outputs.publish }}
+        shell: bash
+        run: echo not publish
 
   build:
     name: Build
