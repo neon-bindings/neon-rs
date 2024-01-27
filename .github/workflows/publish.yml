@@ -161,6 +161,8 @@ jobs:
         uses: falti/dotenv-action@v1
         with:
           export-variables: true
+          keys-case: bypass
+          log-variables: true
       - name: Show Env Variables
         shell: bash
         run: |
