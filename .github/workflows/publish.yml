@@ -156,6 +156,16 @@ jobs:
         run: |
           echo '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
 
+  stuff:
+    name: Stuff
+    if: ${{ !needs.setup.outputs.tag }}
+    needs: [setup]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stuff
+        shell: bash
+        run: echo stuff
+
   build:
     name: Build
     if: ${{ !needs.setup.outputs.tag }}
