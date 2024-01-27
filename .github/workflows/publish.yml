@@ -155,6 +155,8 @@ jobs:
         shell: bash
         run: |
           echo '${{ (inputs.bumpType == 'custom' && inputs.custom) || inputs.bumpType }}'
+      - name: Checkout Code
+        uses: actions/checkout@v3
       - name: Set Environment Variables
         uses: ./.github/actions/setenv
       - name: Show Env Variables
