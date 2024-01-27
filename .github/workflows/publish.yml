@@ -66,12 +66,12 @@ jobs:
           exit 1
       - id: dryrun
         name: Dry run event?
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun == 'true '}}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun }}
         shell: bash
         run: echo dryrun=true >> "$GITHUB_OUTPUT"
       - id: tag
         name: Tag release event?
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun != 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dryrun }}
         shell: bash
         run: echo tag=true >> "$GITHUB_OUTPUT"
       - id: publish
