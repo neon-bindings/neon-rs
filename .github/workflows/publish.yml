@@ -57,6 +57,9 @@ jobs:
       tag: ${{ steps.tag.outputs.tag }}
       publish: ${{ steps.publish.outputs.publish }}
     steps:
+      - name: Diagnostics
+        shell: bash
+        run: echo $MICKEY_MOUSE_PANCAKES
       - name: Validate Workflow Inputs
         if: ${{ inputs.bumpType == 'custom' && inputs.custom == '' }}
         shell: bash
