@@ -14,11 +14,16 @@ on:
         required: false
         type: string
         default: ${{ github.event.repository.default_branch }}
+      update-version:
+        description: 'Update version before building?'
+        required: false
+        type: boolean
+        default: false
       version:
-        description: 'Version update, or empty string for no version update'
+        description: 'Version update (ignored if update-version if false)'
         required: false
         type: string
-        default: ''
+        default: 'patch'
       github-release:
         description: 'Publish GitHub release?'
         required: false
@@ -79,8 +84,8 @@ jobs:
             });
             return [...macOS, ...windows, ...linux];
 
-  build:
-    name: Build
+  binaries:
+    name: Binaries
     needs: [matrix]
     strategy:
       matrix:
@@ -106,7 +111,7 @@ jobs:
         shell: bash
         run: npm ci
       - name: Update Version
-        if: ${{ inputs.version }}
+        if: ${{ inputs.update-version }}
         shell: bash
         run: |
           git config --global user.name $ACTIONS_USER

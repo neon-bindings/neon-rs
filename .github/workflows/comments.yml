@@ -45,5 +45,5 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       branch: ${{ needs.setup.outputs.branch }}
-      version: patch
+      update-version: true
       github-release: false
