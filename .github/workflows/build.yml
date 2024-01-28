@@ -27,6 +27,7 @@ jobs:
       Windows: ${{ steps.matrix.outputs.Windows }}
       Linux: ${{ steps.matrix.outputs.Linux }}
       fullmatrix: ${{ steps.fullmatrix.outputs.fullmatrix }}
+      anotherfullmatrix: ${{ steps.anotherfullmatrix.outputs.result }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -53,6 +54,27 @@ jobs:
           echo "Windows=$(npx @neon-rs/cli ci github | jq -rc .Windows)" >> "$GITHUB_OUTPUT"
           echo "Linux=$(npx @neon-rs/cli ci github | jq -rc .Linux)" >> "$GITHUB_OUTPUT"
         working-directory: ./pkgs/cargo-messages
+      - name: Raw JSON
+        id: rawJSON
+        shell: bash
+        run: |
+          echo "json=$(npx @neon-rs/cli ci github | jq -rc)" >> "$GITHUB_OUTPUT"
+      - name: Compute Configuration Matrix with JavaScript
+        id: anotherfullmatrix
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const platforms = ${{ steps.rawJSON.outputs.json }};
+            const macOS = platforms.macOS.map(platform => {
+              return { os: "macos-latest", platform };
+            });
+            const windows = platforms.Windows.map(platform => {
+              return { os: "windows-latest", platform };
+            });
+            const linux = platforms.Linux.map(platform => {
+              return { os: "ubuntu-latest", platform };
+            });
+            return [...macOS, ...windows, ...linux];
       - name: Compute Configuration Matrix
         id: fullmatrix
         shell: bash
@@ -65,7 +87,7 @@ jobs:
     needs: [platforms]
     strategy:
       matrix:
-        cfg: ${{ fromJSON(needs.platforms.outputs.fullmatrix) }}
+        cfg: ${{ fromJSON(needs.platforms.outputs.anotherfullmatrix) }}
     runs-on: ${{ matrix.cfg.os }}
     steps:
       - name: Show
