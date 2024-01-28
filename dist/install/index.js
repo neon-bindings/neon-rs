@@ -1176,7 +1176,7 @@ const rest = args.slice(3);
 console.error(`[install] $npm_command=${process.env.npm_command}`);
 console.error(`[install] running in working directory: ${cwd}`);
 console.error(`[install] running command: npm ${cmd} ${rest.join(' ')}`);
-const result = await (0,execa__WEBPACK_IMPORTED_MODULE_0__/* .execa */ .r)('npm', [cmd].concat(rest), {
+const result = await (0,execa__WEBPACK_IMPORTED_MODULE_0__/* .execa */ .r)('npm', [cmd, ...rest], {
     shell: true,
     stdout: 'inherit',
     stderr: 'inherit',

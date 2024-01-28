@@ -12,7 +12,7 @@ console.error(`[install] $npm_command=${process.env.npm_command}`);
 console.error(`[install] running in working directory: ${cwd}`)
 console.error(`[install] running command: npm ${cmd} ${rest.join(' ')}`);
 
-const result = await execa('npm', [cmd].concat(rest), {
+const result = await execa('npm', [cmd, ...rest], {
   shell: true,
   stdout: 'inherit',
   stderr: 'inherit',
