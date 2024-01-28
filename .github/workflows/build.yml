@@ -58,6 +58,7 @@ jobs:
         shell: bash
         run: |
           echo "fullmatrix=$(npx @neon-rs/cli ci github | jq -rc '[(.macOS | map({os:"macos-latest",platform:.})), (.Windows | map({os:"windows-latest",platform:.})), (.Linux | map({os:"ubuntu-latest",platform:.}))] | flatten')" >> "$GITHUB_OUTPUT"
+        working-directory: ./pkgs/cargo-messages
 
   all-builds-experiment:
     name: All Builds Experiment
