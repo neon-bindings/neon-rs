@@ -57,7 +57,7 @@ jobs:
         id: fullmatrix
         shell: bash
         run: |
-          echo "fullmatrix=$(node ../../dist/cli ci github | jq -rc '[(.macOS | map({os:"macos-latest",platform:.})), (.Windows | map({os:"windows-latest",platform:.})), (.Linux | map({os:"ubuntu-latest",platform:.}))] | flatten')" >> "$GITHUB_OUTPUT"
+          echo "fullmatrix=$(npx @neon-rs/cli ci github | jq -rc '[(.macOS | map({os:"macos-latest",platform:.})), (.Windows | map({os:"windows-latest",platform:.})), (.Linux | map({os:"ubuntu-latest",platform:.}))] | flatten')" >> "$GITHUB_OUTPUT"
 
   all-builds-experiment:
     name: All Builds Experiment
