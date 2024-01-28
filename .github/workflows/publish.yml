@@ -212,10 +212,8 @@ jobs:
       contents: write
     uses: ./.github/workflows/build.yml
     with:
-      version: |
-        ${{ needs.setup.outputs.dryrun
-            && ((inputs.version == 'custom' && inputs.custom) || inputs.version)
-         || '' }}
+      # FIXME: can we make this more concise?
+      version: ${{ needs.setup.outputs.dryrun && ((inputs.version == 'custom' && inputs.custom) || inputs.version) || '' }}
       github-release: ${{ !!needs.setup.outputs.publish }}
 
   # build:
