@@ -114,6 +114,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
           cache: npm
       - name: Tag Release (manual only)
         if: ${{ steps.tag.outputs.tag }}
@@ -210,6 +211,12 @@ jobs:
       - name: Diagnostics
         shell: bash
         run: git log -10
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
+          cache: npm
       - name: Install Dependencies
         shell: bash
         run: npm ci
@@ -220,6 +227,7 @@ jobs:
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
           fetch-binaries: "*.tgz"
           github-release: true
       - name: Build (@neon-rs/load)
