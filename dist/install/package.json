@@ -1,7 +1,7 @@
 {
   "name": "install",
   "private": true,
-  "version": "0.0.200",
+  "version": "0.0.201",
   "description": "Command-line tool to recursively run npm i or npm ci on a subfolder",
   "main": "index.js"
 }
