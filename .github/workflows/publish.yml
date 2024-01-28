@@ -102,6 +102,8 @@ jobs:
           echo publish=true >> "$GITHUB_OUTPUT"
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.TAG_TOKEN || github.token }}
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
