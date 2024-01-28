@@ -40,6 +40,7 @@ jobs:
           echo '${{ github.event.repository.default_branch }}'
 
   build-all:
+    name: Build
     needs: [setup]
     permissions:
       contents: write
