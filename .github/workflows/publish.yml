@@ -110,12 +110,18 @@ jobs:
           path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
       - name: Tag Release (manual only)
         if: ${{ steps.tag.outputs.tag }}
         shell: bash
         run: |
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
+          npm ci
           npm run tag -- '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
 
   diagnostics:
