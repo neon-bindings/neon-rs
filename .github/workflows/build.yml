@@ -59,6 +59,7 @@ jobs:
         shell: bash
         run: |
           echo "json=$(npx @neon-rs/cli ci github | jq -rc)" >> "$GITHUB_OUTPUT"
+        working-directory: ./pkgs/cargo-messages
       - name: Compute Configuration Matrix with JavaScript
         id: anotherfullmatrix
         uses: actions/github-script@v7
