@@ -53,6 +53,34 @@ jobs:
           echo "Linux=$(npx @neon-rs/cli ci github | jq -rc .Linux)" >> "$GITHUB_OUTPUT"
         working-directory: ./pkgs/cargo-messages
 
+  all-builds-experiment:
+    name: All Builds Experiment
+    strategy:
+      matrix:
+        cfg:
+          - os: macos-latest
+            platform: darwin-x64
+          - os: macos-latest
+            platform: darwin-arm64
+          - os: windows-latest
+            platform: win32-x64-msvc
+          - os: windows-latest
+            platform: win32-arm64-msvc
+          - os: ubuntu-latest
+            platform: linux-x64-gnu
+          - os: ubuntu-latest
+            platform: linux-arm-gnueabihf
+          - os: ubuntu-latest
+            platform: android-arm-eabi
+    runs-on: ${{ matrix.cfg.os }}
+    steps:
+      - name: Show
+        shell: bash
+        run: |
+          echo os=${{ matrix.cfg.os }}
+          echo platform=${{ matrix.cfg.platform }}
+          echo cross=${{ matrix.cfg.os == 'ubuntu-latest' }}
+
   macos-builds:
     name: macOS
     needs: [platforms]
