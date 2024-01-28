@@ -87,7 +87,6 @@ jobs:
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
           npm version ${{ inputs.version }} -m "v%s"
-          npm run dist
       - name: Check Versions
         shell: bash
         run: ./test/lint/check-versions.sh
@@ -133,7 +132,6 @@ jobs:
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
           npm version ${{ inputs.version }} -m "v%s"
-          npm run dist
       - name: Check Versions
         shell: bash
         run: ./test/lint/check-versions.sh
@@ -179,7 +177,6 @@ jobs:
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
           npm version ${{ inputs.version }} -m "v%s"
-          npm run dist
       - name: Check Versions
         shell: bash
         run: ./test/lint/check-versions.sh

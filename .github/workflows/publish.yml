@@ -232,14 +232,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
         working-directory: ./pkgs/load
-      - name: Update (@neon-rs/cli)
-        shell: bash
-        run: |
-          git config --global user.name $ACTIONS_USER
-          git config --global user.email $ACTIONS_EMAIL
-          npm run dist
-          git commit -a -m 'fresh cli build'
-          git push
       - name: Publish (@neon-rs/cli)
         shell: bash
         env:
