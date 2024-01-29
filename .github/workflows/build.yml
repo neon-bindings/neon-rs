@@ -1,11 +1,5 @@
 name: Build
 
-# FIXME: experiment with using these for the runner os
-env:
-  MACOS_RUNNER: macos-latest
-  WINDOWS_RUNNER: windows-latest
-  LINUX_RUNNER: ubuntu-latest
-
 on:
   workflow_call:
     inputs:

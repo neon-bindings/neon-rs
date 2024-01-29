@@ -127,59 +127,6 @@ jobs:
           git config --global user.email $ACTIONS_EMAIL
           npm run tag -- '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
 
-  # diagnostics:
-  #   name: Diagnostics
-  #   needs: [setup]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Diagnostics
-  #       shell: bash
-  #       run: |
-  #         echo dryrun: '${{ needs.setup.outputs.dryrun }}'
-  #         echo tag: '${{ needs.setup.outputs.tag }}'
-  #         echo publish: '${{ needs.setup.outputs.publish }}'
-  #     - name: Dry run
-  #       if: ${{ needs.setup.outputs.dryrun }}
-  #       shell: bash
-  #       run: echo dry run
-  #     - name: Not dry run
-  #       if: ${{ !needs.setup.outputs.dryrun }}
-  #       shell: bash
-  #       run: echo not dry run
-  #     - name: Tag
-  #       if: ${{ needs.setup.outputs.tag }}
-  #       shell: bash
-  #       run: echo tag
-  #     - name: Not tag
-  #       if: ${{ !needs.setup.outputs.tag }}
-  #       shell: bash
-  #       run: echo not tag
-  #     - name: Publish
-  #       if: ${{ needs.setup.outputs.publish }}
-  #       shell: bash
-  #       run: echo publish
-  #     - name: Not publish
-  #       if: ${{ !needs.setup.outputs.publish }}
-  #       shell: bash
-  #       run: echo not publish
-  #     - name: Inputs
-  #       shell: bash
-  #       run: |
-  #         echo '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
-  #     - name: Checkout Code
-  #       uses: actions/checkout@v3
-  #     - name: Set Environment Variables
-  #       uses: falti/dotenv-action@v1
-  #       with:
-  #         path: ./.github/workflows/.env
-  #         export-variables: true
-  #         keys-case: bypass
-  #     - name: Show Env Variables
-  #       shell: bash
-  #       run: |
-  #         echo "$NODE_VERSION"
-  #         echo '${{ env.NODE_VERSION }}'
-
   build:
     name: Build
     needs: [setup]
