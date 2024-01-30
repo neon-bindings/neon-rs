@@ -1,0 +1,52 @@
+{
+  "name": "@neon-rs/manifest",
+  "version": "0.0.1",
+  "description": "",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/index.d.mts",
+        "default": "./lib/index.mjs"
+      },
+      "require": {
+        "types": "./lib/index.d.cts",
+        "default": "./lib/index.cjs"
+      }
+    }
+  },
+  "types": "./lib/index.d.cts",
+  "main": "./lib/index.cjs",
+  "files": [
+    "lib/**/*.cjs",
+    "lib/**/*.d.cts",
+    "lib/**/*.mjs",
+    "lib/**/*.d.mts",
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
+    "data/**/*.json"
+  ],
+  "scripts": {
+    "dist": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Neon",
+    "Rust",
+    "Node"
+  ],
+  "author": "Dave Herman <david.herman@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dherman/neon-rs/issues"
+  },
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "devDependencies": {
+    "@tsconfig/node16": "^16.1.1",
+    "@types/jscodeshift": "^0.11.11",
+    "@types/node": "^20.11.10",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "jscodeshift": "^0.15.1"
+  }
+}
