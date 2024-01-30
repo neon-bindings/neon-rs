@@ -1,7 +1,14 @@
 #!/bin/bash
 
-# This script implements a lint that ensures that all manifest
-# versions in the monorepo have matching versions.
+# This script implements a lint that ensures that versions
+# are kept in lockstep for the following packages in the monorepo:
+#
+#   - @neon-rs/cli
+#   - cargo-messages
+#   - @cargo-messages/*
+#
+# (We also keep the in-repo tool `install` in sync, but it's
+# not particularly necessary.)
 
 echo "Checking that all manifest versions match..."
 
