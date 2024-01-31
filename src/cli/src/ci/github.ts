@@ -1,5 +1,5 @@
 import { Provider } from '../provider.js';
-import { NodePlatform, PlatformMap } from '../platform.js';
+import { NodePlatform, PlatformMap } from '@neon-rs/manifest/platform';
 import GITHUB from '../../data/github.json';
 
 export type GitHubMetadata = {

@@ -1,6 +1,6 @@
 import { execa } from 'execa';
 
-import { RustTarget, assertIsRustTarget } from './platform.js';
+import { RustTarget, assertIsRustTarget } from '@neon-rs/manifest/platform';
 
 export async function getCurrentTarget(log: (msg: string) => void): Promise<RustTarget> {
   log(`rustc -vV`);

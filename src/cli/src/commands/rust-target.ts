@@ -1,7 +1,7 @@
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { isNodePlatform, NodePlatform } from '../platform.js';
-import { LibraryManifest } from '../manifest.js';
+import { isNodePlatform, NodePlatform } from '@neon-rs/manifest/platform';
+import { LibraryManifest } from '@neon-rs/manifest';
 
 const OPTIONS = [
   { name: 'os', type: String, defaultValue: null },

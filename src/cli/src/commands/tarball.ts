@@ -4,8 +4,8 @@ import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { getTargetDescriptor, isRustTarget } from '../platform.js';
-import { LibraryManifest, BinaryManifest } from '../manifest.js';
+import { getTargetDescriptor, isRustTarget } from '@neon-rs/manifest/platform';
+import { LibraryManifest, BinaryManifest } from '@neon-rs/manifest';
 import { getCurrentTarget } from '../target.js';
 
 const mktemp = temp.track().mkdir;

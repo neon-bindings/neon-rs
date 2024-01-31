@@ -1,6 +1,6 @@
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { LibraryManifest } from '../manifest.js';
+import { LibraryManifest } from '@neon-rs/manifest';
 
 const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }

@@ -2,8 +2,8 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { isNodePlatform, isRustTarget, isPlatformPreset, TargetPair } from '../platform.js';
-import { LibraryManifest } from '../manifest.js';
+import { isNodePlatform, isRustTarget, isPlatformPreset, TargetPair } from '@neon-rs/manifest/platform';
+import { LibraryManifest } from '@neon-rs/manifest';
 import { getCurrentTarget } from '../target.js';
 
 function optionArray<T>(option: T | undefined | null): T[] {

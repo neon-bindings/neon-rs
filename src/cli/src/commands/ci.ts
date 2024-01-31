@@ -1,6 +1,6 @@
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { LibraryManifest } from '../manifest.js';
+import { LibraryManifest } from '@neon-rs/manifest';
 import { asProviderName, providerFor, Provider } from '../provider.js';
 
 const OPTIONS = [

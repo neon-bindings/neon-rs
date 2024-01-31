@@ -1,6 +1,6 @@
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { assertIsPlatformPreset, expandPlatformPreset, PlatformPreset } from '../platform.js';
+import { assertIsPlatformPreset, expandPlatformPreset, PlatformPreset } from '@neon-rs/manifest/platform';
 
 const OPTIONS = [
   { name: 'pretty', alias: 'p', type: Boolean, defaultValue: true },

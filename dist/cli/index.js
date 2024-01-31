@@ -44449,7 +44449,7 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 4528:
+/***/ 2633:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -44465,8 +44465,8 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
-;// CONCATENATED MODULE: external "node:fs/promises"
-const promises_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs/promises");
+// EXTERNAL MODULE: external "node:fs/promises"
+var promises_ = __nccwpck_require__(3977);
 // EXTERNAL MODULE: ../node_modules/command-line-args/dist/index.js
 var dist = __nccwpck_require__(7898);
 var dist_default = /*#__PURE__*/__nccwpck_require__.n(dist);
@@ -44601,14 +44601,14 @@ class Dist {
     async run() {
         const file = this._file || (await this.findArtifact());
         // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-        await (0,promises_namespaceObject.copyFile)(file, this._out);
+        await (0,promises_.copyFile)(file, this._out);
     }
 }
 
 ;// CONCATENATED MODULE: external "node:buffer"
 const external_node_buffer_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:buffer");
-;// CONCATENATED MODULE: external "node:path"
-const external_node_path_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
+// EXTERNAL MODULE: external "node:path"
+var external_node_path_ = __nccwpck_require__(9411);
 ;// CONCATENATED MODULE: external "node:child_process"
 const external_node_child_process_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:child_process");
 // EXTERNAL MODULE: external "node:process"
@@ -44662,19 +44662,19 @@ function npmRunPath(options = {}) {
 
 	let previous;
 	const cwdString = cwd instanceof URL ? external_node_url_namespaceObject.fileURLToPath(cwd) : cwd;
-	let cwdPath = external_node_path_namespaceObject.resolve(cwdString);
+	let cwdPath = external_node_path_.resolve(cwdString);
 	const result = [];
 
 	while (previous !== cwdPath) {
-		result.push(external_node_path_namespaceObject.join(cwdPath, 'node_modules/.bin'));
+		result.push(external_node_path_.join(cwdPath, 'node_modules/.bin'));
 		previous = cwdPath;
-		cwdPath = external_node_path_namespaceObject.resolve(cwdPath, '..');
+		cwdPath = external_node_path_.resolve(cwdPath, '..');
 	}
 
 	// Ensure the running `node` binary is used.
-	result.push(external_node_path_namespaceObject.resolve(cwdString, execPath, '..'));
+	result.push(external_node_path_.resolve(cwdString, execPath, '..'));
 
-	return [...result, path_].join(external_node_path_namespaceObject.delimiter);
+	return [...result, path_].join(external_node_path_.delimiter);
 }
 
 function npmRunPathEnv({env = external_node_process_.env, ...options} = {}) {
@@ -45886,7 +45886,7 @@ const handleArguments = (file, args, options = {}) => {
 
 	options.stdio = normalizeStdio(options);
 
-	if (external_node_process_.platform === 'win32' && external_node_path_namespaceObject.basename(file, '.exe') === 'cmd') {
+	if (external_node_process_.platform === 'win32' && external_node_path_.basename(file, '.exe') === 'cmd') {
 		// #116
 		args.unshift('/q');
 	}
@@ -46153,10 +46153,10 @@ const bump_OPTIONS = [
     { name: 'binaries', type: String, defaultValue: null }
 ];
 async function subdirs(dir) {
-    const entries = await promises_namespaceObject.readdir(dir);
+    const entries = await promises_.readdir(dir);
     let dirs = [];
     for (const entry of entries) {
-        if ((await promises_namespaceObject.stat(external_node_path_namespaceObject.join(dir, entry))).isDirectory()) {
+        if ((await promises_.stat(external_node_path_.join(dir, entry))).isDirectory()) {
             dirs.push(entry);
         }
     }
@@ -46221,10 +46221,10 @@ class Bump {
         }
     }
     async bumpBinaries(binaries) {
-        const binariesPath = external_node_path_namespaceObject.join(...binaries.split('/'));
+        const binariesPath = external_node_path_.join(...binaries.split('/'));
         const dirs = await subdirs(binariesPath);
         for (const dir of dirs) {
-            const dirPath = external_node_path_namespaceObject.join(binariesPath, dir);
+            const dirPath = external_node_path_.join(binariesPath, dir);
             this.log(`CWD=${dirPath} npm version --force ${this._version}`);
             const result = await execa('npm', ['version', "--force", this._version], { cwd: dirPath, shell: true });
             if (result.exitCode !== 0) {
@@ -46248,90 +46248,19 @@ class Bump {
 
 // EXTERNAL MODULE: ../node_modules/temp/lib/temp.js
 var temp = __nccwpck_require__(591);
-;// CONCATENATED MODULE: ./data/rust.json
-const rust_namespaceObject = JSON.parse('{"aarch64-apple-darwin":"darwin-arm64","x86_64-apple-darwin":"darwin-x64","aarch64-apple-ios":"ios-arm64","x86_64-apple-ios":"ios-x64","aarch64-linux-android":"android-arm64","armv7-linux-androideabi":"android-arm-eabi","i686-linux-android":"android-ia32","x86_64-linux-android":"android-x64","aarch64-pc-windows-msvc":"win32-arm64-msvc","i686-pc-windows-gnu":"win32-ia32-gnu","i686-pc-windows-msvc":"win32-ia32-msvc","x86_64-pc-windows-gnu":"win32-x64-gnu","x86_64-pc-windows-msvc":"win32-x64-msvc","aarch64-unknown-linux-gnu":"linux-arm64-gnu","aarch64-unknown-linux-musl":"linux-arm64-musl","arm-unknown-linux-gnueabihf":"linux-arm-gnueabihf","arm-unknown-linux-musleabihf":"linux-arm-musleabihf","armv7-unknown-linux-gnueabihf":"linux-arm-gnueabihf","armv7-unknown-linux-musleabihf":"linux-arm-musleabihf","i686-unknown-linux-gnu":"linux-ia32-gnu","i686-unknown-linux-musl":"linux-ia32-musl","mips-unknown-linux-gnu":"linux-mips-gnu","mips-unknown-linux-musl":"linux-mips-musl","mips64-unknown-linux-gnuabi64":"linux-mips64-gnuabi64","mips64-unknown-linux-muslabi64":"linux-mips64-muslabi64","mips64el-unknown-linux-gnuabi64":"linux-mips64el-gnuabi64","mips64el-unknown-linux-muslabi64":"linux-mips64el-muslabi64","mipsel-unknown-linux-gnu":"linux-mipsel-gnu","mipsel-unknown-linux-musl":"linux-mipsel-musl","powerpc-unknown-linux-gnu":"linux-powerpc-gnu","powerpc64-unknown-linux-gnu":"linux-powerpc64-gnu","powerpc64le-unknown-linux-gnu":"linux-powerpc64le-gnu","riscv64gc-unknown-linux-gnu":"linux-riscv64gc-gnu","s390x-unknown-linux-gnu":"linux-s390x-gnu","sparc64-unknown-linux-gnu":"linux-sparc64-gnu","x86_64-unknown-linux-gnu":"linux-x64-gnu","x86_64-unknown-linux-gnux32":"linux-x64-gnux32","x86_64-unknown-linux-musl":"linux-x64-musl","i686-unknown-freebsd":"freebsd-ia32","x86_64-unknown-freebsd":"freebsd-x64"}');
-;// CONCATENATED MODULE: ./data/node.json
-const node_namespaceObject = JSON.parse('{"darwin-arm64":{"os":"darwin","arch":"arm64","abi":null,"llvm":["aarch64-apple-darwin"]},"darwin-x64":{"os":"darwin","arch":"x64","abi":null,"llvm":["x86_64-apple-darwin"]},"ios-arm64":{"os":"ios","arch":"arm64","abi":null,"llvm":["aarch64-apple-ios"]},"ios-x64":{"os":"ios","arch":"x64","abi":null,"llvm":["x86_64-apple-ios"]},"android-arm64":{"os":"android","arch":"arm64","abi":null,"llvm":["aarch64-linux-android"]},"android-arm-eabi":{"os":"android","arch":"arm","abi":"eabi","llvm":["armv7-linux-androideabi"]},"android-ia32":{"os":"android","arch":"ia32","abi":null,"llvm":["i686-linux-android"]},"android-x64":{"os":"android","arch":"x64","abi":null,"llvm":["x86_64-linux-android"]},"win32-arm64-msvc":{"os":"win32","arch":"arm64","abi":"msvc","llvm":["aarch64-pc-windows-msvc"]},"win32-ia32-gnu":{"os":"win32","arch":"ia32","abi":"gnu","llvm":["i686-pc-windows-gnu"]},"win32-ia32-msvc":{"os":"win32","arch":"ia32","abi":"msvc","llvm":["i686-pc-windows-msvc"]},"win32-x64-gnu":{"os":"win32","arch":"x64","abi":"gnu","llvm":["x86_64-pc-windows-gnu"]},"win32-x64-msvc":{"os":"win32","arch":"x64","abi":"msvc","llvm":["x86_64-pc-windows-msvc"]},"linux-arm64-gnu":{"os":"linux","arch":"arm64","abi":"gnu","llvm":["aarch64-unknown-linux-gnu"]},"linux-arm64-musl":{"os":"linux","arch":"arm64","abi":"musl","llvm":["aarch64-unknown-linux-musl"]},"linux-arm-gnueabihf":{"os":"linux","arch":"arm","abi":"gnueabihf","llvm":["arm-unknown-linux-gnueabihf","armv7-unknown-linux-gnueabihf"]},"linux-arm-musleabihf":{"os":"linux","arch":"arm","abi":"musleabihf","llvm":["arm-unknown-linux-musleabihf","armv7-unknown-linux-musleabihf"]},"linux-ia32-gnu":{"os":"linux","arch":"ia32","abi":"gnu","llvm":["i686-unknown-linux-gnu"]},"linux-ia32-musl":{"os":"linux","arch":"ia32","abi":"musl","llvm":["i686-unknown-linux-musl"]},"linux-mips-gnu":{"os":"linux","arch":"mips","abi":"gnu","llvm":["mips-unknown-linux-gnu"]},"linux-mips-musl":{"os":"linux","arch":"mips","abi":"musl","llvm":["mips-unknown-linux-musl"]},"linux-mips64-gnuabi64":{"os":"linux","arch":"mips64","abi":"gnuabi64","llvm":["mips64-unknown-linux-gnuabi64"]},"linux-mips64-muslabi64":{"os":"linux","arch":"mips64","abi":"muslabi64","llvm":["mips64-unknown-linux-muslabi64"]},"linux-mips64el-gnuabi64":{"os":"linux","arch":"mips64el","abi":"gnuabi64","llvm":["mips64el-unknown-linux-gnuabi64"]},"linux-mips64el-muslabi64":{"os":"linux","arch":"mips64el","abi":"muslabi64","llvm":["mips64el-unknown-linux-muslabi64"]},"linux-mipsel-gnu":{"os":"linux","arch":"mipsel","abi":"gnu","llvm":["mipsel-unknown-linux-gnu"]},"linux-mipsel-musl":{"os":"linux","arch":"mipsel","abi":"musl","llvm":["mipsel-unknown-linux-musl"]},"linux-powerpc-gnu":{"os":"linux","arch":"powerpc","abi":"gnu","llvm":["powerpc-unknown-linux-gnu"]},"linux-powerpc64-gnu":{"os":"linux","arch":"powerpc64","abi":"gnu","llvm":["powerpc64-unknown-linux-gnu"]},"linux-powerpc64le-gnu":{"os":"linux","arch":"powerpc64le","abi":"gnu","llvm":["powerpc64le-unknown-linux-gnu"]},"linux-riscv64gc-gnu":{"os":"linux","arch":"riscv64gc","abi":"gnu","llvm":["riscv64gc-unknown-linux-gnu"]},"linux-s390x-gnu":{"os":"linux","arch":"s390x","abi":"gnu","llvm":["s390x-unknown-linux-gnu"]},"linux-sparc64-gnu":{"os":"linux","arch":"sparc64","abi":"gnu","llvm":["sparc64-unknown-linux-gnu"]},"linux-x64-gnu":{"os":"linux","arch":"x64","abi":"gnu","llvm":["x86_64-unknown-linux-gnu"]},"linux-x64-gnux32":{"os":"linux","arch":"x64","abi":"gnux32","llvm":["x86_64-unknown-linux-gnux32"]},"linux-x64-musl":{"os":"linux","arch":"x64","abi":"musl","llvm":["x86_64-unknown-linux-musl"]},"freebsd-ia32":{"os":"freebsd","arch":"ia32","abi":null,"llvm":["i686-unknown-freebsd"]},"freebsd-x64":{"os":"freebsd","arch":"x64","abi":null,"llvm":["x86_64-unknown-freebsd"]}}');
-;// CONCATENATED MODULE: ./data/preset.json
-const preset_namespaceObject = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
-;// CONCATENATED MODULE: ./src/platform.ts
+// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.cjs
+var lib_platform = __nccwpck_require__(2147);
+;// CONCATENATED MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
 
 
+// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/index.cjs
+var manifest_lib = __nccwpck_require__(4696);
+;// CONCATENATED MODULE: ../node_modules/@neon-rs/manifest/lib/index.mjs
 
 
-function isRustTarget(x) {
-    return (typeof x === 'string') && (x in rust_namespaceObject);
-}
-function assertIsRustTarget(x) {
-    if (!isRustTarget(x)) {
-        throw new RangeError(`invalid Rust target: ${x}`);
-    }
-}
-function isNodePlatform(x) {
-    return (typeof x === 'string') && (x in node_namespaceObject);
-}
-function assertIsNodePlatform(x) {
-    if (!isNodePlatform(x)) {
-        throw new RangeError(`invalid platform: ${x}`);
-    }
-}
-function isPlatformPreset(x) {
-    return (typeof x === 'string') && (x in preset_namespaceObject);
-}
-function assertIsPlatformPreset(x) {
-    if (!isPlatformPreset(x)) {
-        throw new RangeError(`invalid platform family preset: ${x}`);
-    }
-}
-function lookupPlatformPreset(key) {
-    return preset_namespaceObject[key];
-}
-function merge(maps) {
-    const merged = Object.create(null);
-    for (const map of maps) {
-        Object.assign(merged, map);
-    }
-    return merged;
-}
-function expandPlatformPreset(preset) {
-    return expandPlatformFamily(lookupPlatformPreset(preset));
-}
-function expandPlatformFamily(family) {
-    return isPlatformPreset(family)
-        ? expandPlatformPreset(family)
-        : Array.isArray(family)
-            ? merge(family.map(expandPlatformFamily))
-            : family;
-}
-function getTargetDescriptor(target) {
-    const node = rust_namespaceObject[target];
-    if (!isNodePlatform(node)) {
-        throw new Error(`Rust target ${target} not supported`);
-    }
-    const nodeDescriptor = node_namespaceObject[node];
-    const badTarget = nodeDescriptor.llvm.find(t => !isRustTarget(t));
-    if (badTarget) {
-        throw new Error(`Rust target ${badTarget} not supported`);
-    }
-    return {
-        node,
-        os: nodeDescriptor.os,
-        arch: nodeDescriptor.arch,
-        abi: nodeDescriptor.abi,
-        llvm: nodeDescriptor.llvm
-    };
-}
-function node2Rust(target) {
-    return node_namespaceObject[target].llvm.map(rt => {
-        assertIsRustTarget(rt);
-        return rt;
-    });
-}
-function rust2Node(target) {
-    const nt = rust_namespaceObject[target];
-    assertIsNodePlatform(nt);
-    return nt;
-}
+;// CONCATENATED MODULE: ./src/target.ts
+
+
 async function getCurrentTarget(log) {
     log(`rustc -vV`);
     const result = await execa("rustc", ["-vV"], { shell: true });
@@ -46345,566 +46274,12 @@ async function getCurrentTarget(log) {
     }
     const target = hostLine.replace(/^host:\s+/, '');
     log(`currentTarget result: "${target}"`);
-    assertIsRustTarget(target);
+    (0,lib_platform.assertIsRustTarget)(target);
     return target;
 }
 
-// EXTERNAL MODULE: ../node_modules/jscodeshift/index.js
-var jscodeshift = __nccwpck_require__(7416);
-var jscodeshift_default = /*#__PURE__*/__nccwpck_require__.n(jscodeshift);
-;// CONCATENATED MODULE: ./src/manifest.ts
-
-
-
-
-function assertIsObject(json, path) {
-    if (!json || typeof json !== 'object') {
-        throw new TypeError(`expected "${path}" property to be an object, found ${json}`);
-    }
-}
-// Idea thanks to https://www.lucaspaganini.com/academy/assertion-functions-typescript-narrowing-5
-function assertHasProps(keys, json, path) {
-    assertIsObject(json, path);
-    for (const key of keys) {
-        if (!(key in json)) {
-            throw new TypeError(`property "${path}.${key}" not found`);
-        }
-    }
-}
-function assertIsBinaryCfg(json) {
-    assertHasProps(['type', 'rust', 'node', 'os', 'arch', 'abi'], json, "neon");
-    if (json.type !== 'binary') {
-        throw new TypeError(`expected "neon.type" property to be "binary", found ${json.type}`);
-    }
-    if (typeof json.rust !== 'string' || !isRustTarget(json.rust)) {
-        throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
-    }
-    if (typeof json.node !== 'string' || !isNodePlatform(json.node)) {
-        throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
-    }
-    if (typeof json.os !== 'string') {
-        throw new TypeError(`expected "neon.os" to be a string, found ${json.os}`);
-    }
-    if (typeof json.arch !== 'string') {
-        throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
-    }
-    if (json.abi !== null && typeof json.abi !== 'string') {
-        throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
-    }
-}
-function assertIsPlatformMap(json, path) {
-    assertIsObject(json, path);
-    for (const key in json) {
-        const value = json[key];
-        if (!isNodePlatform(key)) {
-            throw new TypeError(`platform table key ${key} is not a valid Node platform`);
-        }
-        if (typeof value !== 'string' || !isRustTarget(value)) {
-            throw new TypeError(`platform table value ${value} is not a valid Rust target`);
-        }
-    }
-}
-function assertIsPlatformFamily(json, path) {
-    if (typeof json === 'string') {
-        assertIsPlatformPreset(json);
-        return;
-    }
-    if (Array.isArray(json)) {
-        for (const elt of json) {
-            assertIsPlatformPreset(elt);
-        }
-        return;
-    }
-    assertIsPlatformMap(json, path);
-}
-function assertIsBinaryV2(json) {
-    if (!json || typeof json !== 'object') {
-        throw new TypeError(`expected "neon" to be an object, found ${json}`);
-    }
-    assertHasProps(['rust', 'node', 'platform', 'arch', 'abi'], json, "neon");
-    if (!isRustTarget(json.rust)) {
-        throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
-    }
-    if (!isNodePlatform(json.node)) {
-        throw new TypeError(`expected "neon.node" to be a valid Node platform, found ${json.node}`);
-    }
-    if (typeof json.platform !== 'string') {
-        throw new TypeError(`expected "neon.platform" to be a string, found ${json.platform}`);
-    }
-    if (typeof json.arch !== 'string') {
-        throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
-    }
-    if (json.abi !== null && typeof json.abi !== 'string') {
-        throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
-    }
-}
-function assertIsBinaryV1(json) {
-    assertHasProps(['binary'], json, "neon");
-    const binary = json.binary;
-    if (!binary || typeof binary !== 'object') {
-        throw new TypeError(`expected "neon.binary" to be an object, found ${binary}`);
-    }
-    assertHasProps(['rust', 'node', 'platform', 'arch', 'abi'], binary, "neon.binary");
-    if (typeof binary.rust !== 'string' || !isRustTarget(binary.rust)) {
-        throw new TypeError(`expected "neon.binary.rust" to be a valid Rust target, found ${binary.rust}`);
-    }
-    if (!isNodePlatform(binary.node)) {
-        throw new TypeError(`expected "neon.binary.node" to be a valid Node platform, found ${binary.node}`);
-    }
-    if (typeof binary.platform !== 'string') {
-        throw new TypeError(`expected "neon.binary.platform" to be a string, found ${binary.platform}`);
-    }
-    if (typeof binary.arch !== 'string') {
-        throw new TypeError(`expected "neon.binary.arch" to be a string, found ${binary.arch}`);
-    }
-    if (binary.abi !== null && typeof binary.abi !== 'string') {
-        throw new TypeError(`expected "neon.binary.abi" to be a string or null, found ${binary.abi}`);
-    }
-}
-function assertIsLibraryV1(json) {
-    assertIsObject(json, "neon");
-    for (const key in json) {
-        const value = json[key];
-        if (!isRustTarget(key)) {
-            throw new TypeError(`target table key ${key} is not a valid Rust target`);
-        }
-        if (typeof value !== 'string') {
-            throw new TypeError(`target table value ${value} is not a string`);
-        }
-    }
-}
-function assertIsLibraryCfg(json) {
-    assertHasProps(['type', 'org', 'platforms'], json, "neon");
-    if (json.type !== 'library') {
-        throw new TypeError(`expected "neon.type" property to be "library", found ${json.type}`);
-    }
-    if (typeof json.org !== 'string') {
-        throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
-    }
-    assertIsPlatformFamily(json.platforms, "neon.platforms");
-    if ('load' in json) {
-        if (typeof json.load !== 'string' && typeof json.load !== 'undefined') {
-            throw new TypeError(`expected "neon.load" to be a string, found ${json.load}`);
-        }
-    }
-}
-function assertIsPreamble(json) {
-    if (!json || typeof json !== 'object') {
-        throw new TypeError(`expected binary Neon package manifest, found ${json}`);
-    }
-    if (!('version' in json) || typeof json.version !== 'string') {
-        throw new TypeError('valid "version" string not found in Neon package manifest');
-    }
-    if (!('name' in json) || typeof json.name !== 'string') {
-        throw new TypeError('valid "name" string not found in Neon package manifest');
-    }
-}
-class AbstractManifest {
-    _json;
-    _upgraded;
-    constructor(json) {
-        assertIsPreamble(json);
-        this._json = json;
-        this._upgraded = false;
-    }
-    get name() { return this._json.name; }
-    set name(value) { this._json.name = value; }
-    get version() { return this._json.version; }
-    set version(value) { this._json.version = value; }
-    get description() { return this._json.description ?? ""; }
-    get upgraded() { return this._upgraded; }
-    async save(dir) {
-        dir = dir ?? process.cwd();
-        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(dir, "package.json"), JSON.stringify(this._json, null, 2), { encoding: 'utf8' });
-    }
-    stringify() {
-        return JSON.stringify(this._json);
-    }
-}
-function assertHasCfg(json) {
-    if (!('neon' in json)) {
-        throw new TypeError('property "neon" not found');
-    }
-    assertIsObject(json.neon, "neon");
-}
-function assertHasBinaryCfg(json) {
-    assertHasCfg(json);
-    assertIsBinaryCfg(json.neon);
-}
-function assertHasLibraryCfg(json) {
-    assertHasCfg(json);
-    assertIsLibraryCfg(json.neon);
-}
-async function readManifest(dir) {
-    dir = dir ?? process.cwd();
-    return JSON.parse(await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(dir, "package.json"), { encoding: 'utf8' }));
-}
-class BinaryManifest extends AbstractManifest {
-    _binaryJSON;
-    constructor(json) {
-        super(json);
-        this._upgraded = normalizeBinaryCfg(this._json);
-        assertHasBinaryCfg(this._json);
-        this._binaryJSON = this._json;
-    }
-    cfg() {
-        return this._binaryJSON.neon;
-    }
-    static async load(dir) {
-        return new BinaryManifest(await readManifest(dir));
-    }
-}
-function normalizeBinaryCfg(json) {
-    assertHasCfg(json);
-    // V3 format: {
-    //   neon: {
-    //     type: 'binary',
-    //     rust: RustTarget,
-    //     node: NodeTarget,
-    //     os: string,
-    //     arch: string,
-    //     abi: string | null
-    //   }
-    // }
-    if ('type' in json.neon && 'os' in json.neon) {
-        return false;
-    }
-    // V2 format: {
-    //   neon: {
-    //     type: 'binary',
-    //     rust: RustTarget,
-    //     node: NodeTarget,
-    //     platform: string,
-    //     arch: string,
-    //     abi: string | null
-    //   }
-    // }
-    if ('type' in json.neon) {
-        json.neon = upgradeBinaryV2(json.neon);
-        return true;
-    }
-    // V1 format: {
-    //   neon: {
-    //     binary: {
-    //       rust: RustTarget,
-    //       node: NodeTarget,
-    //       platform: string,
-    //       arch: string,
-    //       abi: string | null
-    //     }
-    //   }
-    // }
-    json.neon = upgradeBinaryV1(json.neon);
-    return true;
-}
-function normalizeLibraryCfg(json) {
-    assertHasCfg(json);
-    // V5 format: {
-    //   type: 'library',
-    //   org: string,
-    //   platforms: PlatformFamily,
-    //   load?: string | undefined
-    // }
-    if ('type' in json.neon && json.neon.type === 'library') {
-        return false;
-    }
-    // V4 format: {
-    //   neon: {
-    //     type: 'source',
-    //     org: string,
-    //     platforms: PlatformFamily,
-    //     load?: string | undefined
-    //   }
-    // }
-    if ('type' in json.neon && 'platforms' in json.neon) {
-        json.neon.type = 'library';
-        return true;
-    }
-    // V3 format: {
-    //   neon: {
-    //     type: 'source',
-    //     org: string,
-    //     targets: PlatformFamily
-    //   }
-    // }
-    if ('type' in json.neon) {
-        const org = json.neon['org'];
-        const targets = json.neon['targets'];
-        assertIsPlatformFamily(targets, "neon.targets");
-        json.neon = {
-            type: 'library',
-            org,
-            platforms: targets
-        };
-        return true;
-    }
-    // V2 format: {
-    //   neon: {
-    //     org: string,
-    //     targets: { Node => Rust }
-    //   }
-    // }
-    if ('org' in json.neon) {
-        const platforms = json.neon['targets'];
-        assertIsPlatformMap(platforms, "neon.targets");
-        json.neon = {
-            type: 'library',
-            org: json.neon.org,
-            platforms
-        };
-        return true;
-    }
-    // V1 format: {
-    //   neon: {
-    //     targets: { Rust => fully-qualified package name }
-    //   }
-    // }
-    const targets = json.neon['targets'];
-    assertIsLibraryV1(targets);
-    json.neon = upgradeLibraryV1(targets);
-    return true;
-}
-// The source manifest is the source of truth for all Neon
-// project metadata. This means you never need to go searching
-// for any other files to query the Neon project's metadata.
-// (Some data is replicated in the binary manifests, however,
-// since they are independently published in npm.)
-class LibraryManifest extends AbstractManifest {
-    _sourceJSON;
-    _expandedPlatforms;
-    constructor(json) {
-        super(json);
-        this._upgraded = normalizeLibraryCfg(this._json);
-        assertHasLibraryCfg(this._json);
-        this._sourceJSON = this._json;
-        this._expandedPlatforms = expandPlatformFamily(this._sourceJSON.neon.platforms);
-    }
-    static async load(dir) {
-        return new LibraryManifest(await readManifest(dir));
-    }
-    cfg() {
-        return this._sourceJSON.neon;
-    }
-    packageNames() {
-        const cfg = this.cfg();
-        return Object.keys(this._expandedPlatforms).map(key => `${cfg.org}/${key}`);
-    }
-    packageFor(target) {
-        const cfg = this.cfg();
-        for (const key in this._expandedPlatforms) {
-            const value = this._expandedPlatforms[key];
-            if (value === target) {
-                return `${cfg.org}/${key}`;
-            }
-        }
-        return undefined;
-    }
-    allPlatforms() {
-        return this._expandedPlatforms;
-    }
-    rustTargetFor(node) {
-        return this._expandedPlatforms[node];
-    }
-    manifestFor(target) {
-        const targetInfo = getTargetDescriptor(target);
-        const name = this.packageFor(target);
-        if (!name) {
-            throw new Error(`Rust target ${target} not found in "neon.platforms" table.`);
-        }
-        const json = {
-            name,
-            description: `Prebuilt binary package for \`${this.name}\` on \`${targetInfo.node}\`.`,
-            version: this.version,
-            os: [targetInfo.os],
-            cpu: [targetInfo.arch],
-            main: "index.node",
-            files: ["index.node"],
-            neon: {
-                type: "binary",
-                rust: target,
-                node: targetInfo.node,
-                os: targetInfo.os,
-                arch: targetInfo.arch,
-                abi: targetInfo.abi
-            }
-        };
-        const OPTIONAL_KEYS = [
-            'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
-        ];
-        for (const key of OPTIONAL_KEYS) {
-            if (key in this._json) {
-                json[key] = this._json[key];
-            }
-        }
-        return new BinaryManifest(json);
-    }
-    async updateLoader(platforms) {
-        const cfg = this.cfg();
-        if (!cfg.load) {
-            return;
-        }
-        const loader = await promises_namespaceObject.readFile(cfg.load, 'utf8');
-        function isPlatformTable(p) {
-            return p.value.properties.every(p => {
-                return p.type === 'Property' &&
-                    p.key.type === 'Literal' &&
-                    isNodePlatform(p.key.value);
-            });
-        }
-        const result = jscodeshift_default()(loader)
-            .find((jscodeshift_default()).ObjectExpression)
-            .filter(isPlatformTable)
-            .replaceWith((p) => {
-            const newProps = platforms.map(platform => {
-                return jscodeshift_default().property('init', jscodeshift_default().literal(platform), jscodeshift_default().arrowFunctionExpression([], jscodeshift_default().callExpression(jscodeshift_default().identifier('require'), [jscodeshift_default().literal(`${cfg.org}/${platform}`)])));
-            });
-            return jscodeshift_default().objectExpression([...p.value.properties, ...newProps]);
-        })
-            .toSource({ quote: 'single' });
-        await promises_namespaceObject.writeFile(cfg.load, result, 'utf8');
-    }
-    async addTargetPair(pair) {
-        const { node, rust } = pair;
-        if (this._expandedPlatforms[node] === rust) {
-            return null;
-        }
-        this._expandedPlatforms[node] = rust;
-        await this.save();
-        await this.updateLoader([node]);
-        return pair;
-    }
-    async addNodePlatform(platform) {
-        const targets = node2Rust(platform);
-        if (targets.length > 1) {
-            throw new Error(`multiple Rust targets found for Node platform ${platform}; please specify one of ${targets.join(', ')}`);
-        }
-        return await this.addTargetPair({ node: platform, rust: targets[0] });
-    }
-    async addRustTarget(target) {
-        return await this.addTargetPair({ node: rust2Node(target), rust: target });
-    }
-    filterNewTargets(family) {
-        let newTargets = [];
-        for (const [key, value] of Object.entries(family)) {
-            const node = key;
-            const rust = value;
-            if (this._expandedPlatforms[node] === rust) {
-                continue;
-            }
-            newTargets.push({ node, rust });
-        }
-        return newTargets;
-    }
-    async addPlatforms(family, opts = {}) {
-        let newTargets = this.filterNewTargets(family);
-        if (!newTargets.length) {
-            return [];
-        }
-        for (const { node, rust } of newTargets) {
-            if (opts.platformsSrc) {
-                opts.platformsSrc[node] = rust;
-            }
-            this._expandedPlatforms[node] = rust;
-        }
-        await this.save();
-        await this.updateLoader(newTargets.map(({ node }) => node));
-        return newTargets;
-    }
-    async addPlatformPreset(preset) {
-        const platformsSrc = this.cfg().platforms;
-        if (typeof platformsSrc === 'string') {
-            this.cfg().platforms = [platformsSrc, preset];
-            return this.addPlatforms(expandPlatformFamily(preset));
-        }
-        if (Array.isArray(platformsSrc)) {
-            platformsSrc.push(preset);
-            return this.addPlatforms(expandPlatformFamily(preset));
-        }
-        // Edge case: an empty object can be treated like an empty array
-        if (Object.keys(platformsSrc).length === 0) {
-            this.cfg().platforms = [];
-            return await this.addPlatformPreset(preset);
-        }
-        return this.addPlatforms(expandPlatformFamily(preset), { platformsSrc });
-    }
-    async updateTargets(log, bundle) {
-        if (!this._json.optionalDependencies) {
-            this._json.optionalDependencies = {};
-        }
-        const packages = this.packageNames();
-        for (const pkg of packages) {
-            if (!(pkg in this._json.optionalDependencies)) {
-                this._json.optionalDependencies[pkg] = this.version;
-            }
-        }
-        this.save();
-        log(`package.json after: ${await promises_namespaceObject.readFile(external_node_path_namespaceObject.join(process.cwd(), "package.json"))}`);
-        if (!bundle) {
-            return;
-        }
-        const PREAMBLE = `// AUTOMATICALLY GENERATED FILE. DO NOT EDIT.
-//
-// This code is never executed but is detected by the static analysis of
-// bundlers such as \`@vercel/ncc\`. The require() expression that selects
-// the right binary module for the current platform is too dynamic to be
-// analyzable by bundler analyses, so this module provides an exhaustive
-// static list for those analyses.
-
-if (0) {
-`;
-        const requires = packages.map(name => `  require('${name}');`).join('\n');
-        log(`generating bundler compatibility module at ${bundle}`);
-        await promises_namespaceObject.writeFile(bundle, PREAMBLE + requires + '\n}\n');
-    }
-}
-function upgradeLibraryV1(object) {
-    function splitSwap([key, value]) {
-        if (!/^@.*\//.test(value)) {
-            throw new TypeError(`expected namespaced npm package name, found ${value}`);
-        }
-        const pkg = value.split('/')[1];
-        assertIsNodePlatform(pkg);
-        assertIsRustTarget(key);
-        return [pkg, key];
-    }
-    const entries = Object.entries(object).map(splitSwap);
-    const orgs = new Set(Object.values(object).map(v => v.split('/')[0]));
-    if (orgs.size === 0) {
-        throw new Error("empty target table");
-    }
-    else if (orgs.size > 1) {
-        throw new Error(`multiple npm orgs found: ${orgs}`);
-    }
-    return {
-        type: 'library',
-        org: [...orgs][0],
-        platforms: Object.fromEntries(entries)
-    };
-}
-function upgradeBinaryV1(json) {
-    assertIsBinaryV1(json);
-    return {
-        type: 'binary',
-        rust: json.binary.rust,
-        node: json.binary.node,
-        os: json.binary.platform,
-        arch: json.binary.arch,
-        abi: json.binary.abi
-    };
-}
-function upgradeBinaryV2(json) {
-    assertIsBinaryV2(json);
-    return {
-        type: 'binary',
-        rust: json.rust,
-        node: json.node,
-        os: json.platform,
-        arch: json.arch,
-        abi: json.abi
-    };
-}
-
 ;// CONCATENATED MODULE: ./src/commands/tarball.ts
+
 
 
 
@@ -46950,7 +46325,7 @@ class Tarball {
         this._target = options.target || null;
         this._addon = options.file;
         this._inDir = options['in-dir'] || null;
-        this._outDir = options['out-dir'] || external_node_path_namespaceObject.join(process.cwd(), 'dist');
+        this._outDir = options['out-dir'] || external_node_path_.join(process.cwd(), 'dist');
         this._verbose = !!options.verbose;
     }
     log(msg) {
@@ -46960,7 +46335,7 @@ class Tarball {
     }
     async createTempDir(libManifest) {
         const target = this._target || await getCurrentTarget(msg => this.log(msg));
-        if (!isRustTarget(target)) {
+        if (!(0,lib_platform.isRustTarget)(target)) {
             throw new Error(`Rust target ${target} not supported.`);
         }
         const binaryManifest = libManifest.manifestFor(target);
@@ -46971,9 +46346,9 @@ class Tarball {
         this.log(`creating ${tmpdir}/package.json`);
         await binaryManifest.save(tmpdir);
         this.log(`copying ${this._addon} to ${tmpdir}/index.node`);
-        await promises_namespaceObject.copyFile(this._addon, external_node_path_namespaceObject.join(tmpdir, "index.node"));
+        await promises_.copyFile(this._addon, external_node_path_.join(tmpdir, "index.node"));
         this.log(`creating ${tmpdir}/README.md`);
-        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(tmpdir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
+        await promises_.writeFile(external_node_path_.join(tmpdir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
         return tmpdir;
     }
     async prepareInDir(libManifest) {
@@ -46981,14 +46356,14 @@ class Tarball {
             return await this.createTempDir(libManifest);
         }
         const version = libManifest.version;
-        const binaryManifest = await BinaryManifest.load(this._inDir);
+        const binaryManifest = await manifest_lib.BinaryManifest.load(this._inDir);
         const cfg = binaryManifest.cfg();
         // Since the source manifest is the source of truth, any time there's a
         // metadata mismatch between source and binary manifests, binary is wrong.
         if (this._target && (cfg.rust !== this._target)) {
             throw new Error(`Specified target ${this._target} does not match target ${cfg.rust} in ${this._inDir}`);
         }
-        const targetInfo = getTargetDescriptor(cfg.rust);
+        const targetInfo = (0,lib_platform.getTargetDescriptor)(cfg.rust);
         cfg.node = targetInfo.node;
         cfg.os = targetInfo.os;
         cfg.arch = targetInfo.arch;
@@ -47000,14 +46375,14 @@ class Tarball {
         await binaryManifest.save(this._inDir);
         // FIXME: make this path configurable
         this.log(`copying ${this._addon} to ${this._inDir}/index.node`);
-        await promises_namespaceObject.copyFile(this._addon, external_node_path_namespaceObject.join(this._inDir, "index.node"));
+        await promises_.copyFile(this._addon, external_node_path_.join(this._inDir, "index.node"));
         return this._inDir;
     }
     async run() {
         this.log(`creating directory ${this._outDir}`);
-        await promises_namespaceObject.mkdir(this._outDir, { recursive: true });
+        await promises_.mkdir(this._outDir, { recursive: true });
         this.log(`reading package.json`);
-        const libManifest = await LibraryManifest.load();
+        const libManifest = await manifest_lib.LibraryManifest.load();
         this.log(`manifest: ${libManifest.stringify()}`);
         const inDir = await this.prepareInDir(libManifest);
         this.log(`npm pack --json`);
@@ -47023,17 +46398,18 @@ class Tarball {
         // NOTE: This is a workaround for https://github.com/npm/cli/issues/3405
         const tarball = JSON.parse(result.stdout)[0].filename.replace('@', '').replace('/', '-');
         this.log(`tarball filename: ${tarball}`);
-        const dest = external_node_path_namespaceObject.join(this._outDir, tarball);
-        this.log(`copying ${external_node_path_namespaceObject.join(inDir, tarball)} to ${dest}`);
+        const dest = external_node_path_.join(this._outDir, tarball);
+        this.log(`copying ${external_node_path_.join(inDir, tarball)} to ${dest}`);
         // Copy instead of move since e.g. GitHub Actions Windows runners host temp directories
         // on a different device (which causes fs.renameSync to fail).
-        await promises_namespaceObject.copyFile(external_node_path_namespaceObject.join(inDir, tarball), dest);
+        await promises_.copyFile(external_node_path_.join(inDir, tarball), dest);
         console.log(dest);
     }
     ;
 }
 
 ;// CONCATENATED MODULE: ./src/commands/add-platform.ts
+
 
 
 
@@ -47134,15 +46510,15 @@ class AddPlatform {
             this.log('adding default system platform');
             return optionArray(await libManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg))));
         }
-        else if (isRustTarget(this._platform)) {
+        else if ((0,lib_platform.isRustTarget)(this._platform)) {
             this.log(`adding Rust target ${this._platform}`);
             return optionArray(await libManifest.addRustTarget(this._platform));
         }
-        else if (isNodePlatform(this._platform)) {
+        else if ((0,lib_platform.isNodePlatform)(this._platform)) {
             this.log(`adding Node platform ${this._platform}`);
             return optionArray(await libManifest.addNodePlatform(this._platform));
         }
-        else if (isPlatformPreset(this._platform)) {
+        else if ((0,lib_platform.isPlatformPreset)(this._platform)) {
             return libManifest.addPlatformPreset(this._platform);
         }
         else {
@@ -47153,18 +46529,18 @@ class AddPlatform {
         const { node, rust } = pair;
         const binaryManifest = libManifest.manifestFor(rust);
         this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
-        const treeDir = external_node_path_namespaceObject.join(this._outDir, node);
+        const treeDir = external_node_path_.join(this._outDir, node);
         this.log(`creating ${treeDir}`);
-        await promises_namespaceObject.mkdir(treeDir, { recursive: true });
+        await promises_.mkdir(treeDir, { recursive: true });
         this.log(`created ${treeDir}`);
         this.log(`creating ${treeDir}/package.json`);
         await binaryManifest.save(treeDir);
         this.log(`creating ${treeDir}/README.md`);
-        await promises_namespaceObject.writeFile(external_node_path_namespaceObject.join(treeDir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
+        await promises_.writeFile(external_node_path_.join(treeDir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
     }
     async run() {
         this.log(`reading package.json`);
-        const libManifest = await LibraryManifest.load();
+        const libManifest = await manifest_lib.LibraryManifest.load();
         this.log(`manifest: ${libManifest.stringify()}`);
         const modified = await this.addPlatform(libManifest);
         if (modified.length) {
@@ -47216,7 +46592,7 @@ class UpdatePlatforms {
     }
     async run() {
         this.log(`reading package.json (CWD=${process.cwd()})`);
-        const libManifest = await LibraryManifest.load();
+        const libManifest = await manifest_lib.LibraryManifest.load();
         const version = libManifest.version;
         this.log(`package.json before: ${libManifest.stringify()}`);
         this.log(`determined version: ${version}`);
@@ -47256,7 +46632,7 @@ class ListPlatforms {
     }
     async run() {
         this.log(`reading package.json`);
-        const libManifest = await LibraryManifest.load();
+        const libManifest = await manifest_lib.LibraryManifest.load();
         this.log(`manifest: ${libManifest.stringify()}`);
         const platforms = libManifest.allPlatforms();
         console.log(JSON.stringify(platforms, null, 2));
@@ -47368,7 +46744,7 @@ class RustTarget {
                 platform = `${platform}-${options.abi}`;
             }
         }
-        if (!isNodePlatform(platform)) {
+        if (!(0,lib_platform.isNodePlatform)(platform)) {
             throw new Error(`${platform} is not a valid Node platform.`);
         }
         this._platform = platform;
@@ -47380,7 +46756,7 @@ class RustTarget {
     }
     async run() {
         this.log(`reading package.json`);
-        const libManifest = await LibraryManifest.load();
+        const libManifest = await manifest_lib.LibraryManifest.load();
         this.log(`manifest: ${libManifest.stringify()}`);
         const rust = libManifest.rustTargetFor(this._platform);
         if (!rust) {
@@ -47419,7 +46795,7 @@ class Preset {
         if (options._unknown.length > 1) {
             throw new Error(`Unexpected argument ${options._unknown[1]}`);
         }
-        assertIsPlatformPreset(options._unknown[0]);
+        (0,lib_platform.assertIsPlatformPreset)(options._unknown[0]);
         this._preset = options._unknown[0];
     }
     log(msg) {
@@ -47428,7 +46804,7 @@ class Preset {
         }
     }
     async run() {
-        const map = expandPlatformPreset(this._preset);
+        const map = (0,lib_platform.expandPlatformPreset)(this._preset);
         console.log(JSON.stringify(map, null, 2));
     }
 }
@@ -47543,7 +46919,7 @@ class Ci {
     }
     async run() {
         this.log(`reading package.json`);
-        const libManifest = await LibraryManifest.load();
+        const libManifest = await manifest_lib.LibraryManifest.load();
         this.log(`manifest: ${libManifest.stringify()}`);
         const platforms = libManifest.allPlatforms();
         const metadata = this._provider.metadata(platforms);
@@ -47668,7 +47044,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(4528);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(2633);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -50696,8 +50072,8 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 /* harmony default export */ const chalk_source = (chalk);
 
-// EXTERNAL MODULE: ./src/command.ts + 46 modules
-var command = __nccwpck_require__(4528);
+// EXTERNAL MODULE: ./src/command.ts + 42 modules
+var command = __nccwpck_require__(2633);
 ;// CONCATENATED MODULE: ./src/print.ts
 
 
@@ -50877,6 +50253,13 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("fs");
 
 /***/ }),
 
+/***/ 3977:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs/promises");
+
+/***/ }),
+
 /***/ 2033:
 /***/ ((module) => {
 
@@ -50888,6 +50271,13 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:module"
 /***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:os");
+
+/***/ }),
+
+/***/ 9411:
+/***/ ((module) => {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:path");
 
 /***/ }),
 
@@ -65581,6 +64971,710 @@ module.exports = (__nccwpck_require__(8372)/* .proxy */ .sj)({
   'android-arm-eabi': () => __nccwpck_require__(1738)
 });
 
+
+/***/ }),
+
+/***/ 4696:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.LibraryManifest = exports.BinaryManifest = void 0;
+const fs = __importStar(__nccwpck_require__(3977));
+const path = __importStar(__nccwpck_require__(9411));
+const platform_cjs_1 = __nccwpck_require__(2147);
+const jscodeshift_1 = __importDefault(__nccwpck_require__(7416));
+function assertIsObject(json, path) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected "${path}" property to be an object, found ${json}`);
+    }
+}
+// Idea thanks to https://www.lucaspaganini.com/academy/assertion-functions-typescript-narrowing-5
+function assertHasProps(keys, json, path) {
+    assertIsObject(json, path);
+    for (const key of keys) {
+        if (!(key in json)) {
+            throw new TypeError(`property "${path}.${key}" not found`);
+        }
+    }
+}
+function assertIsBinaryCfg(json) {
+    assertHasProps(['type', 'rust', 'node', 'os', 'arch', 'abi'], json, "neon");
+    if (json.type !== 'binary') {
+        throw new TypeError(`expected "neon.type" property to be "binary", found ${json.type}`);
+    }
+    if (typeof json.rust !== 'string' || !(0, platform_cjs_1.isRustTarget)(json.rust)) {
+        throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
+    }
+    if (typeof json.node !== 'string' || !(0, platform_cjs_1.isNodePlatform)(json.node)) {
+        throw new TypeError(`expected "neon.node" to be a valid Node target, found ${json.node}`);
+    }
+    if (typeof json.os !== 'string') {
+        throw new TypeError(`expected "neon.os" to be a string, found ${json.os}`);
+    }
+    if (typeof json.arch !== 'string') {
+        throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
+    }
+    if (json.abi !== null && typeof json.abi !== 'string') {
+        throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
+    }
+}
+function assertIsPlatformMap(json, path) {
+    assertIsObject(json, path);
+    for (const key in json) {
+        const value = json[key];
+        if (!(0, platform_cjs_1.isNodePlatform)(key)) {
+            throw new TypeError(`platform table key ${key} is not a valid Node platform`);
+        }
+        if (typeof value !== 'string' || !(0, platform_cjs_1.isRustTarget)(value)) {
+            throw new TypeError(`platform table value ${value} is not a valid Rust target`);
+        }
+    }
+}
+function assertIsPlatformFamily(json, path) {
+    if (typeof json === 'string') {
+        (0, platform_cjs_1.assertIsPlatformPreset)(json);
+        return;
+    }
+    if (Array.isArray(json)) {
+        for (const elt of json) {
+            (0, platform_cjs_1.assertIsPlatformPreset)(elt);
+        }
+        return;
+    }
+    assertIsPlatformMap(json, path);
+}
+function assertIsBinaryV2(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected "neon" to be an object, found ${json}`);
+    }
+    assertHasProps(['rust', 'node', 'platform', 'arch', 'abi'], json, "neon");
+    if (!(0, platform_cjs_1.isRustTarget)(json.rust)) {
+        throw new TypeError(`expected "neon.rust" to be a valid Rust target, found ${json.rust}`);
+    }
+    if (!(0, platform_cjs_1.isNodePlatform)(json.node)) {
+        throw new TypeError(`expected "neon.node" to be a valid Node platform, found ${json.node}`);
+    }
+    if (typeof json.platform !== 'string') {
+        throw new TypeError(`expected "neon.platform" to be a string, found ${json.platform}`);
+    }
+    if (typeof json.arch !== 'string') {
+        throw new TypeError(`expected "neon.arch" to be a string, found ${json.arch}`);
+    }
+    if (json.abi !== null && typeof json.abi !== 'string') {
+        throw new TypeError(`expected "neon.abi" to be a string or null, found ${json.abi}`);
+    }
+}
+function assertIsBinaryV1(json) {
+    assertHasProps(['binary'], json, "neon");
+    const binary = json.binary;
+    if (!binary || typeof binary !== 'object') {
+        throw new TypeError(`expected "neon.binary" to be an object, found ${binary}`);
+    }
+    assertHasProps(['rust', 'node', 'platform', 'arch', 'abi'], binary, "neon.binary");
+    if (typeof binary.rust !== 'string' || !(0, platform_cjs_1.isRustTarget)(binary.rust)) {
+        throw new TypeError(`expected "neon.binary.rust" to be a valid Rust target, found ${binary.rust}`);
+    }
+    if (!(0, platform_cjs_1.isNodePlatform)(binary.node)) {
+        throw new TypeError(`expected "neon.binary.node" to be a valid Node platform, found ${binary.node}`);
+    }
+    if (typeof binary.platform !== 'string') {
+        throw new TypeError(`expected "neon.binary.platform" to be a string, found ${binary.platform}`);
+    }
+    if (typeof binary.arch !== 'string') {
+        throw new TypeError(`expected "neon.binary.arch" to be a string, found ${binary.arch}`);
+    }
+    if (binary.abi !== null && typeof binary.abi !== 'string') {
+        throw new TypeError(`expected "neon.binary.abi" to be a string or null, found ${binary.abi}`);
+    }
+}
+function assertIsLibraryV1(json) {
+    assertIsObject(json, "neon");
+    for (const key in json) {
+        const value = json[key];
+        if (!(0, platform_cjs_1.isRustTarget)(key)) {
+            throw new TypeError(`target table key ${key} is not a valid Rust target`);
+        }
+        if (typeof value !== 'string') {
+            throw new TypeError(`target table value ${value} is not a string`);
+        }
+    }
+}
+function assertIsLibraryCfg(json) {
+    assertHasProps(['type', 'org', 'platforms'], json, "neon");
+    if (json.type !== 'library') {
+        throw new TypeError(`expected "neon.type" property to be "library", found ${json.type}`);
+    }
+    if (typeof json.org !== 'string') {
+        throw new TypeError(`expected "neon.org" to be a string, found ${json.org}`);
+    }
+    assertIsPlatformFamily(json.platforms, "neon.platforms");
+    if ('load' in json) {
+        if (typeof json.load !== 'string' && typeof json.load !== 'undefined') {
+            throw new TypeError(`expected "neon.load" to be a string, found ${json.load}`);
+        }
+    }
+}
+function assertIsPreamble(json) {
+    if (!json || typeof json !== 'object') {
+        throw new TypeError(`expected binary Neon package manifest, found ${json}`);
+    }
+    if (!('version' in json) || typeof json.version !== 'string') {
+        throw new TypeError('valid "version" string not found in Neon package manifest');
+    }
+    if (!('name' in json) || typeof json.name !== 'string') {
+        throw new TypeError('valid "name" string not found in Neon package manifest');
+    }
+}
+class AbstractManifest {
+    constructor(json) {
+        assertIsPreamble(json);
+        this._json = json;
+        this._upgraded = false;
+    }
+    get name() { return this._json.name; }
+    set name(value) { this._json.name = value; }
+    get version() { return this._json.version; }
+    set version(value) { this._json.version = value; }
+    get description() { return this._json.description ?? ""; }
+    get upgraded() { return this._upgraded; }
+    async save(dir) {
+        dir = dir ?? process.cwd();
+        await fs.writeFile(path.join(dir, "package.json"), JSON.stringify(this._json, null, 2), { encoding: 'utf8' });
+    }
+    stringify() {
+        return JSON.stringify(this._json);
+    }
+}
+function assertHasCfg(json) {
+    if (!('neon' in json)) {
+        throw new TypeError('property "neon" not found');
+    }
+    assertIsObject(json.neon, "neon");
+}
+function assertHasBinaryCfg(json) {
+    assertHasCfg(json);
+    assertIsBinaryCfg(json.neon);
+}
+function assertHasLibraryCfg(json) {
+    assertHasCfg(json);
+    assertIsLibraryCfg(json.neon);
+}
+async function readManifest(dir) {
+    dir = dir ?? process.cwd();
+    return JSON.parse(await fs.readFile(path.join(dir, "package.json"), { encoding: 'utf8' }));
+}
+class BinaryManifest extends AbstractManifest {
+    constructor(json) {
+        super(json);
+        this._upgraded = normalizeBinaryCfg(this._json);
+        assertHasBinaryCfg(this._json);
+        this._binaryJSON = this._json;
+    }
+    cfg() {
+        return this._binaryJSON.neon;
+    }
+    static async load(dir) {
+        return new BinaryManifest(await readManifest(dir));
+    }
+}
+exports.BinaryManifest = BinaryManifest;
+function normalizeBinaryCfg(json) {
+    assertHasCfg(json);
+    // V3 format: {
+    //   neon: {
+    //     type: 'binary',
+    //     rust: RustTarget,
+    //     node: NodeTarget,
+    //     os: string,
+    //     arch: string,
+    //     abi: string | null
+    //   }
+    // }
+    if ('type' in json.neon && 'os' in json.neon) {
+        return false;
+    }
+    // V2 format: {
+    //   neon: {
+    //     type: 'binary',
+    //     rust: RustTarget,
+    //     node: NodeTarget,
+    //     platform: string,
+    //     arch: string,
+    //     abi: string | null
+    //   }
+    // }
+    if ('type' in json.neon) {
+        json.neon = upgradeBinaryV2(json.neon);
+        return true;
+    }
+    // V1 format: {
+    //   neon: {
+    //     binary: {
+    //       rust: RustTarget,
+    //       node: NodeTarget,
+    //       platform: string,
+    //       arch: string,
+    //       abi: string | null
+    //     }
+    //   }
+    // }
+    json.neon = upgradeBinaryV1(json.neon);
+    return true;
+}
+function normalizeLibraryCfg(json) {
+    assertHasCfg(json);
+    // V5 format: {
+    //   type: 'library',
+    //   org: string,
+    //   platforms: PlatformFamily,
+    //   load?: string | undefined
+    // }
+    if ('type' in json.neon && json.neon.type === 'library') {
+        return false;
+    }
+    // V4 format: {
+    //   neon: {
+    //     type: 'source',
+    //     org: string,
+    //     platforms: PlatformFamily,
+    //     load?: string | undefined
+    //   }
+    // }
+    if ('type' in json.neon && 'platforms' in json.neon) {
+        json.neon.type = 'library';
+        return true;
+    }
+    // V3 format: {
+    //   neon: {
+    //     type: 'source',
+    //     org: string,
+    //     targets: PlatformFamily
+    //   }
+    // }
+    if ('type' in json.neon) {
+        const org = json.neon['org'];
+        const targets = json.neon['targets'];
+        assertIsPlatformFamily(targets, "neon.targets");
+        json.neon = {
+            type: 'library',
+            org,
+            platforms: targets
+        };
+        return true;
+    }
+    // V2 format: {
+    //   neon: {
+    //     org: string,
+    //     targets: { Node => Rust }
+    //   }
+    // }
+    if ('org' in json.neon) {
+        const platforms = json.neon['targets'];
+        assertIsPlatformMap(platforms, "neon.targets");
+        json.neon = {
+            type: 'library',
+            org: json.neon.org,
+            platforms
+        };
+        return true;
+    }
+    // V1 format: {
+    //   neon: {
+    //     targets: { Rust => fully-qualified package name }
+    //   }
+    // }
+    const targets = json.neon['targets'];
+    assertIsLibraryV1(targets);
+    json.neon = upgradeLibraryV1(targets);
+    return true;
+}
+// The source manifest is the source of truth for all Neon
+// project metadata. This means you never need to go searching
+// for any other files to query the Neon project's metadata.
+// (Some data is replicated in the binary manifests, however,
+// since they are independently published in npm.)
+class LibraryManifest extends AbstractManifest {
+    constructor(json) {
+        super(json);
+        this._upgraded = normalizeLibraryCfg(this._json);
+        assertHasLibraryCfg(this._json);
+        this._sourceJSON = this._json;
+        this._expandedPlatforms = (0, platform_cjs_1.expandPlatformFamily)(this._sourceJSON.neon.platforms);
+    }
+    static async load(dir) {
+        return new LibraryManifest(await readManifest(dir));
+    }
+    cfg() {
+        return this._sourceJSON.neon;
+    }
+    packageNames() {
+        const cfg = this.cfg();
+        return Object.keys(this._expandedPlatforms).map(key => `${cfg.org}/${key}`);
+    }
+    packageFor(target) {
+        const cfg = this.cfg();
+        for (const key in this._expandedPlatforms) {
+            const value = this._expandedPlatforms[key];
+            if (value === target) {
+                return `${cfg.org}/${key}`;
+            }
+        }
+        return undefined;
+    }
+    allPlatforms() {
+        return this._expandedPlatforms;
+    }
+    rustTargetFor(node) {
+        return this._expandedPlatforms[node];
+    }
+    manifestFor(target) {
+        const targetInfo = (0, platform_cjs_1.getTargetDescriptor)(target);
+        const name = this.packageFor(target);
+        if (!name) {
+            throw new Error(`Rust target ${target} not found in "neon.platforms" table.`);
+        }
+        const json = {
+            name,
+            description: `Prebuilt binary package for \`${this.name}\` on \`${targetInfo.node}\`.`,
+            version: this.version,
+            os: [targetInfo.os],
+            cpu: [targetInfo.arch],
+            main: "index.node",
+            files: ["index.node"],
+            neon: {
+                type: "binary",
+                rust: target,
+                node: targetInfo.node,
+                os: targetInfo.os,
+                arch: targetInfo.arch,
+                abi: targetInfo.abi
+            }
+        };
+        const OPTIONAL_KEYS = [
+            'author', 'repository', 'keywords', 'bugs', 'homepage', 'license', 'engines'
+        ];
+        for (const key of OPTIONAL_KEYS) {
+            if (key in this._json) {
+                json[key] = this._json[key];
+            }
+        }
+        return new BinaryManifest(json);
+    }
+    async updateLoader(platforms) {
+        const cfg = this.cfg();
+        if (!cfg.load) {
+            return;
+        }
+        const loader = await fs.readFile(cfg.load, 'utf8');
+        function isPlatformTable(p) {
+            return p.value.properties.every(p => {
+                return p.type === 'Property' &&
+                    p.key.type === 'Literal' &&
+                    (0, platform_cjs_1.isNodePlatform)(p.key.value);
+            });
+        }
+        const result = (0, jscodeshift_1.default)(loader)
+            .find(jscodeshift_1.default.ObjectExpression)
+            .filter(isPlatformTable)
+            .replaceWith((p) => {
+            const newProps = platforms.map(platform => {
+                return jscodeshift_1.default.property('init', jscodeshift_1.default.literal(platform), jscodeshift_1.default.arrowFunctionExpression([], jscodeshift_1.default.callExpression(jscodeshift_1.default.identifier('require'), [jscodeshift_1.default.literal(`${cfg.org}/${platform}`)])));
+            });
+            return jscodeshift_1.default.objectExpression([...p.value.properties, ...newProps]);
+        })
+            .toSource({ quote: 'single' });
+        await fs.writeFile(cfg.load, result, 'utf8');
+    }
+    async addTargetPair(pair) {
+        const { node, rust } = pair;
+        if (this._expandedPlatforms[node] === rust) {
+            return null;
+        }
+        this._expandedPlatforms[node] = rust;
+        await this.save();
+        await this.updateLoader([node]);
+        return pair;
+    }
+    async addNodePlatform(platform) {
+        const targets = (0, platform_cjs_1.node2Rust)(platform);
+        if (targets.length > 1) {
+            throw new Error(`multiple Rust targets found for Node platform ${platform}; please specify one of ${targets.join(', ')}`);
+        }
+        return await this.addTargetPair({ node: platform, rust: targets[0] });
+    }
+    async addRustTarget(target) {
+        return await this.addTargetPair({ node: (0, platform_cjs_1.rust2Node)(target), rust: target });
+    }
+    filterNewTargets(family) {
+        let newTargets = [];
+        for (const [key, value] of Object.entries(family)) {
+            const node = key;
+            const rust = value;
+            if (this._expandedPlatforms[node] === rust) {
+                continue;
+            }
+            newTargets.push({ node, rust });
+        }
+        return newTargets;
+    }
+    async addPlatforms(family, opts = {}) {
+        let newTargets = this.filterNewTargets(family);
+        if (!newTargets.length) {
+            return [];
+        }
+        for (const { node, rust } of newTargets) {
+            if (opts.platformsSrc) {
+                opts.platformsSrc[node] = rust;
+            }
+            this._expandedPlatforms[node] = rust;
+        }
+        await this.save();
+        await this.updateLoader(newTargets.map(({ node }) => node));
+        return newTargets;
+    }
+    async addPlatformPreset(preset) {
+        const platformsSrc = this.cfg().platforms;
+        if (typeof platformsSrc === 'string') {
+            this.cfg().platforms = [platformsSrc, preset];
+            return this.addPlatforms((0, platform_cjs_1.expandPlatformFamily)(preset));
+        }
+        if (Array.isArray(platformsSrc)) {
+            platformsSrc.push(preset);
+            return this.addPlatforms((0, platform_cjs_1.expandPlatformFamily)(preset));
+        }
+        // Edge case: an empty object can be treated like an empty array
+        if (Object.keys(platformsSrc).length === 0) {
+            this.cfg().platforms = [];
+            return await this.addPlatformPreset(preset);
+        }
+        return this.addPlatforms((0, platform_cjs_1.expandPlatformFamily)(preset), { platformsSrc });
+    }
+    async updateTargets(log, bundle) {
+        if (!this._json.optionalDependencies) {
+            this._json.optionalDependencies = {};
+        }
+        const packages = this.packageNames();
+        for (const pkg of packages) {
+            if (!(pkg in this._json.optionalDependencies)) {
+                this._json.optionalDependencies[pkg] = this.version;
+            }
+        }
+        this.save();
+        log(`package.json after: ${await fs.readFile(path.join(process.cwd(), "package.json"))}`);
+        if (!bundle) {
+            return;
+        }
+        const PREAMBLE = `// AUTOMATICALLY GENERATED FILE. DO NOT EDIT.
+//
+// This code is never executed but is detected by the static analysis of
+// bundlers such as \`@vercel/ncc\`. The require() expression that selects
+// the right binary module for the current platform is too dynamic to be
+// analyzable by bundler analyses, so this module provides an exhaustive
+// static list for those analyses.
+
+if (0) {
+`;
+        const requires = packages.map(name => `  require('${name}');`).join('\n');
+        log(`generating bundler compatibility module at ${bundle}`);
+        await fs.writeFile(bundle, PREAMBLE + requires + '\n}\n');
+    }
+}
+exports.LibraryManifest = LibraryManifest;
+function upgradeLibraryV1(object) {
+    function splitSwap([key, value]) {
+        if (!/^@.*\//.test(value)) {
+            throw new TypeError(`expected namespaced npm package name, found ${value}`);
+        }
+        const pkg = value.split('/')[1];
+        (0, platform_cjs_1.assertIsNodePlatform)(pkg);
+        (0, platform_cjs_1.assertIsRustTarget)(key);
+        return [pkg, key];
+    }
+    const entries = Object.entries(object).map(splitSwap);
+    const orgs = new Set(Object.values(object).map(v => v.split('/')[0]));
+    if (orgs.size === 0) {
+        throw new Error("empty target table");
+    }
+    else if (orgs.size > 1) {
+        throw new Error(`multiple npm orgs found: ${orgs}`);
+    }
+    return {
+        type: 'library',
+        org: [...orgs][0],
+        platforms: Object.fromEntries(entries)
+    };
+}
+function upgradeBinaryV1(json) {
+    assertIsBinaryV1(json);
+    return {
+        type: 'binary',
+        rust: json.binary.rust,
+        node: json.binary.node,
+        os: json.binary.platform,
+        arch: json.binary.arch,
+        abi: json.binary.abi
+    };
+}
+function upgradeBinaryV2(json) {
+    assertIsBinaryV2(json);
+    return {
+        type: 'binary',
+        rust: json.rust,
+        node: json.node,
+        os: json.platform,
+        arch: json.arch,
+        abi: json.abi
+    };
+}
+
+
+/***/ }),
+
+/***/ 2147:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.rust2Node = exports.node2Rust = exports.getTargetDescriptor = exports.expandPlatformFamily = exports.expandPlatformPreset = exports.assertIsPlatformPreset = exports.isPlatformPreset = exports.assertIsNodePlatform = exports.isNodePlatform = exports.assertIsRustTarget = exports.isRustTarget = void 0;
+const rust_json_1 = __importDefault(__nccwpck_require__(6685));
+const node_json_1 = __importDefault(__nccwpck_require__(2642));
+const preset_json_1 = __importDefault(__nccwpck_require__(6757));
+function isRustTarget(x) {
+    return (typeof x === 'string') && (x in rust_json_1.default);
+}
+exports.isRustTarget = isRustTarget;
+function assertIsRustTarget(x) {
+    if (!isRustTarget(x)) {
+        throw new RangeError(`invalid Rust target: ${x}`);
+    }
+}
+exports.assertIsRustTarget = assertIsRustTarget;
+function isNodePlatform(x) {
+    return (typeof x === 'string') && (x in node_json_1.default);
+}
+exports.isNodePlatform = isNodePlatform;
+function assertIsNodePlatform(x) {
+    if (!isNodePlatform(x)) {
+        throw new RangeError(`invalid platform: ${x}`);
+    }
+}
+exports.assertIsNodePlatform = assertIsNodePlatform;
+function isPlatformPreset(x) {
+    return (typeof x === 'string') && (x in preset_json_1.default);
+}
+exports.isPlatformPreset = isPlatformPreset;
+function assertIsPlatformPreset(x) {
+    if (!isPlatformPreset(x)) {
+        throw new RangeError(`invalid platform family preset: ${x}`);
+    }
+}
+exports.assertIsPlatformPreset = assertIsPlatformPreset;
+function lookupPlatformPreset(key) {
+    return preset_json_1.default[key];
+}
+function merge(maps) {
+    const merged = Object.create(null);
+    for (const map of maps) {
+        Object.assign(merged, map);
+    }
+    return merged;
+}
+function expandPlatformPreset(preset) {
+    return expandPlatformFamily(lookupPlatformPreset(preset));
+}
+exports.expandPlatformPreset = expandPlatformPreset;
+function expandPlatformFamily(family) {
+    return isPlatformPreset(family)
+        ? expandPlatformPreset(family)
+        : Array.isArray(family)
+            ? merge(family.map(expandPlatformFamily))
+            : family;
+}
+exports.expandPlatformFamily = expandPlatformFamily;
+function getTargetDescriptor(target) {
+    const node = rust_json_1.default[target];
+    if (!isNodePlatform(node)) {
+        throw new Error(`Rust target ${target} not supported`);
+    }
+    const nodeDescriptor = node_json_1.default[node];
+    const badTarget = nodeDescriptor.llvm.find(t => !isRustTarget(t));
+    if (badTarget) {
+        throw new Error(`Rust target ${badTarget} not supported`);
+    }
+    return {
+        node,
+        os: nodeDescriptor.os,
+        arch: nodeDescriptor.arch,
+        abi: nodeDescriptor.abi,
+        llvm: nodeDescriptor.llvm
+    };
+}
+exports.getTargetDescriptor = getTargetDescriptor;
+function node2Rust(target) {
+    return node_json_1.default[target].llvm.map(rt => {
+        assertIsRustTarget(rt);
+        return rt;
+    });
+}
+exports.node2Rust = node2Rust;
+function rust2Node(target) {
+    const nt = rust_json_1.default[target];
+    assertIsNodePlatform(nt);
+    return nt;
+}
+exports.rust2Node = rust2Node;
+
+
+/***/ }),
+
+/***/ 2642:
+/***/ ((module) => {
+
+module.exports = JSON.parse('{"darwin-arm64":{"os":"darwin","arch":"arm64","abi":null,"llvm":["aarch64-apple-darwin"]},"darwin-x64":{"os":"darwin","arch":"x64","abi":null,"llvm":["x86_64-apple-darwin"]},"ios-arm64":{"os":"ios","arch":"arm64","abi":null,"llvm":["aarch64-apple-ios"]},"ios-x64":{"os":"ios","arch":"x64","abi":null,"llvm":["x86_64-apple-ios"]},"android-arm64":{"os":"android","arch":"arm64","abi":null,"llvm":["aarch64-linux-android"]},"android-arm-eabi":{"os":"android","arch":"arm","abi":"eabi","llvm":["armv7-linux-androideabi"]},"android-ia32":{"os":"android","arch":"ia32","abi":null,"llvm":["i686-linux-android"]},"android-x64":{"os":"android","arch":"x64","abi":null,"llvm":["x86_64-linux-android"]},"win32-arm64-msvc":{"os":"win32","arch":"arm64","abi":"msvc","llvm":["aarch64-pc-windows-msvc"]},"win32-ia32-gnu":{"os":"win32","arch":"ia32","abi":"gnu","llvm":["i686-pc-windows-gnu"]},"win32-ia32-msvc":{"os":"win32","arch":"ia32","abi":"msvc","llvm":["i686-pc-windows-msvc"]},"win32-x64-gnu":{"os":"win32","arch":"x64","abi":"gnu","llvm":["x86_64-pc-windows-gnu"]},"win32-x64-msvc":{"os":"win32","arch":"x64","abi":"msvc","llvm":["x86_64-pc-windows-msvc"]},"linux-arm64-gnu":{"os":"linux","arch":"arm64","abi":"gnu","llvm":["aarch64-unknown-linux-gnu"]},"linux-arm64-musl":{"os":"linux","arch":"arm64","abi":"musl","llvm":["aarch64-unknown-linux-musl"]},"linux-arm-gnueabihf":{"os":"linux","arch":"arm","abi":"gnueabihf","llvm":["arm-unknown-linux-gnueabihf","armv7-unknown-linux-gnueabihf"]},"linux-arm-musleabihf":{"os":"linux","arch":"arm","abi":"musleabihf","llvm":["arm-unknown-linux-musleabihf","armv7-unknown-linux-musleabihf"]},"linux-ia32-gnu":{"os":"linux","arch":"ia32","abi":"gnu","llvm":["i686-unknown-linux-gnu"]},"linux-ia32-musl":{"os":"linux","arch":"ia32","abi":"musl","llvm":["i686-unknown-linux-musl"]},"linux-mips-gnu":{"os":"linux","arch":"mips","abi":"gnu","llvm":["mips-unknown-linux-gnu"]},"linux-mips-musl":{"os":"linux","arch":"mips","abi":"musl","llvm":["mips-unknown-linux-musl"]},"linux-mips64-gnuabi64":{"os":"linux","arch":"mips64","abi":"gnuabi64","llvm":["mips64-unknown-linux-gnuabi64"]},"linux-mips64-muslabi64":{"os":"linux","arch":"mips64","abi":"muslabi64","llvm":["mips64-unknown-linux-muslabi64"]},"linux-mips64el-gnuabi64":{"os":"linux","arch":"mips64el","abi":"gnuabi64","llvm":["mips64el-unknown-linux-gnuabi64"]},"linux-mips64el-muslabi64":{"os":"linux","arch":"mips64el","abi":"muslabi64","llvm":["mips64el-unknown-linux-muslabi64"]},"linux-mipsel-gnu":{"os":"linux","arch":"mipsel","abi":"gnu","llvm":["mipsel-unknown-linux-gnu"]},"linux-mipsel-musl":{"os":"linux","arch":"mipsel","abi":"musl","llvm":["mipsel-unknown-linux-musl"]},"linux-powerpc-gnu":{"os":"linux","arch":"powerpc","abi":"gnu","llvm":["powerpc-unknown-linux-gnu"]},"linux-powerpc64-gnu":{"os":"linux","arch":"powerpc64","abi":"gnu","llvm":["powerpc64-unknown-linux-gnu"]},"linux-powerpc64le-gnu":{"os":"linux","arch":"powerpc64le","abi":"gnu","llvm":["powerpc64le-unknown-linux-gnu"]},"linux-riscv64gc-gnu":{"os":"linux","arch":"riscv64gc","abi":"gnu","llvm":["riscv64gc-unknown-linux-gnu"]},"linux-s390x-gnu":{"os":"linux","arch":"s390x","abi":"gnu","llvm":["s390x-unknown-linux-gnu"]},"linux-sparc64-gnu":{"os":"linux","arch":"sparc64","abi":"gnu","llvm":["sparc64-unknown-linux-gnu"]},"linux-x64-gnu":{"os":"linux","arch":"x64","abi":"gnu","llvm":["x86_64-unknown-linux-gnu"]},"linux-x64-gnux32":{"os":"linux","arch":"x64","abi":"gnux32","llvm":["x86_64-unknown-linux-gnux32"]},"linux-x64-musl":{"os":"linux","arch":"x64","abi":"musl","llvm":["x86_64-unknown-linux-musl"]},"freebsd-ia32":{"os":"freebsd","arch":"ia32","abi":null,"llvm":["i686-unknown-freebsd"]},"freebsd-x64":{"os":"freebsd","arch":"x64","abi":null,"llvm":["x86_64-unknown-freebsd"]}}');
+
+/***/ }),
+
+/***/ 6757:
+/***/ ((module) => {
+
+module.exports = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
+
+/***/ }),
+
+/***/ 6685:
+/***/ ((module) => {
+
+module.exports = JSON.parse('{"aarch64-apple-darwin":"darwin-arm64","x86_64-apple-darwin":"darwin-x64","aarch64-apple-ios":"ios-arm64","x86_64-apple-ios":"ios-x64","aarch64-linux-android":"android-arm64","armv7-linux-androideabi":"android-arm-eabi","i686-linux-android":"android-ia32","x86_64-linux-android":"android-x64","aarch64-pc-windows-msvc":"win32-arm64-msvc","i686-pc-windows-gnu":"win32-ia32-gnu","i686-pc-windows-msvc":"win32-ia32-msvc","x86_64-pc-windows-gnu":"win32-x64-gnu","x86_64-pc-windows-msvc":"win32-x64-msvc","aarch64-unknown-linux-gnu":"linux-arm64-gnu","aarch64-unknown-linux-musl":"linux-arm64-musl","arm-unknown-linux-gnueabihf":"linux-arm-gnueabihf","arm-unknown-linux-musleabihf":"linux-arm-musleabihf","armv7-unknown-linux-gnueabihf":"linux-arm-gnueabihf","armv7-unknown-linux-musleabihf":"linux-arm-musleabihf","i686-unknown-linux-gnu":"linux-ia32-gnu","i686-unknown-linux-musl":"linux-ia32-musl","mips-unknown-linux-gnu":"linux-mips-gnu","mips-unknown-linux-musl":"linux-mips-musl","mips64-unknown-linux-gnuabi64":"linux-mips64-gnuabi64","mips64-unknown-linux-muslabi64":"linux-mips64-muslabi64","mips64el-unknown-linux-gnuabi64":"linux-mips64el-gnuabi64","mips64el-unknown-linux-muslabi64":"linux-mips64el-muslabi64","mipsel-unknown-linux-gnu":"linux-mipsel-gnu","mipsel-unknown-linux-musl":"linux-mipsel-musl","powerpc-unknown-linux-gnu":"linux-powerpc-gnu","powerpc64-unknown-linux-gnu":"linux-powerpc64-gnu","powerpc64le-unknown-linux-gnu":"linux-powerpc64le-gnu","riscv64gc-unknown-linux-gnu":"linux-riscv64gc-gnu","s390x-unknown-linux-gnu":"linux-s390x-gnu","sparc64-unknown-linux-gnu":"linux-sparc64-gnu","x86_64-unknown-linux-gnu":"linux-x64-gnu","x86_64-unknown-linux-gnux32":"linux-x64-gnux32","x86_64-unknown-linux-musl":"linux-x64-musl","i686-unknown-freebsd":"freebsd-ia32","x86_64-unknown-freebsd":"freebsd-x64"}');
 
 /***/ })
 

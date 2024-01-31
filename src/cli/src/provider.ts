@@ -1,4 +1,4 @@
-import { PlatformMap } from './platform.js';
+import { PlatformMap } from '@neon-rs/manifest/platform';
 import { GitHub } from './ci/github.js';
 
 export enum ProviderName {
