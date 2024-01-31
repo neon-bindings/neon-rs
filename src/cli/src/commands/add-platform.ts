@@ -2,8 +2,9 @@ import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { getCurrentTarget, isNodePlatform, isRustTarget, isPlatformPreset, TargetPair } from '../platform.js';
+import { isNodePlatform, isRustTarget, isPlatformPreset, TargetPair } from '../platform.js';
 import { LibraryManifest } from '../manifest.js';
+import { getCurrentTarget } from '../target.js';
 
 function optionArray<T>(option: T | undefined | null): T[] {
   return option == null ? [] : [option];

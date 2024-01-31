@@ -4,8 +4,9 @@ import * as temp from 'temp';
 import commandLineArgs from 'command-line-args';
 import { execa } from 'execa';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { getCurrentTarget, getTargetDescriptor, isRustTarget } from '../platform.js';
+import { getTargetDescriptor, isRustTarget } from '../platform.js';
 import { LibraryManifest, BinaryManifest } from '../manifest.js';
+import { getCurrentTarget } from '../target.js';
 
 const mktemp = temp.track().mkdir;
 
