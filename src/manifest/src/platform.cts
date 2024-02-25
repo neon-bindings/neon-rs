@@ -2,6 +2,8 @@ import RUST from '../data/rust.json';
 import NODE from '../data/node.json';
 import PRESET from '../data/preset.json';
 
+import { assertIsObject } from './util.cjs';
+
 export type RustTarget = keyof(typeof RUST);
 
 export function isRustTarget(x: unknown): x is RustTarget {
@@ -36,6 +38,35 @@ export function assertIsPlatformPreset(x: unknown): asserts x is PlatformPreset 
   if (!isPlatformPreset(x)) {
     throw new RangeError(`invalid platform family preset: ${x}`);
   }
+}
+
+export function assertIsPlatformMap(json: unknown, path: string): asserts json is PlatformMap {
+  assertIsObject(json, path);
+  for (const key in json) {
+    const value: unknown = json[key as keyof typeof json];
+    if (!isNodePlatform(key)) {
+      throw new TypeError(`platform table key ${key} is not a valid Node platform`);
+    }
+    if (typeof value !== 'string' || !isRustTarget(value)) {
+      throw new TypeError(`platform table value ${value} is not a valid Rust target`);
+    }
+  }
+}
+
+export function assertIsPlatformFamily(json: unknown, path: string): asserts json is PlatformFamily {
+  if (typeof json === 'string') {
+    assertIsPlatformPreset(json);
+    return;
+  }
+
+  if (Array.isArray(json)) {
+    for (const elt of json) {
+      assertIsPlatformPreset(elt);
+    }
+    return;
+  }
+
+  assertIsPlatformMap(json, path);
 }
 
 export type TargetPair = { node: NodePlatform, rust: RustTarget };
@@ -78,7 +109,7 @@ export type PlatformDescriptor = {
   llvm: RustTarget[]
 };
 
-export function getTargetDescriptor(target: RustTarget): PlatformDescriptor {
+export function describeTarget(target: RustTarget): PlatformDescriptor {
   const node = RUST[target];
   if (!isNodePlatform(node)) {
     throw new Error(`Rust target ${target} not supported`);

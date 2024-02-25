@@ -11,7 +11,6 @@ function optionArray<T>(option: T | undefined | null): T[] {
 }
 
 const OPTIONS = [
-  { name: 'bundle', alias: 'b', type: String, defaultValue: null },
   { name: 'os', type: String, defaultValue: null },
   { name: 'arch', type: String, defaultValue: null },
   { name: 'abi', type: String, defaultValue: null },
@@ -33,11 +32,6 @@ export default class AddPlatform implements Command {
         { name: '--arch <b>', summary: 'Platform architecture name. (Default: current arch)' },
         { name: '--abi <c>', summary: 'Platform ABI name. (Default: current ABI)' },
         { name: '-o, --out-dir <d>', summary: 'Output directory for platform template tree. (Default: ./platforms)' },
-        { name: '-b, --bundle <f>', summary: 'File to generate bundling metadata. (Default: none)' },
-        {
-          name: '',
-          summary: 'This generated file ensures support for bundlers (e.g. @vercel/ncc), which rely on static analysis to detect and enable any addons used by the library.'
-        },
         { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
     ];
     }
@@ -62,7 +56,6 @@ export default class AddPlatform implements Command {
     private _abi: string | null;
     private _platform: string | null;
     private _outDir: string;
-    private _bundle: string | null;
     private _verbose: boolean;
   
     constructor(argv: string[]) {
@@ -72,7 +65,6 @@ export default class AddPlatform implements Command {
       this._arch = options.arch || null;
       this._abi = options.abi || null;
       this._outDir = options['out-dir'];
-      this._bundle = options.bundle || null;
       this._verbose = !!options.verbose;
 
       if (options.os && !options.arch) {
@@ -107,39 +99,21 @@ export default class AddPlatform implements Command {
       }
     }
   
-    async addPlatform(libManifest: LibraryManifest): Promise<TargetPair[]> {
+    async addPlatform(libManifest: LibraryManifest): Promise<void> {
       if (!this._platform) {
         this.log('adding default system platform');
-        return optionArray(await libManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg))));
+        await libManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg)));
       } else if (isRustTarget(this._platform)) {
         this.log(`adding Rust target ${this._platform}`);
-        return optionArray(await libManifest.addRustTarget(this._platform));
+        await libManifest.addRustTarget(this._platform);
       } else if (isNodePlatform(this._platform)) {
         this.log(`adding Node platform ${this._platform}`);
-        return optionArray(await libManifest.addNodePlatform(this._platform));
+        await libManifest.addNodePlatform(this._platform);
       } else if (isPlatformPreset(this._platform)) {
-        return libManifest.addPlatformPreset(this._platform);
+        await libManifest.addPlatformPreset(this._platform);
       } else {
         throw new Error(`unrecognized platform or preset ${this._platform}`);
       }
-    }
-
-    async createTemplateTree(libManifest: LibraryManifest, pair: TargetPair): Promise<void> {
-      const { node, rust } = pair;
-      const binaryManifest = libManifest.manifestFor(rust);
-      this.log(`prebuild manifest: ${binaryManifest.stringify()}`);
-
-      const treeDir = path.join(this._outDir, node);
-
-      this.log(`creating ${treeDir}`);
-      await fs.mkdir(treeDir, { recursive: true });
-      this.log(`created ${treeDir}`);
-
-      this.log(`creating ${treeDir}/package.json`);
-      await binaryManifest.save(treeDir);
-
-      this.log(`creating ${treeDir}/README.md`);
-      await fs.writeFile(path.join(treeDir, "README.md"), `# \`${binaryManifest.name}\`\n\n${binaryManifest.description}\n`);
     }
 
     async run() {
@@ -147,12 +121,10 @@ export default class AddPlatform implements Command {
       const libManifest = await LibraryManifest.load();
       this.log(`manifest: ${libManifest.stringify()}`);
 
-      const modified = await this.addPlatform(libManifest);
-      if (modified.length) {
-        libManifest.updateTargets(msg => this.log(msg), this._bundle);
-        for (const pair of modified) {
-          await this.createTemplateTree(libManifest, pair);
-        }
+      await this.addPlatform(libManifest);
+      if (libManifest.hasUnsavedChanges()) {
+        libManifest.updatePlatforms();
+        libManifest.saveChanges(msg => this.log(msg));
       }
     }
   }

@@ -1,7 +1,4 @@
 export {
-  BinaryCfg,
   LibraryCfg,
-  BinaryManifest,
-  LibraryManifest,
-  Manifest
+  LibraryManifest
 } from './index.cjs';

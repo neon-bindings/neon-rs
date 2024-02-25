@@ -1,0 +1,5 @@
+{
+  "extension": ["cts"],
+  "spec": "lib/test/**/*.cjs",
+  "timeout": 5000
+}

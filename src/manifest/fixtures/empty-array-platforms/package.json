@@ -1,0 +1,54 @@
+{
+  "name": "empty-array-platforms",
+  "private": false,
+  "version": "0.2.42",
+  "description": "A simple Neon library with platforms set to an empty array.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./types/index.d.mts",
+        "default": "./lib/index.mjs"
+      },
+      "require": {
+        "types": "./types/index.d.cts",
+        "default": "./lib/index.cjs"
+      }
+    }
+  },
+  "types": "./types/index.d.cts",
+  "main": "./lib/index.cjs",
+  "files": [
+    "lib/index.cjs",
+    "lib/load.cjs",
+    "lib/index.mjs",
+    "types/index.d.cts",
+    "types/index.d.mts"
+  ],
+  "scripts": {
+    "test": "cargo test",
+    "cargo-build": "cargo build --message-format=json > cargo.log",
+    "cross-build": "cross build --message-format=json > cross.log",
+    "postcargo-build": "neon dist -v < cargo.log",
+    "postcross-build": "neon dist -v -m /target < cross.log",
+    "debug": "npm run cargo-build --",
+    "build": "npm run cargo-build -- --release",
+    "cross": "npm run cross-build -- --release",
+    "prepack": "neon update-platforms -v 2>update-platforms.log",
+    "version": "neon bump -v --binaries platforms"
+  },
+  "author": "David Herman <david.herman@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@neon-rs/cli": "^0.0.186"
+  },
+  "dependencies": {
+    "@neon-rs/load": "^0.0.186"
+  },
+  "neon": {
+    "type": "library",
+    "org": "@empty-array-platforms",
+    "platforms": [],
+    "load": "./lib/load.cjs"
+  }
+}
