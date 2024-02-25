@@ -1,8 +1,8 @@
 {
   "name": "@neon-rs/manifest",
   "private": false,
-  "version": "0.0.3",
-  "description": "",
+  "version": "0.0.4",
+  "description": "Library for working with Neon package configuration.",
   "exports": {
     ".": {
       "import": {
@@ -28,17 +28,15 @@
   "types": "./lib/index.d.cts",
   "main": "./lib/index.cjs",
   "files": [
-    "lib/**/*.cjs",
-    "lib/**/*.d.cts",
-    "lib/**/*.mjs",
-    "lib/**/*.d.mts",
-    "lib/**/*.js",
-    "lib/**/*.d.ts",
+    "lib/*.?({c,m}){t,j}s",
+    "lib/!(test)/**/*",
     "data/**/*.json"
   ],
   "scripts": {
     "dist": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "npm run dist",
+    "test": "mocha",
+    "prepack": "npm run dist"
   },
   "keywords": [
     "Neon",
@@ -53,8 +51,13 @@
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "devDependencies": {
     "@tsconfig/node16": "^16.1.1",
+    "@types/chai": "^4.3.12",
     "@types/jscodeshift": "^0.11.11",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.10",
+    "chai": "^4.4.1",
+    "create-temp-directory": "^2.4.0",
+    "mocha": "^10.3.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {
