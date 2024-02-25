@@ -32,10 +32,10 @@ export default class Ci implements Command {
 
   private _verbose: boolean;
   private _provider: Provider;
-  
+
   constructor(argv: string[]) {
     const options = commandLineArgs(OPTIONS, { argv, partial: true });
-  
+
     this._verbose = !!options.verbose;
     if (!options._unknown || options._unknown.length === 0) {
       throw new Error("No arguments found, expected <provider>.");
@@ -50,7 +50,7 @@ export default class Ci implements Command {
       console.error("[neon ci] " + msg);
     }
   }
-  
+
   async run() {
     this.log(`reading package.json`);
     const libManifest = await LibraryManifest.load();

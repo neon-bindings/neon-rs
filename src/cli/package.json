@@ -53,7 +53,7 @@
   },
   "dependencies": {
     "@neon-rs/load": "^0.0.181",
-    "@neon-rs/manifest": "^0.0.3",
+    "@neon-rs/manifest": "^0.0.4",
     "cargo-messages": "^0.0.202",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",

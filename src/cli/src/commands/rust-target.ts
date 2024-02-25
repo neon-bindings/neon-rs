@@ -84,7 +84,8 @@ export default class RustTarget implements Command {
     const libManifest = await LibraryManifest.load();
     this.log(`manifest: ${libManifest.stringify()}`);
 
-    const rust = libManifest.rustTargetFor(this._platform);
+    const platforms = libManifest.allPlatforms();
+    const rust = platforms[this._platform];
     if (!rust) {
       throw new Error(`no Rust target found for ${this._platform}`);
     }

@@ -1,6 +1,5 @@
 import Dist from './commands/dist.js';
 import Bump from './commands/bump.js';
-import Tarball from './commands/tarball.js';
 import AddPlatform from './commands/add-platform.js';
 import UpdatePlatforms from './commands/update-platforms.js';
 import ListPlatforms from './commands/list-platforms.js';
@@ -35,8 +34,6 @@ export enum CommandName {
   Help = 'help',
   Dist = 'dist',
   Bump = 'bump',
-  PackBuild = 'pack-build', // DEPRECATED(0.1)
-  Tarball = 'tarball', // DEPRECATED(0.1)
   AddTarget = 'add-target', // DEPRECATED(0.1)
   AddPlatform = 'add-platform',
   InstallBuilds = 'install-builds', // DEPRECATED(0.1)
@@ -65,8 +62,6 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Help]: Help,
   [CommandName.Dist]: Dist,
   [CommandName.Bump]: Bump,
-  [CommandName.PackBuild]: Tarball, // DEPRECATED(0.1)
-  [CommandName.Tarball]: Tarball, // DEPRECATED(0.1)
   [CommandName.AddTarget]: AddPlatform, // DEPRECATED(0.1)
   [CommandName.AddPlatform]: AddPlatform,
   [CommandName.InstallBuilds]: UpdatePlatforms, // DEPRECATED(0.1)
