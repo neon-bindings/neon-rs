@@ -34,10 +34,7 @@ export enum CommandName {
   Help = 'help',
   Dist = 'dist',
   Bump = 'bump',
-  AddTarget = 'add-target', // DEPRECATED(0.1)
   AddPlatform = 'add-platform',
-  InstallBuilds = 'install-builds', // DEPRECATED(0.1)
-  UpdateTargets = 'update-targets', // DEPRECATED(0.1)
   UpdatePlatforms = 'update-platforms',
   ListPlatforms = 'list-platforms',
   CurrentPlatform = 'current-platform',
@@ -62,10 +59,7 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Help]: Help,
   [CommandName.Dist]: Dist,
   [CommandName.Bump]: Bump,
-  [CommandName.AddTarget]: AddPlatform, // DEPRECATED(0.1)
   [CommandName.AddPlatform]: AddPlatform,
-  [CommandName.InstallBuilds]: UpdatePlatforms, // DEPRECATED(0.1)
-  [CommandName.UpdateTargets]: UpdatePlatforms, // DEPRECATED(0.1)
   [CommandName.UpdatePlatforms]: UpdatePlatforms,
   [CommandName.ListPlatforms]: ListPlatforms,
   [CommandName.CurrentPlatform]: CurrentPlatform,
