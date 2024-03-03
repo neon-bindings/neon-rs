@@ -46,6 +46,6 @@ jobs:
       contents: write
     uses: ./.github/workflows/build.yml
     with:
-      branch: ${{ needs.setup.outputs.branch }}
+      ref: ${{ needs.setup.outputs.branch }}
       update-version: true
       github-release: false

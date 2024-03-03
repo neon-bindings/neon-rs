@@ -51,6 +51,7 @@ jobs:
     outputs:
       dryrun: ${{ steps.dryrun.outputs.dryrun }}
       publish: ${{ steps.publish.outputs.publish }}
+      ref: ${{ steps.tag.outputs.tag || github.event.repository.default_branch }}
     steps:
       - name: Validate Workflow Inputs
         if: ${{ inputs.version == 'custom' && inputs.custom == '' }}
@@ -100,15 +101,17 @@ jobs:
         run: npm ci
       - name: Tag Release (manual only)
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dryrun }}
+        id: tag
         shell: bash
         run: |
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
           npm run release -- '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
+          echo tag=$(git describe --abbrev=0) >> "$GITHUB_OUTPUT"
       - name: Diagnostics
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dryrun }}
         shell: bash
-        run: git tag --list 'v0.1*'
+        run: git tag --sort=-taggerdate
 
   build:
     name: Build
@@ -117,6 +120,7 @@ jobs:
       contents: write
     uses: ./.github/workflows/build.yml
     with:
+      ref: ${{ needs.setup.outputs.ref }}
       update-version: ${{ !!needs.setup.outputs.dryrun }}
       version: ${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}
       github-release: ${{ !!needs.setup.outputs.publish }}
@@ -135,7 +139,7 @@ jobs:
           fetch-depth: 0
       - name: Diagnostics
         shell: bash
-        run: git tag --list 'v0.1*'
+        run: git tag --sort=-taggerdate
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
