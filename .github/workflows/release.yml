@@ -52,6 +52,7 @@ jobs:
       dryrun: ${{ steps.dryrun.outputs.dryrun }}
       publish: ${{ steps.publish.outputs.publish }}
       ref: ${{ steps.tag.outputs.tag || github.event.repository.default_branch }}
+      tag: ${{ steps.tag.outputs.tag || steps.get-tag.outputs.tag || '' }}
     steps:
       - name: Validate Workflow Inputs
         if: ${{ inputs.version == 'custom' && inputs.custom == '' }}
@@ -108,6 +109,10 @@ jobs:
           git config --global user.email $ACTIONS_EMAIL
           npm run release -- '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
           echo tag=$(git describe --abbrev=0) >> "$GITHUB_OUTPUT"
+      - name: Get Tag (push only)
+        if: ${{ github.event_name == 'push' }}
+        id: get-tag
+        uses: olegtarasov/get-tag@v2.1.2
       - name: Diagnostics
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dryrun }}
         shell: bash
@@ -121,6 +126,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       ref: ${{ needs.setup.outputs.ref }}
+      tag: ${{ needs.setup.outputs.tag }}
       update-version: ${{ !!needs.setup.outputs.dryrun }}
       version: ${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}
       github-release: ${{ !!needs.setup.outputs.publish }}
@@ -158,16 +164,21 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: npm ci
+      - name: Fetch (cargo-messages)
+        uses: robinraju/release-downloader@v1.7
+        with:
+          tag: ${{ needs.setup.outputs.tag }}
+          fileName: "*.tgz"
+          out-file-path: ./pkgs/cargo-messages/dist
       - name: Publish (cargo-messages)
-        uses: neon-actions/publish@v0.4.1
+        shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        with:
-          working-directory: ./pkgs/cargo-messages
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
-          fetch-binaries: "*.tgz"
-          github-release: true
+        run: |
+          for p in *.tgz ; do
+            npm publish --access public $p
+          done
+        working-directory: ./pkgs/cargo-messages/dist
       - name: Build (@neon-rs/load)
         shell: bash
         run: npm run build
