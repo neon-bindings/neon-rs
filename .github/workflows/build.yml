@@ -114,10 +114,23 @@ jobs:
         shell: bash
         run: ./test/lint/check-versions.sh
       - name: Build
-        uses: neon-actions/build@v0.9
+        id: build
+        uses: neon-actions/build@v0.9.1
         with:
           working-directory: ./pkgs/cargo-messages
           node-version: ${{ env.NODE_VERSION }}
           use-cross: ${{ !!matrix.cfg.cross }}
           platform: ${{ matrix.cfg.platform }}
-          github-release: ${{ inputs.github-release }}
+          # github-release: ${{ inputs.github-release }}
+      - name: Diagnostics
+        shell: bash
+        run: |
+          echo 'inputs.ref=${{ inputs.ref }}'
+          echo 'steps.build.outputs.filename=${{ steps.build.outputs.filename }}'
+          ls -al ./pkgs/cargo-messages/dist/${{ steps.build.outputs.filename }}
+      - name: Release
+        if: ${{ inputs.github-release }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./pkgs/cargo-messages/dist/${{ steps.build.outputs.filename }}
+          tag_name: ${{ inputs.ref }}
