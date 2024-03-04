@@ -172,6 +172,12 @@ jobs:
         shell: bash
         run: echo "filename=$(npm pack --pack-destination=dist)" >> $GITHUB_OUTPUT
         working-directory: ./pkgs/cargo-messages
+      - name: Diagnostics
+        shell: bash
+        run: |
+          jq -r .version < package.json
+          cat update-platforms.log
+        working-directory: ./pkgs/cargo-messages
       - name: Release
         if: ${{ inputs.github-release }}
         uses: softprops/action-gh-release@v1
