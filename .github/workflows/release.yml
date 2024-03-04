@@ -182,7 +182,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for p in *.tgz ; do
-            npm publish --access public $p
+            npm publish --access public ./$p
           done
         working-directory: ./pkgs/cargo-messages/dist
       - name: Build (@neon-rs/load)
