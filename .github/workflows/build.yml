@@ -170,16 +170,14 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: npm ci
-      - name: Diagnostics
-        shell: bash
-        run: |
-          ls -al
-          ls -al dist
-        working-directory: ./pkgs/cargo-messages
       - name: Pack
         id: pack
         shell: bash
-        run: echo "filename=$(npm pack --pack-destination=./dist)" >> $GITHUB_OUTPUT
+        run: |
+          mkdir -p dist
+          ls -al
+          ls -al dist
+          echo "filename=$(npm pack --pack-destination=./dist)" >> $GITHUB_OUTPUT
         working-directory: ./pkgs/cargo-messages
       - name: Diagnostics
         shell: bash
