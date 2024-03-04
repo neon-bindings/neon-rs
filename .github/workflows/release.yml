@@ -154,7 +154,9 @@ jobs:
           keys-case: bypass
       - name: Diagnostics
         shell: bash
-        run: git log -10
+        run: |
+          echo 'needs.setup.outputs.tag=${{ needs.setup.outputs.tag }}'
+          git log -10
       - name: Install Node
         uses: actions/setup-node@v3
         with:
@@ -170,6 +172,10 @@ jobs:
           tag: ${{ needs.setup.outputs.tag }}
           fileName: "*.tgz"
           out-file-path: ./pkgs/cargo-messages/dist
+      - name: Diagnostics
+        shell: bash
+        run: ls -al
+        working-directory: ./pkgs/cargo-messages/dist
       - name: Publish (cargo-messages)
         shell: bash
         env:
