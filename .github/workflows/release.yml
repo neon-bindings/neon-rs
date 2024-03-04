@@ -192,7 +192,11 @@ jobs:
             cat ./package/package.json
             cd ..
             rm -rf tmp-unpack
+            mv $p /tmp
+            pushd /tmp
             npm publish --access public ./$p
+            popd
+            echo "NEEEEEXT"
           done
         working-directory: ./pkgs/cargo-messages/dist
       - name: Build (@neon-rs/load)
