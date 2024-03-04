@@ -182,6 +182,16 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for p in *.tgz ; do
+            echo "UNPACKING: $p"
+            ls -al ./$p
+            mkdir -p tmp-unpack
+            cd tmp-unpack
+            cp ../$p ./
+            tar xzf $p
+            ls -al ./package
+            cat ./package/package.json
+            cd ..
+            rm -rf tmp-unpack
             npm publish --access public ./$p
           done
         working-directory: ./pkgs/cargo-messages/dist
