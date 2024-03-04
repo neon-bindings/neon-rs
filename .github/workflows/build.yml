@@ -149,6 +149,12 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
+      - name: Diagnostics
+        shell: bash
+        run: |
+          echo 'inputs.ref=${{ inputs.ref }}'
+          echo 'inputs.tag=${{ inputs.tag }}'
+          echo "cargo-messages.version=$(jq -r '.version' < ./pkgs/cargo-messages/package.json)"
       - name: Set Environment Variables
         uses: falti/dotenv-action@v1
         with:
