@@ -181,9 +181,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          for p in *.tgz ; do
+          for p in ./pkgs/cargo-messages/dist/*.tgz ; do
             echo "UNPACKING: $p"
-            ls -al ./$p
+            ls -al ./pkgs/cargo-messages/dist/$p
             mkdir -p tmp-unpack
             cd tmp-unpack
             cp ../$p ./
@@ -192,10 +192,7 @@ jobs:
             cat ./package/package.json
             cd ..
             rm -rf tmp-unpack
-            mv $p /tmp
-            pushd /tmp
-            npm publish --access public ./$p
-            popd
+            npm publish --access public ./pkgs/cargo-messages/dist/$p
             echo "NEEEEEXT"
           done
         working-directory: ./pkgs/cargo-messages/dist
