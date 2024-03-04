@@ -140,8 +140,8 @@ jobs:
           tag_name: ${{ inputs.tag }}
 
   main:
-    name: Main Package
-    needs: [binaries]
+    name: Main
+    needs: [matrix]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
