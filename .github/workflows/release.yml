@@ -195,7 +195,6 @@ jobs:
             npm publish --access public ./pkgs/cargo-messages/dist/$p
             echo "NEEEEEXT"
           done
-        working-directory: ./pkgs/cargo-messages/dist
       - name: Build (@neon-rs/load)
         shell: bash
         run: npm run build
