@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
+    "@tsconfig/node16": "^16.1.1",
     "@types/node": "^18.15.11",
     "typescript": "^5.0.4"
   }
