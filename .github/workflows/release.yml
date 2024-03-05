@@ -182,9 +182,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for p in ./pkgs/cargo-messages/dist/*.tgz ; do
-            echo "UNPACKING: $p"
             npm publish --access public $p
-            echo "NEEEEEXT"
           done
       - name: Build (@neon-rs/load)
         shell: bash
