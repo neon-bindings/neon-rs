@@ -183,16 +183,7 @@ jobs:
         run: |
           for p in ./pkgs/cargo-messages/dist/*.tgz ; do
             echo "UNPACKING: $p"
-            ls -al ./pkgs/cargo-messages/dist/$p
-            mkdir -p tmp-unpack
-            cd tmp-unpack
-            cp ../$p ./
-            tar xzf $p
-            ls -al ./package
-            cat ./package/package.json
-            cd ..
-            rm -rf tmp-unpack
-            npm publish --access public ./pkgs/cargo-messages/dist/$p
+            npm publish --access public $p
             echo "NEEEEEXT"
           done
       - name: Build (@neon-rs/load)
