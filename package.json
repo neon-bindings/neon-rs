@@ -11,8 +11,7 @@
     "version:src": "node dist/cli bump -d src",
     "version:pkgs": "node dist/cli bump -d pkgs",
     "version:dist": "node dist/cli bump -d dist",
-    "release": "npm version -m 'v%s'",
-    "postrelease": "git push --follow-tags",
+    "release": "gh workflow run release.yml",
     "dryrun": "gh workflow run release.yml -f dryrun=true"
   }
 }

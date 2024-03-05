@@ -1,21 +1,10 @@
 name: Release
 
 run-name: |
-  ${{ (github.event_name == 'workflow_dispatch' && inputs.dryrun
-       && 'Dry run')
-   || (github.event_name == 'workflow_dispatch'
-       && format('Release: {0}', (inputs.version == 'custom' && inputs.custom) || inputs.version))
-   || format('Release: {0}', github.event.head_commit.message) }}
+  ${{ (inputs.dryrun && 'Dry run')
+   || format('Release: {0}', (inputs.version == 'custom' && inputs.custom) || inputs.version) }}
 
 on:
-  # Event: A maintainer has pushed a new release tag for publication.
-  push:
-    tags:
-      - v*
-
-  # Event: A maintainer has used the GitHub Actions UI to initiate
-  #        either tagging a new release for publication or doing a
-  #        dry run.
   workflow_dispatch:
     inputs:
       dryrun:
@@ -52,7 +41,7 @@ jobs:
       dryrun: ${{ steps.dryrun.outputs.dryrun }}
       publish: ${{ steps.publish.outputs.publish }}
       ref: ${{ steps.tag.outputs.tag || github.event.repository.default_branch }}
-      tag: ${{ steps.tag.outputs.tag || steps.get-tag.outputs.tag || '' }}
+      tag: ${{ steps.tag.outputs.tag || '' }}
     steps:
       - name: Validate Workflow Inputs
         if: ${{ inputs.version == 'custom' && inputs.custom == '' }}
@@ -62,12 +51,12 @@ jobs:
           exit 1
       - id: dryrun
         name: Validate Dry Run Event
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dryrun }}
+        if: ${{ inputs.dryrun }}
         shell: bash
         run: echo dryrun=true >> "$GITHUB_OUTPUT"
       - id: publish
         name: Validate Publish Event
-        if: ${{ github.event_name == 'push' || !inputs.dryrun }}
+        if: ${{ !inputs.dryrun }}
         shell: bash
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -100,21 +89,18 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: npm ci
-      - name: Tag Release (manual only)
-        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dryrun }}
+      - name: Tag Release
+        if: ${{ !inputs.dryrun }}
         id: tag
         shell: bash
         run: |
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
-          npm run release -- '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
+          npm version -m 'v%s' '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
+          git push --follow-tags
           echo tag=$(git describe --abbrev=0) >> "$GITHUB_OUTPUT"
-      - name: Get Tag (push only)
-        if: ${{ github.event_name == 'push' }}
-        id: get-tag
-        uses: olegtarasov/get-tag@v2.1.2
       - name: Diagnostics
-        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.dryrun }}
+        if: ${{ !inputs.dryrun }}
         shell: bash
         run: git tag --sort=-taggerdate
 
