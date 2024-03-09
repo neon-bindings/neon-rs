@@ -30,6 +30,12 @@ export class NPMCacheCfg implements CacheCfg {
     this._packages = packages;
   }
 
+  getPlatformOutputPath(platform: NodePlatform): string | undefined {
+    return this._packages[platform]
+      ? path.join(this.dir, platform, 'index.node')
+      : undefined;
+  }
+
   async setPlatformTarget(platform: NodePlatform, target: RustTarget): Promise<void> {
     const pkg = this._packages[platform];
 
@@ -113,8 +119,7 @@ export class NPMCacheCfg implements CacheCfg {
         return js.objectExpression([...p.value.properties, ...newProps]);
       })
       .toSource({ quote: 'single' });
-    await fs.writeFile(loaderPath, result, 'utf8');
-  }
+    await fs.writeFile(loaderPath, result, 'utf8');  }
 
   packageNames(): string[] {
     const cfg = this.manifest.cfg();
