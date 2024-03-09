@@ -187,4 +187,10 @@ export class LibraryManifest extends AbstractManifest {
       this._updatedPlatforms = true;
     }
   }
+
+  getPlatformOutputPath(platform: NodePlatform): string | undefined {
+    return this._cacheCfg
+      ? this._cacheCfg.getPlatformOutputPath(platform)
+      : undefined;
+  }
 }
