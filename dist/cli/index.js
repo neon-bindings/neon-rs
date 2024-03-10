@@ -40266,7 +40266,19 @@ var lib = __nccwpck_require__(3993);
 ;// CONCATENATED MODULE: ./node_modules/cargo-messages/lib/index.mjs
 
 
+// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/index.cjs
+var manifest_lib = __nccwpck_require__(4696);
+;// CONCATENATED MODULE: ../node_modules/@neon-rs/manifest/lib/index.mjs
+
+
+// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.cjs
+var lib_platform = __nccwpck_require__(2147);
+;// CONCATENATED MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
+
+
 ;// CONCATENATED MODULE: ./src/commands/dist.ts
+
+
 
 
 
@@ -40281,6 +40293,8 @@ const OPTIONS = [
     { name: 'mount', alias: 'm', type: String, defaultValue: null },
     { name: 'manifest-path', type: String, defaultValue: null },
     { name: 'out', alias: 'o', type: String, defaultValue: null },
+    { name: 'platform', alias: 'p', type: String, defaultValue: null },
+    { name: 'debug', alias: 'd', type: Boolean, defaultValue: false },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 function createInputStream(file) {
@@ -40295,20 +40309,53 @@ function ensureDefined(str, msg) {
     }
     return str;
 }
+function parseOutputFile(debug, out, platform) {
+    if (debug && out) {
+        throw new Error("Options --debug and --out cannot both be enabled.");
+    }
+    else if (debug && platform) {
+        throw new Error("Options --debug and --platform cannot both be enabled.");
+    }
+    else if (out && platform) {
+        throw new Error("Options --out and --platform cannot both be enabled.");
+    }
+    const NEON_DIST_OUTPUT = process.env['NEON_DIST_OUTPUT'];
+    const NEON_BUILD_PLATFORM = process.env['NEON_BUILD_PLATFORM'];
+    if (platform || (!debug && NEON_BUILD_PLATFORM)) {
+        const p = platform || NEON_BUILD_PLATFORM;
+        (0,lib_platform.assertIsNodePlatform)(p);
+        return manifest_lib/* LibraryManifest.load */.N.load().then(manifest => {
+            const path = manifest.getPlatformOutputPath(p);
+            if (!path) {
+                throw new Error(`Platform $p not supported by this library.`);
+            }
+            return path;
+        });
+    }
+    else if (out || (!debug && NEON_DIST_OUTPUT)) {
+        const path = out || NEON_DIST_OUTPUT;
+        return Promise.resolve(path);
+    }
+    else {
+        return Promise.resolve('index.node');
+    }
+}
 class Dist {
     static summary() { return 'Generate a binary .node file from a cargo output log.'; }
-    static syntax() { return 'neon dist [-n <name>] [-f <dylib>|[-l <log>] [-m <path>]] [-o <dist>]'; }
+    static syntax() { return 'neon dist [-n <name>] [-f <file>|[-l <log>] [-m <path>]] [-p <platform> | -d]'; }
     static options() {
         return [
             { name: '-n, --name', summary: 'Crate name. (Default: $npm_package_name)' },
-            { name: '-f, --file <dylib>', summary: 'Build .node from dylib file <dylib>.' },
+            { name: '-f, --file <file>', summary: 'Build .node from dylib file <file>.' },
             { name: '-l, --log <log>', summary: 'Find dylib path from cargo messages <log>. (Default: stdin)' },
             {
                 name: '-m, --mount <path>',
                 summary: 'Mounted path of target directory in virtual filesystem. This is used to map paths from the log data back to their real paths, needed when tools such as cross-rs report messages from within a mounted Docker filesystem.'
             },
             { name: '--manifest-path <path>', summary: 'Real path to Cargo.toml. (Default: cargo behavior)' },
-            { name: '-o, --out <dist>', summary: 'Copy output to file <dist>. (Default: $NEON_DIST_OUTPUT or index.node)' },
+            // { name: '-o, --out <dist>', summary: 'Copy output to file <dist>. (Default: $NEON_DIST_OUTPUT or index.node)' },
+            { name: '-p, --platform <platform>', summary: 'Stage output file for caching to platform <platform>. (Default: $NEON_BUILD_PLATFORM or -d)' },
+            { name: '-d, --debug', summary: 'Generate output file for debugging (./index.node)' },
             { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
         ];
     }
@@ -40343,9 +40390,7 @@ class Dist {
         this._manifestPath = options['manifest-path'];
         this._crateName = options.name ||
             basename(ensureDefined(process.env['npm_package_name'], '$npm_package_name'));
-        this._out = options.out ||
-            process.env['NEON_DIST_OUTPUT'] ||
-            'index.node';
+        this._out = parseOutputFile(options.debug, options.out, options.platform);
         this._verbose = !!options.verbose;
         this.log(`crate name = "${this._crateName}"`);
     }
@@ -40392,7 +40437,7 @@ class Dist {
     async run() {
         const file = this._file || (await this.findArtifact());
         // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-        await (0,promises_.copyFile)(file, this._out);
+        await (0,promises_.copyFile)(file, await this._out);
     }
 }
 
@@ -42037,16 +42082,6 @@ class Bump {
     }
 }
 
-// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.cjs
-var platform = __nccwpck_require__(2147);
-;// CONCATENATED MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
-
-
-// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/index.cjs
-var manifest_lib = __nccwpck_require__(4696);
-;// CONCATENATED MODULE: ../node_modules/@neon-rs/manifest/lib/index.mjs
-
-
 ;// CONCATENATED MODULE: ./src/target.ts
 
 
@@ -42063,7 +42098,7 @@ async function getCurrentTarget(log) {
     }
     const target = hostLine.replace(/^host:\s+/, '');
     log(`currentTarget result: "${target}"`);
-    (0,platform.assertIsRustTarget)(target);
+    (0,lib_platform.assertIsRustTarget)(target);
     return target;
 }
 
@@ -42159,15 +42194,15 @@ class AddPlatform {
             this.log('adding default system platform');
             await libManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg)));
         }
-        else if ((0,platform.isRustTarget)(this._platform)) {
+        else if ((0,lib_platform.isRustTarget)(this._platform)) {
             this.log(`adding Rust target ${this._platform}`);
             await libManifest.addRustTarget(this._platform);
         }
-        else if ((0,platform.isNodePlatform)(this._platform)) {
+        else if ((0,lib_platform.isNodePlatform)(this._platform)) {
             this.log(`adding Node platform ${this._platform}`);
             await libManifest.addNodePlatform(this._platform);
         }
-        else if ((0,platform.isPlatformPreset)(this._platform)) {
+        else if ((0,lib_platform.isPlatformPreset)(this._platform)) {
             await libManifest.addPlatformPreset(this._platform);
         }
         else {
@@ -42341,7 +42376,7 @@ class Preset {
         if (options._unknown.length > 1) {
             throw new Error(`Unexpected argument ${options._unknown[1]}`);
         }
-        (0,platform.assertIsPlatformPreset)(options._unknown[0]);
+        (0,lib_platform.assertIsPlatformPreset)(options._unknown[0]);
         this._preset = options._unknown[0];
     }
     log(msg) {
@@ -42350,7 +42385,7 @@ class Preset {
         }
     }
     async run() {
-        const map = (0,platform.expandPlatformPreset)(this._preset);
+        const map = (0,lib_platform.expandPlatformPreset)(this._preset);
         console.log(JSON.stringify(map, null, 2));
     }
 }
@@ -60764,6 +60799,11 @@ class NPMCacheCfg {
         }
         this._packages = packages;
     }
+    getPlatformOutputPath(platform) {
+        return this._packages[platform]
+            ? path.join(this.dir, platform, 'index.node')
+            : undefined;
+    }
     async setPlatformTarget(platform, target) {
         const pkg = this._packages[platform];
         if (!pkg) {
@@ -61249,6 +61289,11 @@ class LibraryManifest extends util_cjs_1.AbstractManifest {
         if (this._cacheCfg && this._cacheCfg.updatePlatforms(this)) {
             this._updatedPlatforms = true;
         }
+    }
+    getPlatformOutputPath(platform) {
+        return this._cacheCfg
+            ? this._cacheCfg.getPlatformOutputPath(platform)
+            : undefined;
     }
 }
 exports.LibraryManifest = LibraryManifest;
