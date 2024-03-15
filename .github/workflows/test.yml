@@ -54,7 +54,8 @@ jobs:
       - name: Compute Rust Target
         id: target
         shell: bash
-        run: echo target=$(node dist/cli list-platforms | jq -r '.["linux-x64-gnu"]') > $GITHUB_OUTPUT
+        run: echo target=$(node ../../dist/cli list-platforms | jq -r '.["linux-x64-gnu"]') > $GITHUB_OUTPUT
+        working-directory: ./pkgs/cargo-messages
       - name: Build
         shell: bash
         env:
