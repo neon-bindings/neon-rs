@@ -26,7 +26,7 @@ npx npm-cli-adduser -u ${PROXY_USER} -p ${PROXY_PASSWORD} -e ${PROXY_EMAIL} -r $
 
 cd test/integration/sniff-bytes
 npm i
-NEON_BUILD_PLATFORM${CURRENT_PLATFORM} npm run build
+NEON_BUILD_PLATFORM=${CURRENT_PLATFORM} npm run build
 mkdir -p dist
 # NOTE: `basename` is a workaround for https://github.com/npm/cli/issues/3405
 PACKAGE_TARBALL=$(basename $(npm pack ./platforms/$CURRENT_PLATFORM --pack-destination=./dist --json | jq -r '.[0].filename'))
