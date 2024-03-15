@@ -26,10 +26,9 @@ npx npm-cli-adduser -u ${PROXY_USER} -p ${PROXY_PASSWORD} -e ${PROXY_EMAIL} -r $
 
 cd test/integration/sniff-bytes
 npm i
-NEON_DIST_OUTPUT=platforms/${CURRENT_PLATFORM}/index.node npm run build
+NEON_BUILD_PLATFORM${CURRENT_PLATFORM} npm run build
 mkdir -p dist
-# NOTE: `xargs basename` is a workaround for https://github.com/npm/cli/issues/3405
-PACKAGE_TARBALL=$( (cd platforms/$CURRENT_PLATFORM && npm pack --json | jq '.[0].filename' | xargs basename) )
-mv ./platforms/${CURRENT_PLATFORM}/${PACKAGE_TARBALL} ./dist/
+# NOTE: `basename` is a workaround for https://github.com/npm/cli/issues/3405
+PACKAGE_TARBALL=$(basename $(npm pack ./platforms/$CURRENT_PLATFORM --pack-destination=./dist --json | jq -r '.[0].filename'))
 npm publish ./dist/${PACKAGE_TARBALL} --registry $PROXY_SERVER
 npm publish --registry $PROXY_SERVER

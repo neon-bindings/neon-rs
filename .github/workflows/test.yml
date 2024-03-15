@@ -46,23 +46,26 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set Environment Variables
-        uses: falti/dotenv-action@v1
-        with:
-          path: ./.github/workflows/.env
-          export-variables: true
-          keys-case: bypass
+      - name: Setup Neon Toolchain
+        uses: ./.github/actions/setup-neon
       - name: Install Dependencies
         shell: bash
         run: npm ci --verbose
+      - name: Compute Rust Target
+        id: target
+        shell: bash
+        run: echo target=$(node dist/cli list-platforms | jq -r '.["linux-x64-gnu"]') > $GITHUB_OUTPUT
       - name: Build
-        uses: neon-actions/build@v0.9
-        with:
-          working-directory: ./pkgs/cargo-messages
-          platform: linux-x64-gnu
-          node-version: ${{ env.NODE_VERSION }}
-          use-cross: false
-          github-release: false
+        shell: bash
+        env:
+          CARGO_BUILD_TARGET: ${{ steps.target.outputs.target }}
+          NEON_BUILD_PLATFORM: linux-x64-gnu
+        run: npm run build
+        working-directory: ./pkgs/cargo-messages
+      - name: Pack
+        shell: bash
+        run: npm pack ./platforms/linux-x64-gnu --pack-destination=${{ runner.temp }}
+        working-directory: ./pkgs/cargo-messages
       - name: Start npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
