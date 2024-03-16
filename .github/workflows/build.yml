@@ -71,13 +71,13 @@ jobs:
           script: |
             const platforms = ${{ steps.matrixData.outputs.json }};
             const macOS = platforms.macOS.map(platform => {
-              return { os: "macos-latest", platform, cross: false };
+              return { os: "macos-latest", platform, script: "build" };
             });
             const windows = platforms.Windows.map(platform => {
-              return { os: "windows-latest", platform, cross: false };
+              return { os: "windows-latest", platform, script: "build" };
             });
             const linux = platforms.Linux.map(platform => {
-              return { os: "ubuntu-latest", platform, cross: true };
+              return { os: "ubuntu-latest", platform, script: "cross" };
             });
             return [...macOS, ...windows, ...linux];
 
@@ -102,6 +102,8 @@ jobs:
           path: ./.github/workflows/.env
           export-variables: true
           keys-case: bypass
+      - name: Setup Neon Toolchain
+        uses: ./.github/actions/setup-neon
       - name: Diagnostics
         shell: bash
         run: git log -10
@@ -118,25 +120,36 @@ jobs:
       - name: Check Versions
         shell: bash
         run: ./test/lint/check-versions.sh
+      - name: Compute Rust Target
+        id: target
+        shell: bash
+        run: echo target=$(node ../../dist/cli list-platforms | jq -r '.["${{ matrix.cfg.platform }}"]') >> $GITHUB_OUTPUT
+        working-directory: ./pkgs/cargo-messages
       - name: Build
-        id: build
-        uses: neon-actions/build@v0.9.1
-        with:
-          working-directory: ./pkgs/cargo-messages
-          node-version: ${{ env.NODE_VERSION }}
-          use-cross: ${{ !!matrix.cfg.cross }}
-          platform: ${{ matrix.cfg.platform }}
+        shell: bash
+        env:
+          CARGO_BUILD_TARGET: ${{ steps.target.outputs.target }}
+          NEON_BUILD_PLATFORM: ${{ matrix.cfg.platform }}
+        run: npm run ${{ matrix.cfg.script }}
+        working-directory: ./pkgs/cargo-messages
+      - name: Pack
+        id: pack
+        shell: bash
+        run: |
+          mkdir -p dist
+          echo filename=$(basename $(npm pack ./platforms/${{ matrix.cfg.platform }} --pack-destination=./dist --json | jq -r '.[0].filename')) >> $GITHUB_OUTPUT
+        working-directory: ./pkgs/cargo-messages
       - name: Diagnostics
         shell: bash
         run: |
           echo 'inputs.ref=${{ inputs.ref }}'
-          echo 'steps.build.outputs.filename=${{ steps.build.outputs.filename }}'
-          ls -al ./pkgs/cargo-messages/dist/${{ steps.build.outputs.filename }}
+          echo 'steps.build.outputs.filename=${{ steps.pack.outputs.filename }}'
+          ls -al ./pkgs/cargo-messages/dist/${{ steps.pack.outputs.filename }}
       - name: Release
         if: ${{ inputs.github-release }}
         uses: softprops/action-gh-release@v1
         with:
-          files: ./pkgs/cargo-messages/dist/${{ steps.build.outputs.filename }}
+          files: ./pkgs/cargo-messages/dist/${{ steps.pack.outputs.filename }}
           tag_name: ${{ inputs.tag }}
 
   main:
