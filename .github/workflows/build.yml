@@ -104,6 +104,8 @@ jobs:
           keys-case: bypass
       - name: Setup Neon Toolchain
         uses: ./.github/actions/setup-neon
+        with:
+          use-cross: ${{ matrix.cfg.script == 'cross' }}
       - name: Diagnostics
         shell: bash
         run: git log -10
