@@ -58,3 +58,11 @@ runs:
       uses: baptiste0928/cargo-install@v2
       with:
         crate: cross
+    - name: Output Versions
+      id: version
+      shell: bash
+      run: |
+        # v18.19.0 ==> 18.19.0
+        echo node=$(node --version | cut -c 2-)
+        # rustc 1.70.0 (90c541806 2023-05-31) ==> 1.70.0
+        echo rust=$(rustc --version | awk '{ print $2; }')
