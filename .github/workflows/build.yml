@@ -40,7 +40,6 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
       - name: Setup Neon Toolchain
-        id: neon
         uses: ./.github/actions/setup-neon
         with:
           use-rust: false
@@ -89,12 +88,6 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
-      - name: Set Environment Variables
-        uses: falti/dotenv-action@v1
-        with:
-          path: ./.github/workflows/.env
-          export-variables: true
-          keys-case: bypass
       - name: Setup Neon Toolchain
         id: neon
         uses: ./.github/actions/setup-neon
@@ -166,18 +159,10 @@ jobs:
           echo 'inputs.ref=${{ inputs.ref }}'
           echo 'inputs.tag=${{ inputs.tag }}'
           echo "cargo-messages.version=$(jq -r '.version' < ./pkgs/cargo-messages/package.json)"
-      - name: Set Environment Variables
-        uses: falti/dotenv-action@v1
+      - name: Setup Neon Toolchain
+        uses: ./.github/actions/setup-neon
         with:
-          path: ./.github/workflows/.env
-          export-variables: true
-          keys-case: bypass
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
-          cache: npm
+          use-rust: false
       - name: Install Dependencies
         shell: bash
         run: npm ci

@@ -74,18 +74,10 @@ jobs:
           echo publish=true >> "$GITHUB_OUTPUT"
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Set Environment Variables
-        uses: falti/dotenv-action@v1
+      - name: Setup Neon Toolchain
+        uses: ./.github/actions/setup-neon
         with:
-          path: ./.github/workflows/.env
-          export-variables: true
-          keys-case: bypass
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
-          cache: npm
+          use-rust: false
       - name: Install Dependencies
         shell: bash
         run: npm ci
@@ -134,23 +126,15 @@ jobs:
       - name: Diagnostics
         shell: bash
         run: git tag --sort=-taggerdate
-      - name: Set Environment Variables
-        uses: falti/dotenv-action@v1
-        with:
-          path: ./.github/workflows/.env
-          export-variables: true
-          keys-case: bypass
       - name: Diagnostics
         shell: bash
         run: |
           echo 'needs.setup.outputs.tag=${{ needs.setup.outputs.tag }}'
           git log -10
-      - name: Install Node
-        uses: actions/setup-node@v3
+      - name: Setup Neon Toolchain
+        uses: ./.github/actions/setup-neon
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
-          cache: npm
+          use-rust: false
       - name: Install Dependencies
         shell: bash
         run: npm ci
