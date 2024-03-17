@@ -33,7 +33,7 @@ runs:
     - name: Set Environment Variables
       uses: falti/dotenv-action@v1
       with:
-        path: ./.github/workflows/.env
+        path: ./.github/.env
         export-variables: true
         keys-case: bypass
     - name: Install Node

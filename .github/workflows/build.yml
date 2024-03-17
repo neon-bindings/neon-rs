@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ inputs.ref }}
-      - name: Setup Neon Toolchain
+      - name: Setup Neon Environment
         uses: ./.github/actions/setup-neon
         with:
           use-rust: false
@@ -88,7 +88,7 @@ jobs:
         with:
           ref: ${{ inputs.ref }}
           fetch-depth: 0
-      - name: Setup Neon Toolchain
+      - name: Setup Neon Environment
         id: neon
         uses: ./.github/actions/setup-neon
         with:
@@ -159,7 +159,7 @@ jobs:
           echo 'inputs.ref=${{ inputs.ref }}'
           echo 'inputs.tag=${{ inputs.tag }}'
           echo "cargo-messages.version=$(jq -r '.version' < ./pkgs/cargo-messages/package.json)"
-      - name: Setup Neon Toolchain
+      - name: Setup Neon Environment
         uses: ./.github/actions/setup-neon
         with:
           use-rust: false

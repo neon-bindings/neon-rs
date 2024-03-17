@@ -74,7 +74,7 @@ jobs:
           echo publish=true >> "$GITHUB_OUTPUT"
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Setup Neon Toolchain
+      - name: Setup Neon Environment
         uses: ./.github/actions/setup-neon
         with:
           use-rust: false
@@ -131,7 +131,7 @@ jobs:
         run: |
           echo 'needs.setup.outputs.tag=${{ needs.setup.outputs.tag }}'
           git log -10
-      - name: Setup Neon Toolchain
+      - name: Setup Neon Environment
         uses: ./.github/actions/setup-neon
         with:
           use-rust: false
