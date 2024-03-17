@@ -39,18 +39,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ inputs.ref }}
-      - name: Set Environment Variables
-        uses: falti/dotenv-action@v1
+      - name: Setup Neon Toolchain
+        id: neon
+        uses: ./.github/actions/setup-neon
         with:
-          path: ./.github/workflows/.env
-          export-variables: true
-          keys-case: bypass
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
-          cache: npm
+          use-rust: false
       - name: Install Dependencies
         shell: bash
         run: npm ci

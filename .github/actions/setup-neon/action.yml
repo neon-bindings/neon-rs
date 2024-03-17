@@ -5,6 +5,10 @@ inputs:
     description: 'Platform being built for.'
     required: false
     default: ''
+  use-rust:
+    description: 'Install Rust?'
+    required: false
+    default: 'true'
   use-cross:
     description: 'Install cross-rs?'
     required: false
@@ -16,10 +20,10 @@ inputs:
 outputs:
   rust:
     description: 'Rust version installed.'
-    value: ${{ steps.version.outputs.rust }}
+    value: ${{ steps.rust.outputs.version }}
   node:
     description: 'Node version installed.'
-    value: ${{ steps.version.outputs.node }}
+    value: ${{ steps.node.outputs.version }}
   target:
     description: 'Rust target architecture installed.'
     value: ${{ steps.target.outputs.target }}
@@ -43,11 +47,13 @@ runs:
       shell: bash
       run: echo path=$( (cd dist/cli && pwd) ) >> $GITHUB_OUTPUT
     - name: Compute Rust Target
+      if: ${{ inputs['use-rust'] == 'true' }}
       id: target
       shell: bash
       run: echo target=$(node ${{ steps.cli.outputs.path }} list-platforms | jq -r '.["${{ inputs.platform }}"]') >> $GITHUB_OUTPUT
       working-directory: ${{ inputs.workspace }}
     - name: Install Rust
+      if: ${{ inputs['use-rust'] == 'true' }}
       uses: actions-rs/toolchain@v1
       with:
         toolchain: ${{ env.RUST_VERSION }}
@@ -58,12 +64,16 @@ runs:
       uses: baptiste0928/cargo-install@v2
       with:
         crate: cross
-    - name: Output Versions
-      id: version
+    - name: Node Version
+      id: node
       shell: bash
       run: |
-        # Output Node and Rust versions
         # Trim the leading 'v' (e.g. "v18.19.0" ==> "18.19.0")
-        echo node=$(node --version | cut -c 2-)
+        echo version=$(node --version | cut -c 2-) >> $GITHUB_OUTPUT
+    - name: Rust Version
+      if: ${{ inputs['use-rust'] == 'true' }}
+      id: rust
+      shell: bash
+      run: |
         # Trim extraneous metadata (e.g. "rustc 1.70.0 (90c541806 2023-05-31)" ==> "1.70.0")
-        echo rust=$(rustc --version | awk '{ print $2; }')
+        echo version=$(rustc --version | awk '{ print $2; }') >> $GITHUB_OUTPUT
