@@ -62,7 +62,8 @@ runs:
       id: version
       shell: bash
       run: |
-        # v18.19.0 ==> 18.19.0
+        # Output Node and Rust versions
+        # Trim the leading 'v' (e.g. "v18.19.0" ==> "18.19.0")
         echo node=$(node --version | cut -c 2-)
-        # rustc 1.70.0 (90c541806 2023-05-31) ==> 1.70.0
+        # Trim extraneous metadata (e.g. "rustc 1.70.0 (90c541806 2023-05-31)" ==> "1.70.0")
         echo rust=$(rustc --version | awk '{ print $2; }')
