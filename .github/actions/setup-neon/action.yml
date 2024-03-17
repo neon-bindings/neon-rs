@@ -41,7 +41,7 @@ runs:
     - name: Compute CLI path
       id: cli
       shell: bash
-      run: echo path=$( (cd dist/cli && pwd) )
+      run: echo path=$( (cd dist/cli && pwd) ) >> $GITHUB_OUTPUT
     - name: Compute Rust Target
       id: target
       shell: bash
