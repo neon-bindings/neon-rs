@@ -1,7 +1,7 @@
 {
   "name": "@cargo-messages/linux-arm-gnueabihf",
   "description": "Prebuilt binary package for `cargo-messages` on `linux-arm-gnueabihf`.",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "os": [
     "linux"
   ],
