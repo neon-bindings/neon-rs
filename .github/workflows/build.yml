@@ -127,6 +127,11 @@ jobs:
         shell: bash
         run: echo target=$(node ../../dist/cli list-platforms | jq -r '.["${{ matrix.cfg.platform }}"]') >> $GITHUB_OUTPUT
         working-directory: ./pkgs/cargo-messages
+      - name: Diagnostics
+        shell: bash
+        run: |
+          echo steps.target.outputs.target=${{ steps.target.outputs.target }}
+          echo matrix.cfg.platform=${{ matrix.cfg.platform }}
       - name: Build
         shell: bash
         env:
