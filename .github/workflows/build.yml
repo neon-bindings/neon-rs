@@ -103,9 +103,12 @@ jobs:
           export-variables: true
           keys-case: bypass
       - name: Setup Neon Toolchain
+        id: neon
         uses: ./.github/actions/setup-neon
         with:
           use-cross: ${{ matrix.cfg.script == 'cross' }}
+          platform: ${{ matrix.cfg.platform }}
+          workspace: ./pkgs/cargo-messages
       - name: Diagnostics
         shell: bash
         run: git log -10
@@ -122,20 +125,15 @@ jobs:
       - name: Check Versions
         shell: bash
         run: ./test/lint/check-versions.sh
-      - name: Compute Rust Target
-        id: target
-        shell: bash
-        run: echo target=$(node ../../dist/cli list-platforms | jq -r '.["${{ matrix.cfg.platform }}"]') >> $GITHUB_OUTPUT
-        working-directory: ./pkgs/cargo-messages
       - name: Diagnostics
         shell: bash
         run: |
-          echo steps.target.outputs.target=${{ steps.target.outputs.target }}
+          echo steps.target.outputs.target=${{ steps.neon.outputs.target }}
           echo matrix.cfg.platform=${{ matrix.cfg.platform }}
       - name: Build
         shell: bash
         env:
-          CARGO_BUILD_TARGET: ${{ steps.target.outputs.target }}
+          CARGO_BUILD_TARGET: ${{ steps.neon.outputs.target }}
           NEON_BUILD_PLATFORM: ${{ matrix.cfg.platform }}
         run: npm run ${{ matrix.cfg.script }}
         working-directory: ./pkgs/cargo-messages

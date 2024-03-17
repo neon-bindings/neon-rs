@@ -47,19 +47,18 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup Neon Toolchain
+        id: neon
         uses: ./.github/actions/setup-neon
+        with:
+          platform: linux-x64-gnu
+          workspace: ./pkgs/cargo-messages
       - name: Install Dependencies
         shell: bash
         run: npm ci --verbose
-      - name: Compute Rust Target
-        id: target
-        shell: bash
-        run: echo target=$(node ../../dist/cli list-platforms | jq -r '.["linux-x64-gnu"]') > $GITHUB_OUTPUT
-        working-directory: ./pkgs/cargo-messages
       - name: Build
         shell: bash
         env:
-          CARGO_BUILD_TARGET: ${{ steps.target.outputs.target }}
+          CARGO_BUILD_TARGET: ${{ steps.neon.outputs.target }}
           NEON_BUILD_PLATFORM: linux-x64-gnu
         run: npm run build
         working-directory: ./pkgs/cargo-messages
