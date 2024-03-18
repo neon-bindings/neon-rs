@@ -90,6 +90,9 @@ jobs:
           git config --global user.email $ACTIONS_EMAIL
           npm version -m 'v%s' '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
           npm i
+          # In case `npm i` updated src, re-run the bundler:
+          npm run dist
+          npm i
           git commit -a -m 'update lockfile'
           git push --follow-tags
           echo tag=$(git describe --abbrev=0) >> "$GITHUB_OUTPUT"
