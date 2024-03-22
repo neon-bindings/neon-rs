@@ -116,7 +116,6 @@ jobs:
         run: |
           echo steps.target.outputs.target=${{ steps.neon.outputs.target }}
           echo matrix.cfg.platform=${{ matrix.cfg.platform }}
-          cat ./pkgs/cargo-messages/update-platforms.log || true
       - name: Build
         shell: bash
         env:
@@ -137,6 +136,7 @@ jobs:
           echo 'inputs.ref=${{ inputs.ref }}'
           echo 'steps.build.outputs.filename=${{ steps.pack.outputs.filename }}'
           ls -al ./pkgs/cargo-messages/dist/${{ steps.pack.outputs.filename }}
+          cat ./pkgs/cargo-messages/update-platforms.log || true
       - name: Release
         if: ${{ inputs.github-release }}
         uses: softprops/action-gh-release@v1
