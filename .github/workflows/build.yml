@@ -116,6 +116,7 @@ jobs:
         run: |
           echo steps.target.outputs.target=${{ steps.neon.outputs.target }}
           echo matrix.cfg.platform=${{ matrix.cfg.platform }}
+          cat ./pkgs/cargo-messages/update-platforms.log || true
       - name: Build
         shell: bash
         env:
