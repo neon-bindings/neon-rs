@@ -135,7 +135,9 @@ jobs:
         run: |
           echo 'inputs.ref=${{ inputs.ref }}'
           echo 'steps.build.outputs.filename=${{ steps.pack.outputs.filename }}'
+          ls -al ./pkgs/cargo-messages/platforms/${{ matrix.cfg.platform }}
           ls -al ./pkgs/cargo-messages/dist/${{ steps.pack.outputs.filename }}
+          tar tvzf ./pkgs/cargo-messages/dist/${{ steps.pack.outputs.filename }}
           find . -name update-platforms.log
           cat ./pkgs/cargo-messages/update-platforms.log || true
       - name: Release
