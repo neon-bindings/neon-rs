@@ -29,8 +29,8 @@
     "test": "cargo test",
     "cargo-build": "cargo build --message-format=json > cargo.log",
     "cross-build": "cross build --message-format=json > cross.log",
-    "postcargo-build": "node ../../dist/cli dist -v < cargo.log",
-    "postcross-build": "node ../../dist/cli dist -v -m /target < cross.log",
+    "postcargo-build": "neon dist -v < cargo.log",
+    "postcross-build": "neon dist -v -m /target < cross.log",
     "debug": "npm run cargo-build --",
     "build": "npm run cargo-build -- --release",
     "cross": "npm run cross-build -- --release",
@@ -40,7 +40,7 @@
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.1.17"
+    "@neon-rs/cli": "0.1.26"
   },
   "repository": {
     "type": "git",
