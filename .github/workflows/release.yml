@@ -89,7 +89,6 @@ jobs:
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
           npm version -m 'v%s' '${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}'
-          (cd src/cli && npm run update-cargo-messages)
           npm run dist
           npm i
           git commit -a -m 'update lockfile'
