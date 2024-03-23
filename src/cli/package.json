@@ -18,7 +18,7 @@
   "scripts": {
     "bundle": "bash bundle.sh",
     "update-cargo-messages": "bash update-cargo-messages.sh",
-    "dist": "npm run update-cargo-messages && npm run bundle",
+    "dist": "npm run bundle",
     "build": "tsc",
     "pretest": "npm run build",
     "prepack": "npm run build",
