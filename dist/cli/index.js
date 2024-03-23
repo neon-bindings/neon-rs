@@ -2,13 +2,6 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
-/***/ 3355:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = require(__nccwpck_require__.ab + "index.node")
-
-/***/ }),
-
 /***/ 8938:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -40400,6 +40393,7 @@ class Dist {
         this._out = parseOutputFile(options.debug, options.out, options.platform);
         this._verbose = !!options.verbose;
         this.log(`crate name = "${this._crateName}"`);
+        this.log(`output file = ${this._out}`);
     }
     async findArtifact() {
         const reader = new lib.CargoReader(createInputStream(this._log), {
@@ -45757,6 +45751,14 @@ module.exports = eval("require")("@cargo-messages/darwin-x64");
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/linux-arm-gnueabihf");
+
+
+/***/ }),
+
+/***/ 1316:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/linux-x64-gnu");
 
 
 /***/ }),
@@ -60532,7 +60534,7 @@ module.exports = (__nccwpck_require__(8372)/* .proxy */ .sj)({
   'win32-arm64-msvc': () => __nccwpck_require__(7894),
   'darwin-x64': () => __nccwpck_require__(2990),
   'darwin-arm64': () => __nccwpck_require__(4404),
-  'linux-x64-gnu': () => __nccwpck_require__(3355),
+  'linux-x64-gnu': () => __nccwpck_require__(1316),
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
   'android-arm-eabi': () => __nccwpck_require__(1738)
 });

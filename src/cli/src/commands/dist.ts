@@ -126,6 +126,7 @@ export default class Dist implements Command {
     this._verbose = !!options.verbose;
 
     this.log(`crate name = "${this._crateName}"`);
+    this.log(`output file = ${this._out}`);
   }
 
   async findArtifact(): Promise<string> {
