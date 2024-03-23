@@ -36,7 +36,12 @@ function ensureDefined(str: string | undefined, msg: string): string {
   return str;
 }
 
-function parseOutputFile(debug: boolean, out: string | undefined, platform: string | undefined): Promise<string> {
+type OutputFileParse = {
+  path: string,
+  option: 'debug' | 'out' | 'platform'
+};
+
+function parseOutputFile(debug: boolean, out: string | undefined, platform: string | undefined): Promise<OutputFileParse> {
   if (debug && out) {
     throw new Error("Options --debug and --out cannot both be enabled.");
   } else if (debug && platform) {
@@ -56,13 +61,15 @@ function parseOutputFile(debug: boolean, out: string | undefined, platform: stri
       if (!path) {
         throw new Error(`Platform $p not supported by this library.`);
       }
-      return path;
+      return {
+        path, option: 'platform'
+      };
     });
   } else if (out || (!debug && NEON_DIST_OUTPUT)) {
     const path = out || NEON_DIST_OUTPUT;
-    return Promise.resolve(path!);
+    return Promise.resolve(path!).then(path => ({ path, option: 'out' }));
   } else {
-    return Promise.resolve('index.node');
+    return Promise.resolve({ path: 'index.node', option: 'debug' });
   }
 }
 
@@ -98,7 +105,7 @@ export default class Dist implements Command {
   private _mount: string | null;
   private _manifestPath: string | null;
   private _crateName: string;
-  private _out: Promise<string>;
+  private _out: Promise<OutputFileParse>;
   private _verbose: boolean;
 
   constructor(argv: string[]) {
@@ -181,9 +188,10 @@ export default class Dist implements Command {
     const file = this._file || (await this.findArtifact());
     const out = await this._out;
 
-    this.log(`output file = ${out}`);
+    this.log(`output file option: ${out.option}`);
+    this.log(`output file = ${out.path}`);
 
     // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-    await copyFile(file, out);
+    await copyFile(file, out.path);
   }
 }

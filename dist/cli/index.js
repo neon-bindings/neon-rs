@@ -40329,15 +40329,17 @@ function parseOutputFile(debug, out, platform) {
             if (!path) {
                 throw new Error(`Platform $p not supported by this library.`);
             }
-            return path;
+            return {
+                path, option: 'platform'
+            };
         });
     }
     else if (out || (!debug && NEON_DIST_OUTPUT)) {
         const path = out || NEON_DIST_OUTPUT;
-        return Promise.resolve(path);
+        return Promise.resolve(path).then(path => ({ path, option: 'out' }));
     }
     else {
-        return Promise.resolve('index.node');
+        return Promise.resolve({ path: 'index.node', option: 'debug' });
     }
 }
 class Dist {
@@ -40437,9 +40439,10 @@ class Dist {
     async run() {
         const file = this._file || (await this.findArtifact());
         const out = await this._out;
-        this.log(`output file = ${out}`);
+        this.log(`output file option: ${out.option}`);
+        this.log(`output file = ${out.path}`);
         // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-        await (0,promises_.copyFile)(file, out);
+        await (0,promises_.copyFile)(file, out.path);
     }
 }
 
