@@ -1,7 +1,7 @@
 {
   "name": "@cargo-messages/darwin-arm64",
   "description": "Prebuilt binary package for `cargo-messages` on `darwin-arm64`.",
-  "version": "0.1.42",
+  "version": "0.1.43",
   "os": [
     "darwin"
   ],
