@@ -2,13 +2,6 @@
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "module";
 /******/ var __webpack_modules__ = ({
 
-/***/ 4079:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = require(__nccwpck_require__.ab + "index.node")
-
-/***/ }),
-
 /***/ 8938:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -40446,7 +40439,7 @@ class Dist {
     async run() {
         const file = this._file || (await this.findArtifact());
         const out = await this._out;
-        this.log(`output option = ${out.option}`);
+        this.log(`output type = ${out.option}`);
         this.log(`output file = ${out.path}`);
         // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
         await (0,promises_.copyFile)(file, out.path);
@@ -45746,6 +45739,14 @@ module.exports = eval("require")("@cargo-messages/android-arm-eabi");
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/darwin-arm64");
+
+
+/***/ }),
+
+/***/ 2990:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/darwin-x64");
 
 
 /***/ }),
@@ -60532,10 +60533,10 @@ module.exports = {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 module.exports = (__nccwpck_require__(8372)/* .proxy */ .sj)({
-  'darwin-x64': () => __nccwpck_require__(4079),
+  'darwin-x64': () => __nccwpck_require__(2990),
   'win32-x64-msvc': () => __nccwpck_require__(1324),
   'win32-arm64-msvc': () => __nccwpck_require__(7894),
-  'darwin-x64': () => __nccwpck_require__(4079),
+  'darwin-x64': () => __nccwpck_require__(2990),
   'darwin-arm64': () => __nccwpck_require__(4404),
   'linux-x64-gnu': () => __nccwpck_require__(1316),
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
