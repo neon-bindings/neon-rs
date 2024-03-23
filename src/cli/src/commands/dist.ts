@@ -126,7 +126,6 @@ export default class Dist implements Command {
     this._verbose = !!options.verbose;
 
     this.log(`crate name = "${this._crateName}"`);
-    this.log(`output file = ${this._out}`);
   }
 
   async findArtifact(): Promise<string> {
@@ -180,8 +179,11 @@ export default class Dist implements Command {
 
   async run() {
     const file = this._file || (await this.findArtifact());
+    const out = await this._out;
+
+    this.log(`output file = ${out}`);
 
     // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-    await copyFile(file, await this._out);
+    await copyFile(file, out);
   }
 }
