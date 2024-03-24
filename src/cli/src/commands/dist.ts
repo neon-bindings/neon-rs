@@ -186,12 +186,12 @@ export default class Dist implements Command {
 
   async run() {
     const file = this._file || (await this.findArtifact());
-    const out = await this._out;
+    const { option, path } = await this._out;
 
-    this.log(`output type = ${out.option}`);
-    this.log(`output file = ${out.path}`);
+    this.log(`output type = ${option}`);
+    this.log(`output file = ${path}`);
 
     // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-    await copyFile(file, out.path);
+    await copyFile(file, path);
   }
 }
