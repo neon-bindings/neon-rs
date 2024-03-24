@@ -40327,7 +40327,7 @@ function parseOutputFile(debug, out, platform) {
         return manifest_lib/* LibraryManifest.load */.N.load().then(manifest => {
             const path = manifest.getPlatformOutputPath(p);
             if (!path) {
-                throw new Error(`Platform $p not supported by this library.`);
+                throw new Error(`Platform ${p} not supported by this library.`);
             }
             return {
                 path, option: 'platform'
