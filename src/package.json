@@ -13,7 +13,7 @@
     "dist": "npm run dist:cli && npm run dist:install",
     "dist:cli": "cd cli && npm run dist",
     "dist:install": "cd install && npm run dist",
-    "version": "node ../dist/cli bump -v --workspaces"
+    "version": "bash ../check-src-pollution.sh && node ../dist/cli bump -v --workspaces && bash ../check-src-pollution.sh"
   },
   "dependencies": {
     "cargo-messages": "0.0.168",
