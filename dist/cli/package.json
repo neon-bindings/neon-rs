@@ -28,11 +28,11 @@
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "optionalDependencies": {
     "@cargo-messages/android-arm-eabi": "0.1.52",
-    "@cargo-messages/darwin-arm64": "0.1.51",
-    "@cargo-messages/darwin-x64": "0.1.51",
-    "@cargo-messages/linux-arm-gnueabihf": "0.1.51",
-    "@cargo-messages/linux-x64-gnu": "0.1.51",
-    "@cargo-messages/win32-arm64-msvc": "0.1.51",
-    "@cargo-messages/win32-x64-msvc": "0.1.51"
+    "@cargo-messages/darwin-arm64": "0.1.52",
+    "@cargo-messages/darwin-x64": "0.1.52",
+    "@cargo-messages/linux-arm-gnueabihf": "0.1.52",
+    "@cargo-messages/linux-x64-gnu": "0.1.52",
+    "@cargo-messages/win32-arm64-msvc": "0.1.52",
+    "@cargo-messages/win32-x64-msvc": "0.1.52"
   }
 }
