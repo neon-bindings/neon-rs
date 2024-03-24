@@ -108,6 +108,11 @@ jobs:
           git config --global user.name $ACTIONS_USER
           git config --global user.email $ACTIONS_EMAIL
           npm version ${{ inputs.version }} -m "v%s"
+          for d in `find . -name @cargo-messages -type d`; do
+            echo "*** $d:"
+            ls $d
+            echo ***
+          done
       - name: Check Versions
         shell: bash
         run: ./test/lint/check-versions.sh
