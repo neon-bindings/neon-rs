@@ -1,6 +1,15 @@
 #!/bin/bash
 
+if [ -e ../../dist/cli/index.node ]; then
+  mv ../../dist/cli/index.node ../../dist/cli/index.node.bak
+fi
+
 ncc build src/index.ts -o ../../dist/cli
+
+if [ -e ../../dist/cli/index.node.bak ]; then
+  mv ../../dist/cli/index.node.bak ../../dist/cli/index.node
+fi
+
 crlf --set=LF ../../dist/cli/index.js
 
 if [[ $DEBUG_BUNDLE != '' ]]; then
