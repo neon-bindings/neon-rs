@@ -40355,7 +40355,6 @@ class Dist {
                 summary: 'Mounted path of target directory in virtual filesystem. This is used to map paths from the log data back to their real paths, needed when tools such as cross-rs report messages from within a mounted Docker filesystem.'
             },
             { name: '--manifest-path <path>', summary: 'Real path to Cargo.toml. (Default: cargo behavior)' },
-            // { name: '-o, --out <dist>', summary: 'Copy output to file <dist>. (Default: $NEON_DIST_OUTPUT or index.node)' },
             { name: '-p, --platform <platform>', summary: 'Stage output file for caching to platform <platform>. (Default: $NEON_BUILD_PLATFORM or -d)' },
             { name: '-d, --debug', summary: 'Generate output file for debugging (./index.node)' },
             { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
