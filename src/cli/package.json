@@ -1,7 +1,7 @@
 {
   "name": "@neon-rs/cli",
   "private": true,
-  "version": "0.1.52",
+  "version": "0.1.53",
   "description": "Command-line build tool for Neon modules.",
   "type": "module",
   "exports": "./dist/src/index.js",
@@ -54,7 +54,7 @@
   "dependencies": {
     "@neon-rs/load": "^0.0.181",
     "@neon-rs/manifest": "^0.0.5",
-    "cargo-messages": "^0.1.51",
+    "cargo-messages": "^0.1.52",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",
     "command-line-commands": "^3.0.2",
@@ -65,7 +65,7 @@
     "temp": "^0.9.4"
   },
   "optionalDependencies": {
-    "@cargo-messages/android-arm-eabi": "0.1.51",
+    "@cargo-messages/android-arm-eabi": "0.1.52",
     "@cargo-messages/darwin-arm64": "0.1.51",
     "@cargo-messages/darwin-x64": "0.1.51",
     "@cargo-messages/linux-arm-gnueabihf": "0.1.51",

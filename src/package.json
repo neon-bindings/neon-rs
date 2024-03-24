@@ -2,7 +2,7 @@
   "name": "src",
   "description": "Workspace tree of source packages requiring a `dist` step",
   "private": true,
-  "version": "0.1.52",
+  "version": "0.1.53",
   "workspaces": [
     "cli",
     "install"
