@@ -1,5 +1,8 @@
 #!/bin/bash
 
+mydir=$(dirname $0)
+cd $mydir
+
 if [ -d ./src/node_modules/@cargo-messages ]; then
   read -a pollution <<< `ls -1 ./src/node_modules/@cargo-messages`
 
