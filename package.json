@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "node dist/install src --workspaces --omit=optional && node dist/install pkgs --workspaces && node dist/install dist --workspaces",
     "dist": "cd src && npm run dist",
-    "version": "npm run version:src && npm run version:pkgs && npm run version:dist && npm run dist && git add .",
+    "version": "bash check-src-pollution.sh && npm run version:src && bash check-src-pollution.sh && npm run version:pkgs && npm run version:dist && npm run dist && git add .",
     "version:src": "node dist/cli bump -d src",
     "version:pkgs": "node dist/cli bump -d pkgs",
     "version:dist": "node dist/cli bump -d dist",
