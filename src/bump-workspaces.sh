@@ -4,10 +4,10 @@ bash ../check-src-pollution.sh
 
 # npm version --workspaces patch
 
-(cd cli && npm version patch --workspaces-update=false)
+(cd cli && npm version patch)
 
 bash ../check-src-pollution.sh
 
-(cd install && npm version patch --workspaces-update=false)
+(cd install && npm version patch)
 
 bash ../check-src-pollution.sh
