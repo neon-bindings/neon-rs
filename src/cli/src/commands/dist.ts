@@ -2,7 +2,7 @@ import { createReadStream } from 'node:fs';
 import { copyFile } from 'node:fs/promises';
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
-import { CargoMessages, CargoReader } from 'cargo-messages';
+import { CargoReader } from 'cargo-messages';
 import { LibraryManifest } from '@neon-rs/manifest';
 import { assertIsNodePlatform } from '@neon-rs/manifest/platform';
 
