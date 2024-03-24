@@ -40438,11 +40438,11 @@ class Dist {
     }
     async run() {
         const file = this._file || (await this.findArtifact());
-        const out = await this._out;
-        this.log(`output type = ${out.option}`);
-        this.log(`output file = ${out.path}`);
+        const { option, path } = await this._out;
+        this.log(`output type = ${option}`);
+        this.log(`output file = ${path}`);
         // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-        await (0,promises_.copyFile)(file, out.path);
+        await (0,promises_.copyFile)(file, path);
     }
 }
 
