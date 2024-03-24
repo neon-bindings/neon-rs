@@ -98,9 +98,25 @@ jobs:
       - name: Diagnostics
         shell: bash
         run: git log -10
+      - name: Diagnostics Before Installing Dependencies
+        shell: bash
+        run: |
+          for d in `find . -name @cargo-messages -type d`; do
+            echo "*** $d:"
+            ls $d
+            echo '***'
+          done
       - name: Install Dependencies
         shell: bash
         run: npm ci
+      - name: Diagnostics After Installing Dependencies
+        shell: bash
+        run: |
+          for d in `find . -name @cargo-messages -type d`; do
+            echo "*** $d:"
+            ls $d
+            echo '***'
+          done
       - name: Update Version
         if: ${{ inputs.update-version }}
         shell: bash
@@ -111,7 +127,7 @@ jobs:
           for d in `find . -name @cargo-messages -type d`; do
             echo "*** $d:"
             ls $d
-            echo ***
+            echo '***'
           done
       - name: Check Versions
         shell: bash
