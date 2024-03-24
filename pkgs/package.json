@@ -1,7 +1,7 @@
 {
   "name": "pkgs",
   "private": true,
-  "version": "0.1.48",
+  "version": "0.1.49",
   "description": "Workspace tree for @neon-rs and related packages not requiring a `dist` step",
   "workspaces": [
     "load",
