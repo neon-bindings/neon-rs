@@ -40414,21 +40414,6 @@ class Dist {
             throw new Error(`No artifacts were generated for crate ${this._crateName}`);
         }
         return file;
-        // const messages: CargoMessages = new CargoMessages({
-        //   mount: this._mount || undefined,
-        //   manifestPath: this._manifestPath || undefined,
-        //   file: this._log || undefined,
-        //   verbose: this._verbose
-        // });
-        // const artifact = messages.findArtifact(this._crateName);
-        // if (!artifact) {
-        //   throw new Error(`No artifacts were generated for crate ${this._crateName}`);
-        // }
-        // const file = artifact.findFileByCrateType('cdylib');
-        // if (!file) {
-        //   throw new Error(`No cdylib artifact found for crate ${this._crateName}`);
-        // }
-        // return file;
     }
     log(msg) {
         if (this._verbose) {
