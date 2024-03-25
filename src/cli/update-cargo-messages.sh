@@ -2,6 +2,14 @@
 
 cargo_messages_version=$(npm view cargo-messages version)
 
+echo '[update-cargo-messages.sh] platforms as JSON:'
+
+(cd ../../pkgs/cargo-messages && node ../../dist/cli list-platforms)
+
+echo '[update-cargo-messages.sh] platforms as line-separate list:'
+
+(cd ../../pkgs/cargo-messages && node ../../dist/cli list-platforms) | jq -r 'keys | join("\n")'
+
 read -a platforms <<< $( (cd ../../pkgs/cargo-messages && node ../../dist/cli list-platforms) | jq -r 'keys | join("\n")' )
 
 echo "[update-cargo-messages.sh] platforms: ${platforms[@]}"
