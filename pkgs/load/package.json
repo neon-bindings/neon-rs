@@ -1,6 +1,6 @@
 {
   "name": "@neon-rs/load",
-  "version": "0.1.60",
+  "version": "0.1.61",
   "description": "Utilities for loading Neon modules.",
   "main": "dist/index.js",
   "types": "types/index.d.ts",
