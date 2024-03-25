@@ -1,21 +1,21 @@
 #!/bin/bash
 
 cargo_messages_version=$(npm view cargo-messages version)
+json=$( (cd ../../pkgs/cargo-messages && node ../../dist/cli list-platforms) )
 
 echo '[update-cargo-messages.sh] platforms as JSON:'
 
-(cd ../../pkgs/cargo-messages && node ../../dist/cli list-platforms)
+echo $json
 
 echo '[update-cargo-messages.sh] platforms as line-separate list:'
 
-(cd ../../pkgs/cargo-messages && node ../../dist/cli list-platforms) | jq -r 'keys | join("\n")'
+echo $json | jq -r 'keys[]'
 
-declare -a allplatforms
-read -a allplatforms <<< $( (cd ../../pkgs/cargo-messages && node ../../dist/cli list-platforms) | jq -r 'keys | join("\n")' )
+for platform in `echo $json | jq -r 'keys[]'`; do
+  echo "[update-cargo-messages.sh] platform: $platform"
+done
 
-echo "[update-cargo-messages.sh] platforms: ${allplatforms[@]}"
-
-for platform in ${allplatforms[@]} ; do
+for platform in `echo $json | jq -r 'keys[]'`; do
   echo "[update-cargo-messages.sh] npm i --omit=optional -E -O @cargo-messages/$platform@$cargo_messages_version"
   npm i --omit=optional -E -O @cargo-messages/$platform@$cargo_messages_version || echo "❌ failed to update @cargo-messages/$platform"
 done
