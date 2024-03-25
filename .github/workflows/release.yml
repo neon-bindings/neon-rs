@@ -74,6 +74,10 @@ jobs:
           echo publish=true >> "$GITHUB_OUTPUT"
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Diagnostics
+        shell: bash
+        run: |
+          git log -10
       - name: Setup Neon Environment
         uses: ./.github/actions/setup-neon
         with:
