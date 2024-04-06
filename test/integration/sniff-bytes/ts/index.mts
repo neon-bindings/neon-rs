@@ -1,1 +1,1 @@
-export { sniffBytes, FileFormat } from './index.cjs';
+export * from './index.cjs';
