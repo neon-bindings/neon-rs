@@ -149,7 +149,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          echo filename=$(basename $(npm pack ./platforms/${{ matrix.cfg.platform }} --pack-destination=./dist --json | jq -r '.[0].filename')) | tee -a $GITHUB_OUTPUT
+          echo filename=$(basename $(npm pack ./platforms/${{ matrix.cfg.platform }} --silent --pack-destination=./dist --json | jq -r '.[0].filename')) | tee -a $GITHUB_OUTPUT
         working-directory: ./pkgs/cargo-messages
       - name: Diagnostics
         shell: bash
