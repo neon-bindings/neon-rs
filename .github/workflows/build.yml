@@ -199,7 +199,7 @@ jobs:
           ls -al
           ls -al dist
           echo '*** FNOOOOORD ***'
-          npm pack --pack-destination=./dist --json
+          npm pack --pack-destination=./dist --json 2>/dev/null
           echo '*** FNOOOOOOOOOOOOOOOOOOOORD ***'
           echo "filename=$(npm pack --pack-destination=./dist)" >> $GITHUB_OUTPUT
         working-directory: ./pkgs/cargo-messages
