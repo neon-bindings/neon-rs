@@ -20,7 +20,7 @@ on:
 
 jobs:
   pr:
-    name: PR Setup
+    name: Pull Request Details
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     outputs:
