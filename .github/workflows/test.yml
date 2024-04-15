@@ -82,8 +82,6 @@ jobs:
           echo 'zomg yes this is a build-all PR'
       - name: Checkout Code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Check Bundles
         shell: bash
         run: ./test/lint/check-bundles.sh
