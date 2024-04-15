@@ -198,7 +198,8 @@ jobs:
           mkdir -p dist
           ls -al
           ls -al dist
-          npm pack --pack-destination=./dist || (cat ./update-platforms.log && false)
+          daveherman=$(npm pack --pack-destination=./dist)
+          echo $daveherman
           echo "filename=$(npm pack --pack-destination=./dist)" >> $GITHUB_OUTPUT
         working-directory: ./pkgs/cargo-messages
       - name: Diagnostics
