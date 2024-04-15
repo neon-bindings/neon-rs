@@ -198,7 +198,7 @@ jobs:
           mkdir -p dist
           ls -al
           ls -al dist
-          daveherman=$(npm pack --pack-destination=./dist --json | jq .filename)
+          daveherman=$(npm pack --pack-destination=./dist --json | jq .[0].filename)
           echo $daveherman
           echo "filename=$(npm pack --pack-destination=./dist)" >> $GITHUB_OUTPUT
         working-directory: ./pkgs/cargo-messages
