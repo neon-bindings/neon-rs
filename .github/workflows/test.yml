@@ -48,7 +48,7 @@ jobs:
 
   build-all:
     name: Build
-    if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci:build-all') }}
+    if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci:full-matrix') }}
     needs: [pr]
     permissions:
       contents: write
