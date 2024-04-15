@@ -68,18 +68,6 @@ jobs:
           cat <<GITHUB_EVENT_JSON
           ${{toJSON(github.event)}}
           GITHUB_EVENT_JSON
-      - name: PR Diagnostics
-        if: ${{ github.event_name == 'pull_request' }}
-        shell: bash
-        run: |
-          cat <<GITHUB_EVENT_JSON
-          ${{toJSON(github.event.pull_request.labels)}}
-          GITHUB_EVENT_JSON
-      - name: Is This a Build-All?
-        if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci:build-all') }}
-        shell: bash
-        run: |
-          echo 'zomg yes this is a build-all PR'
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Check Bundles
