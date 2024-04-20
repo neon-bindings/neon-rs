@@ -64,7 +64,11 @@ export abstract class AbstractManifest {
   get description(): string { return (this._json as any).description ?? ""; }
 
   async save(log: (msg: string) => void): Promise<void> {
-    await fs.writeFile(path.join(this.dir, "package.json"), JSON.stringify(this._json, null, 2), { encoding: 'utf8' });
+    await fs.writeFile(
+      path.join(this.dir, "package.json"),
+      JSON.stringify(this._json, null, 2) + "\n",
+      { encoding: 'utf8' }
+    );
   }
 
   stringify(): string {
