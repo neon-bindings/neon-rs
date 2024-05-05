@@ -1,6 +1,7 @@
 import commandLineUsage from 'command-line-usage';
 import chalk from 'chalk';
 import { CommandName, CommandStatics, commandFor, summaries } from './command.js';
+import { Topic, subcommandFor } from './commands/show.js';
 
 function pink(text: string): string {
   return chalk.bold.hex('#e75480')(text);
@@ -22,7 +23,7 @@ function purple(text: string): string {
   return chalk.bold.magentaBright(text);
 }
 
-function commandUsage(name: CommandName, command: CommandStatics): string {
+function commandUsage(name: string, command: CommandStatics): string {
   const sections = [
     {
       content: `${pink('Neon:')} ${name} - ${command.summary()}`,
@@ -68,6 +69,10 @@ function mainUsage(): string {
   ];
 
   return commandLineUsage(sections).trim();
+}
+
+export function printShowTopicUsage(topic: Topic) {
+  console.error(commandUsage(topic, subcommandFor(topic)));
 }
 
 export function printCommandUsage(name: CommandName) {

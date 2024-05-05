@@ -7,6 +7,7 @@ import CurrentPlatform from './commands/current-platform.js';
 import Preset from './commands/preset.js';
 import Ci from './commands/ci.js';
 import Help from './commands/help.js';
+import Show from './commands/show.js';
 
 export interface Command {
   run(): Promise<void>;
@@ -35,10 +36,11 @@ export enum CommandName {
   Bump = 'bump',
   AddPlatform = 'add-platform',
   UpdatePlatforms = 'update-platforms',
-  ListPlatforms = 'list-platforms',
-  CurrentPlatform = 'current-platform',
-  Preset = 'preset',
-  Ci = 'ci'
+  ListPlatforms = 'list-platforms', // DEPRECATED(0.2)
+  CurrentPlatform = 'current-platform', // DEPRECATED(0.2)
+  Preset = 'preset', // DEPRECATED(0.2)
+  Ci = 'ci', // DEPRECATED(0.2)
+  Show = 'show'
 };
 
 export function isCommandName(s: string): s is CommandName {
@@ -62,7 +64,8 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.ListPlatforms]: ListPlatforms,
   [CommandName.CurrentPlatform]: CurrentPlatform,
   [CommandName.Preset]: Preset,
-  [CommandName.Ci]: Ci
+  [CommandName.Ci]: Ci,
+  [CommandName.Show]: Show
 };
 
 export function commandFor(name: CommandName): CommandClass {
@@ -76,9 +79,6 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.Bump, summary: Bump.summary() },
     { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
     { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
-    { name: CommandName.ListPlatforms, summary: ListPlatforms.summary() },
-    { name: CommandName.CurrentPlatform, summary: CurrentPlatform.summary() },
-    { name: CommandName.Preset, summary: Preset.summary() },
-    { name: CommandName.Ci, summary: Ci.summary() }
+    { name: CommandName.Show, summary: Show.summary() }
   ];
 }
