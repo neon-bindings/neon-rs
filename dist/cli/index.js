@@ -40240,7 +40240,7 @@ which.sync = whichSync
 
 /***/ }),
 
-/***/ 7931:
+/***/ 3129:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -42085,7 +42085,7 @@ async function getCurrentTarget(log) {
     return target;
 }
 
-;// CONCATENATED MODULE: ./src/commands/add-platform.ts
+;// CONCATENATED MODULE: ./src/commands/add.ts
 
 
 
@@ -42093,16 +42093,16 @@ async function getCurrentTarget(log) {
 function optionArray(option) {
     return option == null ? [] : [option];
 }
-const add_platform_OPTIONS = [
+const add_OPTIONS = [
     { name: 'os', type: String, defaultValue: null },
     { name: 'arch', type: String, defaultValue: null },
     { name: 'abi', type: String, defaultValue: null },
     { name: 'out-dir', alias: 'o', type: String, defaultValue: 'platforms' },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-class AddPlatform {
+class Add {
     static summary() { return 'Add a platform or platform preset to a Neon project.'; }
-    static syntax() { return 'neon add-platform [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
+    static syntax() { return 'neon add [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
     static options() {
         return [
             { name: '<p>', summary: 'A Node platform or platform preset.' },
@@ -42139,7 +42139,7 @@ class AddPlatform {
     _outDir;
     _verbose;
     constructor(argv) {
-        const options = dist_default()(add_platform_OPTIONS, { argv, partial: true });
+        const options = dist_default()(add_OPTIONS, { argv, partial: true });
         this._os = options.os || null;
         this._arch = options.arch || null;
         this._abi = options.abi || null;
@@ -42169,7 +42169,7 @@ class AddPlatform {
     }
     log(msg) {
         if (this._verbose) {
-            console.error("[neon add-platform] " + msg);
+            console.error("[neon add] " + msg);
         }
     }
     async addPlatform(libManifest) {
@@ -42204,34 +42204,30 @@ class AddPlatform {
     }
 }
 
-;// CONCATENATED MODULE: ./src/commands/update-platforms.ts
+;// CONCATENATED MODULE: ./src/commands/update.ts
 
 
-const update_platforms_OPTIONS = [
+const update_OPTIONS = [
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-class UpdatePlatforms {
+class Update {
     static summary() { return 'Update configuration for all build platforms in package.json.'; }
-    static syntax() { return 'neon update-platforms [-b <file>]'; }
+    static syntax() { return 'neon update [-v]'; }
     static options() {
         return [
             { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
         ];
     }
-    static seeAlso() {
-        return [
-            { name: 'ncc', summary: '<https://github.com/vercel/ncc>' }
-        ];
-    }
+    static seeAlso() { }
     static extraSection() { }
     _verbose;
     constructor(argv) {
-        const options = dist_default()(update_platforms_OPTIONS, { argv });
+        const options = dist_default()(update_OPTIONS, { argv });
         this._verbose = !!options.verbose;
     }
     log(msg) {
         if (this._verbose) {
-            console.error("[neon update-platforms] " + msg);
+            console.error("[neon update] " + msg);
         }
     }
     async run() {
@@ -42495,6 +42491,8 @@ var CommandName;
     CommandName["Help"] = "help";
     CommandName["Dist"] = "dist";
     CommandName["Bump"] = "bump";
+    CommandName["Add"] = "add";
+    CommandName["Update"] = "update";
     CommandName["AddPlatform"] = "add-platform";
     CommandName["UpdatePlatforms"] = "update-platforms";
     CommandName["ListPlatforms"] = "list-platforms";
@@ -42518,8 +42516,10 @@ const COMMANDS = {
     [CommandName.Help]: Help,
     [CommandName.Dist]: Dist,
     [CommandName.Bump]: Bump,
-    [CommandName.AddPlatform]: AddPlatform,
-    [CommandName.UpdatePlatforms]: UpdatePlatforms,
+    [CommandName.Add]: Add,
+    [CommandName.Update]: Update,
+    [CommandName.AddPlatform]: Add,
+    [CommandName.UpdatePlatforms]: Update,
     [CommandName.ListPlatforms]: ListPlatforms,
     [CommandName.CurrentPlatform]: CurrentPlatform,
     [CommandName.Preset]: Preset,
@@ -42534,8 +42534,8 @@ function summaries() {
         { name: CommandName.Help, summary: Help.summary() },
         { name: CommandName.Dist, summary: Dist.summary() },
         { name: CommandName.Bump, summary: Bump.summary() },
-        { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
-        { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
+        { name: CommandName.Add, summary: Add.summary() },
+        { name: CommandName.Update, summary: Update.summary() },
         { name: CommandName.Show, summary: show/* default.summary */.ZP.summary() }
     ];
 }
@@ -42849,7 +42849,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7931);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3129);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -45879,7 +45879,7 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 /* harmony default export */ const chalk_source = (chalk);
 
 // EXTERNAL MODULE: ./src/command.ts + 35 modules
-var command = __nccwpck_require__(7931);
+var command = __nccwpck_require__(3129);
 // EXTERNAL MODULE: ./src/commands/show.ts + 4 modules
 var show = __nccwpck_require__(6264);
 ;// CONCATENATED MODULE: ./src/print.ts

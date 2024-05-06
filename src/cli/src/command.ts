@@ -1,7 +1,7 @@
 import Dist from './commands/dist.js';
 import Bump from './commands/bump.js';
-import AddPlatform from './commands/add-platform.js';
-import UpdatePlatforms from './commands/update-platforms.js';
+import Add from './commands/add.js';
+import Update from './commands/update.js';
 import ListPlatforms from './commands/list-platforms.js';
 import CurrentPlatform from './commands/current-platform.js';
 import Preset from './commands/preset.js';
@@ -34,8 +34,10 @@ export enum CommandName {
   Help = 'help',
   Dist = 'dist',
   Bump = 'bump',
-  AddPlatform = 'add-platform',
-  UpdatePlatforms = 'update-platforms',
+  Add = 'add',
+  Update = 'update',
+  AddPlatform = 'add-platform', // DEPRECATED(0.2)
+  UpdatePlatforms = 'update-platforms', // DEPRECATED(0.2)
   ListPlatforms = 'list-platforms', // DEPRECATED(0.2)
   CurrentPlatform = 'current-platform', // DEPRECATED(0.2)
   Preset = 'preset', // DEPRECATED(0.2)
@@ -59,8 +61,10 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Help]: Help,
   [CommandName.Dist]: Dist,
   [CommandName.Bump]: Bump,
-  [CommandName.AddPlatform]: AddPlatform,
-  [CommandName.UpdatePlatforms]: UpdatePlatforms,
+  [CommandName.Add]: Add,
+  [CommandName.Update]: Update,
+  [CommandName.AddPlatform]: Add,
+  [CommandName.UpdatePlatforms]: Update,
   [CommandName.ListPlatforms]: ListPlatforms,
   [CommandName.CurrentPlatform]: CurrentPlatform,
   [CommandName.Preset]: Preset,
@@ -77,8 +81,8 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.Help, summary: Help.summary() },
     { name: CommandName.Dist, summary: Dist.summary() },
     { name: CommandName.Bump, summary: Bump.summary() },
-    { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
-    { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
+    { name: CommandName.Add, summary: Add.summary() },
+    { name: CommandName.Update, summary: Update.summary() },
     { name: CommandName.Show, summary: Show.summary() }
   ];
 }

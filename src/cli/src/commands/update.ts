@@ -6,19 +6,15 @@ const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 
-export default class UpdatePlatforms implements Command {
+export default class Update implements Command {
   static summary(): string { return 'Update configuration for all build platforms in package.json.'; }
-  static syntax(): string { return 'neon update-platforms [-b <file>]'; }
+  static syntax(): string { return 'neon update [-v]'; }
   static options(): CommandDetail[] {
     return [
       { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
     ];
   }
-  static seeAlso(): CommandDetail[] | void {
-    return [
-      { name: 'ncc', summary: '<https://github.com/vercel/ncc>' }
-    ];
-  }
+  static seeAlso(): CommandDetail[] | void { }
   static extraSection(): CommandSection | void { }
 
   private _verbose: boolean;
@@ -31,7 +27,7 @@ export default class UpdatePlatforms implements Command {
 
   log(msg: string) {
     if (this._verbose) {
-      console.error("[neon update-platforms] " + msg);
+      console.error("[neon update] " + msg);
     }
   }
 

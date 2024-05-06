@@ -18,9 +18,9 @@ const OPTIONS = [
   { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
 
-export default class AddPlatform implements Command {
+export default class Add implements Command {
     static summary(): string { return 'Add a platform or platform preset to a Neon project.'; }
-    static syntax(): string { return 'neon add-platform [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
+    static syntax(): string { return 'neon add [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
     static options(): CommandDetail[] {
       return [
         { name: '<p>', summary: 'A Node platform or platform preset.' },
@@ -95,7 +95,7 @@ export default class AddPlatform implements Command {
 
     log(msg: string) {
       if (this._verbose) {
-        console.error("[neon add-platform] " + msg);
+        console.error("[neon add] " + msg);
       }
     }
   
