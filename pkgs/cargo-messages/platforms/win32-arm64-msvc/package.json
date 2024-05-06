@@ -1,7 +1,7 @@
 {
   "name": "@cargo-messages/win32-arm64-msvc",
   "description": "Prebuilt binary package for `cargo-messages` on `win32-arm64-msvc`.",
-  "version": "0.1.67",
+  "version": "0.1.68",
   "os": [
     "win32"
   ],
