@@ -45905,7 +45905,7 @@ function purple(text) {
 function commandUsage(name, command) {
     const sections = [
         {
-            content: `${pink('Neon:')} ${name} - ${command.summary()}`,
+            content: `${pink('neon ' + name)} - ${command.summary()}`,
             raw: true
         },
         {
@@ -45930,7 +45930,7 @@ function commandUsage(name, command) {
 function mainUsage() {
     const sections = [
         {
-            content: `${pink('Neon:')} the npm packaging tool for Rust addons`,
+            content: `${pink('neon')} - manage and distribute Neon projects`,
             raw: true
         },
         {
@@ -45945,7 +45945,7 @@ function mainUsage() {
     return command_line_usage(sections).trim();
 }
 function printShowTopicUsage(topic) {
-    console.error(commandUsage(topic, (0,show/* subcommandFor */.D8)(topic)));
+    console.error(commandUsage("show " + topic, (0,show/* subcommandFor */.D8)(topic)));
 }
 function printCommandUsage(name) {
     console.error(commandUsage(name, (0,command/* commandFor */.Nl)(name)));

@@ -26,7 +26,7 @@ function purple(text: string): string {
 function commandUsage(name: string, command: CommandStatics): string {
   const sections = [
     {
-      content: `${pink('Neon:')} ${name} - ${command.summary()}`,
+      content: `${pink('neon ' + name)} - ${command.summary()}`,
       raw: true
     },
     {
@@ -55,7 +55,7 @@ function commandUsage(name: string, command: CommandStatics): string {
 function mainUsage(): string {
   const sections = [
     {
-      content: `${pink('Neon:')} the npm packaging tool for Rust addons`,
+      content: `${pink('neon')} - manage and distribute Neon projects`,
       raw: true
     },
     {
@@ -72,7 +72,7 @@ function mainUsage(): string {
 }
 
 export function printShowTopicUsage(topic: Topic) {
-  console.error(commandUsage(topic, subcommandFor(topic)));
+  console.error(commandUsage("show " + topic, subcommandFor(topic)));
 }
 
 export function printCommandUsage(name: CommandName) {
