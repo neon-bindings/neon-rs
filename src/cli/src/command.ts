@@ -1,12 +1,13 @@
 import Dist from './commands/dist.js';
 import Bump from './commands/bump.js';
-import AddPlatform from './commands/add-platform.js';
-import UpdatePlatforms from './commands/update-platforms.js';
+import Add from './commands/add.js';
+import Update from './commands/update.js';
 import ListPlatforms from './commands/list-platforms.js';
 import CurrentPlatform from './commands/current-platform.js';
 import Preset from './commands/preset.js';
 import Ci from './commands/ci.js';
 import Help from './commands/help.js';
+import Show from './commands/show.js';
 
 export interface Command {
   run(): Promise<void>;
@@ -33,12 +34,15 @@ export enum CommandName {
   Help = 'help',
   Dist = 'dist',
   Bump = 'bump',
-  AddPlatform = 'add-platform',
-  UpdatePlatforms = 'update-platforms',
-  ListPlatforms = 'list-platforms',
-  CurrentPlatform = 'current-platform',
-  Preset = 'preset',
-  Ci = 'ci'
+  Add = 'add',
+  Update = 'update',
+  AddPlatform = 'add-platform', // DEPRECATED(0.2)
+  UpdatePlatforms = 'update-platforms', // DEPRECATED(0.2)
+  ListPlatforms = 'list-platforms', // DEPRECATED(0.2)
+  CurrentPlatform = 'current-platform', // DEPRECATED(0.2)
+  Preset = 'preset', // DEPRECATED(0.2)
+  Ci = 'ci', // DEPRECATED(0.2)
+  Show = 'show'
 };
 
 export function isCommandName(s: string): s is CommandName {
@@ -57,12 +61,15 @@ const COMMANDS: Record<CommandName, CommandClass> = {
   [CommandName.Help]: Help,
   [CommandName.Dist]: Dist,
   [CommandName.Bump]: Bump,
-  [CommandName.AddPlatform]: AddPlatform,
-  [CommandName.UpdatePlatforms]: UpdatePlatforms,
+  [CommandName.Add]: Add,
+  [CommandName.Update]: Update,
+  [CommandName.AddPlatform]: Add,
+  [CommandName.UpdatePlatforms]: Update,
   [CommandName.ListPlatforms]: ListPlatforms,
   [CommandName.CurrentPlatform]: CurrentPlatform,
   [CommandName.Preset]: Preset,
-  [CommandName.Ci]: Ci
+  [CommandName.Ci]: Ci,
+  [CommandName.Show]: Show
 };
 
 export function commandFor(name: CommandName): CommandClass {
@@ -74,11 +81,8 @@ export function summaries(): CommandDetail[] {
     { name: CommandName.Help, summary: Help.summary() },
     { name: CommandName.Dist, summary: Dist.summary() },
     { name: CommandName.Bump, summary: Bump.summary() },
-    { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
-    { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
-    { name: CommandName.ListPlatforms, summary: ListPlatforms.summary() },
-    { name: CommandName.CurrentPlatform, summary: CurrentPlatform.summary() },
-    { name: CommandName.Preset, summary: Preset.summary() },
-    { name: CommandName.Ci, summary: Ci.summary() }
+    { name: CommandName.Add, summary: Add.summary() },
+    { name: CommandName.Update, summary: Update.summary() },
+    { name: CommandName.Show, summary: Show.summary() }
   ];
 }

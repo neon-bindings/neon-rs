@@ -40240,7 +40240,7 @@ which.sync = whichSync
 
 /***/ }),
 
-/***/ 3149:
+/***/ 3129:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -40266,16 +40266,10 @@ var lib = __nccwpck_require__(3993);
 ;// CONCATENATED MODULE: ./node_modules/cargo-messages/lib/index.mjs
 
 
-// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/index.cjs
-var manifest_lib = __nccwpck_require__(4696);
-;// CONCATENATED MODULE: ../node_modules/@neon-rs/manifest/lib/index.mjs
-
-
-// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.cjs
-var lib_platform = __nccwpck_require__(2147);
-;// CONCATENATED MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
-
-
+// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/index.mjs
+var manifest_lib = __nccwpck_require__(347);
+// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
+var lib_platform = __nccwpck_require__(8140);
 ;// CONCATENATED MODULE: ./src/commands/dist.ts
 
 
@@ -40323,7 +40317,7 @@ function parseOutputFile(debug, out, platform) {
     const NEON_BUILD_PLATFORM = process.env['NEON_BUILD_PLATFORM'];
     if (platform || (!debug && NEON_BUILD_PLATFORM)) {
         const p = platform || NEON_BUILD_PLATFORM;
-        (0,lib_platform.assertIsNodePlatform)(p);
+        (0,lib_platform/* assertIsNodePlatform */.or)(p);
         return manifest_lib/* LibraryManifest.load */.N.load().then(manifest => {
             const path = manifest.getPlatformOutputPath(p);
             if (!path) {
@@ -42087,11 +42081,11 @@ async function getCurrentTarget(log) {
     }
     const target = hostLine.replace(/^host:\s+/, '');
     log(`currentTarget result: "${target}"`);
-    (0,lib_platform.assertIsRustTarget)(target);
+    (0,lib_platform/* assertIsRustTarget */.sD)(target);
     return target;
 }
 
-;// CONCATENATED MODULE: ./src/commands/add-platform.ts
+;// CONCATENATED MODULE: ./src/commands/add.ts
 
 
 
@@ -42099,16 +42093,16 @@ async function getCurrentTarget(log) {
 function optionArray(option) {
     return option == null ? [] : [option];
 }
-const add_platform_OPTIONS = [
+const add_OPTIONS = [
     { name: 'os', type: String, defaultValue: null },
     { name: 'arch', type: String, defaultValue: null },
     { name: 'abi', type: String, defaultValue: null },
     { name: 'out-dir', alias: 'o', type: String, defaultValue: 'platforms' },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-class AddPlatform {
+class Add {
     static summary() { return 'Add a platform or platform preset to a Neon project.'; }
-    static syntax() { return 'neon add-platform [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
+    static syntax() { return 'neon add [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
     static options() {
         return [
             { name: '<p>', summary: 'A Node platform or platform preset.' },
@@ -42145,7 +42139,7 @@ class AddPlatform {
     _outDir;
     _verbose;
     constructor(argv) {
-        const options = dist_default()(add_platform_OPTIONS, { argv, partial: true });
+        const options = dist_default()(add_OPTIONS, { argv, partial: true });
         this._os = options.os || null;
         this._arch = options.arch || null;
         this._abi = options.abi || null;
@@ -42175,7 +42169,7 @@ class AddPlatform {
     }
     log(msg) {
         if (this._verbose) {
-            console.error("[neon add-platform] " + msg);
+            console.error("[neon add] " + msg);
         }
     }
     async addPlatform(libManifest) {
@@ -42183,15 +42177,15 @@ class AddPlatform {
             this.log('adding default system platform');
             await libManifest.addRustTarget(await getCurrentTarget(msg => this.log(msg)));
         }
-        else if ((0,lib_platform.isRustTarget)(this._platform)) {
+        else if ((0,lib_platform/* isRustTarget */.FZ)(this._platform)) {
             this.log(`adding Rust target ${this._platform}`);
             await libManifest.addRustTarget(this._platform);
         }
-        else if ((0,lib_platform.isNodePlatform)(this._platform)) {
+        else if ((0,lib_platform/* isNodePlatform */.bC)(this._platform)) {
             this.log(`adding Node platform ${this._platform}`);
             await libManifest.addNodePlatform(this._platform);
         }
-        else if ((0,lib_platform.isPlatformPreset)(this._platform)) {
+        else if ((0,lib_platform/* isPlatformPreset */.Qm)(this._platform)) {
             await libManifest.addPlatformPreset(this._platform);
         }
         else {
@@ -42210,34 +42204,30 @@ class AddPlatform {
     }
 }
 
-;// CONCATENATED MODULE: ./src/commands/update-platforms.ts
+;// CONCATENATED MODULE: ./src/commands/update.ts
 
 
-const update_platforms_OPTIONS = [
+const update_OPTIONS = [
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
 ];
-class UpdatePlatforms {
+class Update {
     static summary() { return 'Update configuration for all build platforms in package.json.'; }
-    static syntax() { return 'neon update-platforms [-b <file>]'; }
+    static syntax() { return 'neon update [-v]'; }
     static options() {
         return [
             { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
         ];
     }
-    static seeAlso() {
-        return [
-            { name: 'ncc', summary: '<https://github.com/vercel/ncc>' }
-        ];
-    }
+    static seeAlso() { }
     static extraSection() { }
     _verbose;
     constructor(argv) {
-        const options = dist_default()(update_platforms_OPTIONS, { argv });
+        const options = dist_default()(update_OPTIONS, { argv });
         this._verbose = !!options.verbose;
     }
     log(msg) {
         if (this._verbose) {
-            console.error("[neon update-platforms] " + msg);
+            console.error("[neon update] " + msg);
         }
     }
     async run() {
@@ -42365,7 +42355,7 @@ class Preset {
         if (options._unknown.length > 1) {
             throw new Error(`Unexpected argument ${options._unknown[1]}`);
         }
-        (0,lib_platform.assertIsPlatformPreset)(options._unknown[0]);
+        (0,lib_platform/* assertIsPlatformPreset */.Zv)(options._unknown[0]);
         this._preset = options._unknown[0];
     }
     log(msg) {
@@ -42374,73 +42364,13 @@ class Preset {
         }
     }
     async run() {
-        const map = (0,lib_platform.expandPlatformPreset)(this._preset);
+        const map = (0,lib_platform/* expandPlatformPreset */.EY)(this._preset);
         console.log(JSON.stringify(map, null, 2));
     }
 }
 
-;// CONCATENATED MODULE: ./data/github.json
-const github_namespaceObject = JSON.parse('{"darwin-arm64":"macOS","darwin-x64":"macOS","ios-arm64":null,"ios-x64":null,"android-arm64":"Linux","android-arm-eabi":"Linux","android-ia32":null,"android-x64":"Linux","win32-arm64-msvc":"Windows","win32-ia32-gnu":null,"win32-ia32-msvc":null,"win32-x64-gnu":null,"win32-x64-msvc":"Windows","linux-arm64-gnu":"Linux","linux-arm64-musl":null,"linux-arm-gnueabihf":"Linux","linux-arm-musleabihf":null,"linux-ia32-gnu":null,"linux-ia32-musl":null,"linux-mips-gnu":null,"linux-mips-musl":null,"linux-mips64-gnuabi64":null,"linux-mips64-muslabi64":null,"linux-mips64el-gnuabi64":null,"linux-mips64el-muslabi64":null,"linux-mipsel-gnu":null,"linux-mipsel-musl":null,"linux-powerpc-gnu":null,"linux-powerpc64-gnu":null,"linux-powerpc64le-gnu":null,"linux-riscv64gc-gnu":null,"linux-s390x-gnu":null,"linux-sparc64-gnu":null,"linux-x64-gnu":"Linux","linux-x64-gnux32":null,"linux-x64-musl":null,"freebsd-ia32":null,"freebsd-x64":null}');
-;// CONCATENATED MODULE: ./src/ci/github.ts
-
-function sort(platforms) {
-    const macOS = new Set();
-    const Windows = new Set();
-    const Linux = new Set();
-    const unsupported = new Set();
-    for (const platform of platforms) {
-        switch (github_namespaceObject[platform]) {
-            case 'macOS':
-                macOS.add(platform);
-                break;
-            case 'Windows':
-                Windows.add(platform);
-                break;
-            case 'Linux':
-                Linux.add(platform);
-                break;
-            default:
-                unsupported.add(platform);
-                break;
-        }
-    }
-    return {
-        macOS: [...macOS],
-        Windows: [...Windows],
-        Linux: [...Linux],
-        unsupported: [...unsupported]
-    };
-}
-class GitHub {
-    metadata(platforms) {
-        return sort(Object.keys(platforms));
-    }
-}
-
-;// CONCATENATED MODULE: ./src/provider.ts
-
-var ProviderName;
-(function (ProviderName) {
-    ProviderName["GitHub"] = "github";
-})(ProviderName || (ProviderName = {}));
-;
-const PROVIDERS = {
-    [ProviderName.GitHub]: GitHub
-};
-function isProviderName(s) {
-    const keys = Object.values(ProviderName);
-    return keys.includes(s);
-}
-function asProviderName(name) {
-    if (!isProviderName(name)) {
-        throw new RangeError(`CI provider not recognized: ${name}`);
-    }
-    return name;
-}
-function providerFor(name) {
-    return PROVIDERS[name];
-}
-
+// EXTERNAL MODULE: ./src/provider.ts + 2 modules
+var provider = __nccwpck_require__(545);
 ;// CONCATENATED MODULE: ./src/commands/ci.ts
 
 
@@ -42478,8 +42408,8 @@ class Ci {
         if (!options._unknown || options._unknown.length === 0) {
             throw new Error("No arguments found, expected <provider>.");
         }
-        const providerName = asProviderName(options._unknown[0]);
-        const providerCtor = providerFor(providerName);
+        const providerName = (0,provider/* asProviderName */.tb)(options._unknown[0]);
+        const providerCtor = (0,provider/* providerFor */.kq)(providerName);
         this._provider = new providerCtor();
     }
     log(msg) {
@@ -42499,7 +42429,10 @@ class Ci {
 
 // EXTERNAL MODULE: ./src/print.ts + 26 modules
 var print = __nccwpck_require__(9050);
+// EXTERNAL MODULE: ./src/commands/show.ts + 4 modules
+var show = __nccwpck_require__(6264);
 ;// CONCATENATED MODULE: ./src/commands/help.ts
+
 
 
 class Help {
@@ -42513,14 +42446,27 @@ class Help {
     static seeAlso() { }
     static extraSection() { }
     _name;
+    _topic;
     constructor(argv) {
         this._name = argv.length > 0 ? asCommandName(argv[0]) : undefined;
-        if (argv.length > 1) {
+        this._topic = undefined;
+        if (this._name === CommandName.Show) {
+            if (argv.length === 2) {
+                this._topic = (0,show/* asTopic */.sY)(argv[1]);
+            }
+            if (argv.length > 2) {
+                throw new Error(`Unexpected argument: ${argv[2]}`);
+            }
+        }
+        else if (argv.length > 1) {
             throw new Error(`Unexpected argument: ${argv[1]}`);
         }
     }
     async run() {
-        if (this._name) {
+        if (this._topic) {
+            (0,print/* printShowTopicUsage */.v9)(this._topic);
+        }
+        else if (this._name) {
             (0,print/* printCommandUsage */.CZ)(this._name);
         }
         else {
@@ -42539,17 +42485,21 @@ class Help {
 
 
 
+
 var CommandName;
 (function (CommandName) {
     CommandName["Help"] = "help";
     CommandName["Dist"] = "dist";
     CommandName["Bump"] = "bump";
+    CommandName["Add"] = "add";
+    CommandName["Update"] = "update";
     CommandName["AddPlatform"] = "add-platform";
     CommandName["UpdatePlatforms"] = "update-platforms";
     CommandName["ListPlatforms"] = "list-platforms";
     CommandName["CurrentPlatform"] = "current-platform";
     CommandName["Preset"] = "preset";
     CommandName["Ci"] = "ci";
+    CommandName["Show"] = "show";
 })(CommandName || (CommandName = {}));
 ;
 function isCommandName(s) {
@@ -42566,12 +42516,15 @@ const COMMANDS = {
     [CommandName.Help]: Help,
     [CommandName.Dist]: Dist,
     [CommandName.Bump]: Bump,
-    [CommandName.AddPlatform]: AddPlatform,
-    [CommandName.UpdatePlatforms]: UpdatePlatforms,
+    [CommandName.Add]: Add,
+    [CommandName.Update]: Update,
+    [CommandName.AddPlatform]: Add,
+    [CommandName.UpdatePlatforms]: Update,
     [CommandName.ListPlatforms]: ListPlatforms,
     [CommandName.CurrentPlatform]: CurrentPlatform,
     [CommandName.Preset]: Preset,
-    [CommandName.Ci]: Ci
+    [CommandName.Ci]: Ci,
+    [CommandName.Show]: show/* default */.ZP
 };
 function commandFor(name) {
     return COMMANDS[name];
@@ -42581,13 +42534,309 @@ function summaries() {
         { name: CommandName.Help, summary: Help.summary() },
         { name: CommandName.Dist, summary: Dist.summary() },
         { name: CommandName.Bump, summary: Bump.summary() },
-        { name: CommandName.AddPlatform, summary: AddPlatform.summary() },
-        { name: CommandName.UpdatePlatforms, summary: UpdatePlatforms.summary() },
-        { name: CommandName.ListPlatforms, summary: ListPlatforms.summary() },
-        { name: CommandName.CurrentPlatform, summary: CurrentPlatform.summary() },
-        { name: CommandName.Preset, summary: Preset.summary() },
-        { name: CommandName.Ci, summary: Ci.summary() }
+        { name: CommandName.Add, summary: Add.summary() },
+        { name: CommandName.Update, summary: Update.summary() },
+        { name: CommandName.Show, summary: show/* default.summary */.ZP.summary() }
     ];
+}
+
+
+/***/ }),
+
+/***/ 6264:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "sY": () => (/* binding */ asTopic),
+  "ZP": () => (/* binding */ Show),
+  "D8": () => (/* binding */ subcommandFor)
+});
+
+// UNUSED EXPORTS: Topic
+
+// EXTERNAL MODULE: ../node_modules/command-line-args/dist/index.js
+var dist = __nccwpck_require__(7898);
+var dist_default = /*#__PURE__*/__nccwpck_require__.n(dist);
+// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/index.mjs
+var lib = __nccwpck_require__(347);
+;// CONCATENATED MODULE: ./src/commands/show/platforms.ts
+
+
+const OPTIONS = [
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+class Platforms {
+    static summary() { return 'Display information about this project\'s supported platforms.'; }
+    static syntax() { return 'neon show platforms [-v]'; }
+    static options() {
+        return [
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
+        ];
+    }
+    static seeAlso() { }
+    static extraSection() { }
+    _verbose;
+    constructor(argv) {
+        const options = dist_default()(OPTIONS, { argv, partial: true });
+        this._verbose = !!options.verbose;
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon show platforms] " + msg);
+        }
+    }
+    async run() {
+        this.log(`reading package.json`);
+        const libManifest = await lib/* LibraryManifest.load */.N.load();
+        this.log(`manifest: ${libManifest.stringify()}`);
+        const platforms = libManifest.allPlatforms();
+        console.log(JSON.stringify(platforms, null, 2));
+    }
+}
+
+// EXTERNAL MODULE: ./src/provider.ts + 2 modules
+var provider = __nccwpck_require__(545);
+;// CONCATENATED MODULE: ./src/commands/show/ci.ts
+
+
+
+const ci_OPTIONS = [
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+class CI {
+    static summary() { return 'Display CI metadata for this project\'s platforms.'; }
+    static syntax() { return 'neon show ci [-v] <provider>'; }
+    static options() {
+        return [
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' },
+            { name: '<provider>', summary: 'CI provider, which can be one of the supported providers listed below.' }
+        ];
+    }
+    static seeAlso() {
+        return [
+            { name: 'GitHub Actions', summary: '<https://docs.github.com/actions>' }
+        ];
+    }
+    static extraSection() {
+        return {
+            title: 'CI Providers',
+            details: [
+                { name: 'github', summary: 'GitHub Actions.' }
+            ]
+        };
+    }
+    _verbose;
+    _provider;
+    constructor(argv) {
+        const options = dist_default()(ci_OPTIONS, { argv, partial: true });
+        this._verbose = !!options.verbose;
+        if (!options._unknown || options._unknown.length === 0) {
+            throw new Error("No arguments found, expected <provider>.");
+        }
+        const providerName = (0,provider/* asProviderName */.tb)(options._unknown[0]);
+        const providerCtor = (0,provider/* providerFor */.kq)(providerName);
+        this._provider = new providerCtor();
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon show ci] " + msg);
+        }
+    }
+    async run() {
+        this.log(`reading package.json`);
+        const libManifest = await lib/* LibraryManifest.load */.N.load();
+        this.log(`manifest: ${libManifest.stringify()}`);
+        const platforms = libManifest.allPlatforms();
+        const metadata = this._provider.metadata(platforms);
+        console.log(JSON.stringify(metadata, null, 2));
+    }
+}
+
+// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
+var platform = __nccwpck_require__(8140);
+;// CONCATENATED MODULE: ./src/commands/show/preset.ts
+
+
+const preset_OPTIONS = [
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+class Preset {
+    static summary() { return 'Display target information about a platform preset.'; }
+    static syntax() { return 'neon show preset [-v] <preset>'; }
+    static options() {
+        return [
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' },
+            { name: '<preset>', summary: 'The target family preset to look up.' },
+        ];
+    }
+    static seeAlso() { }
+    static extraSection() { }
+    _json;
+    _verbose;
+    _preset;
+    constructor(argv) {
+        const options = dist_default()(preset_OPTIONS, { argv, partial: true });
+        this._json = options.json || false;
+        this._verbose = !!options.verbose;
+        if (!options._unknown || options._unknown.length === 0) {
+            throw new Error("Missing argument, expected <preset>");
+        }
+        if (options._unknown.length > 1) {
+            throw new Error(`Unexpected argument ${options._unknown[1]}`);
+        }
+        (0,platform/* assertIsPlatformPreset */.Zv)(options._unknown[0]);
+        this._preset = options._unknown[0];
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon show preset] " + msg);
+        }
+    }
+    async run() {
+        const map = (0,platform/* expandPlatformPreset */.EY)(this._preset);
+        console.log(JSON.stringify(map, null, 2));
+    }
+}
+
+// EXTERNAL MODULE: ./node_modules/@neon-rs/load/dist/index.js
+var load_dist = __nccwpck_require__(8938);
+;// CONCATENATED MODULE: ./src/commands/show/system.ts
+
+
+const system_OPTIONS = [
+    { name: 'json', type: Boolean, defaultValue: false },
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+class System {
+    static summary() { return 'Display information about the current system.'; }
+    static syntax() { return 'neon show system [--json] [-v]'; }
+    static options() {
+        return [
+            { name: '--json', summary: 'Display platform info in JSON format. (Default: false)' },
+            { name: '-v, --verbose', summary: 'Enable verbose logging. (Default: false)' }
+        ];
+    }
+    static seeAlso() { }
+    static extraSection() { }
+    _json;
+    _verbose;
+    constructor(argv) {
+        const options = dist_default()(system_OPTIONS, { argv, partial: true });
+        this._json = options.json || false;
+        this._verbose = !!options.verbose;
+    }
+    log(msg) {
+        if (this._verbose) {
+            console.error("[neon show system] " + msg);
+        }
+    }
+    async run() {
+        if (this._json) {
+            const [os, arch, abi] = (0,load_dist/* currentPlatform */.ob)().split('-');
+            const json = {
+                os,
+                arch,
+                abi: abi || null
+            };
+            console.log(JSON.stringify(json, null, 2));
+        }
+        else {
+            console.log((0,load_dist/* currentPlatform */.ob)());
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./src/commands/show.ts
+
+
+
+
+
+const show_OPTIONS = [
+    { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
+];
+var Topic;
+(function (Topic) {
+    Topic["PLATFORMS"] = "platforms";
+    Topic["SYSTEM"] = "system";
+    Topic["PRESET"] = "preset";
+    Topic["CI"] = "ci";
+})(Topic || (Topic = {}));
+function subcommandFor(topic) {
+    switch (topic) {
+        case Topic.CI:
+            return CI;
+        case Topic.PLATFORMS:
+            return Platforms;
+        case Topic.PRESET:
+            return Preset;
+        case Topic.SYSTEM:
+            return System;
+    }
+}
+function isTopic(x) {
+    return ['platforms', 'system', 'preset', 'ci'].includes(x);
+}
+function asTopic(x) {
+    if (!isTopic(x)) {
+        throw new RangeError(`expected <topic>, got ${x}`);
+    }
+    return x;
+}
+function assertIsTopic(x) {
+    if (!isTopic(x)) {
+        throw new RangeError(`expected <topic>, got ${x}`);
+    }
+}
+class Show {
+    static summary() { return 'Display information about the project or current system.'; }
+    static syntax() { return 'neon show <topic>'; }
+    static options() {
+        return [
+            { name: '<topic>', summary: 'The topic to display information about.' },
+            { name: '', summary: 'Run `neon help show <topic>` for details about a topic.' }
+        ];
+    }
+    static seeAlso() { }
+    static extraSection() {
+        return {
+            title: 'Topics',
+            details: [
+                { name: 'ci', summary: 'CI metadata for this project\'s platforms.' },
+                { name: 'platforms', summary: 'Information about this project\'s supported platforms.' },
+                { name: 'preset', summary: 'Target information about a platform preset.' },
+                { name: 'system', summary: 'Information about the current system.' }
+            ]
+        };
+    }
+    _topic;
+    _argv;
+    constructor(argv) {
+        const options = dist_default()(show_OPTIONS, { argv, stopAtFirstUnknown: true, partial: true });
+        if (!options._unknown || options._unknown.length === 0) {
+            throw new Error("Missing argument, expected <topic>");
+        }
+        assertIsTopic(options._unknown[0]);
+        this._topic = options._unknown[0];
+        this._argv = options._unknown.slice(1);
+    }
+    subcommand() {
+        switch (this._topic) {
+            case Topic.PLATFORMS:
+                return new Platforms(this._argv);
+            case Topic.CI:
+                return new CI(this._argv);
+            case Topic.PRESET:
+                return new Preset(this._argv);
+            case Topic.SYSTEM:
+                return new System(this._argv);
+        }
+    }
+    async run() {
+        await this.subcommand().run();
+    }
 }
 
 
@@ -42600,7 +42849,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3149);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3129);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -42661,7 +42910,8 @@ __nccwpck_require__.d(__webpack_exports__, {
   "CZ": () => (/* binding */ printCommandUsage),
   "OS": () => (/* binding */ printError),
   "Yv": () => (/* binding */ printErrorWithUsage),
-  "yY": () => (/* binding */ printMainUsage)
+  "yY": () => (/* binding */ printMainUsage),
+  "v9": () => (/* binding */ printShowTopicUsage)
 });
 
 ;// CONCATENATED MODULE: ../node_modules/command-line-usage/node_modules/array-back/index.js
@@ -45628,9 +45878,12 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 /* harmony default export */ const chalk_source = (chalk);
 
-// EXTERNAL MODULE: ./src/command.ts + 40 modules
-var command = __nccwpck_require__(3149);
+// EXTERNAL MODULE: ./src/command.ts + 35 modules
+var command = __nccwpck_require__(3129);
+// EXTERNAL MODULE: ./src/commands/show.ts + 4 modules
+var show = __nccwpck_require__(6264);
 ;// CONCATENATED MODULE: ./src/print.ts
+
 
 
 
@@ -45652,7 +45905,7 @@ function purple(text) {
 function commandUsage(name, command) {
     const sections = [
         {
-            content: `${pink('Neon:')} ${name} - ${command.summary()}`,
+            content: `${pink('neon ' + name)} - ${command.summary()}`,
             raw: true
         },
         {
@@ -45677,7 +45930,7 @@ function commandUsage(name, command) {
 function mainUsage() {
     const sections = [
         {
-            content: `${pink('Neon:')} the npm packaging tool for Rust addons`,
+            content: `${pink('neon')} - manage and distribute Neon projects`,
             raw: true
         },
         {
@@ -45690,6 +45943,9 @@ function mainUsage() {
         }
     ];
     return command_line_usage(sections).trim();
+}
+function printShowTopicUsage(topic) {
+    console.error(commandUsage("show " + topic, (0,show/* subcommandFor */.D8)(topic)));
 }
 function printCommandUsage(name) {
     console.error(commandUsage(name, (0,command/* commandFor */.Nl)(name)));
@@ -45706,6 +45962,83 @@ function printErrorWithUsage(e) {
 }
 function printError(e) {
     console.error(chalk_source.bold.red("error:") + " " + ((e instanceof Error) ? e.message : String(e)));
+}
+
+
+/***/ }),
+
+/***/ 545:
+/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
+
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "tb": () => (/* binding */ asProviderName),
+  "kq": () => (/* binding */ providerFor)
+});
+
+// UNUSED EXPORTS: ProviderName, isProviderName
+
+;// CONCATENATED MODULE: ./data/github.json
+const github_namespaceObject = JSON.parse('{"darwin-arm64":"macOS","darwin-x64":"macOS","ios-arm64":null,"ios-x64":null,"android-arm64":"Linux","android-arm-eabi":"Linux","android-ia32":null,"android-x64":"Linux","win32-arm64-msvc":"Windows","win32-ia32-gnu":null,"win32-ia32-msvc":null,"win32-x64-gnu":null,"win32-x64-msvc":"Windows","linux-arm64-gnu":"Linux","linux-arm64-musl":null,"linux-arm-gnueabihf":"Linux","linux-arm-musleabihf":null,"linux-ia32-gnu":null,"linux-ia32-musl":null,"linux-mips-gnu":null,"linux-mips-musl":null,"linux-mips64-gnuabi64":null,"linux-mips64-muslabi64":null,"linux-mips64el-gnuabi64":null,"linux-mips64el-muslabi64":null,"linux-mipsel-gnu":null,"linux-mipsel-musl":null,"linux-powerpc-gnu":null,"linux-powerpc64-gnu":null,"linux-powerpc64le-gnu":null,"linux-riscv64gc-gnu":null,"linux-s390x-gnu":null,"linux-sparc64-gnu":null,"linux-x64-gnu":"Linux","linux-x64-gnux32":null,"linux-x64-musl":null,"freebsd-ia32":null,"freebsd-x64":null}');
+;// CONCATENATED MODULE: ./src/ci/github.ts
+
+function sort(platforms) {
+    const macOS = new Set();
+    const Windows = new Set();
+    const Linux = new Set();
+    const unsupported = new Set();
+    for (const platform of platforms) {
+        switch (github_namespaceObject[platform]) {
+            case 'macOS':
+                macOS.add(platform);
+                break;
+            case 'Windows':
+                Windows.add(platform);
+                break;
+            case 'Linux':
+                Linux.add(platform);
+                break;
+            default:
+                unsupported.add(platform);
+                break;
+        }
+    }
+    return {
+        macOS: [...macOS],
+        Windows: [...Windows],
+        Linux: [...Linux],
+        unsupported: [...unsupported]
+    };
+}
+class GitHub {
+    metadata(platforms) {
+        return sort(Object.keys(platforms));
+    }
+}
+
+;// CONCATENATED MODULE: ./src/provider.ts
+
+var ProviderName;
+(function (ProviderName) {
+    ProviderName["GitHub"] = "github";
+})(ProviderName || (ProviderName = {}));
+;
+const PROVIDERS = {
+    [ProviderName.GitHub]: GitHub
+};
+function isProviderName(s) {
+    const keys = Object.values(ProviderName);
+    return keys.includes(s);
+}
+function asProviderName(name) {
+    if (!isProviderName(name)) {
+        throw new RangeError(`CI provider not recognized: ${name}`);
+    }
+    return name;
+}
+function providerFor(name) {
+    return PROVIDERS[name];
 }
 
 
@@ -61531,6 +61864,36 @@ class AbstractManifest {
     }
 }
 exports.AbstractManifest = AbstractManifest;
+
+
+/***/ }),
+
+/***/ 347:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "N": () => (/* reexport safe */ _index_cjs__WEBPACK_IMPORTED_MODULE_0__.N)
+/* harmony export */ });
+/* harmony import */ var _index_cjs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4696);
+
+
+
+/***/ }),
+
+/***/ 8140:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
+
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "EY": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.expandPlatformPreset),
+/* harmony export */   "FZ": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.isRustTarget),
+/* harmony export */   "Qm": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.isPlatformPreset),
+/* harmony export */   "Zv": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.assertIsPlatformPreset),
+/* harmony export */   "bC": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.isNodePlatform),
+/* harmony export */   "or": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.assertIsNodePlatform),
+/* harmony export */   "sD": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.assertIsRustTarget)
+/* harmony export */ });
+/* harmony import */ var _platform_cjs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2147);
+
 
 
 /***/ }),
