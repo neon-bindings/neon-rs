@@ -54,7 +54,7 @@ jobs:
         id: matrixData
         shell: bash
         run: |
-          echo "json=$(node ../../dist/cli ci github | jq -rc)" >> "$GITHUB_OUTPUT"
+          echo "json=$(node ../../dist/cli show ci github | jq -rc)" >> "$GITHUB_OUTPUT"
         working-directory: ./pkgs/cargo-messages
       - name: Compute Matrix
         id: matrix
