@@ -54,7 +54,7 @@ jobs:
         id: matrixData
         shell: bash
         run: |
-          echo "json=$(node ../../dist/cli ci github | jq -rc)" >> "$GITHUB_OUTPUT"
+          echo "json=$(node ../../dist/cli show ci github | jq -rc)" >> "$GITHUB_OUTPUT"
         working-directory: ./pkgs/cargo-messages
       - name: Compute Matrix
         id: matrix
@@ -158,8 +158,8 @@ jobs:
           ls -al ./pkgs/cargo-messages/platforms/${{ matrix.cfg.platform }}
           ls -al ./pkgs/cargo-messages/dist/${{ steps.pack.outputs.filename }}
           tar tvzf ./pkgs/cargo-messages/dist/${{ steps.pack.outputs.filename }}
-          find . -name update-platforms.log
-          cat ./pkgs/cargo-messages/update-platforms.log || true
+          find . -name neon-update.log
+          cat ./pkgs/cargo-messages/neon-update.log || true
       - name: Release
         if: ${{ inputs.github-release }}
         uses: softprops/action-gh-release@v1
@@ -203,7 +203,7 @@ jobs:
         run: |
           jq -r .version < package.json
           ls -al dist
-          cat update-platforms.log
+          cat neon-update.log
         working-directory: ./pkgs/cargo-messages
       - name: Release
         if: ${{ inputs.github-release }}

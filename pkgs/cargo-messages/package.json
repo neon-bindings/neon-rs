@@ -34,13 +34,13 @@
     "debug": "npm run cargo-build --",
     "build": "npm run cargo-build -- --release",
     "cross": "npm run cross-build -- --release",
-    "prepack": "neon update-platforms -v 2>update-platforms.log",
+    "prepack": "neon update -v 2>neon-update.log",
     "version": "neon bump -v --binaries platforms"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@neon-rs/cli": "^0.1.49"
+    "@neon-rs/cli": "^0.1.67"
   },
   "repository": {
     "type": "git",

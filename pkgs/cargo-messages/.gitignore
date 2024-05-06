@@ -1,4 +1,4 @@
 dist
 cargo.log
 cross.log
-update-platforms.log
+neon-update.log
