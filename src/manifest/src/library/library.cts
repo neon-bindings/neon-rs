@@ -28,6 +28,16 @@ function assertIsLibraryCfg(json: unknown): asserts json is LibraryCfg {
   }
 }
 
+function isEmptyFamily(family: PlatformFamily): boolean {
+  if (typeof family === 'string') {
+    return false;
+  }
+  if (Array.isArray(family)) {
+    return family.length === 0;
+  }
+  return Object.keys(family).length === 0;
+}
+
 type HasLibraryCfg = { neon: LibraryCfg };
 
 function assertHasLibraryCfg(json: object): asserts json is HasLibraryCfg {
@@ -165,15 +175,15 @@ export class LibraryManifest extends AbstractManifest {
       await this.addPlatforms(expandPlatformFamily(preset));
     }
 
-    else if (Array.isArray(platformsSrc)) {
-      platformsSrc.push(preset);
+    // Edge case: use the string shorthand source format for a single preset
+    else if (isEmptyFamily(platformsSrc)) {
+      this.cfg().platforms = preset;
       await this.addPlatforms(expandPlatformFamily(preset));
     }
 
-    // Edge case: an empty object can be treated like an empty array
-    else if (Object.keys(platformsSrc).length === 0) {
-      this.cfg().platforms = [];
-      await this.addPlatformPreset(preset);
+    else if (Array.isArray(platformsSrc)) {
+      platformsSrc.push(preset);
+      await this.addPlatforms(expandPlatformFamily(preset));
     }
 
     else {
