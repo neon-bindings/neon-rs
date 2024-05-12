@@ -68,6 +68,22 @@ describe("simple manifest", () => {
     await testEmptyPlatforms(lib, 'empty-array-platforms', '0.2.42');
   });
 
+  it("uses string shorthand when adding a preset to an empty object", async () => {
+    const lib = await library('empty-object-platforms');
+    await lib.addPlatformPreset('common');
+    await lib.saveChanges(() => {});
+    const reloaded = await LibraryManifest.load(lib.dir);
+    assert.strictEqual(reloaded.cfg().platforms, 'common');
+  });
+
+  it("uses string shorthand when adding a preset to an empty array", async () => {
+    const lib = await library('empty-array-platforms');
+    await lib.addPlatformPreset('common');
+    await lib.saveChanges(() => {});
+    const reloaded = await LibraryManifest.load(lib.dir);
+    assert.strictEqual(reloaded.cfg().platforms, 'common');
+  });
+
   it("can update optionalDependencies", async () => {
     const lib = await library('empty-object-platforms');
     await lib.addNodePlatform('darwin-arm64');
