@@ -1,0 +1,6 @@
+{
+  "extension": ["ts"],
+  "spec": "dist/src/test/**/*.js",
+  "timeout": 5000
+}
+
