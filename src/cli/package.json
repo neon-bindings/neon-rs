@@ -22,7 +22,7 @@
     "build": "tsc",
     "pretest": "npm run build",
     "prepack": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -41,20 +41,24 @@
   "homepage": "https://github.com/dherman/neon-rs#readme",
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
+    "@types/chai": "^4.3.16",
     "@types/command-line-args": "^5.2.0",
     "@types/command-line-commands": "^2.0.1",
     "@types/command-line-usage": "^5.0.2",
     "@types/jscodeshift": "^0.11.11",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^18.15.11",
     "@types/temp": "^0.9.1",
     "@vercel/ncc": "^0.36.1",
+    "chai": "^5.1.1",
     "crlf": "^1.1.1",
+    "mocha": "^10.4.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
     "@neon-rs/load": "^0.0.181",
     "@neon-rs/manifest": "^0.0.5",
-    "cargo-messages": "^0.1.67",
+    "cargo-messages": "^0.1.68",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",
     "command-line-commands": "^3.0.2",
@@ -65,12 +69,12 @@
     "temp": "^0.9.4"
   },
   "optionalDependencies": {
-    "@cargo-messages/android-arm-eabi": "0.1.67",
-    "@cargo-messages/darwin-arm64": "0.1.67",
-    "@cargo-messages/darwin-x64": "0.1.67",
-    "@cargo-messages/linux-arm-gnueabihf": "0.1.67",
-    "@cargo-messages/linux-x64-gnu": "0.1.67",
-    "@cargo-messages/win32-arm64-msvc": "0.1.67",
-    "@cargo-messages/win32-x64-msvc": "0.1.67"
+    "@cargo-messages/android-arm-eabi": "0.1.68",
+    "@cargo-messages/darwin-arm64": "0.1.68",
+    "@cargo-messages/darwin-x64": "0.1.68",
+    "@cargo-messages/linux-arm-gnueabihf": "0.1.68",
+    "@cargo-messages/linux-x64-gnu": "0.1.68",
+    "@cargo-messages/win32-arm64-msvc": "0.1.68",
+    "@cargo-messages/win32-x64-msvc": "0.1.68"
   }
 }

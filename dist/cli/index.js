@@ -40397,11 +40397,8 @@ class Dist {
         });
         let file = null;
         for await (const msg of reader) {
-            if (msg.isCompilerArtifact() && msg.crateName() === this._crateName) {
+            if (!file && msg.isCompilerArtifact() && msg.crateName() === this._crateName) {
                 file = msg.findFileByCrateType('cdylib');
-                if (!file) {
-                    throw new Error(`No artifacts were generated for crate ${this._crateName}`);
-                }
             }
         }
         if (!file) {
