@@ -188,6 +188,13 @@ impl CargoMessages {
         let mut count: u32 = 0;
         let mut result: Option<Artifact> = None;
 
+        // Starting around Rust 1.78 or 1.79, cargo will begin normalizing
+        // crate names in the JSON output, so to support both old and new
+        // versions of cargo, we need to compare against both variants.
+        //
+        // See: https://github.com/rust-lang/cargo/issues/13867
+        let normalized_crate_name = &crate_name.replace('-', "_");
+
         while let Some(msg) = self.next() {
             match msg {
                 Ok(Message::CompilerArtifact(artifact)) => {
@@ -195,7 +202,7 @@ impl CargoMessages {
                     if self.verbose() {
                         eprintln!("[cargo-messages] found artifact for {}", artifact.target.name);
                     }
-                    if result.is_none() && &artifact.target.name == crate_name {
+                    if result.is_none() && &artifact.target.name == crate_name || &artifact.target.name == normalized_crate_name {
                         result = Some(artifact);
                     }
                 }
