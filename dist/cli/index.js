@@ -40277,6 +40277,14 @@ var lib_platform = __nccwpck_require__(8140);
 
 
 
+// Starting around Rust 1.78 or 1.79, cargo will begin normalizing
+// crate names in the JSON output, so to support both old and new
+// versions of cargo, we need to compare against both variants.
+//
+// See: https://github.com/rust-lang/cargo/issues/13867
+function normalize(crateName) {
+    return crateName.replaceAll(/-/g, "_");
+}
 // FIXME: add options to infer crate name from manifests
 // --package <path/to/package.json>
 // --crate <path/to/Cargo.toml>
@@ -40366,6 +40374,7 @@ class Dist {
     _mount;
     _manifestPath;
     _crateName;
+    _normalizedCrateName;
     _out;
     _verbose;
     constructor(argv) {
@@ -40385,6 +40394,7 @@ class Dist {
         this._manifestPath = options['manifest-path'];
         this._crateName = options.name ||
             basename(ensureDefined(process.env['npm_package_name'], '$npm_package_name'));
+        this._normalizedCrateName = normalize(this._crateName);
         this._out = parseOutputFile(options.debug, options.out, options.platform);
         this._verbose = !!options.verbose;
         this.log(`crate name = "${this._crateName}"`);
@@ -40397,7 +40407,7 @@ class Dist {
         });
         let file = null;
         for await (const msg of reader) {
-            if (!file && msg.isCompilerArtifact() && msg.crateName() === this._crateName) {
+            if (!file && msg.isCompilerArtifact() && normalize(msg.crateName()) === this._normalizedCrateName) {
                 file = msg.findFileByCrateType('cdylib');
             }
         }
