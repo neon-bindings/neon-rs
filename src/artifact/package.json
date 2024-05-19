@@ -1,0 +1,54 @@
+{
+  "name": "@neon-rs/artifact",
+  "private": false,
+  "version": "0.1.0",
+  "description": "Library for working with Neon build artifacts.",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/index.d.mts",
+        "default": "./lib/index.mjs"
+      },
+      "require": {
+        "types": "./lib/index.d.cts",
+        "default": "./lib/index.cjs"
+      }
+    }
+  },
+  "types": "./lib/index.d.cts",
+  "main": "./lib/index.cjs",
+  "files": [
+    "lib/*.?({c,m}){t,j}s",
+    "lib/!(test)/**/*"
+  ],
+  "scripts": {
+    "dist": "tsc",
+    "pretest": "npm run dist",
+    "test": "mocha",
+    "prepack": "npm run dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neon-bindings/neon-rs.git"
+  },
+  "keywords": [
+    "Neon",
+    "Rust",
+    "Node"
+  ],
+  "author": "Dave Herman <david.herman@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/neon-bindings/neon-rs/issues"
+  },
+  "homepage": "https://github.com/neon-bindings/neon-rs#readme",
+  "devDependencies": {
+    "@tsconfig/node16": "^16.1.3",
+    "@types/chai": "^4.3.16",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.12.12",
+    "chai": "^4.4.1",
+    "mocha": "^10.4.0",
+    "typescript": "^5.4.5"
+  }
+}
