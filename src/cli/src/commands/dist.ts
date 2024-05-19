@@ -1,10 +1,10 @@
 import { createReadStream } from 'node:fs';
-import { copyFile } from 'node:fs/promises';
 import commandLineArgs from 'command-line-args';
 import { Command, CommandDetail, CommandSection } from '../command.js';
 import { CargoReader } from 'cargo-messages';
 import { LibraryManifest } from '@neon-rs/manifest';
 import { assertIsNodePlatform } from '@neon-rs/manifest/platform';
+import { copyArtifact } from '@neon-rs/artifact';
 
 // Starting around Rust 1.78 or 1.79, cargo will begin normalizing
 // crate names in the JSON output, so to support both old and new
@@ -180,7 +180,6 @@ export default class Dist implements Command {
     this.log(`output type = ${option}`);
     this.log(`output file = ${path}`);
 
-    // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-    await copyFile(file, path);
+    await copyArtifact(file, path);
   }
 }
