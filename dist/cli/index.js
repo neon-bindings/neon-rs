@@ -40240,7 +40240,7 @@ which.sync = whichSync
 
 /***/ }),
 
-/***/ 3129:
+/***/ 5065:
 /***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
 
 
@@ -40256,8 +40256,6 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("node:fs");
-// EXTERNAL MODULE: external "node:fs/promises"
-var promises_ = __nccwpck_require__(3977);
 // EXTERNAL MODULE: ../node_modules/command-line-args/dist/index.js
 var dist = __nccwpck_require__(7898);
 var dist_default = /*#__PURE__*/__nccwpck_require__.n(dist);
@@ -40270,6 +40268,11 @@ var lib = __nccwpck_require__(3993);
 var manifest_lib = __nccwpck_require__(347);
 // EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
 var lib_platform = __nccwpck_require__(8140);
+// EXTERNAL MODULE: ../node_modules/@neon-rs/artifact/lib/index.cjs
+var artifact_lib = __nccwpck_require__(8893);
+;// CONCATENATED MODULE: ../node_modules/@neon-rs/artifact/lib/index.mjs
+
+
 ;// CONCATENATED MODULE: ./src/commands/dist.ts
 
 
@@ -40426,8 +40429,7 @@ class Dist {
         const { option, path } = await this._out;
         this.log(`output type = ${option}`);
         this.log(`output file = ${path}`);
-        // FIXME: needs all the logic of cargo-cp-artifact (timestamp check, M1 workaround, async, errors)
-        await (0,promises_.copyFile)(file, path);
+        await (0,artifact_lib.copyArtifact)(file, path);
     }
 }
 
@@ -41966,6 +41968,8 @@ function execaNode(scriptPath, args, options = {}) {
 	);
 }
 
+// EXTERNAL MODULE: external "node:fs/promises"
+var promises_ = __nccwpck_require__(3977);
 ;// CONCATENATED MODULE: ./src/commands/bump.ts
 
 
@@ -42856,7 +42860,7 @@ __nccwpck_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5046);
 /* harmony import */ var command_line_commands__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(command_line_commands__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _print_js__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(9050);
-/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(3129);
+/* harmony import */ var _command_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(5065);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3__ = __nccwpck_require__(2033);
 /* harmony import */ var node_module__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__nccwpck_require__.n(node_module__WEBPACK_IMPORTED_MODULE_3__);
 
@@ -45885,8 +45889,8 @@ const chalkStderr = createChalk({level: stderrColor ? stderrColor.level : 0});
 
 /* harmony default export */ const chalk_source = (chalk);
 
-// EXTERNAL MODULE: ./src/command.ts + 35 modules
-var command = __nccwpck_require__(3129);
+// EXTERNAL MODULE: ./src/command.ts + 36 modules
+var command = __nccwpck_require__(5065);
 // EXTERNAL MODULE: ./src/commands/show.ts + 4 modules
 var show = __nccwpck_require__(6264);
 ;// CONCATENATED MODULE: ./src/print.ts
@@ -60866,6 +60870,78 @@ module.exports = (__nccwpck_require__(8372)/* .proxy */ .sj)({
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
   'android-arm-eabi': () => __nccwpck_require__(1738)
 });
+
+
+/***/ }),
+
+/***/ 8893:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.copyArtifact = exports.isNewer = void 0;
+const fs = __importStar(__nccwpck_require__(3977));
+const path = __importStar(__nccwpck_require__(9411));
+async function isNewer(filename, outputFile) {
+    try {
+        const prevStats = await fs.stat(outputFile);
+        const nextStats = await fs.stat(filename);
+        return nextStats.mtime > prevStats.mtime;
+    }
+    catch (_err) { }
+    return true;
+}
+exports.isNewer = isNewer;
+async function copyArtifact(src, dest) {
+    if (!(await isNewer(src, dest))) {
+        return;
+    }
+    const destDir = path.dirname(dest);
+    await fs.mkdir(destDir, { recursive: true });
+    // Apple Silicon (M1, etc.) requires shared libraries to be signed. However,
+    // the macOS code signing cache isn't cleared when overwriting a file.
+    // Deleting the file before copying works around the issue.
+    //
+    // Unfortunately, this workaround is incomplete because the file must be
+    // deleted from the location it is loaded. If further steps in the user's
+    // build process copy or move the file in place, the code signing cache
+    // will not be cleared.
+    //
+    // https://github.com/neon-bindings/neon/issues/911
+    if (path.extname(dest) === ".node") {
+        try {
+            await fs.unlink(dest);
+        }
+        catch (_e) {
+            // Ignore errors; the file might not exist
+        }
+    }
+    await fs.copyFile(src, dest);
+}
+exports.copyArtifact = copyArtifact;
 
 
 /***/ }),
