@@ -74,6 +74,7 @@
     "@cargo-messages/darwin-arm64": "0.1.72",
     "@cargo-messages/darwin-x64": "0.1.72",
     "@cargo-messages/linux-arm-gnueabihf": "0.1.72",
+    "@cargo-messages/linux-arm64-gnu": "0.1.72",
     "@cargo-messages/linux-x64-gnu": "0.1.72",
     "@cargo-messages/win32-arm64-msvc": "0.1.72",
     "@cargo-messages/win32-x64-msvc": "0.1.72"
