@@ -32,6 +32,11 @@ EOF
 )
 
 echo "${PROXY_SERVER:5}:_authToken=${NPM_AUTH_TOKEN}" > $ROOT_DIR/.npmrc
+
+echo '*****  NPMRC *****'
+cat $ROOT_DIR/.npmrc
+echo '***** /NPMRC *****'
+
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
