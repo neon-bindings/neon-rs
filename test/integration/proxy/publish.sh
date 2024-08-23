@@ -31,7 +31,10 @@ curl -s \
 EOF
 )
 
-echo "${PROXY_SERVER:5}:_authToken=${NPM_AUTH_TOKEN}" > $ROOT_DIR/.npmrc
+echo "${PROXY_SERVER:5}:_authToken=${NPM_AUTH_TOKEN}" > ./.npmrc
+
+echo ".=$PWD"
+echo "ROOT_DIR=${ROOT_DIR}"
 
 echo '*****  NPMRC *****'
 cat $ROOT_DIR/.npmrc
