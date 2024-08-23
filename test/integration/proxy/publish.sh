@@ -20,7 +20,18 @@ PROXY_PASSWORD=dummycipassword
 PROXY_EMAIL=ci@neon-bindings.com
 PROXY_SERVER=http://127.0.0.1:4873/
 
-npx npm-cli-adduser -u ${PROXY_USER} -p ${PROXY_PASSWORD} -e ${PROXY_EMAIL} -r ${PROXY_SERVER}
+NPM_AUTH_TOKEN=$(
+curl -s \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -X PUT -d@- \
+  --user ${PROXY_USER}:${PROXY_PASSWORD} \
+  ${PROXY_SERVER}-/user/org.couchdb.user:${PROXY_USER} << EOF | jq -r .token
+{"name": "${PROXY_USER}", "password": "${PROXY_PASSWORD}", "type": "user"}
+EOF
+)
+
+echo "${PROXY_SERVER:5}:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
