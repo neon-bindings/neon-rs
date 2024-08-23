@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "test": "cargo test",
-    "cargo-build": "cargo build --message-format=json > cargo.log",
+    "cargo-build": "cargo build --message-format=json > cargo.log && cat cargo.log",
     "cross-build": "cross build --message-format=json > cross.log",
     "postcargo-build": "neon dist -v < cargo.log",
     "postcross-build": "neon dist -v -m /target < cross.log",
