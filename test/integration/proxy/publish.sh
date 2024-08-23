@@ -33,17 +33,6 @@ EOF
 
 npm config set "${PROXY_SERVER:5}:_authToken" "${NPM_AUTH_TOKEN}"
 
-#echo "${PROXY_SERVER:5}:_authToken=${NPM_AUTH_TOKEN}" > $HOME/.npmrc
-#echo "always-auth=true" >> $HOME/.npmrc
-
-echo ".=$PWD"
-echo "ROOT_DIR=${ROOT_DIR}"
-echo "HOME=$HOME"
-
-echo '*****  NPMRC *****'
-cat $HOME/.npmrc
-echo '***** /NPMRC *****'
-
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
