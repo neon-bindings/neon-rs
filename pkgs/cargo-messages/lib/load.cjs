@@ -6,5 +6,6 @@ module.exports = require('@neon-rs/load').proxy({
   'darwin-arm64': () => require('@cargo-messages/darwin-arm64'),
   'linux-x64-gnu': () => require('@cargo-messages/linux-x64-gnu'),
   'linux-arm-gnueabihf': () => require('@cargo-messages/linux-arm-gnueabihf'),
-  'android-arm-eabi': () => require('@cargo-messages/android-arm-eabi')
+  'android-arm-eabi': () => require('@cargo-messages/android-arm-eabi'),
+  'linux-arm64-gnu': () => require('@cargo-messages/linux-arm64-gnu')
 });
