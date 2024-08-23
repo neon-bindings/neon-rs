@@ -52,7 +52,7 @@
     "@neon-rs/cli": "*",
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^20.10.5",
-    "typescript": "5.2.2"
+    "typescript": "=5.2.2"
   },
   "dependencies": {
     "@neon-rs/load": "*"
