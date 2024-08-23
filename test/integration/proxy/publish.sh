@@ -31,7 +31,7 @@ curl -s \
 EOF
 )
 
-echo "${PROXY_SERVER:5}:_authToken=${NPM_AUTH_TOKEN}" > ~/.npmrc
+echo "${PROXY_SERVER:5}:_authToken=${NPM_AUTH_TOKEN}" > $ROOT_DIR/.npmrc
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
