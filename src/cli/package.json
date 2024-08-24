@@ -58,8 +58,8 @@
   "dependencies": {
     "@neon-rs/artifact": "^0.1.0",
     "@neon-rs/load": "^0.0.181",
-    "@neon-rs/manifest": "^0.0.5",
-    "cargo-messages": "^0.1.74",
+    "@neon-rs/manifest": "^0.1.1",
+    "cargo-messages": "^0.1.75",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",
     "command-line-commands": "^3.0.2",
@@ -70,13 +70,13 @@
     "temp": "^0.9.4"
   },
   "optionalDependencies": {
-    "@cargo-messages/android-arm-eabi": "0.1.74",
-    "@cargo-messages/darwin-arm64": "0.1.74",
-    "@cargo-messages/darwin-x64": "0.1.74",
-    "@cargo-messages/linux-arm-gnueabihf": "0.1.74",
-    "@cargo-messages/linux-arm64-gnu": "0.1.74",
-    "@cargo-messages/linux-x64-gnu": "0.1.74",
-    "@cargo-messages/win32-arm64-msvc": "0.1.74",
-    "@cargo-messages/win32-x64-msvc": "0.1.74"
+    "@cargo-messages/android-arm-eabi": "0.1.75",
+    "@cargo-messages/darwin-arm64": "0.1.75",
+    "@cargo-messages/darwin-x64": "0.1.75",
+    "@cargo-messages/linux-arm-gnueabihf": "0.1.75",
+    "@cargo-messages/linux-arm64-gnu": "0.1.75",
+    "@cargo-messages/linux-x64-gnu": "0.1.75",
+    "@cargo-messages/win32-arm64-msvc": "0.1.75",
+    "@cargo-messages/win32-x64-msvc": "0.1.75"
   }
 }

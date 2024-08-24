@@ -61586,6 +61586,15 @@ function assertIsLibraryCfg(json) {
         }
     }
 }
+function isEmptyFamily(family) {
+    if (typeof family === 'string') {
+        return false;
+    }
+    if (Array.isArray(family)) {
+        return family.length === 0;
+    }
+    return Object.keys(family).length === 0;
+}
 function assertHasLibraryCfg(json) {
     (0, neon_cjs_1.assertHasNeonCfg)(json);
     assertIsLibraryCfg(json.neon);
@@ -61685,14 +61694,14 @@ class LibraryManifest extends util_cjs_1.AbstractManifest {
             this.cfg().platforms = [platformsSrc, preset];
             await this.addPlatforms((0, platform_cjs_1.expandPlatformFamily)(preset));
         }
+        // Edge case: use the string shorthand source format for a single preset
+        else if (isEmptyFamily(platformsSrc)) {
+            this.cfg().platforms = preset;
+            await this.addPlatforms((0, platform_cjs_1.expandPlatformFamily)(preset));
+        }
         else if (Array.isArray(platformsSrc)) {
             platformsSrc.push(preset);
             await this.addPlatforms((0, platform_cjs_1.expandPlatformFamily)(preset));
-        }
-        // Edge case: an empty object can be treated like an empty array
-        else if (Object.keys(platformsSrc).length === 0) {
-            this.cfg().platforms = [];
-            await this.addPlatformPreset(preset);
         }
         else {
             const added = await this.addPlatforms((0, platform_cjs_1.expandPlatformFamily)(preset));
@@ -61939,7 +61948,7 @@ class AbstractManifest {
     set version(value) { this._json.version = value; }
     get description() { return this._json.description ?? ""; }
     async save(log) {
-        await fs.writeFile(path.join(this.dir, "package.json"), JSON.stringify(this._json, null, 2), { encoding: 'utf8' });
+        await fs.writeFile(path.join(this.dir, "package.json"), JSON.stringify(this._json, null, 2) + "\n", { encoding: 'utf8' });
     }
     stringify() {
         return JSON.stringify(this._json);
@@ -62000,7 +62009,7 @@ module.exports = JSON.parse('{"darwin-arm64":{"os":"darwin","arch":"arm64","abi"
 /***/ 6757:
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
+module.exports = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm64-gnu":"aarch64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
 
 /***/ }),
 
