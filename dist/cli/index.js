@@ -46087,6 +46087,14 @@ module.exports = eval("require")("@cargo-messages/linux-arm-gnueabihf");
 
 /***/ }),
 
+/***/ 1713:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/linux-arm64-gnu");
+
+
+/***/ }),
+
 /***/ 1316:
 /***/ ((module) => {
 
@@ -60868,7 +60876,8 @@ module.exports = (__nccwpck_require__(8372)/* .proxy */ .sj)({
   'darwin-arm64': () => __nccwpck_require__(4404),
   'linux-x64-gnu': () => __nccwpck_require__(1316),
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
-  'android-arm-eabi': () => __nccwpck_require__(1738)
+  'android-arm-eabi': () => __nccwpck_require__(1738),
+  'linux-arm64-gnu': () => __nccwpck_require__(1713)
 });
 
 
