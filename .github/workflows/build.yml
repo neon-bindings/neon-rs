@@ -141,6 +141,7 @@ jobs:
         env:
           CARGO_BUILD_TARGET: ${{ steps.neon.outputs.target }}
           NEON_BUILD_PLATFORM: ${{ matrix.cfg.platform }}
+          RUSTFLAGS: ${{ (endsWith(matrix.cfg.platform, 'musl') && '-C target-feature=-crt-static') || '' }}
         run: npm run ${{ matrix.cfg.script }}
         working-directory: ./pkgs/cargo-messages
       - name: Pack
