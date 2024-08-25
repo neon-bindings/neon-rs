@@ -20,7 +20,7 @@ const OPTIONS = [
 
 export default class Add implements Command {
     static summary(): string { return 'Add a platform or platform preset to a Neon project.'; }
-    static syntax(): string { return 'neon add [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
+    static syntax(): string { return 'neon add [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>]'; }
     static options(): CommandDetail[] {
       return [
         { name: '<p>', summary: 'A Node platform or platform preset.' },

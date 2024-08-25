@@ -42113,7 +42113,7 @@ const add_OPTIONS = [
 ];
 class Add {
     static summary() { return 'Add a platform or platform preset to a Neon project.'; }
-    static syntax() { return 'neon add [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>] [-b <f>]'; }
+    static syntax() { return 'neon add [<p> | --os <a> --arch <b> [--abi <c>]] [-o <d>]'; }
     static options() {
         return [
             { name: '<p>', summary: 'A Node platform or platform preset.' },
@@ -46095,10 +46095,26 @@ module.exports = eval("require")("@cargo-messages/linux-arm64-gnu");
 
 /***/ }),
 
+/***/ 4134:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/linux-arm64-musl");
+
+
+/***/ }),
+
 /***/ 1316:
 /***/ ((module) => {
 
 module.exports = eval("require")("@cargo-messages/linux-x64-gnu");
+
+
+/***/ }),
+
+/***/ 6469:
+/***/ ((module) => {
+
+module.exports = eval("require")("@cargo-messages/linux-x64-musl");
 
 
 /***/ }),
@@ -60877,7 +60893,9 @@ module.exports = (__nccwpck_require__(8372)/* .proxy */ .sj)({
   'linux-x64-gnu': () => __nccwpck_require__(1316),
   'linux-arm-gnueabihf': () => __nccwpck_require__(5379),
   'android-arm-eabi': () => __nccwpck_require__(1738),
-  'linux-arm64-gnu': () => __nccwpck_require__(1713)
+  'linux-arm64-gnu': () => __nccwpck_require__(1713),
+  'linux-arm64-musl': () => __nccwpck_require__(4134),
+  'linux-x64-musl': () => __nccwpck_require__(6469)
 });
 
 
@@ -61829,9 +61847,11 @@ exports.expandPlatformPreset = expandPlatformPreset;
 function expandPlatformFamily(family) {
     return isPlatformPreset(family)
         ? expandPlatformPreset(family)
-        : Array.isArray(family)
-            ? merge(family.map(expandPlatformFamily))
-            : family;
+        : isNodePlatform(family)
+            ? { [family]: node2Rust(family)[0] }
+            : Array.isArray(family)
+                ? merge(family.map(expandPlatformFamily))
+                : family;
 }
 exports.expandPlatformFamily = expandPlatformFamily;
 function describeTarget(target) {
