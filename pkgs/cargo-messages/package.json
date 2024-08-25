@@ -68,9 +68,7 @@
       "linux-arm64-gnu": "aarch64-unknown-linux-gnu",
       "win32-arm64-msvc": "aarch64-pc-windows-msvc",
       "linux-arm-gnueabihf": "armv7-unknown-linux-gnueabihf",
-      "android-arm-eabi": "armv7-linux-androideabi",
-      "linux-arm64-musl": "aarch64-unknown-linux-musl",
-      "linux-x64-musl": "x86_64-unknown-linux-musl"
+      "android-arm-eabi": "armv7-linux-androideabi"
     },
     "load": "./lib/load.cjs"
   },
@@ -82,8 +80,6 @@
     "@cargo-messages/win32-arm64-msvc": "0.1.77",
     "@cargo-messages/linux-arm-gnueabihf": "0.1.77",
     "@cargo-messages/android-arm-eabi": "0.1.77",
-    "@cargo-messages/linux-arm64-gnu": "0.1.77",
-    "@cargo-messages/linux-arm64-musl": "0.1.77",
-    "@cargo-messages/linux-x64-musl": "0.1.77"
+    "@cargo-messages/linux-arm64-gnu": "0.1.77"
   }
 }
