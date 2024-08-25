@@ -34,6 +34,14 @@ export function isPlatformPreset(x: unknown): x is PlatformPreset {
   return (typeof x === 'string') && (x in PRESET);
 }
 
+export type PlatformName = NodePlatform | PlatformPreset;
+
+export function assertIsPlatformName(x: unknown): asserts x is PlatformName {
+  if (!isPlatformPreset(x) && !isNodePlatform(x)) {
+    throw new RangeError(`invalid platform name: ${x}`);
+  }
+}
+
 export function assertIsPlatformPreset(x: unknown): asserts x is PlatformPreset {
   if (!isPlatformPreset(x)) {
     throw new RangeError(`invalid platform family preset: ${x}`);
@@ -55,13 +63,13 @@ export function assertIsPlatformMap(json: unknown, path: string): asserts json i
 
 export function assertIsPlatformFamily(json: unknown, path: string): asserts json is PlatformFamily {
   if (typeof json === 'string') {
-    assertIsPlatformPreset(json);
+    assertIsPlatformName(json);
     return;
   }
 
   if (Array.isArray(json)) {
     for (const elt of json) {
-      assertIsPlatformPreset(elt);
+      assertIsPlatformName(elt);
     }
     return;
   }
@@ -71,7 +79,6 @@ export function assertIsPlatformFamily(json: unknown, path: string): asserts jso
 
 export type TargetPair = { node: NodePlatform, rust: RustTarget };
 export type PlatformMap = { [key in NodePlatform]?: RustTarget };
-export type PlatformName = NodePlatform | PlatformPreset;
 
 export type PlatformFamily =
     PlatformName
