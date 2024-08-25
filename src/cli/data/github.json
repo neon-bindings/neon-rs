@@ -13,7 +13,7 @@
   "win32-x64-gnu": null,
   "win32-x64-msvc": "Windows",
   "linux-arm64-gnu": "Linux",
-  "linux-arm64-musl": null,
+  "linux-arm64-musl": "Linux",
   "linux-arm-gnueabihf": "Linux",
   "linux-arm-musleabihf": null,
   "linux-ia32-gnu": null,
@@ -34,7 +34,7 @@
   "linux-sparc64-gnu": null,
   "linux-x64-gnu": "Linux",
   "linux-x64-gnux32": null,
-  "linux-x64-musl": null,
+  "linux-x64-musl": "Linux",
   "freebsd-ia32": null,
   "freebsd-x64": null
 }
