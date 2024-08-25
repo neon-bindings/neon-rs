@@ -58,7 +58,7 @@
   "dependencies": {
     "@neon-rs/artifact": "^0.1.0",
     "@neon-rs/load": "^0.0.181",
-    "@neon-rs/manifest": "^0.1.2",
+    "@neon-rs/manifest": "^0.1.3",
     "cargo-messages": "^0.1.80",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",

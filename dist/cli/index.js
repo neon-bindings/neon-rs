@@ -61768,7 +61768,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.rust2Node = exports.node2Rust = exports.describeTarget = exports.expandPlatformFamily = exports.expandPlatformPreset = exports.assertIsPlatformFamily = exports.assertIsPlatformMap = exports.assertIsPlatformPreset = exports.isPlatformPreset = exports.assertIsNodePlatform = exports.isNodePlatform = exports.assertIsRustTarget = exports.isRustTarget = void 0;
+exports.rust2Node = exports.node2Rust = exports.describeTarget = exports.expandPlatformFamily = exports.expandPlatformPreset = exports.assertIsPlatformFamily = exports.assertIsPlatformMap = exports.assertIsPlatformPreset = exports.assertIsPlatformName = exports.isPlatformPreset = exports.assertIsNodePlatform = exports.isNodePlatform = exports.assertIsRustTarget = exports.isRustTarget = void 0;
 const rust_json_1 = __importDefault(__nccwpck_require__(6685));
 const node_json_1 = __importDefault(__nccwpck_require__(2642));
 const preset_json_1 = __importDefault(__nccwpck_require__(6757));
@@ -61797,6 +61797,12 @@ function isPlatformPreset(x) {
     return (typeof x === 'string') && (x in preset_json_1.default);
 }
 exports.isPlatformPreset = isPlatformPreset;
+function assertIsPlatformName(x) {
+    if (!isPlatformPreset(x) && !isNodePlatform(x)) {
+        throw new RangeError(`invalid platform name: ${x}`);
+    }
+}
+exports.assertIsPlatformName = assertIsPlatformName;
 function assertIsPlatformPreset(x) {
     if (!isPlatformPreset(x)) {
         throw new RangeError(`invalid platform family preset: ${x}`);
@@ -61818,12 +61824,12 @@ function assertIsPlatformMap(json, path) {
 exports.assertIsPlatformMap = assertIsPlatformMap;
 function assertIsPlatformFamily(json, path) {
     if (typeof json === 'string') {
-        assertIsPlatformPreset(json);
+        assertIsPlatformName(json);
         return;
     }
     if (Array.isArray(json)) {
         for (const elt of json) {
-            assertIsPlatformPreset(elt);
+            assertIsPlatformName(elt);
         }
         return;
     }
