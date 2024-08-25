@@ -71,10 +71,11 @@ export function assertIsPlatformFamily(json: unknown, path: string): asserts jso
 
 export type TargetPair = { node: NodePlatform, rust: RustTarget };
 export type PlatformMap = { [key in NodePlatform]?: RustTarget };
+export type PlatformName = NodePlatform | PlatformPreset;
 
 export type PlatformFamily =
-    PlatformPreset
-  | PlatformPreset[]
+    PlatformName
+  | PlatformName[]
   | PlatformMap;
 
 function lookupPlatformPreset(key: PlatformPreset): PlatformFamily {
@@ -96,6 +97,8 @@ export function expandPlatformPreset(preset: PlatformPreset): PlatformMap {
 export function expandPlatformFamily(family: PlatformFamily): PlatformMap {
   return isPlatformPreset(family)
     ? expandPlatformPreset(family)
+    : isNodePlatform(family)
+    ? { [family]: node2Rust(family)[0] }
     : Array.isArray(family)
     ? merge(family.map(expandPlatformFamily))
     : family;
