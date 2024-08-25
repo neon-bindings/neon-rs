@@ -1,0 +1,37 @@
+{
+  "name": "@cargo-messages/linux-arm64-musl",
+  "description": "Prebuilt binary package for `cargo-messages` on `linux-arm64-musl`.",
+  "version": "0.1.77",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "main": "index.node",
+  "files": [
+    "index.node"
+  ],
+  "neon": {
+    "type": "binary",
+    "rust": "aarch64-unknown-linux-musl",
+    "node": "linux-arm64-musl",
+    "os": "linux",
+    "arch": "arm64",
+    "abi": "musl"
+  },
+  "author": "David Herman <david.herman@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dherman/neon-rs.git"
+  },
+  "keywords": [
+    "Rust",
+    "Neon"
+  ],
+  "bugs": {
+    "url": "https://github.com/dherman/neon-rs/issues"
+  },
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "license": "MIT"
+}
