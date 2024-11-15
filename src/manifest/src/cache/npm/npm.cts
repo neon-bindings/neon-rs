@@ -111,7 +111,7 @@ export class NPMCacheCfg implements CacheCfg {
               [],
               js.callExpression(
                 js.identifier('require'),
-                [js.literal(`${cfg.org}/${platform}`)]
+                [js.literal(`${cfg.org}/${cfg.prefix ?? ''}${platform}`)]
               )
             )
           );
@@ -123,7 +123,7 @@ export class NPMCacheCfg implements CacheCfg {
 
   packageNames(): string[] {
     const cfg = this.manifest.cfg();
-    return Object.keys(this.manifest.allPlatforms()).map(key => `${cfg.org}/${key}`);
+    return Object.keys(this.manifest.allPlatforms()).map(key => `${cfg.org}/${cfg.prefix ?? ''}${key}`);
   }
 
   updatePlatforms(lib: LibraryManifest): boolean {

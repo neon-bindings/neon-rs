@@ -34,6 +34,12 @@ describe("simple manifest", () => {
     assert.strictEqual(lib.version, '0.1.17');
   });
 
+  async function testPrefixPlatforms(lib: LibraryManifest, name: string, prefix: string, version: string) {
+    const contents = await fs.readFile(path.join(lib.dir, 'lib', 'load.cjs'), 'utf8');
+    assert.include(contents, `'darwin-arm64': () => require('@${name}/${prefix}darwin-arm64')`);
+    assert.include(contents, `'darwin-x64': () => require('@${name}/${prefix}darwin-x64')`);
+  }
+
   async function testEmptyPlatforms(lib: LibraryManifest, name: string, version: string) {
     await lib.addNodePlatform('darwin-arm64');
     assert.isTrue(lib.hasUnsavedChanges());
@@ -91,5 +97,15 @@ describe("simple manifest", () => {
     await lib.saveChanges(msg => {});
     const json: any = lib.toJSON();
     assert.strictEqual(json.optionalDependencies['@empty-object-platforms/darwin-arm64'], lib.version);
+  });
+
+  it("handles prefixes", async () => {
+    const lib = await library('empty-platforms-with-prefix');
+    await lib.addPlatformPreset('macos');
+    await lib.saveChanges(() => {});
+    const reloaded = await LibraryManifest.load(lib.dir);
+    assert.strictEqual(reloaded.cfg().platforms, 'macos');
+    assert.strictEqual(reloaded.cfg().prefix, 'empty-platforms-with-prefix-');
+    assert.strictEqual(reloaded.cfg().org, '@dherman');
   });
 });

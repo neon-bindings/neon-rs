@@ -5,14 +5,16 @@
   "version": "0.1.81",
   "workspaces": [
     "cli",
-    "install"
+    "install",
+    "manifest"
   ],
   "author": "Dave Herman <david.herman@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dist": "npm run dist:cli && npm run dist:install",
+    "dist": "npm run dist:cli && npm run dist:install && npm run dist:manifest",
     "dist:cli": "cd cli && npm run dist",
     "dist:install": "cd install && npm run dist",
+    "dist:manifest": "cd manifest && npm run dist",
     "version": "node ../dist/cli bump -v --workspaces"
   },
   "dependencies": {
