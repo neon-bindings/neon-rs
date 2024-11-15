@@ -8,6 +8,7 @@ import { NPMCacheCfg } from "../cache/npm/npm.cjs";
 export interface LibraryCfg {
   type: "library";
   org: string;
+  prefix?: string;
   platforms: PlatformFamily;
   load?: string;
 }
@@ -24,6 +25,11 @@ function assertIsLibraryCfg(json: unknown): asserts json is LibraryCfg {
   if ('load' in json) {
     if (typeof json.load !== 'string' && typeof json.load !== 'undefined') {
       throw new TypeError(`expected "neon.load" to be a string, found ${json.load}`);
+    }
+  }
+  if ('prefix' in json) {
+    if (typeof json.prefix !== 'string' && typeof json.prefix !== 'undefined') {
+      throw new TypeError(`expected "neon.prefix" to be a string, found ${json.prefix}`);
     }
   }
 }
