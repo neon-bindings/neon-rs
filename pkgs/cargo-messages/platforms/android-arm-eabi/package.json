@@ -1,7 +1,7 @@
 {
   "name": "@cargo-messages/android-arm-eabi",
   "description": "Prebuilt binary package for `cargo-messages` on `android-arm-eabi`.",
-  "version": "0.1.81",
+  "version": "0.1.82",
   "os": [
     "android"
   ],

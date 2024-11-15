@@ -1,7 +1,7 @@
 {
   "name": "@neon-rs/manifest",
   "private": false,
-  "version": "0.2.1",
+  "version": "0.1.82",
   "description": "Library for working with Neon package configuration.",
   "exports": {
     ".": {
