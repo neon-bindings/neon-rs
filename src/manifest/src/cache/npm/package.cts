@@ -83,7 +83,7 @@ export class BinaryPackage {
     const targetInfo = describeTarget(rust);
     const libraryManifest = cacheCfg.manifest;
     const org = libraryManifest.cfg().org;
-    const name = `${org}/${node}`;
+    const name = `${org}/${cacheCfg.manifest.cfg().prefix ?? ''}${node}`;
     const json: any = {
       name,
       description: `Prebuilt binary package for \`${libraryManifest.name}\` on \`${targetInfo.node}\`.`,
