@@ -28937,7 +28937,7 @@ const collections = __nccwpck_require__(9846);
 const getParser = __nccwpck_require__(5033);
 const matchNode = __nccwpck_require__(3949);
 const recast = __nccwpck_require__(9684);
-const template = __nccwpck_require__(7275);
+const template = __nccwpck_require__(9097);
 
 const Node = recast.types.namedTypes.Node;
 const NodePath = recast.types.NodePath;
@@ -29188,7 +29188,7 @@ module.exports = matchNode;
 
 /***/ }),
 
-/***/ 7275:
+/***/ 9097:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 
@@ -40264,10 +40264,10 @@ var lib = __nccwpck_require__(3993);
 ;// CONCATENATED MODULE: ./node_modules/cargo-messages/lib/index.mjs
 
 
-// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/index.mjs
-var manifest_lib = __nccwpck_require__(347);
-// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
-var lib_platform = __nccwpck_require__(8140);
+// EXTERNAL MODULE: ../manifest/lib/index.mjs
+var manifest_lib = __nccwpck_require__(711);
+// EXTERNAL MODULE: ../manifest/lib/platform.mjs
+var lib_platform = __nccwpck_require__(2453);
 // EXTERNAL MODULE: ../node_modules/@neon-rs/artifact/lib/index.cjs
 var artifact_lib = __nccwpck_require__(8893);
 ;// CONCATENATED MODULE: ../node_modules/@neon-rs/artifact/lib/index.mjs
@@ -40297,7 +40297,7 @@ const OPTIONS = [
     { name: 'log', alias: 'l', type: String, defaultValue: null },
     { name: 'mount', alias: 'm', type: String, defaultValue: null },
     { name: 'manifest-path', type: String, defaultValue: null },
-    { name: 'out', alias: 'o', type: String, defaultValue: null },
+    { name: 'out', alias: 'o', type: String, defaultValue: null }, // DEPRECATED: 0.2
     { name: 'platform', alias: 'p', type: String, defaultValue: null },
     { name: 'debug', alias: 'd', type: Boolean, defaultValue: false },
     { name: 'verbose', alias: 'v', type: Boolean, defaultValue: false }
@@ -42570,8 +42570,8 @@ __nccwpck_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: ../node_modules/command-line-args/dist/index.js
 var dist = __nccwpck_require__(7898);
 var dist_default = /*#__PURE__*/__nccwpck_require__.n(dist);
-// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/index.mjs
-var lib = __nccwpck_require__(347);
+// EXTERNAL MODULE: ../manifest/lib/index.mjs
+var lib = __nccwpck_require__(711);
 ;// CONCATENATED MODULE: ./src/commands/show/platforms.ts
 
 
@@ -42665,8 +42665,8 @@ class CI {
     }
 }
 
-// EXTERNAL MODULE: ../node_modules/@neon-rs/manifest/lib/platform.mjs
-var platform = __nccwpck_require__(8140);
+// EXTERNAL MODULE: ../manifest/lib/platform.mjs
+var platform = __nccwpck_require__(2453);
 ;// CONCATENATED MODULE: ./src/commands/show/preset.ts
 
 
@@ -60901,87 +60901,15 @@ module.exports = (__nccwpck_require__(8372)/* .proxy */ .sj)({
 
 /***/ }),
 
-/***/ 8893:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.copyArtifact = exports.isNewer = void 0;
-const fs = __importStar(__nccwpck_require__(3977));
-const path = __importStar(__nccwpck_require__(9411));
-async function isNewer(filename, outputFile) {
-    try {
-        const prevStats = await fs.stat(outputFile);
-        const nextStats = await fs.stat(filename);
-        return nextStats.mtime > prevStats.mtime;
-    }
-    catch (_err) { }
-    return true;
-}
-exports.isNewer = isNewer;
-async function copyArtifact(src, dest) {
-    if (!(await isNewer(src, dest))) {
-        return;
-    }
-    const destDir = path.dirname(dest);
-    await fs.mkdir(destDir, { recursive: true });
-    // Apple Silicon (M1, etc.) requires shared libraries to be signed. However,
-    // the macOS code signing cache isn't cleared when overwriting a file.
-    // Deleting the file before copying works around the issue.
-    //
-    // Unfortunately, this workaround is incomplete because the file must be
-    // deleted from the location it is loaded. If further steps in the user's
-    // build process copy or move the file in place, the code signing cache
-    // will not be cleared.
-    //
-    // https://github.com/neon-bindings/neon/issues/911
-    if (path.extname(dest) === ".node") {
-        try {
-            await fs.unlink(dest);
-        }
-        catch (_e) {
-            // Ignore errors; the file might not exist
-        }
-    }
-    await fs.copyFile(src, dest);
-}
-exports.copyArtifact = copyArtifact;
-
-
-/***/ }),
-
-/***/ 9173:
+/***/ 7080:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.normalizeBinaryCfg = void 0;
-const platform_cjs_1 = __nccwpck_require__(2147);
-const util_cjs_1 = __nccwpck_require__(5304);
-const neon_cjs_1 = __nccwpck_require__(4941);
+exports.normalizeBinaryCfg = normalizeBinaryCfg;
+const platform_cjs_1 = __nccwpck_require__(5585);
+const util_cjs_1 = __nccwpck_require__(7275);
+const neon_cjs_1 = __nccwpck_require__(3550);
 function assertIsBinaryV1(json) {
     (0, util_cjs_1.assertHasProps)(['binary'], json, "neon");
     const binary = json.binary;
@@ -61069,7 +60997,6 @@ function normalizeBinaryCfg(json) {
     json.neon = upgradeBinaryV1(json.neon);
     return true;
 }
-exports.normalizeBinaryCfg = normalizeBinaryCfg;
 function upgradeBinaryV1(json) {
     assertIsBinaryV1(json);
     return {
@@ -61096,16 +61023,16 @@ function upgradeBinaryV2(json) {
 
 /***/ }),
 
-/***/ 4980:
+/***/ 9027:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BinaryManifest = exports.SCHEMA_VERSION = void 0;
-const platform_cjs_1 = __nccwpck_require__(2147);
-const neon_cjs_1 = __nccwpck_require__(4941);
-const util_cjs_1 = __nccwpck_require__(5304);
-const legacy_cjs_1 = __nccwpck_require__(9173);
+const platform_cjs_1 = __nccwpck_require__(5585);
+const neon_cjs_1 = __nccwpck_require__(3550);
+const util_cjs_1 = __nccwpck_require__(7275);
+const legacy_cjs_1 = __nccwpck_require__(7080);
 exports.SCHEMA_VERSION = 3;
 function assertIsBinaryCfg(json) {
     (0, util_cjs_1.assertHasProps)(['type', 'rust', 'node', 'os', 'arch', 'abi'], json, "neon");
@@ -61179,7 +61106,7 @@ exports.BinaryManifest = BinaryManifest;
 
 /***/ }),
 
-/***/ 1796:
+/***/ 7429:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -61214,8 +61141,8 @@ exports.NPMCacheCfg = void 0;
 const fs = __importStar(__nccwpck_require__(3977));
 const path = __importStar(__nccwpck_require__(9411));
 const jscodeshift_1 = __importDefault(__nccwpck_require__(7416));
-const platform_cjs_1 = __nccwpck_require__(2147);
-const package_cjs_1 = __nccwpck_require__(9531);
+const platform_cjs_1 = __nccwpck_require__(5585);
+const package_cjs_1 = __nccwpck_require__(107);
 const PLATFORMS_DIR = 'platforms';
 class NPMCacheCfg {
     constructor(manifest, outDir = PLATFORMS_DIR) {
@@ -61294,7 +61221,7 @@ class NPMCacheCfg {
             .filter(isPlatformTable)
             .replaceWith((p) => {
             const newProps = platforms.map(platform => {
-                return jscodeshift_1.default.property('init', jscodeshift_1.default.literal(platform), jscodeshift_1.default.arrowFunctionExpression([], jscodeshift_1.default.callExpression(jscodeshift_1.default.identifier('require'), [jscodeshift_1.default.literal(`${cfg.org}/${platform}`)])));
+                return jscodeshift_1.default.property('init', jscodeshift_1.default.literal(platform), jscodeshift_1.default.arrowFunctionExpression([], jscodeshift_1.default.callExpression(jscodeshift_1.default.identifier('require'), [jscodeshift_1.default.literal(`${cfg.org}/${cfg.prefix ?? ''}${platform}`)])));
             });
             return jscodeshift_1.default.objectExpression([...p.value.properties, ...newProps]);
         })
@@ -61303,7 +61230,7 @@ class NPMCacheCfg {
     }
     packageNames() {
         const cfg = this.manifest.cfg();
-        return Object.keys(this.manifest.allPlatforms()).map(key => `${cfg.org}/${key}`);
+        return Object.keys(this.manifest.allPlatforms()).map(key => `${cfg.org}/${cfg.prefix ?? ''}${key}`);
     }
     updatePlatforms(lib) {
         let changed = false;
@@ -61327,7 +61254,7 @@ exports.NPMCacheCfg = NPMCacheCfg;
 
 /***/ }),
 
-/***/ 9531:
+/***/ 107:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -61356,9 +61283,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BinaryPackage = void 0;
-const platform_cjs_1 = __nccwpck_require__(2147);
-const manifest_cjs_1 = __nccwpck_require__(4980);
-const util_cjs_1 = __nccwpck_require__(5304);
+const platform_cjs_1 = __nccwpck_require__(5585);
+const manifest_cjs_1 = __nccwpck_require__(9027);
+const util_cjs_1 = __nccwpck_require__(7275);
 const path = __importStar(__nccwpck_require__(9411));
 const fs = __importStar(__nccwpck_require__(3977));
 async function loadManifest(cacheCfg, node, rust) {
@@ -61420,7 +61347,7 @@ class BinaryPackage {
         const targetInfo = (0, platform_cjs_1.describeTarget)(rust);
         const libraryManifest = cacheCfg.manifest;
         const org = libraryManifest.cfg().org;
-        const name = `${org}/${node}`;
+        const name = `${org}/${cacheCfg.manifest.cfg().prefix ?? ''}${node}`;
         const json = {
             name,
             description: `Prebuilt binary package for \`${libraryManifest.name}\` on \`${targetInfo.node}\`.`,
@@ -61448,28 +61375,28 @@ exports.BinaryPackage = BinaryPackage;
 
 /***/ }),
 
-/***/ 4696:
+/***/ 6253:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 var __webpack_unused_export__;
 
 __webpack_unused_export__ = ({ value: true });
 exports.N = void 0;
-var library_cjs_1 = __nccwpck_require__(9736);
+var library_cjs_1 = __nccwpck_require__(2702);
 Object.defineProperty(exports, "N", ({ enumerable: true, get: function () { return library_cjs_1.LibraryManifest; } }));
 
 
 /***/ }),
 
-/***/ 5333:
+/***/ 8972:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.normalizeLibraryCfg = void 0;
-const platform_cjs_1 = __nccwpck_require__(2147);
-const util_cjs_1 = __nccwpck_require__(5304);
-const neon_cjs_1 = __nccwpck_require__(4941);
+exports.normalizeLibraryCfg = normalizeLibraryCfg;
+const platform_cjs_1 = __nccwpck_require__(5585);
+const util_cjs_1 = __nccwpck_require__(7275);
+const neon_cjs_1 = __nccwpck_require__(3550);
 function assertIsLibraryV1(json) {
     (0, util_cjs_1.assertIsObject)(json, "neon");
     for (const key in json) {
@@ -61549,7 +61476,6 @@ function normalizeLibraryCfg(json) {
     json.neon = upgradeLibraryV1(targets);
     return true;
 }
-exports.normalizeLibraryCfg = normalizeLibraryCfg;
 function upgradeLibraryV1(object) {
     function splitSwap([key, value]) {
         if (!/^@.*\//.test(value)) {
@@ -61578,17 +61504,17 @@ function upgradeLibraryV1(object) {
 
 /***/ }),
 
-/***/ 9736:
+/***/ 2702:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LibraryManifest = exports.SCHEMA_VERSION = void 0;
-const platform_cjs_1 = __nccwpck_require__(2147);
-const neon_cjs_1 = __nccwpck_require__(4941);
-const util_cjs_1 = __nccwpck_require__(5304);
-const legacy_cjs_1 = __nccwpck_require__(5333);
-const npm_cjs_1 = __nccwpck_require__(1796);
+const platform_cjs_1 = __nccwpck_require__(5585);
+const neon_cjs_1 = __nccwpck_require__(3550);
+const util_cjs_1 = __nccwpck_require__(7275);
+const legacy_cjs_1 = __nccwpck_require__(8972);
+const npm_cjs_1 = __nccwpck_require__(7429);
 function assertIsLibraryCfg(json) {
     (0, util_cjs_1.assertHasProps)(['type', 'org', 'platforms'], json, "neon");
     if (json.type !== 'library') {
@@ -61601,6 +61527,11 @@ function assertIsLibraryCfg(json) {
     if ('load' in json) {
         if (typeof json.load !== 'string' && typeof json.load !== 'undefined') {
             throw new TypeError(`expected "neon.load" to be a string, found ${json.load}`);
+        }
+    }
+    if ('prefix' in json) {
+        if (typeof json.prefix !== 'string' && typeof json.prefix !== 'undefined') {
+            throw new TypeError(`expected "neon.prefix" to be a string, found ${json.prefix}`);
         }
     }
 }
@@ -61742,25 +61673,24 @@ exports.LibraryManifest = LibraryManifest;
 
 /***/ }),
 
-/***/ 4941:
+/***/ 3550:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.assertHasNeonCfg = void 0;
-const util_cjs_1 = __nccwpck_require__(5304);
+exports.assertHasNeonCfg = assertHasNeonCfg;
+const util_cjs_1 = __nccwpck_require__(7275);
 function assertHasNeonCfg(json) {
     if (!('neon' in json)) {
         throw new TypeError('property "neon" not found');
     }
     (0, util_cjs_1.assertIsObject)(json.neon, "neon");
 }
-exports.assertHasNeonCfg = assertHasNeonCfg;
 
 
 /***/ }),
 
-/***/ 2147:
+/***/ 5585:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -61768,47 +61698,53 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.rust2Node = exports.node2Rust = exports.describeTarget = exports.expandPlatformFamily = exports.expandPlatformPreset = exports.assertIsPlatformFamily = exports.assertIsPlatformMap = exports.assertIsPlatformPreset = exports.assertIsPlatformName = exports.isPlatformPreset = exports.assertIsNodePlatform = exports.isNodePlatform = exports.assertIsRustTarget = exports.isRustTarget = void 0;
-const rust_json_1 = __importDefault(__nccwpck_require__(6685));
-const node_json_1 = __importDefault(__nccwpck_require__(2642));
-const preset_json_1 = __importDefault(__nccwpck_require__(6757));
-const util_cjs_1 = __nccwpck_require__(5304);
+exports.isRustTarget = isRustTarget;
+exports.assertIsRustTarget = assertIsRustTarget;
+exports.isNodePlatform = isNodePlatform;
+exports.assertIsNodePlatform = assertIsNodePlatform;
+exports.isPlatformPreset = isPlatformPreset;
+exports.assertIsPlatformName = assertIsPlatformName;
+exports.assertIsPlatformPreset = assertIsPlatformPreset;
+exports.assertIsPlatformMap = assertIsPlatformMap;
+exports.assertIsPlatformFamily = assertIsPlatformFamily;
+exports.expandPlatformPreset = expandPlatformPreset;
+exports.expandPlatformFamily = expandPlatformFamily;
+exports.describeTarget = describeTarget;
+exports.node2Rust = node2Rust;
+exports.rust2Node = rust2Node;
+const rust_json_1 = __importDefault(__nccwpck_require__(9736));
+const node_json_1 = __importDefault(__nccwpck_require__(6130));
+const preset_json_1 = __importDefault(__nccwpck_require__(5154));
+const util_cjs_1 = __nccwpck_require__(7275);
 function isRustTarget(x) {
     return (typeof x === 'string') && (x in rust_json_1.default);
 }
-exports.isRustTarget = isRustTarget;
 function assertIsRustTarget(x) {
     if (!isRustTarget(x)) {
         throw new RangeError(`invalid Rust target: ${x}`);
     }
 }
-exports.assertIsRustTarget = assertIsRustTarget;
 function isNodePlatform(x) {
     return (typeof x === 'string') && (x in node_json_1.default);
 }
-exports.isNodePlatform = isNodePlatform;
 function assertIsNodePlatform(x) {
     if (!isNodePlatform(x)) {
         throw new RangeError(`invalid platform: ${x}`);
     }
 }
-exports.assertIsNodePlatform = assertIsNodePlatform;
 function isPlatformPreset(x) {
     return (typeof x === 'string') && (x in preset_json_1.default);
 }
-exports.isPlatformPreset = isPlatformPreset;
 function assertIsPlatformName(x) {
     if (!isPlatformPreset(x) && !isNodePlatform(x)) {
         throw new RangeError(`invalid platform name: ${x}`);
     }
 }
-exports.assertIsPlatformName = assertIsPlatformName;
 function assertIsPlatformPreset(x) {
     if (!isPlatformPreset(x)) {
         throw new RangeError(`invalid platform family preset: ${x}`);
     }
 }
-exports.assertIsPlatformPreset = assertIsPlatformPreset;
 function assertIsPlatformMap(json, path) {
     (0, util_cjs_1.assertIsObject)(json, path);
     for (const key in json) {
@@ -61821,7 +61757,6 @@ function assertIsPlatformMap(json, path) {
         }
     }
 }
-exports.assertIsPlatformMap = assertIsPlatformMap;
 function assertIsPlatformFamily(json, path) {
     if (typeof json === 'string') {
         assertIsPlatformName(json);
@@ -61835,7 +61770,6 @@ function assertIsPlatformFamily(json, path) {
     }
     assertIsPlatformMap(json, path);
 }
-exports.assertIsPlatformFamily = assertIsPlatformFamily;
 function lookupPlatformPreset(key) {
     return preset_json_1.default[key];
 }
@@ -61849,7 +61783,6 @@ function merge(maps) {
 function expandPlatformPreset(preset) {
     return expandPlatformFamily(lookupPlatformPreset(preset));
 }
-exports.expandPlatformPreset = expandPlatformPreset;
 function expandPlatformFamily(family) {
     return isPlatformPreset(family)
         ? expandPlatformPreset(family)
@@ -61859,7 +61792,6 @@ function expandPlatformFamily(family) {
                 ? merge(family.map(expandPlatformFamily))
                 : family;
 }
-exports.expandPlatformFamily = expandPlatformFamily;
 function describeTarget(target) {
     const node = rust_json_1.default[target];
     if (!isNodePlatform(node)) {
@@ -61878,25 +61810,22 @@ function describeTarget(target) {
         llvm: nodeDescriptor.llvm
     };
 }
-exports.describeTarget = describeTarget;
 function node2Rust(target) {
     return node_json_1.default[target].llvm.map(rt => {
         assertIsRustTarget(rt);
         return rt;
     });
 }
-exports.node2Rust = node2Rust;
 function rust2Node(target) {
     const nt = rust_json_1.default[target];
     assertIsNodePlatform(nt);
     return nt;
 }
-exports.rust2Node = rust2Node;
 
 
 /***/ }),
 
-/***/ 5304:
+/***/ 7275:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
@@ -61924,7 +61853,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AbstractManifest = exports.readManifest = exports.assertHasProps = exports.assertIsObject = void 0;
+exports.AbstractManifest = void 0;
+exports.assertIsObject = assertIsObject;
+exports.assertHasProps = assertHasProps;
+exports.readManifest = readManifest;
 const fs = __importStar(__nccwpck_require__(3977));
 const path = __importStar(__nccwpck_require__(9411));
 function assertIsObject(json, path) {
@@ -61932,7 +61864,6 @@ function assertIsObject(json, path) {
         throw new TypeError(`expected "${path}" property to be an object, found ${json}`);
     }
 }
-exports.assertIsObject = assertIsObject;
 // Idea thanks to https://www.lucaspaganini.com/academy/assertion-functions-typescript-narrowing-5
 function assertHasProps(keys, json, path) {
     assertIsObject(json, path);
@@ -61942,14 +61873,12 @@ function assertHasProps(keys, json, path) {
         }
     }
 }
-exports.assertHasProps = assertHasProps;
 async function readManifest(dir) {
     dir = dir ?? process.cwd();
     const json = JSON.parse(await fs.readFile(path.join(dir, "package.json"), { encoding: 'utf8' }));
     assertIsPreamble(json);
     return json;
 }
-exports.readManifest = readManifest;
 function assertIsPreamble(json) {
     if (!json || typeof json !== 'object' || Array.isArray(json)) {
         throw new TypeError(`expected Neon package manifest, found ${json}`);
@@ -61995,19 +61924,91 @@ exports.AbstractManifest = AbstractManifest;
 
 /***/ }),
 
-/***/ 347:
+/***/ 8893:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.copyArtifact = exports.isNewer = void 0;
+const fs = __importStar(__nccwpck_require__(3977));
+const path = __importStar(__nccwpck_require__(9411));
+async function isNewer(filename, outputFile) {
+    try {
+        const prevStats = await fs.stat(outputFile);
+        const nextStats = await fs.stat(filename);
+        return nextStats.mtime > prevStats.mtime;
+    }
+    catch (_err) { }
+    return true;
+}
+exports.isNewer = isNewer;
+async function copyArtifact(src, dest) {
+    if (!(await isNewer(src, dest))) {
+        return;
+    }
+    const destDir = path.dirname(dest);
+    await fs.mkdir(destDir, { recursive: true });
+    // Apple Silicon (M1, etc.) requires shared libraries to be signed. However,
+    // the macOS code signing cache isn't cleared when overwriting a file.
+    // Deleting the file before copying works around the issue.
+    //
+    // Unfortunately, this workaround is incomplete because the file must be
+    // deleted from the location it is loaded. If further steps in the user's
+    // build process copy or move the file in place, the code signing cache
+    // will not be cleared.
+    //
+    // https://github.com/neon-bindings/neon/issues/911
+    if (path.extname(dest) === ".node") {
+        try {
+            await fs.unlink(dest);
+        }
+        catch (_e) {
+            // Ignore errors; the file might not exist
+        }
+    }
+    await fs.copyFile(src, dest);
+}
+exports.copyArtifact = copyArtifact;
+
+
+/***/ }),
+
+/***/ 711:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
 /* harmony export */   "N": () => (/* reexport safe */ _index_cjs__WEBPACK_IMPORTED_MODULE_0__.N)
 /* harmony export */ });
-/* harmony import */ var _index_cjs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(4696);
+/* harmony import */ var _index_cjs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(6253);
 
 
 
 /***/ }),
 
-/***/ 8140:
+/***/ 2453:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 /* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
@@ -62019,27 +62020,27 @@ exports.AbstractManifest = AbstractManifest;
 /* harmony export */   "or": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.assertIsNodePlatform),
 /* harmony export */   "sD": () => (/* reexport safe */ _platform_cjs__WEBPACK_IMPORTED_MODULE_0__.assertIsRustTarget)
 /* harmony export */ });
-/* harmony import */ var _platform_cjs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2147);
+/* harmony import */ var _platform_cjs__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(5585);
 
 
 
 /***/ }),
 
-/***/ 2642:
+/***/ 6130:
 /***/ ((module) => {
 
 module.exports = JSON.parse('{"darwin-arm64":{"os":"darwin","arch":"arm64","abi":null,"llvm":["aarch64-apple-darwin"]},"darwin-x64":{"os":"darwin","arch":"x64","abi":null,"llvm":["x86_64-apple-darwin"]},"ios-arm64":{"os":"ios","arch":"arm64","abi":null,"llvm":["aarch64-apple-ios"]},"ios-x64":{"os":"ios","arch":"x64","abi":null,"llvm":["x86_64-apple-ios"]},"android-arm64":{"os":"android","arch":"arm64","abi":null,"llvm":["aarch64-linux-android"]},"android-arm-eabi":{"os":"android","arch":"arm","abi":"eabi","llvm":["armv7-linux-androideabi"]},"android-ia32":{"os":"android","arch":"ia32","abi":null,"llvm":["i686-linux-android"]},"android-x64":{"os":"android","arch":"x64","abi":null,"llvm":["x86_64-linux-android"]},"win32-arm64-msvc":{"os":"win32","arch":"arm64","abi":"msvc","llvm":["aarch64-pc-windows-msvc"]},"win32-ia32-gnu":{"os":"win32","arch":"ia32","abi":"gnu","llvm":["i686-pc-windows-gnu"]},"win32-ia32-msvc":{"os":"win32","arch":"ia32","abi":"msvc","llvm":["i686-pc-windows-msvc"]},"win32-x64-gnu":{"os":"win32","arch":"x64","abi":"gnu","llvm":["x86_64-pc-windows-gnu"]},"win32-x64-msvc":{"os":"win32","arch":"x64","abi":"msvc","llvm":["x86_64-pc-windows-msvc"]},"linux-arm64-gnu":{"os":"linux","arch":"arm64","abi":"gnu","llvm":["aarch64-unknown-linux-gnu"]},"linux-arm64-musl":{"os":"linux","arch":"arm64","abi":"musl","llvm":["aarch64-unknown-linux-musl"]},"linux-arm-gnueabihf":{"os":"linux","arch":"arm","abi":"gnueabihf","llvm":["arm-unknown-linux-gnueabihf","armv7-unknown-linux-gnueabihf"]},"linux-arm-musleabihf":{"os":"linux","arch":"arm","abi":"musleabihf","llvm":["arm-unknown-linux-musleabihf","armv7-unknown-linux-musleabihf"]},"linux-ia32-gnu":{"os":"linux","arch":"ia32","abi":"gnu","llvm":["i686-unknown-linux-gnu"]},"linux-ia32-musl":{"os":"linux","arch":"ia32","abi":"musl","llvm":["i686-unknown-linux-musl"]},"linux-mips-gnu":{"os":"linux","arch":"mips","abi":"gnu","llvm":["mips-unknown-linux-gnu"]},"linux-mips-musl":{"os":"linux","arch":"mips","abi":"musl","llvm":["mips-unknown-linux-musl"]},"linux-mips64-gnuabi64":{"os":"linux","arch":"mips64","abi":"gnuabi64","llvm":["mips64-unknown-linux-gnuabi64"]},"linux-mips64-muslabi64":{"os":"linux","arch":"mips64","abi":"muslabi64","llvm":["mips64-unknown-linux-muslabi64"]},"linux-mips64el-gnuabi64":{"os":"linux","arch":"mips64el","abi":"gnuabi64","llvm":["mips64el-unknown-linux-gnuabi64"]},"linux-mips64el-muslabi64":{"os":"linux","arch":"mips64el","abi":"muslabi64","llvm":["mips64el-unknown-linux-muslabi64"]},"linux-mipsel-gnu":{"os":"linux","arch":"mipsel","abi":"gnu","llvm":["mipsel-unknown-linux-gnu"]},"linux-mipsel-musl":{"os":"linux","arch":"mipsel","abi":"musl","llvm":["mipsel-unknown-linux-musl"]},"linux-powerpc-gnu":{"os":"linux","arch":"powerpc","abi":"gnu","llvm":["powerpc-unknown-linux-gnu"]},"linux-powerpc64-gnu":{"os":"linux","arch":"powerpc64","abi":"gnu","llvm":["powerpc64-unknown-linux-gnu"]},"linux-powerpc64le-gnu":{"os":"linux","arch":"powerpc64le","abi":"gnu","llvm":["powerpc64le-unknown-linux-gnu"]},"linux-riscv64gc-gnu":{"os":"linux","arch":"riscv64gc","abi":"gnu","llvm":["riscv64gc-unknown-linux-gnu"]},"linux-s390x-gnu":{"os":"linux","arch":"s390x","abi":"gnu","llvm":["s390x-unknown-linux-gnu"]},"linux-sparc64-gnu":{"os":"linux","arch":"sparc64","abi":"gnu","llvm":["sparc64-unknown-linux-gnu"]},"linux-x64-gnu":{"os":"linux","arch":"x64","abi":"gnu","llvm":["x86_64-unknown-linux-gnu"]},"linux-x64-gnux32":{"os":"linux","arch":"x64","abi":"gnux32","llvm":["x86_64-unknown-linux-gnux32"]},"linux-x64-musl":{"os":"linux","arch":"x64","abi":"musl","llvm":["x86_64-unknown-linux-musl"]},"freebsd-ia32":{"os":"freebsd","arch":"ia32","abi":null,"llvm":["i686-unknown-freebsd"]},"freebsd-x64":{"os":"freebsd","arch":"x64","abi":null,"llvm":["x86_64-unknown-freebsd"]}}');
 
 /***/ }),
 
-/***/ 6757:
+/***/ 5154:
 /***/ ((module) => {
 
 module.exports = JSON.parse('{"windows":{"win32-x64-msvc":"x86_64-pc-windows-msvc"},"macos":{"darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin"},"linux":{"linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf"},"desktop":{"win32-x64-msvc":"x86_64-pc-windows-msvc","darwin-x64":"x86_64-apple-darwin","darwin-arm64":"aarch64-apple-darwin","linux-x64-gnu":"x86_64-unknown-linux-gnu","linux-arm64-gnu":"aarch64-unknown-linux-gnu"},"mobile":{"win32-arm64-msvc":"aarch64-pc-windows-msvc","linux-arm-gnueabihf":"armv7-unknown-linux-gnueabihf","android-arm-eabi":"armv7-linux-androideabi"},"common":["desktop"],"extended":["desktop","mobile"]}');
 
 /***/ }),
 
-/***/ 6685:
+/***/ 9736:
 /***/ ((module) => {
 
 module.exports = JSON.parse('{"aarch64-apple-darwin":"darwin-arm64","x86_64-apple-darwin":"darwin-x64","aarch64-apple-ios":"ios-arm64","x86_64-apple-ios":"ios-x64","aarch64-linux-android":"android-arm64","armv7-linux-androideabi":"android-arm-eabi","i686-linux-android":"android-ia32","x86_64-linux-android":"android-x64","aarch64-pc-windows-msvc":"win32-arm64-msvc","i686-pc-windows-gnu":"win32-ia32-gnu","i686-pc-windows-msvc":"win32-ia32-msvc","x86_64-pc-windows-gnu":"win32-x64-gnu","x86_64-pc-windows-msvc":"win32-x64-msvc","aarch64-unknown-linux-gnu":"linux-arm64-gnu","aarch64-unknown-linux-musl":"linux-arm64-musl","arm-unknown-linux-gnueabihf":"linux-arm-gnueabihf","arm-unknown-linux-musleabihf":"linux-arm-musleabihf","armv7-unknown-linux-gnueabihf":"linux-arm-gnueabihf","armv7-unknown-linux-musleabihf":"linux-arm-musleabihf","i686-unknown-linux-gnu":"linux-ia32-gnu","i686-unknown-linux-musl":"linux-ia32-musl","mips-unknown-linux-gnu":"linux-mips-gnu","mips-unknown-linux-musl":"linux-mips-musl","mips64-unknown-linux-gnuabi64":"linux-mips64-gnuabi64","mips64-unknown-linux-muslabi64":"linux-mips64-muslabi64","mips64el-unknown-linux-gnuabi64":"linux-mips64el-gnuabi64","mips64el-unknown-linux-muslabi64":"linux-mips64el-muslabi64","mipsel-unknown-linux-gnu":"linux-mipsel-gnu","mipsel-unknown-linux-musl":"linux-mipsel-musl","powerpc-unknown-linux-gnu":"linux-powerpc-gnu","powerpc64-unknown-linux-gnu":"linux-powerpc64-gnu","powerpc64le-unknown-linux-gnu":"linux-powerpc64le-gnu","riscv64gc-unknown-linux-gnu":"linux-riscv64gc-gnu","s390x-unknown-linux-gnu":"linux-s390x-gnu","sparc64-unknown-linux-gnu":"linux-sparc64-gnu","x86_64-unknown-linux-gnu":"linux-x64-gnu","x86_64-unknown-linux-gnux32":"linux-x64-gnux32","x86_64-unknown-linux-musl":"linux-x64-musl","i686-unknown-freebsd":"freebsd-ia32","x86_64-unknown-freebsd":"freebsd-x64"}');
