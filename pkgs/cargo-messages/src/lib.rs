@@ -343,6 +343,7 @@ fn from_file(mut cx: FunctionContext) -> JsResult<Boxed<CargoMessages>> {
 }
 
 fn create_reader(mut cx: FunctionContext) -> JsResult<Boxed<CargoReader>> {
+    eprintln!("AWOOOOGA! This is the Rust create_reader.");
     let options = options(&mut cx, 0)?;
     Ok(cx.boxed(RefCell::new(CargoReader { options })))
 }
