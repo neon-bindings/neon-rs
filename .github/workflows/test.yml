@@ -110,6 +110,13 @@ jobs:
         working-directory: ./test/integration/proxy
         timeout-minutes: 3
         run: ./ci-proxy.sh
+      - name: Say hi to Dave
+        shell: bash
+        run: |
+          echo "***** Environment Variables:"
+          printenv | sort
+          echo "***** npm config list:"
+          npm config list
       - name: Publish to npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
