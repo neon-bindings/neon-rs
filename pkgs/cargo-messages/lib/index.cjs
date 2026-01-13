@@ -1,5 +1,10 @@
 const addon = require('./load.cjs');
 const readline = require('node:readline');
+const { createReadStream } = require('node:fs');
+const path = require('node:path');
+const child_process = require('node:child_process');
+
+const RUST = true;
 
 const PRIVATE = {};
 
@@ -20,23 +25,93 @@ class CargoArtifact {
   }
 }
 
+// Starting around Rust 1.78 or 1.79, cargo began normalizing crate
+// names in the JSON output, so to support both old and new versions
+// of cargo, we need to compare against both variants.
+//
+// See: https://github.com/rust-lang/cargo/issues/13867
+function normalize(crateName) {
+  return crateName.replace(/-/g, '_');
+}
+
+function unmountOptions(options, filename) {
+   return options?.mount ? unmount(options.mount, options.manifestPath, filename) : filename;
+}
+
+function unmount(mount, manifestPath, filename) {
+  const rel = path.relative(mount, filename);
+  const hostBase = JSON.parse(child_process.execSync('cargo', [
+    'metadata',
+    '--format-version', '1',
+    '--no-deps',
+    ...(manifestPath ? ['--manifest-path', manifestPath] : [])
+  ])).target_directory;
+  return path.join(hostBase, rel);
+}
+
 class CargoMessages {
   constructor(options) {
     options = options || {};
     this._mount = options.mount || null;
     this._manifestPath = options.manifestPath || null;
     this._verbose = options.verbose || false;
-    this._kernel = options.file
-      ? addon.fromFile(options.file, this._mount, this._manifestPath, this._verbose)
-      : (process.stdin.resume(), addon.fromStdin(this._mount, this._manifestPath, this._verbose));
+    if (RUST) {
+      this._kernel = options.file
+        ? addon.fromFile(options.file, this._mount, this._manifestPath, this._verbose)
+        : (process.stdin.resume(), addon.fromStdin(this._mount, this._manifestPath, this._verbose));
+    } else {
+      this._kernel = options.file
+        ? createReadStream(options.file, { encoding: 'utf8' })
+        : (process.stdin.resume(), process.stdin);
+    }
   }
 
-  findArtifact(crateName) {
-    const found = addon.findArtifact(this._kernel, crateName);
-    return found
-      ? new CargoArtifact(PRIVATE, found)
-      : null;
+  async findArtifact(crateName) {
+    if (RUST) {
+      const found = addon.findArtifact(this._kernel, crateName);
+      return found
+        ? new CargoArtifact(PRIVATE, found)
+        : null;
+    }
+
+    let count = 0;
+    let result = null;
+
+    const normalizedCrateName = normalize(crateName);
+
+    for await (const msg of this._kernel) {
+      count++;
+      if (msg.reason === 'compiler-artifact') {
+        if (this._verbose) {
+          console.info(`[cargo-messages] found artifact for ${msg.target.name}`);
+        }
+        if (result === null && normalize(msg?.target?.name === normalizedCrateName)) {
+          result = msg;
+        }
+      } else if (msg.reason === 'build-finished') {
+        if (this._verbose) {
+          console.info(`[cargo-messages] build finished (${msg.success ? 'succeeded' : 'failed'})`);
+        }
+      }
+    }
+
+    if (this._verbose) {
+      console.info(`[cargo-messages] no${count === 0 ? '' : ' more'} artifacts`);
+    }
+
+    return result;
   }
+}
+
+function parseLine(line) {
+  try {
+    const parsed = JSON.parse(line);
+    if (typeof parsed === 'object' && parsed !== null && typeof parsed.reason === 'string') {
+      return parsed;
+    }
+  } catch (e) { }
+
+  return { reason: 'text', text: line };
 }
 
 class CargoReader {
@@ -45,8 +120,13 @@ class CargoReader {
     this._mount = options.mount || null;
     this._manifestPath = options.manifestPath || null;
     this._verbose = options.verbose || false;
+    this._options = options;
     this._input = input;
-    this._kernel = addon.createReader(this._mount, this._manifestPath, this._verbose);
+    if (RUST) {
+      this._kernel = addon.createReader(this._mount, this._manifestPath, this._verbose);
+    } else {
+      this._kernel = null;
+    }
   }
 
   async *[Symbol.asyncIterator]() {
@@ -55,27 +135,56 @@ class CargoReader {
     });
 
     for await (const line of rl) {
-      const { kernel, kind } = addon.readline(this._kernel, line);
-      switch (kind) {
-        case 0:
-          yield new CompilerArtifact(PRIVATE, kernel);
-          break;
+      if (RUST) {
+        const { kernel, kind } = addon.readline(this._kernel, line);
+        switch (kind) {
+          case 0:
+            yield new CompilerArtifact(PRIVATE, kernel);
+            break;
 
-        case 1:
-          yield new CompilerMessage(PRIVATE, kernel);
-          break;
+          case 1:
+            yield new CompilerMessage(PRIVATE, kernel);
+            break;
 
-        case 2:
-          yield new BuildScriptExecuted(PRIVATE, kernel);
-          break;
+          case 2:
+            yield new BuildScriptExecuted(PRIVATE, kernel);
+            break;
 
-        case 3:
-          yield new BuildFinished(PRIVATE, kernel);
-          break;
+          case 3:
+            yield new BuildFinished(PRIVATE, kernel);
+            break;
 
-        case 4:
-          yield new TextLine(PRIVATE, kernel);
-          break;
+          case 4:
+            yield new TextLine(PRIVATE, kernel);
+            break;
+        }
+      }
+      else {
+        const parsed = parseLine(line);
+
+        switch (parsed.reason) {
+          case 'compiler-artifact':
+            yield new CompilerArtifact(PRIVATE, parsed, this._options);
+            break;
+
+          case 'compiler-message':
+            yield new CompilerMessage(PRIVATE, parsed, this._options);
+            break;
+
+          case 'build-script-executed':
+            yield new BuildScriptExecuted(PRIVATE, parsed, this._options);
+            break;
+
+          case 'build-finished':
+            yield new BuildFinished(PRIVATE, parsed, this._options);
+            break;
+
+          default:
+            const textLine = new TextLine(PRIVATE, parsed, this._options);
+            textLine.text = line;
+            yield textLine;
+            break;
+        }
       }
     }
   }
@@ -90,58 +199,88 @@ class CargoMessage {
 }
 
 class CompilerArtifact extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, kernel, options) {
     super();
     enforcePrivate(nonce, 'CompilerArtifact');
     this._kernel = kernel;
+    this._options = options;
   }
 
   isCompilerArtifact() { return true; }
 
   crateName() {
+    if (RUST) {
+      return this._crateName_RUST();
+    } else {
+      return this._crateName_TS();
+    }
+  }
+
+  _crateName_RUST() {
     return addon.compilerArtifactCrateName(this._kernel);
   }
 
+  _crateName_TS() {
+    return this._kernel.target.name;
+  }
+
   findFileByCrateType(crateType) {
+    if (RUST) {
+      return this._findFileByCrateType_RUST(crateType);
+    } else {
+      return this._findFileByCrateType_TS(crateType);
+    }
+  }
+
+  _findFileByCrateType_RUST(crateType) {
     return addon.compilerArtifactFindFileByCrateType(this._kernel, crateType);
+  }
+
+  _findFileByCrateType_TS(crateType) {
+    const i = this._kernel.crate_types.indexOf(crateType);
+    return i !== -1 ? unmountOptions(this._options, this._kernel.filenames[i]) : null;
   }
 }
 
 class CompilerMessage extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, kernel, options) {
     super();
     enforcePrivate(nonce, 'CompilerMessage');
     this._kernel = kernel;
+    this._options = options;
   }
 
   isCompilerMessage() { return true; }
 }
 
 class BuildScriptExecuted extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, kernel, options) {
     super();
     enforcePrivate(nonce, 'BuildScriptExecuted');
     this._kernel = kernel;
+    this._options = options;
   }
 
   isBuildScriptExecuted() { return true; }
 }
 
 class BuildFinished extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, kernel, options) {
     super();
     enforcePrivate(nonce, 'BuildFinished');
     this._kernel = kernel;
+    this._options = options;
   }
 
   isBuildFinished() { return true; }
 }
 
 class TextLine extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, kernel, options) {
     super();
     enforcePrivate(nonce, 'TextLine');
     this._kernel = kernel;
+    this._options = options;
   }
 
   isTextLine() { return true; }
