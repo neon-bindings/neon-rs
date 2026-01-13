@@ -45,12 +45,10 @@ latest_version=$(npm view --registry $PROXY_SERVER cargo-messages version)
 echo "*********************************"
 echo "UPDATED cli PACKAGE.JSON:"
 cat dist/cli/package.json
-echo "UPDATED cli PACKAGE-LOCK.JSON:"
-cat dist/cli/package-lock.json
 echo "*********************************"
 
 cd test/integration/sniff-bytes
-npm i
+npm i --registry $PROXY_SERVER
 NEON_BUILD_PLATFORM=${CURRENT_PLATFORM} npm run build
 mkdir -p dist
 # NOTE: `basename` is a workaround for https://github.com/npm/cli/issues/3405
