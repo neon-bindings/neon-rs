@@ -103,20 +103,13 @@ jobs:
         working-directory: ./pkgs/cargo-messages
       - name: Pack
         shell: bash
-        run: npm pack ./platforms/linux-x64-gnu --pack-destination=${{ runner.temp }}
+        run: npm pack ./platforms/linux-x64-gnu
         working-directory: ./pkgs/cargo-messages
       - name: Start npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
         timeout-minutes: 3
         run: ./ci-proxy.sh
-      - name: Say hi to Dave
-        shell: bash
-        run: |
-          echo "***** Environment Variables:"
-          printenv | sort
-          echo "***** npm config list:"
-          npm config list
       - name: Publish to npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy

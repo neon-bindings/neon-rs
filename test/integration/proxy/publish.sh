@@ -33,6 +33,8 @@ EOF
 
 npm config set "${PROXY_SERVER:5}:_authToken" "${NPM_AUTH_TOKEN}"
 
+(cd pkgs/cargo-messages && npm publish --registry $PROXY_SERVER)
+(cd pkgs/cargo-messages/platforms/linux-x64-gnu && npm publish --registry $PROXY_SERVER)
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
