@@ -41,6 +41,13 @@ latest_version=$(npm view --registry $PROXY_SERVER cargo-messages version)
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm update --registry $PROXY_SERVER cargo-messages && npm install -O --registry $PROXY_SERVER @cargo-messages/linux-x64-gnu@$latest_version && npm publish --registry $PROXY_SERVER && echo 'PUBLISHED cli TO PROXY')
 
+echo "*********************************"
+echo "UPDATED cli PACKAGE.JSON:"
+cat dist/cli/package.json
+echo "UPDATED cli PACKAGE-LOCK.JSON:"
+cat dist/cli/package-lock.json
+echo "*********************************"
+
 cd test/integration/sniff-bytes
 npm i
 NEON_BUILD_PLATFORM=${CURRENT_PLATFORM} npm run build
