@@ -2,6 +2,10 @@ storage: ./storage
 auth:
   htpasswd:
     file: ./htpasswd
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+    timeout: 120s
 packages:
   '@neon-rs/*':
     access: $all
@@ -18,4 +22,8 @@ packages:
   '@cargo-messages/*':
     access: $all
     publish: $all
+  '**':
+    access: $all
+    publish: $authenticated
+    proxy: npmjs
 log: { type: file, path: proxy.log, level: info }
