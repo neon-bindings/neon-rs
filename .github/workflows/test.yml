@@ -122,7 +122,9 @@ jobs:
       - name: Dependency diagnostics
         shell: bash
         working-directory: ./test/integration/sniff-bytes
-        run: npm why cargo-messages || true
+        run: |
+          cat package-lock.json
+          npm why cargo-messages || true
       # Since package integrity checksums may vary depending on what versions
       # are available in the proxy registry, we don't put the lockfile for this
       # test in source control. This means we have to use `npm i`, not `npm ci`.
