@@ -12,4 +12,10 @@ packages:
   '@neon-integration-tests/*':
     access: $all
     publish: $all
+  'cargo-messages':
+    access: $all
+    publish: $all
+  '@cargo-messages/*':
+    access: $all
+    publish: $all
 log: { type: file, path: proxy.log, level: info }
