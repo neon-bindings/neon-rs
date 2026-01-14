@@ -226,7 +226,18 @@ class CompilerArtifact extends CargoMessage {
 
   findFileByCrateType(crateType) {
     if (RUST) {
-      return this._findFileByCrateType_RUST(crateType);
+      const result = this._findFileByCrateType_RUST(crateType);
+      try {
+        const refactor = this._findFileByCrateType_TS(crateType);
+        if (refactor === result) {
+          console.info(`[cargo-messages] findFileByCrateType consistent for crateType=${crateType}: ${result}`);
+        } else {
+          console.warn(`[cargo-messages] findFileByCrateType inconsistent for crateType=${crateType}: RUST=${result} vs TS=${refactor}`);
+        }
+      } catch (e) {
+        console.warn(`[cargo-messages] findFileByCrateType TS threw for crateType=${crateType}: ${e}`);
+      }
+      return result;
     } else {
       return this._findFileByCrateType_TS(crateType);
     }

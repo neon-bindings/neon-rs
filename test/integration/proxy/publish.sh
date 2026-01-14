@@ -37,19 +37,11 @@ echo "*********************************"
 echo PUBLISHING CLI TO NPM PROXY
 echo "*********************************"
 
-# echo "BEFORE PUBLISHING: LATEST cargo-messages IN VERDACCIO: $(npm view --registry $PROXY_SERVER cargo-messages version)"
 (cd pkgs/cargo-messages && npm publish --registry $PROXY_SERVER)
 (cd pkgs/cargo-messages/platforms/linux-x64-gnu && npm publish --registry $PROXY_SERVER)
-# echo "AFTER PUBLISHING: LATEST cargo-messages IN VERDACCIO: $(npm view --registry $PROXY_SERVER cargo-messages version)"
-# echo "AFTER PUBLISHING: LATEST @cargo-messages/linux-x64-gnu IN VERDACCIO: $(npm view --registry $PROXY_SERVER @cargo-messages/linux-x64-gnu version)"
 latest_version=$(npm view --registry $PROXY_SERVER cargo-messages version)
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm update --registry $PROXY_SERVER cargo-messages && npm install -O --registry $PROXY_SERVER "@cargo-messages/linux-x64-gnu@$latest_version" && npm publish --registry $PROXY_SERVER)
-
-# echo "*********************************"
-# echo "UPDATED cli PACKAGE.JSON:"
-# cat dist/cli/package.json
-# echo "*********************************"
 
 echo "*********************************"
 echo BUILDING test/integration/sniff-bytes
@@ -59,6 +51,11 @@ cd test/integration/sniff-bytes
 npm i --registry $PROXY_SERVER
 NEON_BUILD_PLATFORM=${CURRENT_PLATFORM} npm run build
 mkdir -p dist
+
+echo "*********************************"
+echo PUBLISHING test/integration/sniff-bytes TO NPM PROXY
+echo "*********************************"
+
 # NOTE: `basename` is a workaround for https://github.com/npm/cli/issues/3405
 PACKAGE_TARBALL=$(basename $(npm pack ./platforms/$CURRENT_PLATFORM --pack-destination=./dist --json | jq -r '.[0].filename'))
 npm publish ./dist/${PACKAGE_TARBALL} --registry $PROXY_SERVER
