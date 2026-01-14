@@ -21,8 +21,8 @@ test('findFileByCrateType with mount', async (t) => {
   const manifestPath = new URL('../test/Cargo.toml', import.meta.url).pathname;
 
   const reader = new CargoReader(createReadStream(new URL('../test/cross.log', import.meta.url)), {
-    mount: '/target',
-    manifestPath,
+    virtualTargetPath: '/target',
+    realManifestPath: manifestPath,
   });
 
   let found = null;

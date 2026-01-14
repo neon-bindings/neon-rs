@@ -19,19 +19,30 @@ function normalize(crateName) {
   return crateName.replace(/-/g, '_');
 }
 
-function unmountOptions(options, filename) {
-   return options?.mount ? unmount(options.mount, options.manifestPath, filename) : filename;
+class RealMount {
+  constructor() { }
+
+  unmount(filename) {
+    return filename;
+  }
 }
 
-function unmount(mount, manifestPath, filename) {
-  const rel = path.relative(mount, filename);
-  const hostBase = JSON.parse(child_process.execFileSync('cargo', [
-    'metadata',
-    '--format-version', '1',
-    '--no-deps',
-    ...(manifestPath ? ['--manifest-path', manifestPath] : [])
-  ])).target_directory;
-  return path.join(hostBase, rel);
+class VirtualMount {
+  constructor(virtualTargetPath, realManifestPath) {
+    this._virtualTargetPath = virtualTargetPath;
+    this._realManifestPath = realManifestPath || path.join('.', 'Cargo.toml');
+  }
+
+  unmount(filename) {
+    const rel = path.relative(this._virtualTargetPath, filename);
+    const hostBase = JSON.parse(child_process.execFileSync('cargo', [
+      'metadata',
+      '--format-version', '1',
+      '--no-deps',
+      '--manifest-path', this._realManifestPath
+    ])).target_directory;
+    return path.join(hostBase, rel);
+  }
 }
 
 function parseLine(line) {
@@ -48,8 +59,9 @@ function parseLine(line) {
 class CargoReader {
   constructor(input, options) {
     options = options || {};
-    this._mount = options.mount || null;
-    this._manifestPath = options.manifestPath || null;
+    this._mount = options.virtualTargetPath
+      ? new VirtualMount(options.virtualTargetPath, options.realManifestPath)
+      : new RealMount();
     this._verbose = options.verbose || false;
     this._options = options;
     this._input = input;
@@ -63,7 +75,7 @@ class CargoReader {
     for await (const line of rl) {
       const parsed = parseLine(line);
       const Message = MESSAGE_TYPES[parsed.reason] ?? TextLine;
-      yield new Message(PRIVATE, parsed, this._options);
+      yield new Message(PRIVATE, parsed, this._mount);
     }
   }
 }
@@ -77,11 +89,11 @@ class CargoMessage {
 }
 
 class CompilerArtifact extends CargoMessage {
-  constructor(nonce, line, options) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'CompilerArtifact');
     this._line = line;
-    this._options = options;
+    this._mount = mount;
   }
 
   isCompilerArtifact() { return true; }
@@ -96,49 +108,49 @@ class CompilerArtifact extends CargoMessage {
 
   findFileByCrateType(crateType) {
     const i = this._line.target.crate_types.indexOf(crateType);
-    return i !== -1 ? unmountOptions(this._options, this._line.filenames[i]) : null;
+    return i !== -1 ? this._mount.unmount(this._line.filenames[i]) : null;
   }
 }
 
 class CompilerMessage extends CargoMessage {
-  constructor(nonce, line, options) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'CompilerMessage');
     this._line = line;
-    this._options = options;
+    this._mount = mount;
   }
 
   isCompilerMessage() { return true; }
 }
 
 class BuildScriptExecuted extends CargoMessage {
-  constructor(nonce, line, options) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'BuildScriptExecuted');
     this._line = line;
-    this._options = options;
+    this._mount = mount;
   }
 
   isBuildScriptExecuted() { return true; }
 }
 
 class BuildFinished extends CargoMessage {
-  constructor(nonce, line, options) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'BuildFinished');
     this._line = line;
-    this._options = options;
+    this._mount = mount;
   }
 
   isBuildFinished() { return true; }
 }
 
 class TextLine extends CargoMessage {
-  constructor(nonce, line, options) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'TextLine');
     this._line = line;
-    this._options = options;
+    this._mount = mount;
   }
 
   isTextLine() { return true; }

@@ -4,8 +4,8 @@ export type CrateType =
   | 'rlib';
 
 export type CargoReaderOptions = {
-  mount?: string,
-  manifestPath?: string,
+  virtualTargetPath?: string,
+  realManifestPath?: string,
   verbose?: boolean,
 }
 
