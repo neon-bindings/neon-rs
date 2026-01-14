@@ -45,6 +45,13 @@ function parseLine(line) {
   return { reason: 'text', text: line };
 }
 
+const MESSAGE_TYPES = {
+  'compiler-artifact': CompilerArtifact,
+  'compiler-message': CompilerMessage,
+  'build-script-executed': BuildScriptExecuted,
+  'build-finished': BuildFinished,
+};
+
 class CargoReader {
   constructor(input, options) {
     options = options || {};
@@ -62,30 +69,8 @@ class CargoReader {
 
     for await (const line of rl) {
       const parsed = parseLine(line);
-
-      switch (parsed.reason) {
-        case 'compiler-artifact':
-          yield new CompilerArtifact(PRIVATE, parsed, this._options);
-          break;
-
-        case 'compiler-message':
-          yield new CompilerMessage(PRIVATE, parsed, this._options);
-          break;
-
-        case 'build-script-executed':
-          yield new BuildScriptExecuted(PRIVATE, parsed, this._options);
-          break;
-
-        case 'build-finished':
-          yield new BuildFinished(PRIVATE, parsed, this._options);
-          break;
-
-        default:
-          const textLine = new TextLine(PRIVATE, parsed, this._options);
-          textLine.text = line;
-          yield textLine;
-          break;
-      }
+      const Message = MESSAGE_TYPES[parsed.reason] ?? TextLine;
+      yield new Message(PRIVATE, parsed, this._options);
     }
   }
 }
