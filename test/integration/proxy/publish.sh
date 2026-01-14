@@ -33,18 +33,26 @@ EOF
 
 npm config set "${PROXY_SERVER:5}:_authToken" "${NPM_AUTH_TOKEN}"
 
-echo "BEFORE PUBLISHING: LATEST cargo-messages IN VERDACCIO: $(npm view --registry $PROXY_SERVER cargo-messages version)"
+echo "*********************************"
+echo PUBLISHING CLI TO NPM PROXY
+echo "*********************************"
+
+# echo "BEFORE PUBLISHING: LATEST cargo-messages IN VERDACCIO: $(npm view --registry $PROXY_SERVER cargo-messages version)"
 (cd pkgs/cargo-messages && npm publish --registry $PROXY_SERVER)
 (cd pkgs/cargo-messages/platforms/linux-x64-gnu && npm publish --registry $PROXY_SERVER)
-echo "AFTER PUBLISHING: LATEST cargo-messages IN VERDACCIO: $(npm view --registry $PROXY_SERVER cargo-messages version)"
-echo "AFTER PUBLISHING: LATEST @cargo-messages/linux-x64-gnu IN VERDACCIO: $(npm view --registry $PROXY_SERVER @cargo-messages/linux-x64-gnu version)"
+# echo "AFTER PUBLISHING: LATEST cargo-messages IN VERDACCIO: $(npm view --registry $PROXY_SERVER cargo-messages version)"
+# echo "AFTER PUBLISHING: LATEST @cargo-messages/linux-x64-gnu IN VERDACCIO: $(npm view --registry $PROXY_SERVER @cargo-messages/linux-x64-gnu version)"
 latest_version=$(npm view --registry $PROXY_SERVER cargo-messages version)
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
-(cd dist/cli && npm update --registry $PROXY_SERVER cargo-messages && npm install -O --registry $PROXY_SERVER "@cargo-messages/linux-x64-gnu@$latest_version" && npm publish --registry $PROXY_SERVER && echo 'PUBLISHED cli TO PROXY')
+(cd dist/cli && npm update --registry $PROXY_SERVER cargo-messages && npm install -O --registry $PROXY_SERVER "@cargo-messages/linux-x64-gnu@$latest_version" && npm publish --registry $PROXY_SERVER)
+
+# echo "*********************************"
+# echo "UPDATED cli PACKAGE.JSON:"
+# cat dist/cli/package.json
+# echo "*********************************"
 
 echo "*********************************"
-echo "UPDATED cli PACKAGE.JSON:"
-cat dist/cli/package.json
+echo BUILDING test/integration/sniff-bytes
 echo "*********************************"
 
 cd test/integration/sniff-bytes
