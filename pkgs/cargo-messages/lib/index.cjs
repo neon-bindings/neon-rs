@@ -139,23 +139,23 @@ class CargoReader {
         const { kernel, kind } = addon.readline(this._kernel, line);
         switch (kind) {
           case 0:
-            yield new CompilerArtifact(PRIVATE, kernel);
+            yield new CompilerArtifact(PRIVATE, kernel, parseLine(line), this._options);
             break;
 
           case 1:
-            yield new CompilerMessage(PRIVATE, kernel);
+            yield new CompilerMessage(PRIVATE, kernel, parseLine(line), this._options);
             break;
 
           case 2:
-            yield new BuildScriptExecuted(PRIVATE, kernel);
+            yield new BuildScriptExecuted(PRIVATE, kernel, parseLine(line), this._options);
             break;
 
           case 3:
-            yield new BuildFinished(PRIVATE, kernel);
+            yield new BuildFinished(PRIVATE, kernel, parseLine(line), this._options);
             break;
 
           case 4:
-            yield new TextLine(PRIVATE, kernel);
+            yield new TextLine(PRIVATE, kernel, parseLine(line), this._options);
             break;
         }
       }
@@ -164,23 +164,23 @@ class CargoReader {
 
         switch (parsed.reason) {
           case 'compiler-artifact':
-            yield new CompilerArtifact(PRIVATE, parsed, this._options);
+            yield new CompilerArtifact(PRIVATE, null, parsed, this._options);
             break;
 
           case 'compiler-message':
-            yield new CompilerMessage(PRIVATE, parsed, this._options);
+            yield new CompilerMessage(PRIVATE, null, parsed, this._options);
             break;
 
           case 'build-script-executed':
-            yield new BuildScriptExecuted(PRIVATE, parsed, this._options);
+            yield new BuildScriptExecuted(PRIVATE, null, parsed, this._options);
             break;
 
           case 'build-finished':
-            yield new BuildFinished(PRIVATE, parsed, this._options);
+            yield new BuildFinished(PRIVATE, null, parsed, this._options);
             break;
 
           default:
-            const textLine = new TextLine(PRIVATE, parsed, this._options);
+            const textLine = new TextLine(PRIVATE, null, parsed, this._options);
             textLine.text = line;
             yield textLine;
             break;
@@ -199,10 +199,11 @@ class CargoMessage {
 }
 
 class CompilerArtifact extends CargoMessage {
-  constructor(nonce, kernel, options) {
+  constructor(nonce, kernel, line, options) {
     super();
     enforcePrivate(nonce, 'CompilerArtifact');
     this._kernel = kernel;
+    this._line = line;
     this._options = options;
   }
 
@@ -221,7 +222,7 @@ class CompilerArtifact extends CargoMessage {
   }
 
   _crateName_TS() {
-    return this._kernel.target.name;
+    return this._line.target.name;
   }
 
   findFileByCrateType(crateType) {
@@ -248,16 +249,17 @@ class CompilerArtifact extends CargoMessage {
   }
 
   _findFileByCrateType_TS(crateType) {
-    const i = this._kernel.crate_types.indexOf(crateType);
-    return i !== -1 ? unmountOptions(this._options, this._kernel.filenames[i]) : null;
+    const i = this._line.crate_types.indexOf(crateType);
+    return i !== -1 ? unmountOptions(this._options, this._line.filenames[i]) : null;
   }
 }
 
 class CompilerMessage extends CargoMessage {
-  constructor(nonce, kernel, options) {
+  constructor(nonce, kernel, line, options) {
     super();
     enforcePrivate(nonce, 'CompilerMessage');
     this._kernel = kernel;
+    this._line = line;
     this._options = options;
   }
 
@@ -265,10 +267,11 @@ class CompilerMessage extends CargoMessage {
 }
 
 class BuildScriptExecuted extends CargoMessage {
-  constructor(nonce, kernel, options) {
+  constructor(nonce, kernel, line, options) {
     super();
     enforcePrivate(nonce, 'BuildScriptExecuted');
     this._kernel = kernel;
+    this._line = line;
     this._options = options;
   }
 
@@ -276,10 +279,11 @@ class BuildScriptExecuted extends CargoMessage {
 }
 
 class BuildFinished extends CargoMessage {
-  constructor(nonce, kernel, options) {
+  constructor(nonce, kernel, line, options) {
     super();
     enforcePrivate(nonce, 'BuildFinished');
     this._kernel = kernel;
+    this._line = line;
     this._options = options;
   }
 
@@ -287,10 +291,11 @@ class BuildFinished extends CargoMessage {
 }
 
 class TextLine extends CargoMessage {
-  constructor(nonce, kernel, options) {
+  constructor(nonce, kernel, line, options) {
     super();
     enforcePrivate(nonce, 'TextLine');
     this._kernel = kernel;
+    this._line = line;
     this._options = options;
   }
 
