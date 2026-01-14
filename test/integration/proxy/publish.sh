@@ -38,7 +38,6 @@ echo PUBLISHING CLI TO NPM PROXY
 echo "*********************************"
 
 (cd pkgs/cargo-messages && npm publish --registry $PROXY_SERVER)
-# (cd pkgs/cargo-messages/platforms/linux-x64-gnu && npm publish --registry $PROXY_SERVER)
 latest_version=$(npm view --registry $PROXY_SERVER cargo-messages version)
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 
@@ -47,9 +46,6 @@ echo REBUILDING AND PUBLISHING CLI TO NPM PROXY
 echo "*********************************"
 
 (cd src/cli && npm install "cargo-messages@${latest_version}" && (NPM_CONFIG_REGISTRY=$PROXY_SERVER npm run dist))
-# echo "+++++++++++++++++++++++++++++++++"
-# cat dist/cli/index.js
-# echo "+++++++++++++++++++++++++++++++++"
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
 echo "*********************************"
