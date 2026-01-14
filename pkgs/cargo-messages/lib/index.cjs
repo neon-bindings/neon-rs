@@ -45,13 +45,6 @@ function parseLine(line) {
   return { reason: 'text', text: line };
 }
 
-const MESSAGE_TYPES = {
-  'compiler-artifact': CompilerArtifact,
-  'compiler-message': CompilerMessage,
-  'build-script-executed': BuildScriptExecuted,
-  'build-finished': BuildFinished,
-};
-
 class CargoReader {
   constructor(input, options) {
     options = options || {};
@@ -146,6 +139,13 @@ class TextLine extends CargoMessage {
 
   isTextLine() { return true; }
 }
+
+const MESSAGE_TYPES = {
+  'compiler-artifact': CompilerArtifact,
+  'compiler-message': CompilerMessage,
+  'build-script-executed': BuildScriptExecuted,
+  'build-finished': BuildFinished,
+};
 
 module.exports = {
   CargoReader
