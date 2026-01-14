@@ -5,11 +5,11 @@
 
 echo "Checking that all bundled tools are up to date..."
 
-input_workspaces=(src/cli src/install)
+input_workspaces=(pkgs/cli pkgs/install)
 dirty_workspaces=()
 
 for input_workspace in ${input_workspaces[@]} ; do
-  output_workspace=$(echo $input_workspace | sed -e 's/^src/dist/')
+  output_workspace=$(echo $input_workspace | sed -e 's/^pkgs/dist/')
   input_mtime=$(git log -1 --format=%ct $input_workspace)
   output_mtime=$(git log -1 --format=%ct $output_workspace)
   if [[ $input_mtime -gt $output_mtime ]] ; then
