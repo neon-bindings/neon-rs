@@ -16,6 +16,5 @@
   keywords: .keywords,
   license: .license,
   bugs: .bugs,
-  homepage: .homepage,
-  optionalDependencies: .optionalDependencies
+  homepage: .homepage
 }
