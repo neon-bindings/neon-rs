@@ -100,23 +100,10 @@ jobs:
         shell: bash
         run: git tag --sort=-taggerdate
 
-  build:
-    name: Build
-    needs: [setup]
-    permissions:
-      contents: write
-    uses: ./.github/workflows/build.yml
-    with:
-      ref: ${{ needs.setup.outputs.ref }}
-      tag: ${{ needs.setup.outputs.tag }}
-      update-version: ${{ !!needs.setup.outputs.dryrun }}
-      version: ${{ (inputs.version == 'custom' && inputs.custom) || inputs.version }}
-      github-release: ${{ !!needs.setup.outputs.publish }}
-
   publish:
     name: Publish
     if: ${{ needs.setup.outputs.publish }}
-    needs: [setup, build]
+    needs: [setup]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -140,24 +127,12 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: npm ci
-      - name: Fetch (cargo-messages)
-        uses: robinraju/release-downloader@v1.7
-        with:
-          tag: ${{ needs.setup.outputs.tag }}
-          fileName: "*.tgz"
-          out-file-path: ./pkgs/cargo-messages/dist
-      - name: Diagnostics
-        shell: bash
-        run: ls -al
-        working-directory: ./pkgs/cargo-messages/dist
       - name: Publish (cargo-messages)
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          for p in ./pkgs/cargo-messages/dist/*.tgz ; do
-            npm publish --access public $p
-          done
+        run: npm publish --access public
+        working-directory: ./pkgs/cargo-messages
       - name: Build (@neon-rs/load)
         shell: bash
         run: npm run build
