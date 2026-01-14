@@ -94,17 +94,6 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: npm ci --verbose
-      - name: Build
-        shell: bash
-        env:
-          CARGO_BUILD_TARGET: ${{ steps.neon.outputs.target }}
-          NEON_BUILD_PLATFORM: linux-x64-gnu
-        run: npm run build
-        working-directory: ./pkgs/cargo-messages
-      - name: Pack
-        shell: bash
-        run: npm pack ./platforms/linux-x64-gnu
-        working-directory: ./pkgs/cargo-messages
       - name: Start npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
