@@ -78,8 +78,8 @@ jobs:
         shell: bash
         run: ./test/lint/check-bundles.sh
 
-  integration:
-    name: Integration Tests
+  test:
+    name: Tests
     needs: [bundles]
     runs-on: ubuntu-latest
     steps:
@@ -94,6 +94,10 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: npm ci --verbose
+      - name: cargo-messages Unit Tests
+        shell: bash
+        working-directory: ./pkgs/cargo-messages
+        run: npm test
       - name: Start npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
