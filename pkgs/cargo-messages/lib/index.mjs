@@ -1,1 +1,1 @@
-export { CargoMessages, CargoReader } from './index.cjs';
+export { CargoReader } from './index.cjs';

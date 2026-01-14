@@ -1,10 +1,11 @@
 export {
   CrateType,
-  CargoArtifact,
-  CargoMessageOptions,
-  CargoMessages,
   CargoReader,
   CargoReaderOptions,
+  CompilerMessage,
+  BuildScriptExecuted,
+  BuildFinished,
   CompilerArtifact,
+  TextLine,
   CargoMessage
 } from './index.d.cts';

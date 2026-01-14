@@ -20,20 +20,12 @@
   "main": "./lib/index.cjs",
   "files": [
     "lib/index.cjs",
-    "lib/load.cjs",
     "lib/index.mjs",
     "types/index.d.cts",
     "types/index.d.mts"
   ],
   "scripts": {
-    "test": "cargo test",
-    "cargo-build": "cargo build --message-format=json > cargo.log",
-    "cross-build": "cross build --message-format=json > cross.log",
-    "postcargo-build": "neon dist -v < cargo.log",
-    "postcross-build": "neon dist -v -m /target < cross.log",
-    "debug": "npm run cargo-build --",
-    "build": "npm run cargo-build -- --release",
-    "cross": "npm run cross-build -- --release",
+    "test": "node --test",
     "prepack": "neon update -v 2>neon-update.log",
     "version": "neon bump -v --binaries platforms"
   },
@@ -54,29 +46,4 @@
     "url": "https://github.com/dherman/neon-rs/issues"
   },
   "homepage": "https://github.com/dherman/neon-rs#readme",
-  "dependencies": {
-    "@neon-rs/load": "^0.1.81"
-  },
-  "neon": {
-    "type": "library",
-    "org": "@cargo-messages",
-    "platforms": [
-      "extended",
-      "linux-arm64-musl",
-      "linux-x64-musl"
-    ],
-    "load": "./lib/load.cjs"
-  },
-  "optionalDependencies": {
-    "@cargo-messages/win32-x64-msvc": "0.1.77",
-    "@cargo-messages/darwin-x64": "0.1.77",
-    "@cargo-messages/darwin-arm64": "0.1.77",
-    "@cargo-messages/linux-x64-gnu": "0.1.77",
-    "@cargo-messages/win32-arm64-msvc": "0.1.77",
-    "@cargo-messages/linux-arm-gnueabihf": "0.1.77",
-    "@cargo-messages/android-arm-eabi": "0.1.77",
-    "@cargo-messages/linux-arm64-gnu": "0.1.77",
-    "@cargo-messages/linux-arm64-musl": "0.1.77",
-    "@cargo-messages/linux-x64-musl": "0.1.77"
-  }
 }
