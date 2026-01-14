@@ -249,7 +249,7 @@ class CompilerArtifact extends CargoMessage {
   }
 
   _findFileByCrateType_TS(crateType) {
-    const i = this._line.crate_types.indexOf(crateType);
+    const i = this._line.target.crate_types.indexOf(crateType);
     return i !== -1 ? unmountOptions(this._options, this._line.filenames[i]) : null;
   }
 }
