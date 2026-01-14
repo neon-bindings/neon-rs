@@ -1,5 +1,0 @@
-[workspace]
-exclude = [
-  "pkgs/cargo-messages/test",
-  "test/integration/sniff-bytes"
-]
