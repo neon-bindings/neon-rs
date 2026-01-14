@@ -25,5 +25,6 @@
   "bugs": {
     "url": "https://github.com/dherman/neon-rs/issues"
   },
-  "homepage": "https://github.com/dherman/neon-rs#readme"
+  "homepage": "https://github.com/dherman/neon-rs#readme",
+  "optionalDependencies": null
 }

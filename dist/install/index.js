@@ -79,7 +79,7 @@ function hookChildProcess(cp, parsed) {
         // the command exists and emit an "error" instead
         // See https://github.com/IndigoUnited/node-cross-spawn/issues/16
         if (name === 'exit') {
-            const err = verifyENOENT(arg1, parsed, 'spawn');
+            const err = verifyENOENT(arg1, parsed);
 
             if (err) {
                 return originalEmit.call(cp, 'error', err);
@@ -236,15 +236,17 @@ function escapeArgument(arg, doubleEscapeMetaChars) {
     arg = `${arg}`;
 
     // Algorithm below is based on https://qntm.org/cmd
+    // It's slightly altered to disable JS backtracking to avoid hanging on specially crafted input
+    // Please see https://github.com/moxystudio/node-cross-spawn/pull/160 for more information
 
     // Sequence of backslashes followed by a double quote:
     // double up all the backslashes and escape the double quote
-    arg = arg.replace(/(\\*)"/g, '$1$1\\"');
+    arg = arg.replace(/(?=(\\+?)?)\1"/g, '$1$1\\"');
 
     // Sequence of backslashes followed by the end of the string
     // (which will become a double quote later):
     // double up all the backslashes
-    arg = arg.replace(/(\\*)$/, '$1$1');
+    arg = arg.replace(/(?=(\\+?)?)\1$/, '$1$1');
 
     // All other backslashes occur literally
 
@@ -1313,39 +1315,53 @@ function pathKey(options = {}) {
 
 
 
-function npmRunPath(options = {}) {
-	const {
-		cwd = external_node_process_namespaceObject.cwd(),
-		path: path_ = external_node_process_namespaceObject.env[pathKey()],
-		execPath = external_node_process_namespaceObject.execPath,
-	} = options;
-
-	let previous;
-	const cwdString = cwd instanceof URL ? external_node_url_namespaceObject.fileURLToPath(cwd) : cwd;
-	let cwdPath = external_node_path_namespaceObject.resolve(cwdString);
+const npmRunPath = ({
+	cwd = external_node_process_namespaceObject.cwd(),
+	path: pathOption = external_node_process_namespaceObject.env[pathKey()],
+	preferLocal = true,
+	execPath = external_node_process_namespaceObject.execPath,
+	addExecPath = true,
+} = {}) => {
+	const cwdString = cwd instanceof URL ? (0,external_node_url_namespaceObject.fileURLToPath)(cwd) : cwd;
+	const cwdPath = external_node_path_namespaceObject.resolve(cwdString);
 	const result = [];
+
+	if (preferLocal) {
+		applyPreferLocal(result, cwdPath);
+	}
+
+	if (addExecPath) {
+		applyExecPath(result, execPath, cwdPath);
+	}
+
+	return [...result, pathOption].join(external_node_path_namespaceObject.delimiter);
+};
+
+const applyPreferLocal = (result, cwdPath) => {
+	let previous;
 
 	while (previous !== cwdPath) {
 		result.push(external_node_path_namespaceObject.join(cwdPath, 'node_modules/.bin'));
 		previous = cwdPath;
 		cwdPath = external_node_path_namespaceObject.resolve(cwdPath, '..');
 	}
+};
 
-	// Ensure the running `node` binary is used.
-	result.push(external_node_path_namespaceObject.resolve(cwdString, execPath, '..'));
+// Ensure the running `node` binary is used
+const applyExecPath = (result, execPath, cwdPath) => {
+	const execPathString = execPath instanceof URL ? (0,external_node_url_namespaceObject.fileURLToPath)(execPath) : execPath;
+	result.push(external_node_path_namespaceObject.resolve(cwdPath, execPathString, '..'));
+};
 
-	return [...result, path_].join(external_node_path_namespaceObject.delimiter);
-}
-
-function npmRunPathEnv({env = external_node_process_namespaceObject.env, ...options} = {}) {
+const npmRunPathEnv = ({env = external_node_process_namespaceObject.env, ...options} = {}) => {
 	env = {...env};
 
-	const path = pathKey({env});
-	options.path = env[path];
-	env[path] = npmRunPath(options);
+	const pathName = pathKey({env});
+	options.path = env[pathName];
+	env[pathName] = npmRunPath(options);
 
 	return env;
-}
+};
 
 ;// CONCATENATED MODULE: ../node_modules/mimic-fn/index.js
 const copyProperty = (to, from, property, ignoreNonConfigurable) => {
@@ -1865,6 +1881,7 @@ const signalsByNumber=getSignalsByNumber();
 ;// CONCATENATED MODULE: ../node_modules/execa/lib/error.js
 
 
+
 const getErrorPrefix = ({timedOut, timeout, errorCode, signal, signalDescription, exitCode, isCanceled}) => {
 	if (timedOut) {
 		return `timed out after ${timeout} milliseconds`;
@@ -1901,7 +1918,7 @@ const makeError = ({
 	timedOut,
 	isCanceled,
 	killed,
-	parsed: {options: {timeout}},
+	parsed: {options: {timeout, cwd = external_node_process_namespaceObject.cwd()}},
 }) => {
 	// `signal` and `exitCode` emitted on `spawned.on('exit')` event can be `null`.
 	// We normalize them to `undefined`
@@ -1932,6 +1949,7 @@ const makeError = ({
 	error.signalDescription = signalDescription;
 	error.stdout = stdout;
 	error.stderr = stderr;
+	error.cwd = cwd;
 
 	if (all !== undefined) {
 		error.all = all;
