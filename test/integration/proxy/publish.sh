@@ -47,11 +47,9 @@ echo REBUILDING AND PUBLISHING CLI TO NPM PROXY
 echo "*********************************"
 
 (cd src/cli && npm install "cargo-messages@${latest_version}" && (NPM_CONFIG_REGISTRY=$PROXY_SERVER npm run dist))
-
-echo "+++++++++++++++++++++++++++++++++"
-cat dist/cli/index.js
-echo "+++++++++++++++++++++++++++++++++"
-
+# echo "+++++++++++++++++++++++++++++++++"
+# cat dist/cli/index.js
+# echo "+++++++++++++++++++++++++++++++++"
 (cd dist/cli && npm update --registry $PROXY_SERVER cargo-messages && npm install -O --registry $PROXY_SERVER "@cargo-messages/linux-x64-gnu@$latest_version" && npm publish --registry $PROXY_SERVER)
 
 echo "*********************************"
