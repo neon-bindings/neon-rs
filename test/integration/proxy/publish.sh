@@ -37,16 +37,17 @@ echo "*********************************"
 echo PUBLISHING CLI TO NPM PROXY
 echo "*********************************"
 
-(cd pkgs/cargo-messages && npm publish --registry $PROXY_SERVER)
-latest_version=$(npm view --registry $PROXY_SERVER cargo-messages version)
+# (cd pkgs/cargo-messages && npm publish --registry $PROXY_SERVER)
+# latest_version=$(npm view --registry $PROXY_SERVER cargo-messages version)
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
-
-echo "*********************************"
-echo REBUILDING AND PUBLISHING CLI TO NPM PROXY
-echo "*********************************"
-
-(cd src/cli && npm install "cargo-messages@${latest_version}" && (NPM_CONFIG_REGISTRY=$PROXY_SERVER npm run dist))
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
+
+# echo "*********************************"
+# echo REBUILDING AND PUBLISHING CLI TO NPM PROXY
+# echo "*********************************"
+
+# (cd src/cli && npm install "cargo-messages@${latest_version}" && (NPM_CONFIG_REGISTRY=$PROXY_SERVER npm run dist))
+# (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
 echo "*********************************"
 echo BUILDING test/integration/sniff-bytes
