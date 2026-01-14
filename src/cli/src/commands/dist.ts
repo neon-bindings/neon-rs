@@ -6,15 +6,6 @@ import { LibraryManifest } from '@neon-rs/manifest';
 import { assertIsNodePlatform } from '@neon-rs/manifest/platform';
 import { copyArtifact } from '@neon-rs/artifact';
 
-// Starting around Rust 1.78 or 1.79, cargo will begin normalizing
-// crate names in the JSON output, so to support both old and new
-// versions of cargo, we need to compare against both variants.
-//
-// See: https://github.com/rust-lang/cargo/issues/13867
-function normalize(crateName: string): string {
-  return crateName.replaceAll(/-/g, "_");
-}
-
 // FIXME: add options to infer crate name from manifests
 // --package <path/to/package.json>
 // --crate <path/to/Cargo.toml>
@@ -113,7 +104,6 @@ export default class Dist implements Command {
   private _mount: string | null;
   private _manifestPath: string | null;
   private _crateName: string;
-  private _normalizedCrateName: string;
   private _out: Promise<OutputFileParse>;
   private _verbose: boolean;
 
@@ -138,7 +128,6 @@ export default class Dist implements Command {
     this._manifestPath = options['manifest-path'];
     this._crateName = options.name ||
       basename(ensureDefined(process.env['npm_package_name'], '$npm_package_name'));
-    this._normalizedCrateName = normalize(this._crateName);
     this._out = parseOutputFile(options.debug, options.out, options.platform);
     this._verbose = !!options.verbose;
 
@@ -155,7 +144,7 @@ export default class Dist implements Command {
     let file: string | null = null;
 
     for await (const msg of reader) {
-      if (!file && msg.isCompilerArtifact() && normalize(msg.crateName()) === this._normalizedCrateName) {
+      if (!file && msg.isCompilerArtifact() && msg.matchesCrateName(this._crateName)) {
         file = msg.findFileByCrateType('cdylib');
       }
     }

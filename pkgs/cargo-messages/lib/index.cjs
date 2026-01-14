@@ -90,6 +90,10 @@ class CompilerArtifact extends CargoMessage {
     return this._line.target.name;
   }
 
+  matchesCrateName(name) {
+    return normalize(name) === normalize(this._line.target.name);
+  }
+
   findFileByCrateType(crateType) {
     const i = this._line.target.crate_types.indexOf(crateType);
     return i !== -1 ? unmountOptions(this._options, this._line.filenames[i]) : null;

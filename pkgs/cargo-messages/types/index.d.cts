@@ -19,6 +19,7 @@ export interface CargoMessage {
 
 export interface CompilerArtifact extends CargoMessage {
   crateName(): string;
+  matchesCrateName(name: string): boolean;
   findFileByCrateType(crateType: CrateType): string | null;
 }
 
