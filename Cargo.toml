@@ -1,7 +1,5 @@
 [workspace]
-members = [
-  "pkgs/cargo-messages"
-]
 exclude = [
+  "pkgs/cargo-messages/test",
   "test/integration/sniff-bytes"
 ]

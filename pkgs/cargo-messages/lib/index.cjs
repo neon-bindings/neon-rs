@@ -25,7 +25,7 @@ function unmountOptions(options, filename) {
 
 function unmount(mount, manifestPath, filename) {
   const rel = path.relative(mount, filename);
-  const hostBase = JSON.parse(child_process.execSync('cargo', [
+  const hostBase = JSON.parse(child_process.execFileSync('cargo', [
     'metadata',
     '--format-version', '1',
     '--no-deps',
