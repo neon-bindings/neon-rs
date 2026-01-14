@@ -9,7 +9,7 @@ test('findFileByCrateType without mount', async (t) => {
 
   let found = null;
   for await (const message of reader) {
-    if (message.isCompilerArtifact() && message.crateName() === 'cargo-messages') {
+    if (message.isCompilerArtifact() && message.matchesCrateName('cargo-messages')) {
       found = message.findFileByCrateType('cdylib');
     }
   }
@@ -27,10 +27,25 @@ test('findFileByCrateType with mount', async (t) => {
 
   let found = null;
   for await (const message of reader) {
-    if (message.isCompilerArtifact() && message.crateName() === 'cargo-messages') {
+    if (message.isCompilerArtifact() && message.matchesCrateName('cargo-messages')) {
+      assert.strictEqual(message.crateName(), 'cargo-messages');
       found = message.findFileByCrateType('cdylib');
     }
   }
 
   assert.strictEqual(found, path.join(path.dirname(manifestPath), 'target/release/libcargo_messages.dylib'));
+});
+
+test('findFileByCrateType with normalized crate name', async (t) => {
+  const reader = new CargoReader(createReadStream(new URL('../test/normalized.log', import.meta.url)));
+
+  let found = null;
+  for await (const message of reader) {
+    if (message.isCompilerArtifact() && message.matchesCrateName('cargo-messages')) {
+      assert.strictEqual(message.crateName(), 'cargo_messages');
+      found = message.findFileByCrateType('cdylib');
+    }
+  }
+
+  assert.strictEqual(found, '/Users/dherman/Sources/neon-rs/target/release/libcargo_messages.dylib');
 });
