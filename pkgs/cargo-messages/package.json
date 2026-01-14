@@ -25,9 +25,7 @@
     "types/index.d.mts"
   ],
   "scripts": {
-    "test": "node --test",
-    "prepack": "neon update -v 2>neon-update.log",
-    "version": "neon bump -v --binaries platforms"
+    "test": "node --test"
   },
   "author": "David Herman <david.herman@gmail.com>",
   "license": "MIT",
