@@ -84,7 +84,7 @@ jobs:
           use-rust: false
       - name: Install Dependencies
         shell: bash
-        run: npm ci
+        run: npm ci --workspaces
       - name: Tag Release
         if: ${{ !inputs.dryrun }}
         id: tag
@@ -126,7 +126,7 @@ jobs:
           use-rust: false
       - name: Install Dependencies
         shell: bash
-        run: npm ci
+        run:  npm ci --workspaces
       - name: Publish (cargo-messages)
         shell: bash
         env:

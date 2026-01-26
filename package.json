@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.1.82",
   "description": "@neon-rs monorepo root",
-  "workspaces": [],
+  "workspaces": [
+    "pkgs/*"
+  ],
   "scripts": {
-    "postinstall": "node dist/install pkgs --workspaces && node dist/install dist --workspaces",
     "dist": "cd pkgs && npm run dist",
     "version": "npm run version:pkgs && npm run version:dist && npm run dist && npm i && git add .",
     "version:pkgs": "node dist/cli bump -d pkgs",

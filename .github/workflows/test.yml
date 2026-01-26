@@ -50,7 +50,7 @@ jobs:
           workspace: ./test/integration/sniff-bytes
       - name: Install Dependencies
         shell: bash
-        run: npm ci --verbose
+        run: npm ci --workspaces --verbose
       - name: cargo-messages Unit Tests
         shell: bash
         working-directory: ./pkgs/cargo-messages
