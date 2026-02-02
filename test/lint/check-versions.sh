@@ -5,10 +5,6 @@
 #
 #   - @neon-rs/cli
 #   - cargo-messages
-#   - @cargo-messages/*
-#
-# (We also keep the in-repo tool `install` in sync, but it's
-# not particularly necessary.)
 
 echo "Checking that all manifest versions match..."
 
@@ -16,9 +12,8 @@ expected=$(jq -r .version ./package.json)
 
 echo "Expected manifest version: $expected"
 
-dist_dirs=(dist dist/cli dist/install)
-pkgs_dirs=(pkgs pkgs/cargo-messages pkgs/cli pkgs/install pkgs/load)
-cmbin=pkgs/cargo-messages/platforms
+dist_dirs=(dist dist/cli)
+pkgs_dirs=(pkgs pkgs/cargo-messages pkgs/cli pkgs/load)
 for d in ${dist_dirs[@]} ${pkgs_dirs[@]} ; do
   actual=$(jq -r .version $d/package.json)
   if [[ $actual != $expected ]]; then

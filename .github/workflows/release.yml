@@ -78,10 +78,12 @@ jobs:
         shell: bash
         run: |
           git log -10
-      - name: Setup Neon Environment
-        uses: ./.github/actions/setup-neon
+      - name: Install Node
+        uses: actions/setup-node@v3
         with:
-          use-rust: false
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
+          cache: npm
       - name: Install Dependencies
         shell: bash
         run: npm ci --workspaces
@@ -120,10 +122,12 @@ jobs:
         run: |
           echo 'needs.setup.outputs.tag=${{ needs.setup.outputs.tag }}'
           git log -10
-      - name: Setup Neon Environment
-        uses: ./.github/actions/setup-neon
+      - name: Install Node
+        uses: actions/setup-node@v3
         with:
-          use-rust: false
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
+          cache: npm
       - name: Install Dependencies
         shell: bash
         run:  npm ci --workspaces

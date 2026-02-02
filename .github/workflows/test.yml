@@ -31,9 +31,6 @@ jobs:
           GITHUB_EVENT_JSON
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Check Bundles
-        shell: bash
-        run: ./test/lint/check-bundles.sh
 
   test:
     name: Tests
