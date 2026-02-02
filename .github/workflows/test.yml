@@ -52,6 +52,9 @@ jobs:
         shell: bash
         working-directory: ./pkgs/cargo-messages
         run: npm test
+      - name: Build CLI
+        shell: bash
+        run: npm run dist
       - name: Start npm Proxy
         shell: bash
         working-directory: ./test/integration/proxy
