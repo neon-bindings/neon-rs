@@ -8,10 +8,11 @@
   ],
   "scripts": {
     "dist": "cd pkgs && npm run dist",
-    "version": "npm run version:pkgs && npm run version:dist && npm run dist && npm i && git add .",
-    "version:pkgs": "node dist/cli bump -d pkgs",
-    "version:dist": "node dist/cli bump -d dist",
+    "version": "npx tsx pkgs/cli/src/index.ts bump -d pkgs && npm run dist && npm i && git add .",
     "release": "gh workflow run release.yml -f dryrun=false -f version=patch",
     "dryrun": "gh workflow run release.yml -f dryrun=true"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }

@@ -15,6 +15,6 @@
     "dist:artifact": "cd artifact && npm run dist",
     "dist:cli": "cd cli && npm run dist",
     "dist:manifest": "cd manifest && npm run dist",
-    "version": "node ../dist/cli bump -v --workspaces"
+    "version": "npx tsx ../pkgs/cli/src/index.ts bump -v --workspaces"
   }
 }
