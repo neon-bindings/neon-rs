@@ -1,8 +1,8 @@
 name: 'Setup Neon'
 description: 'Setup the Neon toolchain.'
 inputs:
-  platform:
-    description: 'Platform being built for.'
+  target:
+    description: 'Rust target triple to install (e.g. x86_64-unknown-linux-gnu). If empty, uses the host default.'
     required: false
     default: ''
   use-rust:
@@ -13,10 +13,6 @@ inputs:
     description: 'Install cross-rs?'
     required: false
     default: 'false'
-  workspace:
-    description: 'Path to workspace being setup.'
-    required: false
-    default: '.'
 outputs:
   rust:
     description: 'Rust version installed.'
@@ -26,7 +22,7 @@ outputs:
     value: ${{ steps.node.outputs.version }}
   target:
     description: 'Rust target architecture installed.'
-    value: ${{ steps.target.outputs.target }}
+    value: ${{ inputs.target }}
 runs:
   using: "composite"
   steps:
@@ -42,22 +38,12 @@ runs:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: ${{ env.NPM_REGISTRY }}
         cache: npm
-    - name: Compute CLI path
-      id: cli
-      shell: bash
-      run: echo path=$( (cd dist/cli && pwd) ) >> $GITHUB_OUTPUT
-    - name: Compute Rust Target
-      if: ${{ inputs['use-rust'] == 'true' }}
-      id: target
-      shell: bash
-      run: echo target=$(node ${{ steps.cli.outputs.path }} show platforms | jq -r '.["${{ inputs.platform }}"]') >> $GITHUB_OUTPUT
-      working-directory: ${{ inputs.workspace }}
     - name: Install Rust
       if: ${{ inputs['use-rust'] == 'true' }}
       uses: actions-rs/toolchain@v1
       with:
         toolchain: ${{ env.RUST_VERSION }}
-        target: ${{ steps.target.outputs.target }}
+        target: ${{ inputs.target }}
         override: true
     - name: Install cross-rs
       if: ${{ inputs['use-cross'] == 'true' }}

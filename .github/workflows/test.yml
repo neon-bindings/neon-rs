@@ -42,9 +42,6 @@ jobs:
       - name: Setup Neon Environment
         id: neon
         uses: ./.github/actions/setup-neon
-        with:
-          platform: linux-x64-gnu
-          workspace: ./test/integration/sniff-bytes
       - name: Install Dependencies
         shell: bash
         run: npm ci --workspaces --verbose
