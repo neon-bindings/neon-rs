@@ -7,7 +7,10 @@
     "pkgs/*"
   ],
   "scripts": {
-    "dist": "cd pkgs && npm run dist",
+    "dist": "npm run dist:artifact && npm run dist:cli && npm run dist:manifest",
+    "dist:artifact": "cd pkgs/artifact && npm run dist",
+    "dist:cli": "cd pkgs/cli && npm run dist",
+    "dist:manifest": "cd pkgs/manifest && npm run dist",
     "version": "npm version --no-git-tag-version --workspaces $npm_package_version && npm run dist && npm i && git add .",
     "release": "gh workflow run release.yml -f dryrun=false -f version=patch",
     "dryrun": "gh workflow run release.yml -f dryrun=true"
