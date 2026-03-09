@@ -34,8 +34,11 @@ runs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: ${{ env.RUST_VERSION }}
-        target: ${{ inputs.target }}
         override: true
+    - name: Install Rust Target
+      if: ${{ inputs.target }}
+      shell: bash
+      run: rustup target add ${{ inputs.target }}
     - name: Node Version
       id: node
       shell: bash

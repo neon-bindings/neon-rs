@@ -40,7 +40,9 @@ class VirtualMount {
       '--format-version', '1',
       '--no-deps',
       '--manifest-path', this._realManifestPath
-    ])).target_directory;
+    ], {
+      encoding: 'utf8'
+    })).target_directory;
     return path.join(hostBase, rel);
   }
 }

@@ -19,22 +19,8 @@ on:
       - main
 
 jobs:
-  bundles:
-    name: Check Bundles
-    runs-on: ubuntu-latest
-    steps:
-      - name: Diagnostics
-        shell: bash
-        run: |
-          cat <<GITHUB_EVENT_JSON
-          ${{toJSON(github.event)}}
-          GITHUB_EVENT_JSON
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
   test:
     name: Tests
-    needs: [bundles]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
