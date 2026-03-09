@@ -3,3 +3,4 @@
 target
 npm-debug.log*
 **/*.node
+dist

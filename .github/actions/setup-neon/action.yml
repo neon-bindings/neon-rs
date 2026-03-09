@@ -1,22 +1,10 @@
 name: 'Setup Neon'
 description: 'Setup the Neon toolchain.'
 inputs:
-  platform:
-    description: 'Platform being built for.'
+  target:
+    description: 'Rust target triple to install (e.g. x86_64-unknown-linux-gnu). If empty, uses the host default.'
     required: false
     default: ''
-  use-rust:
-    description: 'Install Rust?'
-    required: false
-    default: 'true'
-  use-cross:
-    description: 'Install cross-rs?'
-    required: false
-    default: 'false'
-  workspace:
-    description: 'Path to workspace being setup.'
-    required: false
-    default: '.'
 outputs:
   rust:
     description: 'Rust version installed.'
@@ -26,7 +14,7 @@ outputs:
     value: ${{ steps.node.outputs.version }}
   target:
     description: 'Rust target architecture installed.'
-    value: ${{ steps.target.outputs.target }}
+    value: ${{ inputs.target }}
 runs:
   using: "composite"
   steps:
@@ -42,28 +30,15 @@ runs:
         node-version: ${{ env.NODE_VERSION }}
         registry-url: ${{ env.NPM_REGISTRY }}
         cache: npm
-    - name: Compute CLI path
-      id: cli
-      shell: bash
-      run: echo path=$( (cd dist/cli && pwd) ) >> $GITHUB_OUTPUT
-    - name: Compute Rust Target
-      if: ${{ inputs['use-rust'] == 'true' }}
-      id: target
-      shell: bash
-      run: echo target=$(node ${{ steps.cli.outputs.path }} show platforms | jq -r '.["${{ inputs.platform }}"]') >> $GITHUB_OUTPUT
-      working-directory: ${{ inputs.workspace }}
     - name: Install Rust
-      if: ${{ inputs['use-rust'] == 'true' }}
       uses: actions-rs/toolchain@v1
       with:
         toolchain: ${{ env.RUST_VERSION }}
-        target: ${{ steps.target.outputs.target }}
         override: true
-    - name: Install cross-rs
-      if: ${{ inputs['use-cross'] == 'true' }}
-      uses: baptiste0928/cargo-install@v2
-      with:
-        crate: cross
+    - name: Install Rust Target
+      if: ${{ inputs.target }}
+      shell: bash
+      run: rustup target add ${{ inputs.target }}
     - name: Node Version
       id: node
       shell: bash
@@ -71,7 +46,6 @@ runs:
         # Trim the leading 'v' (e.g. "v18.19.0" ==> "18.19.0")
         echo version=$(node --version | cut -c 2-) >> $GITHUB_OUTPUT
     - name: Rust Version
-      if: ${{ inputs['use-rust'] == 'true' }}
       id: rust
       shell: bash
       run: |

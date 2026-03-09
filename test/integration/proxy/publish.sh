@@ -33,13 +33,26 @@ EOF
 
 npm config set "${PROXY_SERVER:5}:_authToken" "${NPM_AUTH_TOKEN}"
 
+echo "***************************************************"
+echo PUBLISHING CLI TO NPM PROXY
+echo "***************************************************"
+
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
 (cd dist/cli && npm publish --registry $PROXY_SERVER)
 
+echo "***************************************************"
+echo BUILDING test/integration/sniff-bytes
+echo "***************************************************"
+
 cd test/integration/sniff-bytes
-npm i
+npm i --registry $PROXY_SERVER
 NEON_BUILD_PLATFORM=${CURRENT_PLATFORM} npm run build
 mkdir -p dist
+
+echo "***************************************************"
+echo PUBLISHING test/integration/sniff-bytes TO NPM PROXY
+echo "***************************************************"
+
 # NOTE: `basename` is a workaround for https://github.com/npm/cli/issues/3405
 PACKAGE_TARBALL=$(basename $(npm pack ./platforms/$CURRENT_PLATFORM --pack-destination=./dist --json | jq -r '.[0].filename'))
 npm publish ./dist/${PACKAGE_TARBALL} --registry $PROXY_SERVER

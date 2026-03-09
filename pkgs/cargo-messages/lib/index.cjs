@@ -1,5 +1,6 @@
-const addon = require('./load.cjs');
 const readline = require('node:readline');
+const path = require('node:path');
+const child_process = require('node:child_process');
 
 const PRIVATE = {};
 
@@ -9,44 +10,63 @@ function enforcePrivate(nonce, className) {
   }
 }
 
-class CargoArtifact {
-  constructor(nonce, kernel) {
-    enforcePrivate(nonce, 'CargoArtifact');
-    this._kernel = kernel;
-  }
+// Starting around Rust 1.78 or 1.79, cargo began normalizing crate
+// names in the JSON output, so to support both old and new versions
+// of cargo, we need to compare against both variants.
+//
+// See: https://github.com/rust-lang/cargo/issues/13867
+function normalize(crateName) {
+  return crateName.replace(/-/g, '_');
+}
 
-  findFileByCrateType(crateType) {
-    return addon.findFileByCrateType(this._kernel, crateType);
+class RealMount {
+  constructor() { }
+
+  unmount(filename) {
+    return filename;
   }
 }
 
-class CargoMessages {
-  constructor(options) {
-    options = options || {};
-    this._mount = options.mount || null;
-    this._manifestPath = options.manifestPath || null;
-    this._verbose = options.verbose || false;
-    this._kernel = options.file
-      ? addon.fromFile(options.file, this._mount, this._manifestPath, this._verbose)
-      : (process.stdin.resume(), addon.fromStdin(this._mount, this._manifestPath, this._verbose));
+class VirtualMount {
+  constructor(virtualTargetPath, realManifestPath) {
+    this._virtualTargetPath = virtualTargetPath;
+    this._realManifestPath = realManifestPath || path.join('.', 'Cargo.toml');
   }
 
-  findArtifact(crateName) {
-    const found = addon.findArtifact(this._kernel, crateName);
-    return found
-      ? new CargoArtifact(PRIVATE, found)
-      : null;
+  unmount(filename) {
+    const rel = path.relative(this._virtualTargetPath, filename);
+    const hostBase = JSON.parse(child_process.execFileSync('cargo', [
+      'metadata',
+      '--format-version', '1',
+      '--no-deps',
+      '--manifest-path', this._realManifestPath
+    ], {
+      encoding: 'utf8'
+    })).target_directory;
+    return path.join(hostBase, rel);
   }
+}
+
+function parseLine(line) {
+  try {
+    const parsed = JSON.parse(line);
+    if (typeof parsed === 'object' && parsed !== null && typeof parsed.reason === 'string') {
+      return parsed;
+    }
+  } catch (e) { }
+
+  return { reason: 'text', text: line };
 }
 
 class CargoReader {
   constructor(input, options) {
     options = options || {};
-    this._mount = options.mount || null;
-    this._manifestPath = options.manifestPath || null;
+    this._mount = options.virtualTargetPath
+      ? new VirtualMount(options.virtualTargetPath, options.realManifestPath)
+      : new RealMount();
     this._verbose = options.verbose || false;
+    this._options = options;
     this._input = input;
-    this._kernel = addon.createReader(this._mount, this._manifestPath, this._verbose);
   }
 
   async *[Symbol.asyncIterator]() {
@@ -55,28 +75,9 @@ class CargoReader {
     });
 
     for await (const line of rl) {
-      const { kernel, kind } = addon.readline(this._kernel, line);
-      switch (kind) {
-        case 0:
-          yield new CompilerArtifact(PRIVATE, kernel);
-          break;
-
-        case 1:
-          yield new CompilerMessage(PRIVATE, kernel);
-          break;
-
-        case 2:
-          yield new BuildScriptExecuted(PRIVATE, kernel);
-          break;
-
-        case 3:
-          yield new BuildFinished(PRIVATE, kernel);
-          break;
-
-        case 4:
-          yield new TextLine(PRIVATE, kernel);
-          break;
-      }
+      const parsed = parseLine(line);
+      const Message = MESSAGE_TYPES[parsed.reason] ?? TextLine;
+      yield new Message(PRIVATE, parsed, this._mount);
     }
   }
 }
@@ -90,64 +91,80 @@ class CargoMessage {
 }
 
 class CompilerArtifact extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'CompilerArtifact');
-    this._kernel = kernel;
+    this._line = line;
+    this._mount = mount;
   }
 
   isCompilerArtifact() { return true; }
 
   crateName() {
-    return addon.compilerArtifactCrateName(this._kernel);
+    return this._line.target.name;
+  }
+
+  matchesCrateName(name) {
+    return normalize(name) === normalize(this._line.target.name);
   }
 
   findFileByCrateType(crateType) {
-    return addon.compilerArtifactFindFileByCrateType(this._kernel, crateType);
+    const i = this._line.target.crate_types.indexOf(crateType);
+    return i !== -1 ? this._mount.unmount(this._line.filenames[i]) : null;
   }
 }
 
 class CompilerMessage extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'CompilerMessage');
-    this._kernel = kernel;
+    this._line = line;
+    this._mount = mount;
   }
 
   isCompilerMessage() { return true; }
 }
 
 class BuildScriptExecuted extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'BuildScriptExecuted');
-    this._kernel = kernel;
+    this._line = line;
+    this._mount = mount;
   }
 
   isBuildScriptExecuted() { return true; }
 }
 
 class BuildFinished extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'BuildFinished');
-    this._kernel = kernel;
+    this._line = line;
+    this._mount = mount;
   }
 
   isBuildFinished() { return true; }
 }
 
 class TextLine extends CargoMessage {
-  constructor(nonce, kernel) {
+  constructor(nonce, line, mount) {
     super();
     enforcePrivate(nonce, 'TextLine');
-    this._kernel = kernel;
+    this._line = line;
+    this._mount = mount;
   }
 
   isTextLine() { return true; }
 }
 
+const MESSAGE_TYPES = {
+  'compiler-artifact': CompilerArtifact,
+  'compiler-message': CompilerMessage,
+  'build-script-executed': BuildScriptExecuted,
+  'build-finished': BuildFinished,
+};
+
 module.exports = {
-  CargoMessages,
   CargoReader
 };
