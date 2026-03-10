@@ -38,7 +38,7 @@ echo PUBLISHING CLI TO NPM PROXY
 echo "***************************************************"
 
 (cd pkgs/load && npm publish --registry $PROXY_SERVER)
-(cd dist/cli && npm publish --registry $PROXY_SERVER)
+(cd pkgs/cli && npm publish --registry $PROXY_SERVER)
 
 echo "***************************************************"
 echo BUILDING test/integration/sniff-bytes
