@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsc",
     "pretest": "npm run build",
-    "prepack": "ncc build src/index.ts -o .",
+    "prepack": "ncc build src/index.ts -o dist && mv dist/index.js . && rm -rf dist",
     "test": "mocha"
   },
   "repository": {
