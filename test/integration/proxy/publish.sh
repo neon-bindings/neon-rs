@@ -34,6 +34,13 @@ EOF
 npm config set "${PROXY_SERVER:5}:_authToken" "${NPM_AUTH_TOKEN}"
 
 echo "***************************************************"
+echo BUILDING PACKAGES
+echo "***************************************************"
+
+npm run dist --workspaces --if-present
+npm run build --workspaces --if-present
+
+echo "***************************************************"
 echo PUBLISHING PACKAGES TO NPM PROXY
 echo "***************************************************"
 
