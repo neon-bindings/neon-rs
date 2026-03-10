@@ -10,6 +10,9 @@ packages:
   '@neon-rs/*':
     access: $all
     publish: $all
+  'cargo-messages':
+    access: $all
+    publish: $all
   '@sniff-bytes/*':
     access: $all
     publish: $all
