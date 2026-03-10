@@ -34,11 +34,10 @@ EOF
 npm config set "${PROXY_SERVER:5}:_authToken" "${NPM_AUTH_TOKEN}"
 
 echo "***************************************************"
-echo PUBLISHING CLI TO NPM PROXY
+echo PUBLISHING PACKAGES TO NPM PROXY
 echo "***************************************************"
 
-(cd pkgs/load && npm publish --registry $PROXY_SERVER)
-(cd pkgs/cli && npm publish --registry $PROXY_SERVER)
+npm publish --workspaces --registry $PROXY_SERVER
 
 echo "***************************************************"
 echo BUILDING test/integration/sniff-bytes
