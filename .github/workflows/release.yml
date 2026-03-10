@@ -115,6 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -137,7 +138,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 24
           registry-url: ${{ env.NPM_REGISTRY }}
           cache: npm
       - name: Install Dependencies
@@ -145,6 +146,4 @@ jobs:
         run: npm ci --workspaces
       - name: Publish packages
         shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --workspaces --access public
+        run: npm publish --workspaces --access public --provenance
