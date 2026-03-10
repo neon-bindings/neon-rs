@@ -31,14 +31,14 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dherman/neon-rs.git"
+    "url": "git+https://github.com/neon-bindings/neon-rs.git"
   },
   "keywords": [
     "Rust",
     "Neon"
   ],
   "bugs": {
-    "url": "https://github.com/dherman/neon-rs/issues"
+    "url": "https://github.com/neon-bindings/neon-rs/issues"
   },
-  "homepage": "https://github.com/dherman/neon-rs#readme"
+  "homepage": "https://github.com/neon-bindings/neon-rs#readme"
 }
