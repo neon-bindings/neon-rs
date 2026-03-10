@@ -1,7 +1,7 @@
 {
   "name": "@neon-rs/artifact",
   "private": false,
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Library for working with Neon build artifacts.",
   "exports": {
     ".": {
