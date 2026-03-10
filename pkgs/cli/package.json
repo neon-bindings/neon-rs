@@ -1,26 +1,22 @@
 {
   "name": "@neon-rs/cli",
-  "private": true,
-  "version": "0.1.82",
+  "version": "0.2.2",
   "description": "Command-line build tool for Neon modules.",
   "type": "module",
-  "exports": "./dist/src/index.js",
+  "exports": "./index.js",
   "types": "types/index.d.ts",
   "files": [
-    "data/**/*",
-    "dist/**/*",
-    "types/**/*",
+    "index.js",
     "LICENSE*"
   ],
   "bin": {
-    "neon": "dist/src/index.js"
+    "neon": "./index.js"
   },
   "scripts": {
-    "bundle": "bash bundle.sh",
-    "dist": "npm run bundle",
     "build": "tsc",
     "pretest": "npm run build",
-    "prepack": "npm run build",
+    "prepack": "cp package.json package.json.bak && ncc build src/index.ts -o . && jq -f prepack.jq package.json.bak > package.json",
+    "postpack": "mv package.json.bak package.json && rm -f index.js",
     "test": "mocha"
   },
   "repository": {
@@ -50,15 +46,14 @@
     "@types/temp": "^0.9.1",
     "@vercel/ncc": "^0.36.1",
     "chai": "^5.1.1",
-    "crlf": "^1.1.1",
     "mocha": "^10.4.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@neon-rs/artifact": "^0.1.0",
-    "@neon-rs/load": "^0.0.181",
-    "@neon-rs/manifest": "^0.2.1",
-    "cargo-messages": "file:../../pkgs/cargo-messages",
+    "@neon-rs/artifact": "*",
+    "@neon-rs/load": "*",
+    "@neon-rs/manifest": "*",
+    "cargo-messages": "*",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",
     "command-line-commands": "^3.0.2",

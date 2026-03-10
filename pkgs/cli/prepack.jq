@@ -5,8 +5,8 @@
   type: .type,
   exports: "./index.js",
   files: [
-    "LICENSE*",
-    "index.js"
+    "index.js",
+    "LICENSE*"
   ],
   bin: {
     "neon": "./index.js"

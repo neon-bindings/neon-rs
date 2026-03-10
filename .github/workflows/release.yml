@@ -137,25 +137,8 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run:  npm ci --workspaces
-      - name: Publish (cargo-messages)
+      - name: Publish packages
         shell: bash
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
-        working-directory: ./pkgs/cargo-messages
-      - name: Build (@neon-rs/load)
-        shell: bash
-        run: npm run build
-        working-directory: ./pkgs/load
-      - name: Publish (@neon-rs/load)
-        shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
-        working-directory: ./pkgs/load
-      - name: Publish (@neon-rs/cli)
-        shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
-        working-directory: ./dist/cli
+        run: npm publish --workspaces --access public
