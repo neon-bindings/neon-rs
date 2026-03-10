@@ -15,8 +15,7 @@
   "scripts": {
     "build": "tsc",
     "pretest": "npm run build",
-    "prepack": "cp package.json package.json.bak && ncc build src/index.ts -o . && jq -f prepack.jq package.json.bak > package.json",
-    "postpack": "mv package.json.bak package.json && rm -f index.js",
+    "prepack": "ncc build src/index.ts -o .",
     "test": "mocha"
   },
   "repository": {
@@ -35,32 +34,26 @@
   },
   "homepage": "https://github.com/neon-bindings/neon-rs#readme",
   "devDependencies": {
+    "@neon-rs/artifact": "*",
+    "@neon-rs/load": "*",
+    "@neon-rs/manifest": "*",
     "@tsconfig/node16": "^1.0.3",
     "@types/chai": "^4.3.16",
     "@types/command-line-args": "^5.2.0",
     "@types/command-line-commands": "^2.0.1",
     "@types/command-line-usage": "^5.0.2",
-    "@types/jscodeshift": "^0.11.11",
     "@types/mocha": "^10.0.6",
     "@types/node": "^18.15.11",
-    "@types/temp": "^0.9.1",
     "@vercel/ncc": "^0.36.1",
-    "chai": "^5.1.1",
-    "mocha": "^10.4.0",
-    "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "@neon-rs/artifact": "*",
-    "@neon-rs/load": "*",
-    "@neon-rs/manifest": "*",
     "cargo-messages": "*",
+    "chai": "^5.1.1",
     "chalk": "^5.2.0",
     "command-line-args": "^5.2.1",
     "command-line-commands": "^3.0.2",
     "command-line-usage": "^7.0.1",
     "execa": "^7.1.1",
-    "jscodeshift": "^0.15.1",
+    "mocha": "^10.4.0",
     "stream-to-string": "^1.2.1",
-    "temp": "^0.9.4"
+    "typescript": "^5.0.4"
   }
 }
