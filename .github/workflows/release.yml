@@ -128,6 +128,12 @@ jobs:
         run: |
           echo 'needs.setup.outputs.tag=${{ needs.setup.outputs.tag }}'
           git log -10
+      - name: Set Environment Variables
+        uses: falti/dotenv-action@v1
+        with:
+          path: ./.github/.env
+          export-variables: true
+          keys-case: bypass
       - name: Install Node
         uses: actions/setup-node@v3
         with:
