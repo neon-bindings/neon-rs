@@ -38,6 +38,10 @@
     "test": "mocha",
     "prepack": "npm run dist"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neon-bindings/neon-rs.git"
+  },
   "keywords": [
     "Neon",
     "Rust",
