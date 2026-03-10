@@ -143,11 +143,6 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: npm ci --workspaces
-      - name: Build Packages
-        shell: bash
-        run: |
-          npm run dist --workspaces --if-present
-          npm run build --workspaces --if-present
       - name: Publish packages
         shell: bash
         env:

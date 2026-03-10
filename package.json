@@ -4,7 +4,11 @@
   "version": "0.2.2",
   "description": "@neon-rs monorepo root",
   "workspaces": [
-    "pkgs/*"
+    "pkgs/artifact",
+    "pkgs/cargo-messages",
+    "pkgs/load",
+    "pkgs/manifest",
+    "pkgs/cli"
   ],
   "scripts": {
     "version": "npm version --no-git-tag-version --workspaces $npm_package_version && npm i && git add .",
